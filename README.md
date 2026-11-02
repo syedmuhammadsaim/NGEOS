@@ -9,6 +9,16 @@
     Empowering underprivileged communities worldwide across Education, Healthcare, Food Relief, Elderly & Women Welfare.
   </p>
 
+  <!-- LIVE WEBSITE BADGES -->
+  <p align="center">
+    <a href="https://ngeos.runasp.net" target="_blank">
+      <img src="https://img.shields.io/badge/🌐_LIVE_WEBSITE-ngeos.runasp.net-00C853?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Live Website" />
+    </a>
+    <a href="https://ngeos.runasp.net" target="_blank">
+      <img src="https://img.shields.io/badge/SSL_STATUS-Active_%26_Secured-blue?style=for-the-badge&logo=letsencrypt&logoColor=white" alt="SSL Active" />
+    </a>
+  </p>
+
   <!-- BADGES & ICONS -->
   <p align="center">
     <a href="https://dotnet.microsoft.com/">
@@ -38,6 +48,7 @@
   </p>
 
   <p align="center">
+    <a href="https://ngeos.runasp.net"><b>🌐 Live Website</b></a> •
     <a href="#-key-features">Key Features</a> •
     <a href="#%EF%B8%8F-tech-stack--tools">Tech Stack</a> •
     <a href="#-getting-started">Getting Started</a> •
@@ -48,6 +59,20 @@
   </p>
 
 </div>
+
+---
+
+## 🌐 Live Production Website
+
+The production version of **NGEOS** is deployed and active with high availability, full HTTPS Let's Encrypt SSL encryption, and integrated MS SQL database hosting:
+
+| Attribute | Details |
+| :--- | :--- |
+| **Live URL** | 🔗 **[https://ngeos.runasp.net](https://ngeos.runasp.net)** |
+| **Cloud Hosting** | MonsterASP.NET Cloud Platform |
+| **SSL / HTTPS** | Let's Encrypt 256-bit SSL Certificate (Active & Forced HTTPS) |
+| **Authentication** | Google OAuth 2.0 + Email/Password + Firebase Phone SMS OTP |
+| **Database** | Remote Cloud MS SQL Database (`db77413`) |
 
 ---
 
@@ -93,7 +118,8 @@ Built with **ASP.NET Core (C#)**, **Entity Framework Core**, and **Microsoft SQL
 | Component | Technology | Description |
 | :--- | :--- | :--- |
 | **Backend Framework** | ![.NET](https://img.shields.io/badge/.NET_10-512BD4?style=flat-square&logo=dotnet&logoColor=white) | ASP.NET Core MVC with C# |
-| **Database Engine** | ![SQL Server](https://img.shields.io/badge/SQL_Server-CC292B?style=flat-square&logo=microsoftsqlserver&logoColor=white) | Microsoft SQL Server (Local & Production ready) |
+| **Cloud Hosting** | ![MonsterASP](https://img.shields.io/badge/MonsterASP.NET-00C853?style=flat-square&logo=googlechrome&logoColor=white) | Production Web & Database Cloud Hosting |
+| **Database Engine** | ![SQL Server](https://img.shields.io/badge/SQL_Server-CC292B?style=flat-square&logo=microsoftsqlserver&logoColor=white) | Microsoft SQL Server (Local & Cloud Production) |
 | **Database Tool** | ![SSMS](https://img.shields.io/badge/SSMS-0078D4?style=flat-square&logo=microsoft&logoColor=white) | SQL Server Management Studio (SSMS) |
 | **ORM** | ![EF Core](https://img.shields.io/badge/EF_Core-512BD4?style=flat-square&logo=dotnet&logoColor=white) | Entity Framework Core (Code-First & Migrations) |
 | **Frontend Styling** | ![Bootstrap](https://img.shields.io/badge/Bootstrap_5-7952B3?style=flat-square&logo=bootstrap&logoColor=white) | Bootstrap 5.3.3 + Custom Modern Design System |
@@ -125,58 +151,60 @@ cd NGEOS
 
 ## 🗄️ Database Setup (SSMS)
 
-### Option A: Automatic Code-First Migration (Recommended)
-1. Open `NGEOS/appsettings.json` and verify your SQL Server connection string:
-   ```json
-   "ConnectionStrings": {
-     "DefaultConnection": "Server=localhost;Database=NGEOSDb;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True"
-   }
-   ```
-2. Apply migrations automatically via .NET CLI:
-   ```bash
-   dotnet ef database update --project NGEOS
-   ```
+The complete SQL database schema with initial seed data is provided in `Database/NGEOSDb.sql`.
 
-### Option B: Using SQL Server Management Studio (SSMS)
-1. Launch **SQL Server Management Studio (SSMS)** and connect to `localhost` (or `.\SQLEXPRESS`).
-2. Open the script file provided in [`Database/NGEOSDb.sql`](Database/NGEOSDb.sql).
-3. Execute the script to create `NGEOSDb` along with all required tables, foreign keys, and default seed data.
+1. Open **SQL Server Management Studio (SSMS)**.
+2. Connect to your local SQL Server instance (`.` or `localhost`).
+3. Open [`Database/NGEOSDb.sql`](Database/NGEOSDb.sql).
+4. Click **Execute** (or press `F5`).
+5. The `NGEOSDb` database will be created with all 18 tables:
+   - `Users`, `Roles`, `Causes`, `Donations`, `AboutPages`, `ContactMessages`, `Events`, `FAQs`, `JobOpportunities`, `NGOs`, `Partners`, `PasswordResetTokens`, `Programmes`, `ProgrammeInterests`, `TeamMembers`, `UserQueries`, `ZakatCalculations`.
 
 ---
 
-## ▶️ Running the Application
+### ⚙️ 2. Configuration Settings
 
-### 🌐 Web Mode (Visual Studio / Terminal)
-To run in development mode:
+Update your connection string in `NGEOS/appsettings.json` if using custom SQL credentials:
+
+```json
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=.;Database=NGEOSDb;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True"
+  }
+}
+```
+
+---
+
+### ▶️ 3. Run the Application
+
+#### Using Visual Studio:
+- Open `NGEOS/NGEOS.slnx` in Visual Studio 2022.
+- Press `F5` to start debugging with IIS Express or Kestrel.
+
+#### Using .NET CLI:
 ```bash
 cd NGEOS
 dotnet run
 ```
-Open your browser and navigate to:
-```text
-http://localhost:5125  or  http://localhost:5000
-```
+Open [http://localhost:5000](http://localhost:5000) or [https://localhost:7179](https://localhost:7179) in your browser.
 
 ---
 
 ## 🖥️ Desktop Application Mode
 
-NGEOS includes built-in standalone desktop packaging that runs locally without requiring a browser window:
+NGEOS includes native Windows Desktop Integration:
 
-1. **Launch Desktop App Silently:**
-   - Run [`Launch-NGEOS.vbs`](Launch-NGEOS.vbs) or double-click the **NGEOS** Desktop shortcut.
-   - It checks backend health, starts the background server silently if needed, and launches Microsoft Edge/Chrome in dedicated App Mode (`--app`).
-
-2. **Single-Click Installer (`NGEOS-Setup.exe`):**
-   - Located at [`NGEOS-Setup.exe`](NGEOS-Setup.exe) (and downloadable directly from the website footer).
-   - Generates the desktop shortcut with the official embedded `.ico` and opens the application immediately without ZIP extraction.
+1. **One-Click Installer:** Run `NGEOS-Setup.exe` to automatically create a desktop shortcut with the official high-resolution icon.
+2. **Silent Background Launcher:** Double-click `Launch-NGEOS.vbs` to start the app silently without any CMD or console windows.
+3. **Dedicated App Window:** Launches in a native standalone Chrome/Edge application window without browser URL bars or tabs.
 
 ---
 
 ## 🔒 Authentication & Security
 
-- **Cookie Authentication:** Encrypted HTTP-only sliding session cookies (`NGEOS_AuthSession`).
-- **Role-Based Access Control (RBAC):** Distinct authorization policies for `Admin`, `User`, and `NGO Partner`.
+- **Dual Authentication:** Google OAuth 2.0 Single Sign-On + Email & Password authentication.
+- **Role-Based Access Control (RBAC):** Admin and User authorization policies (`AdminOnly`, `UserOnly`).
 - **Anti-Forgery Validation:** CSRF token verification across all forms and donation checkout requests.
 - **Password Hashing:** PBKDF2 / Argon2 cryptographic password hashing via `PasswordHelper`.
 - **Firebase SMS OTP Verification:** High-security one-time SMS verification directly to the user's mobile number.
@@ -198,7 +226,6 @@ NGEOS/
 │   ├── ViewModels/               # DTOs and ViewModels
 │   ├── Views/                    # Razor Views & Layouts
 │   └── wwwroot/                  # Static assets (CSS, JS, Logos, Icons, Manifest)
-├── publish/                      # Compiled Release binaries for instant offline deployment
 ├── Create-Desktop-Shortcut.ps1   # PowerShell automation script for desktop shortcut
 ├── Launch-NGEOS.vbs              # Zero-console VBScript background launcher
 ├── NGEOS-Setup.exe               # Standalone WinExe setup installer with embedded icon
@@ -211,6 +238,7 @@ NGEOS/
 ## 👨‍💻 Author
 
 **Syed Muhammad Saim**
+- **🌐 Live Platform:** [https://ngeos.runasp.net](https://ngeos.runasp.net)
 - **GitHub:** [@syedmuhammadsaim](https://github.com/syedmuhammadsaim)
 - **Email:** syedmuhammadsaim.contact@gmail.com
 - **Project Repository:** [NGEOS on GitHub](https://github.com/syedmuhammadsaim/NGEOS)
