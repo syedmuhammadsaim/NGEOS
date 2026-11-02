@@ -1,0 +1,451 @@
+@model List<NGEOS.Models.Cause>
+@{
+    ViewData["Title"] = "Home - Empowering Vulnerable Lives Worldwide";
+    var highlightCampaign = ViewBag.HighlightCampaign as NGEOS.Models.Cause;
+    var upcomingProgrammes = ViewBag.UpcomingProgrammes as List<NGEOS.Models.Programme> ?? new List<NGEOS.Models.Programme>();
+    var partnerNgos = ViewBag.PartnerNgos as List<NGEOS.Models.NGO> ?? new List<NGEOS.Models.NGO>();
+    var partners = ViewBag.Partners as List<NGEOS.Models.Partner> ?? new List<NGEOS.Models.Partner>();
+    var galleryPreview = ViewBag.GalleryPreview as List<NGEOS.Models.GalleryItem> ?? new List<NGEOS.Models.GalleryItem>();
+    var latestEvents = ViewBag.LatestEvents as List<NGEOS.Models.Event> ?? new List<NGEOS.Models.Event>();
+}
+
+<!-- 3. HERO SECTION -->
+<section class="giveaid-hero">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8 col-xl-7" data-aos="fade-up" data-aos-duration="850">
+                <span class="hero-tag">
+                    <i class="bi bi-heart-pulse-fill text-warning"></i> Non-Governmental Organization Platform
+                </span>
+                <h1 class="hero-title">
+                    Together We Can <span>Make A Difference</span> In Every Life
+                </h1>
+                <p class="hero-subtitle">
+                    Join NGEOS's global alliance of accredited NGOs, corporate benefactors, and volunteers working tirelessly to provide food, education, healthcare, and dignity to the underprivileged.
+                </p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a asp-controller="Donate" asp-action="Index" class="btn btn-orange btn-lg px-4 shadow-lg">
+                        <i class="bi bi-heart-fill"></i> Donate Now
+                    </a>
+                    <a asp-controller="Programmes" asp-action="Index" class="btn btn-outline-light btn-lg px-4">
+                        <i class="bi bi-person-check-fill"></i> Become A Volunteer
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 4. OVERLAPPING QUICK ACTION CARDS -->
+<div class="container quick-actions-wrapper">
+    <div class="row g-4">
+        <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+            <div class="action-card">
+                <div class="action-card-icon icon-volunteer">
+                    <i class="bi bi-people-fill"></i>
+                </div>
+                <h4>Become A Volunteer</h4>
+                <p>Offer your skills, time, and heart to take part in medical camps, rural teaching drives, and relief distributions.</p>
+                <a asp-controller="Programmes" asp-action="Index" class="btn btn-outline-orange w-100">
+                    Join Active Programmes <i class="bi bi-arrow-right ms-1"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+            <div class="action-card">
+                <div class="action-card-icon icon-donate">
+                    <i class="bi bi-credit-card-fill"></i>
+                </div>
+                <h4>Give A Donation</h4>
+                <p>Support vetted causes with transparent 100% allocation. Choose your preferred category and make a simulated payment.</p>
+                <a asp-controller="Donate" asp-action="Index" class="btn btn-orange w-100">
+                    Donate Online Now <i class="bi bi-heart-fill ms-1"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+            <div class="action-card">
+                <div class="action-card-icon icon-cause">
+                    <i class="bi bi-hand-thumbs-up-fill"></i>
+                </div>
+                <h4>Support A Specific Cause</h4>
+                <p>Select tailored humanitarian causes—from orphan child nutrition and rural classrooms to disabled youth mobility.</p>
+                <a asp-controller="Causes" asp-action="Index" class="btn btn-outline-navy w-100">
+                    Explore All Causes <i class="bi bi-arrow-right ms-1"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 5. ABOUT SECTION WITH LIVE METRICS -->
+<section class="section-padding">
+    <div class="container">
+        <div class="row g-5 align-items-center">
+            <div class="col-lg-6" data-aos="fade-right" data-aos-duration="850">
+                <div class="position-relative">
+                    <img src="https://images.unsplash.com/photo-1542810634-71277d95dcbb?w=800&auto=format&fit=crop&q=80" alt="About NGEOS" class="rounded-4 shadow-lg w-100" style="height: 440px; object-fit: cover;">
+                    <div class="position-absolute bottom-0 end-0 bg-white p-4 rounded-4 shadow-lg m-3 d-none d-sm-block border-start border-4 border-warning" style="max-width: 250px;" data-aos="zoom-in" data-aos-delay="250">
+                        <h4 class="fw-bold mb-1 text-dark">100%</h4>
+                        <p class="small text-muted mb-0">Direct Humanitarian Allocation & Audited Transparency</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6" data-aos="fade-left" data-aos-duration="850">
+                <span class="section-tag"><i class="bi bi-info-circle-fill me-1"></i> About NGEOS</span>
+                <h2 class="section-title">A Unified Bridge Connecting Generosity with Genuine Needs</h2>
+                <p class="text-muted mb-4">
+                    NGEOS (Non-Governmental Organization) is established with the generous contributions of major global corporate benefactors and philanthropic donors. We empower verified grassroots NGOs to raise essential funds and execute transformative welfare programs.
+                </p>
+
+                <!-- Statistics Grid -->
+                <div class="row g-3 mb-4">
+                    <div class="col-6 col-sm-3" data-aos="zoom-in" data-aos-delay="100">
+                        <div class="stat-card">
+                            <div class="stat-number">12K+</div>
+                            <p class="stat-label">Lives Helped</p>
+                        </div>
+                    </div>
+                    <div class="col-6 col-sm-3" data-aos="zoom-in" data-aos-delay="200">
+                        <div class="stat-card">
+                            <div class="stat-number">@ViewBag.TotalCausesCount+</div>
+                            <p class="stat-label">Active Causes</p>
+                        </div>
+                    </div>
+                    <div class="col-6 col-sm-3" data-aos="zoom-in" data-aos-delay="300">
+                        <div class="stat-card">
+                            <div class="stat-number">@ViewBag.TotalProgrammesCount+</div>
+                            <p class="stat-label">Programmes</p>
+                        </div>
+                    </div>
+                    <div class="col-6 col-sm-3" data-aos="zoom-in" data-aos-delay="400">
+                        <div class="stat-card">
+                            <div class="stat-number">@ViewBag.TotalNgosCount+</div>
+                            <p class="stat-label">Partner NGOs</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex flex-wrap gap-3">
+                    <a asp-controller="About" asp-action="WhatWeDo" class="btn btn-navy">
+                        Learn More About Us <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                    <a asp-controller="About" asp-action="OurMission" class="btn btn-outline-orange">
+                        Our Mission & Vision
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 6. CAUSES SECTION -->
+<section class="section-padding bg-subtle">
+    <div class="container">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end mb-5" data-aos="fade-up">
+            <div>
+                <span class="section-tag"><i class="bi bi-heart-fill me-1"></i> Urgent Needs</span>
+                <h2 class="section-title mb-0">Causes That Need Your Help</h2>
+            </div>
+            <a asp-controller="Causes" asp-action="Index" class="btn btn-outline-navy mt-3 mt-md-0">
+                View All Causes <i class="bi bi-arrow-right ms-1"></i>
+            </a>
+        </div>
+
+        <div class="row g-4">
+            @{ int causeIdx = 0; }
+            @foreach (var cause in Model)
+            {
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="@((causeIdx++ % 3) * 120)">
+                    <div class="giveaid-card">
+                        <div class="card-img-wrapper">
+                            <img src="@cause.ImageUrl" alt="@cause.Title">
+                            <span class="card-category-badge">@cause.Category</span>
+                        </div>
+                        <div class="card-body-content">
+                            <h5 class="card-title fw-bold mb-2">
+                                <a asp-controller="Causes" asp-action="Details" asp-route-id="@cause.Id" class="text-dark">@cause.Title</a>
+                            </h5>
+                            <p class="text-muted small mb-3 flex-grow-1">@cause.ShortDescription</p>
+                            
+                            <!-- Progress Meta -->
+                            <div class="progress-meta">
+                                <span class="text-muted small">Raised: <strong class="text-dark">$@cause.RaisedAmount.ToString("N0")</strong></span>
+                                <span class="text-muted small">Goal: <strong class="text-dark">$@cause.TargetAmount.ToString("N0")</strong></span>
+                            </div>
+                            <div class="custom-progress">
+                                <div class="progress-bar-orange" style="width: @(cause.PercentageRaised)%"></div>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <span class="badge bg-light text-dark border px-2 py-1"><i class="bi bi-pie-chart-fill text-warning me-1"></i> @cause.PercentageRaised% Funded</span>
+                                <span class="small text-muted"><i class="bi bi-building me-1"></i> @(cause.Ngo?.Name ?? "NGEOS")</span>
+                            </div>
+
+                            <div class="d-flex gap-2">
+                                <a asp-controller="Donate" asp-action="Index" asp-route-causeId="@cause.Id" class="btn btn-orange btn-sm flex-grow-1">
+                                    <i class="bi bi-heart-fill"></i> Donate Now
+                                </a>
+                                <a asp-controller="Causes" asp-action="Details" asp-route-id="@cause.Id" class="btn btn-outline-navy btn-sm" title="View Details">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<!-- 7. FEATURED DONATION SECTION -->
+@if (highlightCampaign != null)
+{
+    <section class="section-padding">
+        <div class="container">
+            <div class="featured-campaign-box" data-aos="zoom-in-up" data-aos-duration="850">
+                <div class="row g-5 align-items-center">
+                    <div class="col-lg-6">
+                        <img src="@highlightCampaign.ImageUrl" alt="@highlightCampaign.Title" class="rounded-4 w-100 shadow" style="height: 380px; object-fit: cover;">
+                    </div>
+                    <div class="col-lg-6">
+                        <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold text-uppercase mb-3">
+                            <i class="bi bi-star-fill me-1"></i> Featured Campaign Spotlight
+                        </span>
+                        <h2 class="fw-bold mb-3">@highlightCampaign.Title</h2>
+                        <p class="text-white-50 mb-4">
+                            @highlightCampaign.FullDescription
+                        </p>
+
+                        <!-- Progress info -->
+                        <div class="d-flex justify-content-between text-white font-weight-bold mb-1">
+                            <span>Raised: <strong>$@highlightCampaign.RaisedAmount.ToString("N0")</strong></span>
+                            <span>Target: <strong>$@highlightCampaign.TargetAmount.ToString("N0")</strong></span>
+                        </div>
+                        <div class="custom-progress mb-4" style="height: 10px; background: rgba(255,255,255,0.2);">
+                            <div class="progress-bar-orange" style="width: @(highlightCampaign.PercentageRaised)%"></div>
+                        </div>
+
+                        <div class="d-flex flex-wrap gap-3">
+                            <a asp-controller="Donate" asp-action="Index" asp-route-causeId="@highlightCampaign.Id" class="btn btn-orange btn-lg px-4 shadow">
+                                <i class="bi bi-heart-fill"></i> Donate To This Cause
+                            </a>
+                            <a asp-controller="Causes" asp-action="Details" asp-route-id="@highlightCampaign.Id" class="btn btn-outline-light btn-lg px-4">
+                                Read Full Story
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+
+<!-- 8. PROGRAMMES SECTION -->
+<section class="section-padding bg-subtle">
+    <div class="container">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end mb-5" data-aos="fade-up">
+            <div>
+                <span class="section-tag"><i class="bi bi-calendar2-event me-1"></i> Active Initiatives</span>
+                <h2 class="section-title mb-0">Upcoming NGO Programmes</h2>
+            </div>
+            <a asp-controller="Programmes" asp-action="Index" class="btn btn-outline-navy mt-3 mt-md-0">
+                Explore All Programmes <i class="bi bi-arrow-right ms-1"></i>
+            </a>
+        </div>
+
+        <div class="row g-4">
+            @{ int progIdx = 0; }
+            @foreach (var prog in upcomingProgrammes)
+            {
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="@((progIdx++ % 3) * 120)">
+                    <div class="giveaid-card">
+                        <div class="card-img-wrapper">
+                            <img src="@prog.ImageUrl" alt="@prog.Title">
+                            <span class="card-category-badge">@prog.Category</span>
+                        </div>
+                        <div class="card-body-content">
+                            <div class="d-flex align-items-center gap-2 text-muted small mb-2">
+                                <span><i class="bi bi-calendar-event text-warning me-1"></i> @prog.StartDate.ToString("MMM dd, yyyy")</span>
+                                <span>•</span>
+                                <span><i class="bi bi-geo-alt text-danger me-1"></i> @prog.Location</span>
+                            </div>
+                            <h5 class="card-title fw-bold mb-2">
+                                <a asp-controller="Programmes" asp-action="Details" asp-route-id="@prog.Id" class="text-dark">@prog.Title</a>
+                            </h5>
+                            <p class="text-muted small mb-3 flex-grow-1">@prog.ShortDescription</p>
+                            
+                            <div class="d-flex align-items-center justify-content-between pt-3 border-top">
+                                <span class="small text-muted"><i class="bi bi-people me-1"></i> @prog.TargetBeneficiaries Beneficiaries</span>
+                                <a asp-controller="Programmes" asp-action="Details" asp-route-id="@prog.Id" class="btn btn-orange btn-sm">
+                                    <i class="bi bi-hand-index-thumb"></i> Show Interest
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<!-- 9. NGOs SECTION -->
+<section class="section-padding">
+    <div class="container">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end mb-5" data-aos="fade-up">
+            <div>
+                <span class="section-tag"><i class="bi bi-building me-1"></i> Accredited Allies</span>
+                <h2 class="section-title mb-0">Our Partner NGOs</h2>
+            </div>
+            <a asp-controller="Ngos" asp-action="Index" class="btn btn-outline-navy mt-3 mt-md-0">
+                View All NGOs <i class="bi bi-arrow-right ms-1"></i>
+            </a>
+        </div>
+
+        <div class="row g-4">
+            @{ int ngoIdx = 0; }
+            @foreach (var ngo in partnerNgos)
+            {
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="@((ngoIdx++ % 3) * 120)">
+                    <div class="giveaid-card p-4">
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <img src="@ngo.LogoUrl" alt="@ngo.Name" class="rounded-3 shadow-sm" style="width: 60px; height: 60px; object-fit: cover;">
+                            <div>
+                                <h6 class="fw-bold mb-0 text-dark">@ngo.Name</h6>
+                                <span class="badge bg-light text-muted border small mt-1"><i class="bi bi-patch-check-fill text-primary me-1"></i> Verified NGO</span>
+                            </div>
+                        </div>
+                        <p class="text-muted small mb-3 flex-grow-1">@ngo.ShortDescription</p>
+                        <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+                            <span class="small text-muted"><i class="bi bi-bullseye text-warning me-1"></i> @ngo.FocusArea</span>
+                            <a asp-controller="Ngos" asp-action="Details" asp-route-id="@ngo.Id" class="btn btn-outline-navy btn-sm">
+                                View Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<!-- 10. PARTNERS SECTION -->
+<section class="section-padding bg-subtle border-top border-bottom">
+    <div class="container text-center">
+        <div data-aos="fade-up">
+            <span class="section-tag"><i class="bi bi-shield-check me-1"></i> Corporate Benefactors</span>
+            <h2 class="section-title mb-2">Major Companies Supporting NGEOS</h2>
+            <p class="section-subtitle mx-auto mb-5">
+                NGEOS has been established and continuously powered with the help of leading global corporations, CSR funds, and technological alliances.
+            </p>
+        </div>
+
+        <div class="row g-3 justify-content-center">
+            @{ int partnerIdx = 0; }
+            @foreach (var p in partners)
+            {
+                <div class="col-6 col-md-4 col-lg-2" data-aos="zoom-in" data-aos-delay="@((partnerIdx++ % 6) * 70)">
+                    <div class="partner-logo-card">
+                        <img src="@p.LogoUrl" alt="@p.Name" title="@p.Name (@p.Category)">
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<!-- 11. GALLERY PREVIEW -->
+<section class="section-padding">
+    <div class="container">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end mb-5" data-aos="fade-up">
+            <div>
+                <span class="section-tag"><i class="bi bi-images me-1"></i> Visual Stories</span>
+                <h2 class="section-title mb-0">Humanitarian Action in Photos</h2>
+            </div>
+            <a asp-controller="Gallery" asp-action="Index" class="btn btn-outline-navy mt-3 mt-md-0">
+                View Full Gallery <i class="bi bi-arrow-right ms-1"></i>
+            </a>
+        </div>
+
+        <div class="row g-4">
+            @{ int galleryIdx = 0; }
+            @foreach (var item in galleryPreview)
+            {
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="@((galleryIdx++ % 3) * 120)">
+                    <div class="gallery-card" data-img-src="@item.ImageUrl" data-img-title="@item.Title" data-img-desc="@item.Description" data-img-cat="@item.Category">
+                        <img src="@item.ImageUrl" alt="@item.Title">
+                        <div class="gallery-overlay">
+                            <span class="badge bg-warning text-dark align-self-start mb-2">@item.Category</span>
+                            <h6 class="fw-bold mb-1">@item.Title</h6>
+                            <p class="small text-white-50 mb-0"><i class="bi bi-zoom-in me-1"></i> Click to preview</p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<!-- 12. POWERFUL CALL TO ACTION -->
+<section class="section-padding bg-dark text-white text-center position-relative" style="background: linear-gradient(135deg, rgba(11, 25, 44, 0.92), rgba(15, 23, 42, 0.85)), url('https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=1600') center/cover no-repeat !important;">
+    <div class="container py-4" data-aos="zoom-in" data-aos-duration="850">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <span class="hero-tag mb-3"><i class="bi bi-star-fill text-warning"></i> Change A Life Today</span>
+                <h2 class="display-5 fw-bold text-white mb-3">Your Small Contribution Can Change A Life Forever</h2>
+                <p class="lead text-white-50 mb-4">
+                    Whether you donate $10 for child meals or volunteer your weekend in a rural medical camp, your empathy transforms communities.
+                </p>
+                <div class="d-flex flex-wrap justify-content-center gap-3">
+                    <a asp-controller="Donate" asp-action="Index" class="btn btn-orange btn-lg px-4 shadow">
+                        <i class="bi bi-heart-fill"></i> Donate Now
+                    </a>
+                    <a asp-controller="Programmes" asp-action="Index" class="btn btn-outline-light btn-lg px-4">
+                        <i class="bi bi-person-heart"></i> Become A Volunteer
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- PROFESSIONAL GALLERY LIGHTBOX MODAL -->
+<div class="modal fade gallery-lightbox-modal" id="galleryLightboxModal" tabindex="-1" aria-hidden="true" data-lenis-prevent>
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content border-0 bg-transparent shadow-none">
+            <div class="lightbox-shell position-relative mx-auto w-100">
+                <!-- Top Control Bar -->
+                <div class="lightbox-topbar d-flex justify-content-between align-items-center mb-2 px-1">
+                    <div class="d-flex align-items-center gap-2">
+                        <span id="lightboxCategory" class="badge bg-warning text-dark px-3 py-1 rounded-pill fw-semibold">Photo</span>
+                        <span id="lightboxCounter" class="badge bg-dark border border-secondary text-white-50 px-2 py-1 rounded-pill small">1 / 1</span>
+                    </div>
+                    <button type="button" class="lightbox-close-btn" data-bs-dismiss="modal" aria-label="Close" title="Close Preview (Esc)">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                </div>
+
+                <!-- Main Image Stage with Nav Buttons -->
+                <div class="lightbox-stage position-relative rounded-4 overflow-hidden shadow-lg">
+                    <img id="lightboxImage" src="" alt="Photo Preview" class="lightbox-img w-100">
+                    
+                    <!-- Prev / Next Navigation Arrows -->
+                    <button type="button" class="lightbox-nav-btn lightbox-prev-btn" id="lightboxPrevBtn" aria-label="Previous Photo" title="Previous (←)">
+                        <i class="bi bi-chevron-left"></i>
+                    </button>
+                    <button type="button" class="lightbox-nav-btn lightbox-next-btn" id="lightboxNextBtn" aria-label="Next Photo" title="Next (→)">
+                        <i class="bi bi-chevron-right"></i>
+                    </button>
+                </div>
+
+                <!-- Bottom Caption Bar -->
+                <div class="lightbox-caption mt-2 p-3 rounded-3">
+                    <h5 id="lightboxTitle" class="fw-bold text-white mb-1"></h5>
+                    <p id="lightboxDesc" class="text-white-50 small mb-0"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

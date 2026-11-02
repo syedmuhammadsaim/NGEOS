@@ -1,0 +1,76 @@
+@model NGEOS.ViewModels.AdminReplyQueryViewModel
+@{
+    ViewData["Title"] = "Reply to Query - Admin";
+    Layout = "_AdminLayout";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h3 class="fw-bold mb-1">Reply to User Query</h3>
+        <p class="text-muted small mb-0">Compose an official response to ticket #@Model.QueryId.</p>
+    </div>
+    <a asp-action="Queries" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left me-1"></i> Back to Queries</a>
+</div>
+
+<div class="row g-4">
+    <!-- Original Query Card -->
+    <div class="col-lg-5">
+        <div class="giveaid-card p-4">
+            <h5 class="fw-bold mb-3"><i class="bi bi-person-lines-fill text-warning me-2"></i> Query Details</h5>
+            <div class="mb-3">
+                <label class="text-muted small d-block">Sender Name & Email:</label>
+                <strong class="text-dark">@Model.FullName</strong> (<a href="mailto:@Model.Email">@Model.Email</a>)
+            </div>
+            <div class="mb-3">
+                <label class="text-muted small d-block">Category & Subject:</label>
+                <span class="badge bg-warning text-dark mb-1">@Model.Category</span>
+                <strong class="d-block text-dark">@Model.Subject</strong>
+            </div>
+            <div class="mb-3">
+                <label class="text-muted small d-block">Submitted On:</label>
+                <span class="small text-muted">@Model.CreatedAt.ToString("MMMM dd, yyyy - hh:mm tt") UTC</span>
+            </div>
+            <div class="p-3 bg-light rounded-3">
+                <label class="fw-bold small text-dark d-block mb-1">User Message:</label>
+                <p class="small text-secondary mb-0">@Model.OriginalMessage</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reply Form -->
+    <div class="col-lg-7">
+        <div class="giveaid-card p-4">
+            <h5 class="fw-bold mb-3"><i class="bi bi-reply-fill text-success me-2"></i> Official Response</h5>
+            <form asp-action="ReplyQuery" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="QueryId" />
+                <input type="hidden" asp-for="FullName" />
+                <input type="hidden" asp-for="Email" />
+                <input type="hidden" asp-for="Subject" />
+                <input type="hidden" asp-for="Category" />
+                <input type="hidden" asp-for="OriginalMessage" />
+                <input type="hidden" asp-for="CreatedAt" />
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger small mb-3"></div>
+
+                <div class="mb-3">
+                    <label asp-for="Status" class="form-label">Ticket Status</label>
+                    <select asp-for="Status" class="form-select">
+                        <option value="Replied">Replied & Resolved</option>
+                        <option value="In Progress">In Progress</option>
+                        <option value="Closed">Closed</option>
+                    </select>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="AdminReply" class="form-label fw-bold">Admin Message / Resolution Notes</label>
+                    <textarea asp-for="AdminReply" rows="7" class="form-control" placeholder="Write your official response to the user here..." required></textarea>
+                    <span asp-validation-for="AdminReply" class="text-danger small"></span>
+                </div>
+
+                <button type="submit" class="btn btn-orange btn-lg w-100 shadow">
+                    <i class="bi bi-send-check-fill me-1"></i> Send Reply to User
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

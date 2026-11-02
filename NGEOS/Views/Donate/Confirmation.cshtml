@@ -1,0 +1,304 @@
+@model NGEOS.ViewModels.DonationReceiptViewModel
+@{
+    ViewData["Title"] = "Donation Confirmation & Receipt - NGEOS";
+}
+
+<div class="container section-padding confirmation-receipt-container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-xl-7">
+            
+            <!-- Printable Receipt Card -->
+            <div class="giveaid-card p-4 p-md-4 shadow-lg border rounded-4 bg-white" id="printableReceipt">
+                
+                <!-- 1. Official Organization Brand Header (Always Visible & Beautiful in Print) -->
+                <div class="d-flex align-items-center justify-content-between pb-3 mb-3 border-bottom receipt-brand-header">
+                    <div class="d-flex align-items-center gap-3">
+                        <img src="~/images/ngeos-logo.svg" alt="NGEOS Official Logo" class="receipt-brand-logo" width="46" height="46" asp-append-version="true" />
+                        <div>
+                            <h4 class="fw-bold mb-0 text-dark" style="letter-spacing: -0.5px;">Give<span style="color: #f25c05;">-AID</span> Foundation</h4>
+                            <small class="text-muted d-block" style="font-size: 0.78rem;">Global Humanitarian &amp; Relief Charity &bull; Reg: #NGO-PK-2024-8841</small>
+                        </div>
+                    </div>
+                    <div class="text-end">
+                        <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-1 rounded-pill fw-bold text-uppercase" style="font-size: 0.75rem;">
+                            <i class="bi bi-patch-check-fill me-1"></i> Official Tax Receipt
+                        </span>
+                        <div class="small fw-semibold text-muted mt-1 font-monospace" style="font-size: 0.78rem;">#@Model.TransactionId</div>
+                    </div>
+                </div>
+
+                <!-- 2. Header with Success Icon & Generosity Message -->
+                <div class="text-center mb-3 pb-3 border-bottom receipt-title-box">
+                    <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-success text-white mb-2" style="width: 44px; height: 44px; font-size: 1.4rem;">
+                        <i class="bi bi-check-lg"></i>
+                    </div>
+                    <span class="badge bg-success-subtle text-success border border-success px-3 py-1 mb-1 fw-bold text-uppercase d-block mx-auto" style="width: fit-content; font-size: 0.72rem;">Payment Successful</span>
+                    <h3 class="fw-bold text-dark mb-1 fs-4">Thank You For Your Generosity!</h3>
+                    <p class="text-muted small mb-0">Your contribution has been successfully recorded in the NGEOS humanitarian ledger.</p>
+                </div>
+
+                @if (Model.IsReceiptEmailSent)
+                {
+                    <div class="alert alert-success d-flex align-items-center gap-2 small py-2 px-3 mb-3 border border-success-subtle shadow-xs d-print-none">
+                        <i class="bi bi-envelope-check-fill fs-5 text-success flex-shrink-0"></i>
+                        <div>
+                            <strong class="d-block text-dark">Official Receipt Emailed</strong>
+                            An electronic donation receipt with transaction ID <code>#@Model.TransactionId</code> has been emailed to <strong>@Model.DonorEmail</strong>.
+                        </div>
+                    </div>
+                }
+
+                <!-- 3. Transaction Details Table -->
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="fw-bold text-uppercase small text-muted" style="font-size: 0.78rem;"><i class="bi bi-receipt me-1 text-warning"></i> Transaction Summary</span>
+                        <span class="badge bg-light text-muted border font-monospace" style="font-size: 0.75rem;">Status: Completed</span>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered mb-0 receipt-data-table">
+                            <tbody>
+                                <tr>
+                                    <th class="bg-light text-muted small w-35 py-2">Contribution Type</th>
+                                    <td class="py-2">
+                                        @if (Model.DonationType == "Zakat")
+                                        {
+                                            <span class="badge bg-warning-subtle text-dark border border-warning px-2 py-1 fw-bold" style="font-size: 0.8rem;">
+                                                <i class="bi bi-moon-stars-fill text-warning me-1"></i> Zakat Contribution (100% Policy)
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-light text-dark border px-2 py-1 fw-bold" style="font-size: 0.8rem;">
+                                                <i class="bi bi-heart-fill text-danger me-1"></i> General Sadaqah / Donation
+                                            </span>
+                                        }
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="bg-light text-muted small py-2">Donation Amount</th>
+                                    <td class="fs-5 fw-bold text-success py-2">$@Model.Amount.ToString("N2") USD</td>
+                                </tr>
+                                <tr>
+                                    <th class="bg-light text-muted small py-2">Selected Cause</th>
+                                    <td class="fw-bold text-dark py-2">@Model.CauseTitle <span class="badge bg-light text-muted border ms-1" style="font-size: 0.75rem;">@Model.Category</span></td>
+                                </tr>
+                                <tr>
+                                    <th class="bg-light text-muted small py-2">Managing NGO</th>
+                                    <td class="py-2">@Model.NgoName</td>
+                                </tr>
+                                <tr>
+                                    <th class="bg-light text-muted small py-2">Donor Name</th>
+                                    <td class="py-2 fw-semibold text-dark">@Model.DonorName</td>
+                                </tr>
+                                <tr>
+                                    <th class="bg-light text-muted small py-2">Donor Email</th>
+                                    <td class="py-2 font-monospace text-secondary" style="font-size: 0.88rem;">@Model.DonorEmail</td>
+                                </tr>
+                                <tr>
+                                    <th class="bg-light text-muted small py-2">Payment Method</th>
+                                    <td class="py-2 text-dark">@Model.CardType (@Model.MaskedCardNumber)</td>
+                                </tr>
+                                <tr>
+                                    <th class="bg-light text-muted small py-2">Transaction Date</th>
+                                    <td class="py-2 text-muted" style="font-size: 0.85rem;">@Model.DonationDate.ToString("MMMM dd, yyyy - hh:mm tt") UTC</td>
+                                </tr>
+                                @if (!string.IsNullOrEmpty(Model.Notes))
+                                {
+                                    <tr>
+                                        <th class="bg-light text-muted small py-2">Donor Message</th>
+                                        <td class="fst-italic text-muted py-2">"@Model.Notes"</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 4. Footer Note & Verification Assurance -->
+                <div class="p-2 px-3 bg-light rounded-3 d-flex justify-content-between align-items-center border mb-4 receipt-footer-note" style="font-size: 0.78rem;">
+                    <div class="text-muted">
+                        <i class="bi bi-shield-check text-success me-1"></i> NGEOS certified 100% transparent ledger. All contributions qualify for charitable records.
+                    </div>
+                    <div class="text-end text-muted font-monospace d-none d-sm-block">
+                        Issued: @DateTime.UtcNow.ToString("yyyy-MM-dd")
+                    </div>
+                </div>
+
+                <!-- 5. Action Buttons (Hidden when Printing) -->
+                <div class="d-flex flex-wrap gap-2 justify-content-center d-print-none pt-1">
+                    <button type="button" class="btn btn-navy px-4 rounded-pill fw-bold" onclick="window.print();">
+                        <i class="bi bi-printer-fill me-1"></i> Print Receipt
+                    </button>
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <a asp-controller="User" asp-action="Donations" class="btn btn-outline-navy px-4 rounded-pill fw-semibold">
+                            <i class="bi bi-clock-history me-1"></i> View Donation History
+                        </a>
+                    }
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-orange px-4 rounded-pill fw-bold">
+                        <i class="bi bi-house-door-fill me-1"></i> Back to Home
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        /* ========================================================
+           EXACT 1-PAGE PRINT STYLING FOR DONATION RECEIPT
+           ======================================================== */
+        @@page {
+            size: A4 portrait;
+            margin: 8mm 12mm;
+        }
+
+        @@media print {
+            /* Hide all site chrome */
+            header,
+            nav,
+            footer,
+            .giveaid-topbar,
+            .giveaid-navbar,
+            footer.giveaid-footer,
+            #backToTopBtn,
+            .d-print-none,
+            .navbar,
+            .dropdown-menu {
+                display: none !important;
+                visibility: hidden !important;
+                height: 0 !important;
+                overflow: hidden !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            /* Reset body & containers for 100% single page fit */
+            html, body {
+                background: #ffffff !important;
+                color: #0f172a !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                font-size: 11px !important;
+                width: 100% !important;
+                height: auto !important;
+                overflow: visible !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .container,
+            .section-padding,
+            .confirmation-receipt-container {
+                padding: 0 !important;
+                margin: 0 auto !important;
+                max-width: 100% !important;
+                width: 100% !important;
+            }
+
+            .row {
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            .col-lg-8,
+            .col-xl-7 {
+                width: 100% !important;
+                max-width: 100% !important;
+                padding: 0 !important;
+                flex: 0 0 100% !important;
+            }
+
+            /* Single-Page Receipt Container */
+            #printableReceipt {
+                border: 1.5px solid #cbd5e1 !important;
+                border-radius: 8px !important;
+                box-shadow: none !important;
+                background: #ffffff !important;
+                padding: 16px 20px !important;
+                margin: 0 auto !important;
+                max-width: 680px !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+
+            /* Ensure Logo Prints Clearly */
+            .receipt-brand-logo {
+                width: 44px !important;
+                height: 44px !important;
+                display: inline-block !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .receipt-brand-header {
+                padding-bottom: 8px !important;
+                margin-bottom: 10px !important;
+            }
+
+            .receipt-title-box {
+                padding-bottom: 8px !important;
+                margin-bottom: 10px !important;
+            }
+
+            .receipt-title-box h3 {
+                font-size: 1.15rem !important;
+                margin-bottom: 2px !important;
+            }
+
+            .receipt-data-table {
+                margin-bottom: 8px !important;
+                font-size: 0.82rem !important;
+            }
+
+            .receipt-data-table th,
+            .receipt-data-table td {
+                padding: 5px 10px !important;
+                border-color: #cbd5e1 !important;
+            }
+
+            .receipt-data-table th {
+                background-color: #f8fafc !important;
+                color: #334155 !important;
+                font-weight: 600 !important;
+                width: 32% !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .receipt-footer-note {
+                padding: 6px 12px !important;
+                margin-bottom: 0 !important;
+                background-color: #f8fafc !important;
+                border-color: #e2e8f0 !important;
+                font-size: 0.72rem !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            /* Force color preservation on badges in print */
+            .badge {
+                border: 1px solid #cbd5e1 !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .bg-success-subtle {
+                background-color: #dcfce7 !important;
+                color: #166534 !important;
+            }
+
+            .bg-warning-subtle {
+                background-color: #fef9c3 !important;
+                color: #854d0e !important;
+            }
+
+            .text-success {
+                color: #16a34a !important;
+            }
+        }
+    </style>
+}

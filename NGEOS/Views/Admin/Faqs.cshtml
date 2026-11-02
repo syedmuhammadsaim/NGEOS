@@ -1,0 +1,59 @@
+@model List<NGEOS.Models.FAQ>
+@{
+    ViewData["Title"] = "Manage FAQs - Admin";
+    Layout = "_AdminLayout";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h3 class="fw-bold mb-1">Help Centre & FAQs Management</h3>
+        <p class="text-muted small mb-0">Add, edit, and organize frequently asked questions displayed in the Help Centre.</p>
+    </div>
+    <a asp-action="CreateFaq" class="btn btn-orange btn-sm shadow-sm">
+        <i class="bi bi-question-circle-fill me-1"></i> Add New FAQ
+    </a>
+</div>
+
+<div class="giveaid-card p-4">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Question</th>
+                    <th>Category</th>
+                    <th>Answer Preview</th>
+                    <th>Order</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var faq in Model)
+                {
+                    <tr>
+                        <td><strong class="text-dark small">@faq.Question</strong></td>
+                        <td><span class="badge bg-warning text-dark">@faq.Category</span></td>
+                        <td class="small text-muted" style="max-width: 300px;">@faq.Answer</td>
+                        <td><code>@faq.DisplayOrder</code></td>
+                        <td>
+                            <span class="badge @(faq.IsActive ? "bg-success" : "bg-secondary")">@(faq.IsActive ? "Active" : "Disabled")</span>
+                        </td>
+                        <td>
+                            <div class="d-inline-flex gap-1">
+                                <a asp-action="EditFaq" asp-route-id="@faq.Id" class="btn btn-sm btn-outline-primary" title="Edit FAQ">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                                <form asp-action="DeleteFaq" asp-route-id="@faq.Id" method="post" onsubmit="return confirm('Delete this FAQ?');" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete FAQ">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

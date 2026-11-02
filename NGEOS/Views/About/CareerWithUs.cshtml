@@ -1,0 +1,163 @@
+@model List<NGEOS.Models.JobOpportunity>
+@{
+    var aboutPage = ViewBag.AboutPage as NGEOS.Models.AboutPage;
+    ViewData["Title"] = "Careers With NGEOS";
+}
+
+<div class="py-5 text-white position-relative" style="background: linear-gradient(135deg, rgba(11, 25, 44, 0.9), rgba(15, 23, 42, 0.8)), url('https://images.unsplash.com/photo-1531482615713-2afd69097998?w=1600') center/cover no-repeat;" data-aos="fade-down">
+    <div class="container text-center py-4">
+        <span class="hero-tag mb-2" data-aos="fade-up"><i class="bi bi-briefcase-fill text-warning"></i> Social Impact Careers</span>
+        <h1 class="display-4 fw-bold text-white mb-2" data-aos="fade-up" data-aos-delay="100">Career With Us</h1>
+        <p class="text-white-50 mx-auto" style="max-width: 650px;" data-aos="fade-up" data-aos-delay="150">
+            Turn your passion for humanitarian progress into a fulfilling career. Work alongside passionate change-makers globally.
+        </p>
+    </div>
+</div>
+
+<div class="container section-padding">
+    <div class="row g-5">
+        <!-- Main Job Openings List -->
+        <div class="col-lg-8" data-aos="fade-up">
+            <h3 class="fw-bold mb-4">Current Open Positions (@Model.Count)</h3>
+
+            @if (Model.Any())
+            {
+                @foreach (var job in Model)
+                {
+                    <div class="giveaid-card p-4 mb-4">
+                        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-3">
+                            <div>
+                                <span class="badge bg-warning text-dark px-3 py-1 mb-2">@job.JobType</span>
+                                <h4 class="fw-bold mb-1">@job.Title</h4>
+                                <div class="text-muted small d-flex gap-3">
+                                    <span><i class="bi bi-building me-1"></i> @job.Department</span>
+                                    <span><i class="bi bi-geo-alt me-1"></i> @job.Location</span>
+                                    <span><i class="bi bi-clock me-1"></i> Posted @job.PostedDate.ToString("MMM dd, yyyy")</span>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-orange btn-apply-job" data-bs-toggle="modal" data-bs-target="#applyJobModal" data-job-id="@job.Id" data-job-title="@job.Title">
+                                Apply Now <i class="bi bi-send-fill ms-1"></i>
+                            </button>
+                        </div>
+
+                        <div class="mb-3">
+                            <h6 class="fw-bold mb-1">Job Description:</h6>
+                            <p class="text-secondary small">@job.Description</p>
+                        </div>
+
+                        <div>
+                            <h6 class="fw-bold mb-1">Requirements & Qualifications:</h6>
+                            <p class="text-secondary small mb-0">@job.Requirements</p>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="text-center p-5 bg-white rounded-4 shadow-sm">
+                    <i class="bi bi-briefcase fs-1 text-muted mb-2 d-block"></i>
+                    <h5 class="fw-bold">No Current Openings</h5>
+                    <p class="text-muted small">We do not have open vacancies right now, but you can always register interest as a volunteer in our programmes.</p>
+                    <a asp-controller="Programmes" asp-action="Index" class="btn btn-orange btn-sm mt-2">Explore Programmes</a>
+                </div>
+            }
+        </div>
+
+        <!-- Sidebar Benefits -->
+        <div class="col-lg-4" data-aos="fade-left" data-aos-delay="150">
+            <div class="giveaid-card p-4 mb-4">
+                <h5 class="fw-bold mb-3"><i class="bi bi-stars text-warning me-2"></i> Working At NGEOS</h5>
+                <ul class="list-unstyled mb-0">
+                    <li class="mb-3 d-flex gap-2">
+                        <i class="bi bi-check-circle-fill text-success fs-5"></i>
+                        <div>
+                            <strong class="d-block small text-dark">Global Human Impact</strong>
+                            <span class="small text-muted">Every initiative directly uplifts vulnerable individuals.</span>
+                        </div>
+                    </li>
+                    <li class="mb-3 d-flex gap-2">
+                        <i class="bi bi-check-circle-fill text-success fs-5"></i>
+                        <div>
+                            <strong class="d-block small text-dark">Continuous Mentorship</strong>
+                            <span class="small text-muted">Professional development from experienced international directors.</span>
+                        </div>
+                    </li>
+                    <li class="mb-3 d-flex gap-2">
+                        <i class="bi bi-check-circle-fill text-success fs-5"></i>
+                        <div>
+                            <strong class="d-block small text-dark">Inclusive Work Culture</strong>
+                            <span class="small text-muted">A collaborative, diverse, and empathy-centered environment.</span>
+                        </div>
+                    </li>
+                    <li class="d-flex gap-2">
+                        <i class="bi bi-check-circle-fill text-success fs-5"></i>
+                        <div>
+                            <strong class="d-block small text-dark">Flexible & Hybrid</strong>
+                            <span class="small text-muted">Supportive remote and on-ground scheduling options.</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="p-4 bg-light rounded-4 text-center">
+                <h6 class="fw-bold mb-2">Have General Recruitment Questions?</h6>
+                <p class="small text-muted mb-3">Reach out directly to our HR Talent team at <a href="mailto:ngeos@gmail.com">ngeos@gmail.com</a></p>
+                <a asp-controller="Home" asp-action="Contact" class="btn btn-outline-navy btn-sm">Contact HR Team</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JOB APPLICATION MODAL -->
+<div class="modal fade" id="applyJobModal" tabindex="-1" aria-hidden="true" data-lenis-prevent>
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+        <form asp-controller="About" asp-action="ApplyJob" method="post" class="modal-content border-0 shadow-xl rounded-4 overflow-hidden">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="jobId" id="modalJobId" value="1" />
+            <div class="modal-header bg-navy-dark text-white p-3 px-4" style="background-color: var(--navy-dark); border-bottom: 2px solid var(--primary-orange);">
+                <div>
+                    <h5 class="modal-title fw-bold text-white mb-1" id="modalJobTitle">Apply for Position</h5>
+                    <p class="small text-white-50 mb-0">NGEOS Talent Acquisition</p>
+                </div>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-3 px-4">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Full Name</label>
+                        <input type="text" name="fullName" class="form-control" placeholder="Your full name" required value="@User.Identity?.Name" data-rule="letters-only" />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold">Email Address</label>
+                        <input type="email" name="email" class="form-control" placeholder="yourname@domain.com" required />
+                    </div>
+                    <div class="col-md-12">
+                        <label class="form-label fw-semibold">Phone Number</label>
+                        <input type="tel" name="phone" class="form-control" placeholder="+92 300 1234567" required data-rule="numbers-only" />
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label fw-semibold">Cover Letter / Relevant Experience</label>
+                        <textarea name="message" rows="4" class="form-control" placeholder="Briefly describe your background, skills and motivation to work with NGEOS..." required></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer bg-white p-3 px-4 border-top d-flex justify-content-end gap-2">
+                <button type="button" class="btn btn-outline-secondary px-4 py-2 rounded-pill fw-semibold" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-orange px-4 py-2 rounded-pill fw-bold shadow-sm">Submit Application</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.querySelectorAll('.btn-apply-job').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const id = this.getAttribute('data-job-id');
+                const title = this.getAttribute('data-job-title');
+                document.getElementById('modalJobId').value = id;
+                document.getElementById('modalJobTitle').textContent = 'Apply for ' + title;
+            });
+        });
+    </script>
+}

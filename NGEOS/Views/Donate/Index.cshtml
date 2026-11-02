@@ -1,0 +1,242 @@
+@model NGEOS.ViewModels.DonateRequestViewModel
+@{
+    ViewData["Title"] = "Make A Donation - NGEOS";
+}
+
+<div class="py-5 text-white position-relative" style="background: linear-gradient(135deg, rgba(11, 25, 44, 0.9), rgba(15, 23, 42, 0.82)), url('https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?w=1600') center/cover no-repeat;" data-aos="fade-down">
+    <div class="container text-center py-3">
+        <span class="hero-tag mb-2" data-aos="fade-up"><i class="bi bi-heart-fill text-warning"></i> Secure Donation Portal</span>
+        <h1 class="display-5 fw-bold text-white mb-2" data-aos="fade-up" data-aos-delay="100">Give Hope. Transform A Life.</h1>
+        <p class="text-white-50 mx-auto" style="max-width: 600px;" data-aos="fade-up" data-aos-delay="150">
+            Your simulated donation helps us demonstrate how funds are tracked, verified, and allocated directly to critical humanitarian projects.
+        </p>
+    </div>
+</div>
+
+<div class="container section-padding">
+    <div class="row justify-content-center">
+        <div class="col-lg-9 col-xl-8" data-aos="zoom-in-up">
+            <div class="form-card shadow-lg">
+                <form asp-controller="Donate" asp-action="ProcessDonation" method="post" id="donationForm">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger small mb-4"></div>
+
+                    <!-- Step 1: Select Cause & Amount -->
+                    <div class="mb-5">
+                        <h5 class="fw-bold text-dark border-bottom pb-2 mb-4 d-flex align-items-center gap-2">
+                            <span class="badge bg-warning text-dark rounded-circle" style="width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center;">1</span>
+                            Select Your Cause & Contribution Amount
+                        </h5>
+
+                        <!-- Contribution Type (General vs Zakat) -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold d-block">Contribution Type</label>
+                            <div class="row g-3">
+                                <div class="col-sm-6">
+                                    <div class="donation-type-card @(Model.DonationType != "Zakat" ? "active" : "")" id="cardTypeGeneral" onclick="selectDonationType('General')">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div class="donation-type-icon icon-general">
+                                                <i class="bi bi-heart-fill"></i>
+                                            </div>
+                                            <div>
+                                                <strong class="d-block text-dark">General Sadaqah / Gift</strong>
+                                                <small class="text-muted">Ongoing welfare, relief & education</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="donation-type-card @(Model.DonationType == "Zakat" ? "active" : "")" id="cardTypeZakat" onclick="selectDonationType('Zakat')">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div class="donation-type-icon icon-zakat">
+                                                <i class="bi bi-moon-stars-fill"></i>
+                                            </div>
+                                            <div>
+                                                <strong class="d-block text-dark">Zakat Contribution</strong>
+                                                <small class="text-muted">100% Shariah-audited distribution</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" asp-for="DonationType" id="donationTypeInput" value="@(string.IsNullOrEmpty(Model.DonationType) ? "General" : Model.DonationType)" />
+                            
+                            <div id="zakatPolicyBadge" class="mt-2 p-2 px-3 bg-success-subtle text-success rounded-3 small border border-success-subtle @(Model.DonationType == "Zakat" ? "" : "d-none")">
+                                <i class="bi bi-patch-check-fill me-1"></i> <strong>100% Zakat Policy:</strong> This gift will be deposited into the verified Zakat sub-ledger and disbursed strictly to eligible beneficiaries (Mustahiqeen).
+                            </div>
+                            <div class="mt-2 text-end">
+                                <a asp-controller="Zakat" asp-action="Index" class="small text-decoration-none fw-semibold" style="color: #c2410c;">
+                                    <i class="bi bi-calculator me-1"></i> Calculate your exact Zakat in seconds: <u>Smart Zakat Calculator &rarr;</u>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="CauseId" class="form-label fw-bold"></label>
+                            <select asp-for="CauseId" class="form-select form-select-lg" required>
+                                @if (Model.AvailableCauses != null)
+                                {
+                                    @foreach (var c in Model.AvailableCauses)
+                                    {
+                                        <option value="@c.Id" selected="@(c.Id == Model.CauseId)">
+                                            [@c.Category] @c.Title (Goal: $@c.TargetAmount.ToString("N0"))
+                                        </option>
+                                    }
+                                }
+                            </select>
+                            <span asp-validation-for="CauseId" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Preset Amount Buttons -->
+                        <label class="form-label fw-bold">Select Donation Amount</label>
+                        <div class="d-flex flex-wrap gap-2 mb-3">
+                            <button type="button" class="btn btn-preset-amount @(Model.Amount == 25 ? "btn-orange active" : "btn-outline-navy") flex-grow-1" data-amount="25">$25</button>
+                            <button type="button" class="btn btn-preset-amount @(Model.Amount == 50 ? "btn-orange active" : "btn-outline-navy") flex-grow-1" data-amount="50">$50</button>
+                            <button type="button" class="btn btn-preset-amount @(Model.Amount == 100 ? "btn-orange active" : "btn-outline-navy") flex-grow-1" data-amount="100">$100</button>
+                            <button type="button" class="btn btn-preset-amount @(Model.Amount == 250 ? "btn-orange active" : "btn-outline-navy") flex-grow-1" data-amount="250">$250</button>
+                            <button type="button" class="btn btn-preset-amount @(Model.Amount == 500 ? "btn-orange active" : "btn-outline-navy") flex-grow-1" data-amount="500">$500</button>
+                        </div>
+
+                        <div class="input-group input-group-lg">
+                            <span class="input-group-text fw-bold text-dark">$</span>
+                            <input asp-for="Amount" type="number" step="1" min="1" max="1000000" class="form-control" id="donationAmountInput" placeholder="Custom Amount" required />
+                            <span class="input-group-text small text-muted">USD</span>
+                        </div>
+                        <span asp-validation-for="Amount" class="text-danger small"></span>
+                    </div>
+
+                    <!-- Step 2: Donor Contact Info -->
+                    <div class="mb-5">
+                        <h5 class="fw-bold text-dark border-bottom pb-2 mb-4 d-flex align-items-center gap-2">
+                            <span class="badge bg-warning text-dark rounded-circle" style="width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center;">2</span>
+                            Donor Information (for Official Receipt)
+                        </h5>
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label asp-for="DonorName" class="form-label"></label>
+                                <input asp-for="DonorName" class="form-control" placeholder="Your full name" required data-rule="letters-only" />
+                                <span asp-validation-for="DonorName" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="DonorEmail" class="form-label"></label>
+                                <input asp-for="DonorEmail" type="email" class="form-control" placeholder="yourname@domain.com" required />
+                                <span asp-validation-for="DonorEmail" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label asp-for="DonorPhone" class="form-label"></label>
+                                <div class="intl-phone-wrapper">
+                                    <div class="input-group">
+                                        <button class="btn btn-outline-secondary dropdown-toggle country-picker-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <span class="country-flag-icon">🇵🇰</span>
+                                            <span class="country-dial-code">+92</span>
+                                        </button>
+                                        <ul class="dropdown-menu country-dropdown-menu shadow">
+                                            <li class="country-search-box">
+                                                <input type="text" class="form-control form-control-sm country-search-input" placeholder="Search country or code..." />
+                                            </li>
+                                            <div class="country-items-list"></div>
+                                        </ul>
+                                        <input type="tel" class="form-control country-phone-input" placeholder="300 1234567" maxlength="10" data-rule="numbers-only" />
+                                        <input type="hidden" asp-for="DonorPhone" class="phone-actual-input" />
+                                    </div>
+                                    <div class="phone-meta-row">
+                                        <span class="phone-helper-text">Max 10 digits for Pakistan (+92)</span>
+                                        <span class="phone-digit-counter">0/10</span>
+                                    </div>
+                                </div>
+                                <span asp-validation-for="DonorPhone" class="text-danger small"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Dummy Payment Card Details -->
+                    <div class="mb-4">
+                        <h5 class="fw-bold text-dark border-bottom pb-2 mb-4 d-flex align-items-center gap-2">
+                            <span class="badge bg-warning text-dark rounded-circle" style="width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center;">3</span>
+                            Dummy Payment Details (Credit / Debit Card)
+                        </h5>
+
+                        <div class="alert alert-light border small text-muted mb-4 d-flex align-items-center gap-2">
+                            <i class="bi bi-info-circle-fill text-warning fs-5"></i>
+                            <div>
+                                <strong>Demonstration Notice:</strong> This is an educational dummy payment system. Do not use real bank card details. (You can enter dummy digits e.g. <code>4111 1111 1111 1111</code>, MM/YY, 123).
+                            </div>
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label asp-for="CardType" class="form-label"></label>
+                                <select asp-for="CardType" class="form-select" required>
+                                    <option value="Credit Card">Credit Card (Visa / MasterCard / Amex)</option>
+                                    <option value="Debit Card">Debit Card</option>
+                                </select>
+                                <span asp-validation-for="CardType" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="CardHolderName" class="form-label"></label>
+                                <input asp-for="CardHolderName" class="form-control" placeholder="Cardholder Name as on Card" required data-rule="letters-only" />
+                                <span asp-validation-for="CardHolderName" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="CardNumber" class="form-label"></label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-credit-card-2-front"></i></span>
+                                    <input asp-for="CardNumber" id="cardNumberInput" class="form-control" placeholder="4111 2222 3333 4444" maxlength="19" required />
+                                </div>
+                                <span asp-validation-for="CardNumber" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label asp-for="ExpiryDate" class="form-label"></label>
+                                <input asp-for="ExpiryDate" id="cardExpiryInput" class="form-control" placeholder="MM/YY" maxlength="5" required />
+                                <span asp-validation-for="ExpiryDate" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label asp-for="CVV" class="form-label"></label>
+                                <input asp-for="CVV" id="cardCvvInput" type="password" class="form-control" placeholder="123" maxlength="4" required />
+                                <span asp-validation-for="CVV" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-12">
+                                <label asp-for="Notes" class="form-label"></label>
+                                <textarea asp-for="Notes" rows="2" class="form-control" placeholder="Write a short message of hope or dedicate this donation (optional)..."></textarea>
+                                <span asp-validation-for="Notes" class="text-danger small"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-orange btn-lg w-100 py-3 shadow-lg fw-bold" style="font-size: 1.15rem;">
+                        <i class="bi bi-lock-fill me-1"></i> Process Secure Dummy Donation
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function selectDonationType(type) {
+            document.getElementById('donationTypeInput').value = type;
+            const cardGen = document.getElementById('cardTypeGeneral');
+            const cardZak = document.getElementById('cardTypeZakat');
+            const zakBadge = document.getElementById('zakatPolicyBadge');
+
+            if (type === 'Zakat') {
+                cardZak.classList.add('active');
+                cardGen.classList.remove('active');
+                zakBadge.classList.remove('d-none');
+            } else {
+                cardGen.classList.add('active');
+                cardZak.classList.remove('active');
+                zakBadge.classList.add('d-none');
+            }
+        }
+    </script>
+}

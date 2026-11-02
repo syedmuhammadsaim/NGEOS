@@ -1,0 +1,75 @@
+@model List<NGEOS.Models.Programme>
+@{
+    ViewData["Title"] = "Our Programmes - Education, Healthcare & Child Welfare";
+    var categories = ViewBag.Categories as List<string> ?? new List<string>();
+    var selectedCategory = ViewBag.SelectedCategory as string ?? "All";
+    var pIdx = 0;
+}
+
+<div class="py-5 text-white position-relative" style="background: linear-gradient(135deg, rgba(11, 25, 44, 0.9), rgba(15, 23, 42, 0.82)), url('https://images.unsplash.com/photo-1593113598332-cd288d649433?w=1600') center/cover no-repeat;" data-aos="fade-down">
+    <div class="container text-center py-4">
+        <span class="hero-tag mb-2" data-aos="fade-up"><i class="bi bi-calendar2-check-fill text-warning"></i> On-Ground Initiatives</span>
+        <h1 class="display-4 fw-bold text-white mb-2" data-aos="fade-up" data-aos-delay="100">Our Welfare Programmes</h1>
+        <p class="text-white-50 mx-auto" style="max-width: 650px;" data-aos="fade-up" data-aos-delay="150">
+            Explore welfare and development programmes conducted by NGEOS and partner NGOs for Education, Healthcare, Privileged children (Specially challenged), and Women Empowerment.
+        </p>
+    </div>
+</div>
+
+<div class="container section-padding">
+    <!-- Category Filter Tabs -->
+    <div class="d-flex flex-wrap gap-2 justify-content-center mb-5" data-aos="fade-up" data-aos-delay="100">
+        @foreach (var cat in categories)
+        {
+            <a asp-action="Index" asp-route-category="@cat" 
+               class="btn @(selectedCategory.ToLower() == cat.ToLower() ? "btn-orange" : "btn-outline-navy") rounded-pill px-4 btn-sm">
+                @cat
+            </a>
+        }
+    </div>
+
+    @if (Model.Any())
+    {
+        <div class="row g-4">
+            @foreach (var prog in Model)
+            {
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="@((pIdx++ % 3) * 120)">
+                    <div class="giveaid-card">
+                        <div class="card-img-wrapper">
+                            <img src="@prog.ImageUrl" alt="@prog.Title">
+                            <span class="card-category-badge">@prog.Category</span>
+                        </div>
+                        <div class="card-body-content">
+                            <div class="d-flex align-items-center gap-2 text-muted small mb-2">
+                                <span><i class="bi bi-calendar-event text-warning me-1"></i> @prog.StartDate.ToString("MMM dd, yyyy")</span>
+                                <span>•</span>
+                                <span><i class="bi bi-geo-alt text-danger me-1"></i> @prog.Location</span>
+                            </div>
+
+                            <h5 class="card-title fw-bold mb-2">
+                                <a asp-action="Details" asp-route-id="@prog.Id" class="text-dark">@prog.Title</a>
+                            </h5>
+                            <p class="text-muted small mb-3 flex-grow-1">@prog.ShortDescription</p>
+                            
+                            <div class="d-flex align-items-center justify-content-between pt-3 border-top">
+                                <span class="small text-muted"><i class="bi bi-people me-1"></i> @prog.TargetBeneficiaries Beneficiaries</span>
+                                <a asp-action="Details" asp-route-id="@prog.Id" class="btn btn-orange btn-sm">
+                                    <i class="bi bi-hand-index-thumb me-1"></i> Show Interest
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="text-center p-5 bg-white rounded-4 shadow-sm">
+            <i class="bi bi-calendar-x fs-1 text-muted mb-3 d-block"></i>
+            <h5 class="fw-bold">No Programmes in this Category</h5>
+            <p class="text-muted small">Try selecting another category or check back soon.</p>
+            <a asp-action="Index" class="btn btn-orange btn-sm mt-2">View All Programmes</a>
+        </div>
+    }
+</div>

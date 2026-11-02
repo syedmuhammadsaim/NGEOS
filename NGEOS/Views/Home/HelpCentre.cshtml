@@ -1,0 +1,123 @@
+@model List<NGEOS.Models.FAQ>
+@{
+    ViewData["Title"] = "Help Centre & Frequently Asked Questions";
+    var categories = ViewBag.Categories as List<string> ?? new List<string>();
+    var selectedCategory = ViewBag.SelectedCategory as string ?? "All";
+    var searchTerm = ViewBag.SearchTerm as string ?? "";
+}
+
+<!-- Hero Section -->
+<div class="giveaid-hero py-5" style="min-height: 340px; padding-bottom: 60px !important; background: linear-gradient(135deg, rgba(11, 25, 44, 0.9), rgba(15, 23, 42, 0.82)), url('https://images.unsplash.com/photo-1450133064473-71024230f91b?w=1600') center/cover no-repeat !important;" data-aos="fade-down">
+    <div class="container text-center position-relative z-1">
+        <span class="hero-tag mb-3" data-aos="fade-up"><i class="bi bi-question-diamond-fill"></i> Knowledge Base</span>
+        <h1 class="display-5 fw-bold text-white mb-3" style="font-family: var(--font-heading);" data-aos="fade-up" data-aos-delay="100">NGEOS Help Centre & FAQs</h1>
+        <p class="text-white-50 mx-auto mb-4" style="max-width: 650px; font-size: 1.1rem;" data-aos="fade-up" data-aos-delay="150">
+            Find instant answers to questions regarding online donations, NGO accreditation, volunteering, and tax receipts.
+        </p>
+
+        <!-- Search Bar -->
+        <form method="get" asp-action="HelpCentre" class="mx-auto" style="max-width: 580px;" data-aos="zoom-in" data-aos-delay="200">
+            <div class="input-group input-group-lg shadow-lg rounded-pill overflow-hidden border-0">
+                <span class="input-group-text bg-white border-0 ps-4"><i class="bi bi-search text-muted"></i></span>
+                <input type="text" name="search" class="form-control border-0 shadow-none ps-2" placeholder="Search questions or keywords..." value="@searchTerm">
+                <button class="btn btn-orange px-4 fw-bold" type="submit">Search</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Main Content -->
+<div class="container section-padding pt-5">
+    <div class="row g-4">
+        
+        <!-- Left Sidebar (Equal Height Fixed) -->
+        <div class="col-lg-4" data-aos="fade-right">
+            <div class="d-flex flex-column h-100">
+                
+                <!-- Categories Card -->
+                <div class="giveaid-card p-4 mb-4">
+                    <h5 class="fw-bold mb-3" style="font-family: var(--font-heading); color: var(--navy-dark);">
+                        <i class="bi bi-funnel text-orange me-2"></i> FAQ Categories
+                    </h5>
+                    <div class="list-group list-group-flush border-0">
+                        <a asp-action="HelpCentre" asp-route-category="All" class="list-group-item list-group-item-action border-0 rounded-3 mb-1 px-3 d-flex justify-content-between align-items-center @(selectedCategory == "All" ? "bg-orange-light fw-bold text-orange" : "text-secondary")">
+                            All Questions
+                            <i class="bi bi-chevron-right small"></i>
+                        </a>
+                        @foreach (var cat in categories)
+                        {
+                            <a asp-action="HelpCentre" asp-route-category="@cat" class="list-group-item list-group-item-action border-0 rounded-3 mb-1 px-3 d-flex justify-content-between align-items-center @(selectedCategory == cat ? "bg-orange-light fw-bold text-orange" : "text-secondary")">
+                                @cat
+                                <i class="bi bi-chevron-right small"></i>
+                            </a>
+                        }
+                    </div>
+                </div>
+
+                <!-- Still Need Help Box (Pushed to Bottom) -->
+                <div class="giveaid-card p-4 text-center border-start border-4 border-warning mt-auto">
+                    <div class="action-card-icon icon-volunteer mx-auto mb-3">
+                        <i class="bi bi-chat-square-text-fill"></i>
+                    </div>
+                    <h5 class="fw-bold mb-2" style="font-family: var(--font-heading);">Can't Find Your Answer?</h5>
+                    <p class="text-muted small mb-4">
+                        Submit a query directly to our support team and receive a prompt response in your user portal.
+                    </p>
+                    <a asp-action="RaiseQuery" class="btn btn-orange w-100 py-2">
+                        <i class="bi bi-send-fill me-1"></i> Raise A Query
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side FAQ Accordion -->
+        <div class="col-lg-8" data-aos="fade-left">
+            <div class="form-card h-100 d-flex flex-column" style="padding: 32px;">
+                <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
+                    <h4 class="fw-bold mb-0" style="font-family: var(--font-heading); color: var(--navy-dark);">Frequently Asked Questions (@Model.Count)</h4>
+                    @if (selectedCategory != "All" || !string.IsNullOrEmpty(searchTerm))
+                    {
+                        <a asp-action="HelpCentre" class="btn btn-outline-navy btn-sm rounded-pill px-3">
+                            <i class="bi bi-arrow-counterclockwise me-1"></i> Reset Filters
+                        </a>
+                    }
+                </div>
+
+                @if (Model.Any())
+                {
+                    <div class="accordion accordion-flush" id="faqAccordion">
+                        @for (int i = 0; i < Model.Count; i++)
+                        {
+                            var item = Model[i];
+                            <div class="accordion-item border-0 border-bottom mb-2">
+                                <h2 class="accordion-header" id="heading_@i">
+                                    <button class="accordion-button @(i == 0 ? "" : "collapsed") fw-bold py-3 px-0 shadow-none bg-transparent" type="button" data-bs-toggle="collapse" data-bs-target="#collapse_@i" aria-expanded="@(i == 0 ? "true" : "false")" aria-controls="collapse_@i">
+                                        <span class="badge bg-light text-navy border me-3 small px-2 py-1">@item.Category</span>
+                                        <span class="text-navy" style="font-size: 1.05rem;">@item.Question</span>
+                                    </button>
+                                </h2>
+                                <div id="collapse_@i" class="accordion-collapse collapse @(i == 0 ? "show" : "")" aria-labelledby="heading_@i" data-bs-parent="#faqAccordion">
+                                    <div class="accordion-body text-secondary lh-lg py-3 px-0">
+                                        @item.Answer
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center p-5 my-auto">
+                        <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                            <i class="bi bi-search fs-2 text-muted"></i>
+                        </div>
+                        <h5 class="fw-bold" style="font-family: var(--font-heading);">No FAQs found</h5>
+                        <p class="text-muted small">No questions matched your search query. Feel free to raise a custom query.</p>
+                        <a asp-action="RaiseQuery" class="btn btn-orange btn-sm mt-2 px-4 rounded-pill">Raise A Query Now</a>
+                    </div>
+                }
+            </div>
+        </div>
+
+    </div>
+</div>

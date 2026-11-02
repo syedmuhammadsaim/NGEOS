@@ -1,0 +1,116 @@
+@model NGEOS.Models.NGO
+@{
+    ViewData["Title"] = Model.Name + " - Partner NGO Profile";
+}
+
+<div class="py-5 text-white position-relative" style="background: linear-gradient(135deg, rgba(11, 25, 44, 0.92), rgba(15, 23, 42, 0.85)), url('https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?w=1600') center/cover no-repeat;" data-aos="fade-down">
+    <div class="container py-3">
+        <div class="d-flex align-items-center gap-3">
+            <img src="@Model.LogoUrl" alt="@Model.Name" class="rounded-3 shadow-lg" style="width: 70px; height: 70px; object-fit: cover; background: #fff; padding: 4px;">
+            <div>
+                <h1 class="display-6 fw-bold text-white mb-0">@Model.Name</h1>
+                <span class="badge bg-warning text-dark mt-1"><i class="bi bi-patch-check-fill me-1"></i> Verified Non-Profit Partner</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container section-padding">
+    <div class="row g-5">
+        <!-- Main Content -->
+        <div class="col-lg-8">
+            <div class="giveaid-card p-4 p-md-5 mb-5">
+                <h3 class="fw-bold mb-3">About @Model.Name</h3>
+                <p class="lead text-secondary mb-4">@Model.ShortDescription</p>
+                <div class="text-secondary lh-lg mb-4" style="font-size: 1.05rem;">
+                    <p>@Model.FullDescription</p>
+                </div>
+            </div>
+
+            <!-- Active Causes by this NGO -->
+            @if (Model.Causes.Any())
+            {
+                <h4 class="fw-bold mb-4"><i class="bi bi-heart-pulse-fill text-warning me-2"></i> Active Causes Managed by @Model.Name</h4>
+                <div class="row g-4 mb-5">
+                    @foreach (var cause in Model.Causes)
+                    {
+                        <div class="col-md-6">
+                            <div class="giveaid-card">
+                                <div class="card-img-wrapper" style="height: 180px;">
+                                    <img src="@cause.ImageUrl" alt="@cause.Title">
+                                    <span class="card-category-badge">@cause.Category</span>
+                                </div>
+                                <div class="card-body-content">
+                                    <h6 class="fw-bold mb-2">@cause.Title</h6>
+                                    <div class="progress-meta">
+                                        <span class="text-muted small">Raised: <strong>$@cause.RaisedAmount.ToString("N0")</strong></span>
+                                        <span class="text-muted small">Goal: $@cause.TargetAmount.ToString("N0")</span>
+                                    </div>
+                                    <div class="custom-progress mb-3">
+                                        <div class="progress-bar-orange" style="width: @(cause.PercentageRaised)%"></div>
+                                    </div>
+                                    <a asp-controller="Donate" asp-action="Index" asp-route-causeId="@cause.Id" class="btn btn-orange btn-sm w-100">
+                                        <i class="bi bi-heart-fill"></i> Donate Now
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+
+            <!-- Programmes Conducted by this NGO -->
+            @if (Model.Programmes.Any())
+            {
+                <h4 class="fw-bold mb-4"><i class="bi bi-calendar2-check-fill text-primary me-2"></i> Upcoming Programmes by @Model.Name</h4>
+                <div class="row g-4">
+                    @foreach (var prog in Model.Programmes)
+                    {
+                        <div class="col-md-6">
+                            <div class="giveaid-card">
+                                <div class="card-img-wrapper" style="height: 180px;">
+                                    <img src="@prog.ImageUrl" alt="@prog.Title">
+                                    <span class="card-category-badge">@prog.Category</span>
+                                </div>
+                                <div class="card-body-content">
+                                    <h6 class="fw-bold mb-1">@prog.Title</h6>
+                                    <p class="text-muted small mb-3"><i class="bi bi-geo-alt text-danger me-1"></i> @prog.Location</p>
+                                    <a asp-controller="Programmes" asp-action="Details" asp-route-id="@prog.Id" class="btn btn-outline-navy btn-sm w-100">
+                                        View Programme & Volunteer
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+
+        <!-- Sidebar Contact & Verification Info -->
+        <div class="col-lg-4">
+            <div class="giveaid-card p-4 position-sticky" style="top: 90px;">
+                <h5 class="fw-bold mb-3">Accreditation Details</h5>
+                <ul class="list-unstyled text-muted small mb-4">
+                    <li class="mb-2"><strong class="text-dark">Registration No:</strong> @Model.RegistrationNumber</li>
+                    <li class="mb-2"><strong class="text-dark">Primary Focus:</strong> @Model.FocusArea</li>
+                    <li class="mb-2"><strong class="text-dark">Established:</strong> @Model.EstablishedYear</li>
+                    <li class="mb-2"><strong class="text-dark">Official Email:</strong> <a href="mailto:@Model.Email">@Model.Email</a></li>
+                    <li class="mb-2"><strong class="text-dark">Phone:</strong> @Model.Phone</li>
+                    <li class="mb-2"><strong class="text-dark">Headquarters:</strong> @Model.Address</li>
+                    @if (!string.IsNullOrEmpty(Model.Website))
+                    {
+                        <li class="mt-3">
+                            <a href="@Model.Website" target="_blank" class="btn btn-outline-navy btn-sm w-100">
+                                Visit Official Website <i class="bi bi-box-arrow-up-right ms-1"></i>
+                            </a>
+                        </li>
+                    }
+                </ul>
+
+                <a asp-controller="Home" asp-action="Contact" class="btn btn-orange btn-sm w-100">
+                    <i class="bi bi-envelope-fill me-1"></i> Contact via NGEOS
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

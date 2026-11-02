@@ -1,0 +1,52 @@
+@model List<NGEOS.Models.AboutPage>
+@{
+    ViewData["Title"] = "About Us CMS Sub-Pages - Admin";
+    Layout = "_AdminLayout";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h3 class="fw-bold mb-1">About Us Sub-Pages Management (CMS)</h3>
+        <p class="text-muted small mb-0">Dynamic editor for the 7 official About Us sub-pages.</p>
+    </div>
+</div>
+
+<div class="giveaid-card p-4">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Page Title</th>
+                    <th>Slug URL</th>
+                    <th>Subtitle</th>
+                    <th>Last Updated</th>
+                    <th>Live Preview</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            <strong class="d-block text-dark">@item.Title</strong>
+                        </td>
+                        <td><code>/About/@item.Slug</code></td>
+                        <td class="small text-muted" style="max-width: 260px;">@item.Subtitle</td>
+                        <td class="small text-muted">@item.LastUpdated.ToString("MMM dd, yyyy - hh:mm tt")</td>
+                        <td>
+                            <a asp-controller="About" asp-action="@(item.Slug.Replace("-", ""))" target="_blank" class="btn btn-sm btn-outline-secondary">
+                                <i class="bi bi-box-arrow-up-right me-1"></i> Preview
+                            </a>
+                        </td>
+                        <td>
+                            <a asp-action="EditAboutPage" asp-route-id="@item.Id" class="btn btn-sm btn-orange">
+                                <i class="bi bi-pencil-square me-1"></i> Edit Content
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

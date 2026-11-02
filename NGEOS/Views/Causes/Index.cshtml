@@ -1,0 +1,94 @@
+@model List<NGEOS.Models.Cause>
+@{
+    ViewData["Title"] = "Charity Causes That Need Your Support";
+    var categories = ViewBag.Categories as List<string> ?? new List<string>();
+    var selectedCategory = ViewBag.SelectedCategory as string ?? "All";
+    var searchTerm = ViewBag.SearchTerm as string ?? "";
+    var cIdx = 0;
+}
+
+<div class="py-5 text-white position-relative" style="background: linear-gradient(135deg, rgba(11, 25, 44, 0.9), rgba(15, 23, 42, 0.82)), url('https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=1600') center/cover no-repeat;" data-aos="fade-down">
+    <div class="container text-center py-4">
+        <span class="hero-tag mb-2" data-aos="fade-up"><i class="bi bi-heart-fill text-warning"></i> Humanitarian Causes</span>
+        <h1 class="display-4 fw-bold text-white mb-2" data-aos="fade-up" data-aos-delay="100">Explore Causes That Need Your Help</h1>
+        <p class="text-white-50 mx-auto mb-4" style="max-width: 650px;" data-aos="fade-up" data-aos-delay="150">
+            Choose from vetted welfare campaigns spanning child health, schooling, disabled youth prosthetics, and elderly shelter. 100% of your gift changes lives.
+        </p>
+
+        <!-- Search Bar -->
+        <form method="get" asp-action="Index" class="mx-auto" style="max-width: 540px;" data-aos="zoom-in" data-aos-delay="200">
+            <input type="hidden" name="category" value="@selectedCategory" />
+            <div class="input-group input-group-lg shadow-lg">
+                <input type="text" name="search" class="form-control border-0" placeholder="Search by cause name or keywords..." value="@searchTerm">
+                <button class="btn btn-orange px-4" type="submit"><i class="bi bi-search"></i> Search</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="container section-padding">
+    <!-- Category Filter Tabs -->
+    <div class="d-flex flex-wrap gap-2 justify-content-center mb-5" data-aos="fade-up" data-aos-delay="100">
+        @foreach (var cat in categories)
+        {
+            <a asp-action="Index" asp-route-category="@cat" asp-route-search="@searchTerm" 
+               class="btn @(selectedCategory.ToLower() == cat.ToLower() ? "btn-orange" : "btn-outline-navy") rounded-pill px-4 btn-sm">
+                @cat
+            </a>
+        }
+    </div>
+
+    @if (Model.Any())
+    {
+        <div class="row g-4">
+            @foreach (var cause in Model)
+            {
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="@((cIdx++ % 3) * 120)">
+                    <div class="giveaid-card">
+                        <div class="card-img-wrapper">
+                            <img src="@cause.ImageUrl" alt="@cause.Title">
+                            <span class="card-category-badge">@cause.Category</span>
+                        </div>
+                        <div class="card-body-content">
+                            <h5 class="card-title fw-bold mb-2">
+                                <a asp-action="Details" asp-route-id="@cause.Id" class="text-dark">@cause.Title</a>
+                            </h5>
+                            <p class="text-muted small mb-3 flex-grow-1">@cause.ShortDescription</p>
+                            
+                            <!-- Progress Meta -->
+                            <div class="progress-meta">
+                                <span class="text-muted small">Raised: <strong class="text-dark">$@cause.RaisedAmount.ToString("N0")</strong></span>
+                                <span class="text-muted small">Goal: <strong class="text-dark">$@cause.TargetAmount.ToString("N0")</strong></span>
+                            </div>
+                            <div class="custom-progress">
+                                <div class="progress-bar-orange" style="width: @(cause.PercentageRaised)%"></div>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <span class="badge bg-light text-dark border px-2 py-1"><i class="bi bi-pie-chart-fill text-warning me-1"></i> @cause.PercentageRaised% Funded</span>
+                                <span class="small text-muted"><i class="bi bi-building me-1"></i> @(cause.Ngo?.Name ?? "NGEOS Alliance")</span>
+                            </div>
+
+                            <div class="d-flex gap-2">
+                                <a asp-controller="Donate" asp-action="Index" asp-route-causeId="@cause.Id" class="btn btn-orange btn-sm flex-grow-1">
+                                    <i class="bi bi-heart-fill"></i> Donate Now
+                                </a>
+                                <a asp-action="Details" asp-route-id="@cause.Id" class="btn btn-outline-navy btn-sm" title="View Details">
+                                    <i class="bi bi-eye"></i> Details
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="text-center p-5 bg-white rounded-4 shadow-sm">
+            <i class="bi bi-search fs-1 text-muted mb-3 d-block"></i>
+            <h5 class="fw-bold">No Causes Found</h5>
+            <p class="text-muted small">We couldn't find any causes matching your category or search term.</p>
+            <a asp-action="Index" class="btn btn-orange btn-sm mt-2">View All Causes</a>
+        </div>
+    }
+</div>

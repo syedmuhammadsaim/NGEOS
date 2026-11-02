@@ -1,0 +1,109 @@
+@model NGEOS.Models.Programme
+@{
+    ViewData["Title"] = "Edit Programme - Admin";
+    Layout = "_AdminLayout";
+    var ngos = ViewBag.Ngos as List<NGEOS.Models.NGO> ?? new List<NGEOS.Models.NGO>();
+    var categories = ViewBag.Categories as List<string> ?? new List<string>();
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h3 class="fw-bold mb-1">Edit Programme</h3>
+        <p class="text-muted small mb-0">Update information for '@Model.Title'.</p>
+    </div>
+    <a asp-action="Programmes" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left me-1"></i> Back to Programmes</a>
+</div>
+
+<div class="giveaid-card p-4 p-md-5">
+    <form asp-action="EditProgramme" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="CreatedAt" />
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger small mb-3"></div>
+
+        <div class="row g-3">
+            <div class="col-md-8">
+                <label asp-for="Title" class="form-label"></label>
+                <input asp-for="Title" class="form-control" required />
+                <span asp-validation-for="Title" class="text-danger small"></span>
+            </div>
+
+            <div class="col-md-4">
+                <label asp-for="Category" class="form-label"></label>
+                <select asp-for="Category" class="form-select" required>
+                    @foreach (var cat in categories)
+                    {
+                        <option value="@cat" selected="@(cat == Model.Category)">@cat</option>
+                    }
+                </select>
+                <span asp-validation-for="Category" class="text-danger small"></span>
+            </div>
+
+            <div class="col-md-4">
+                <label asp-for="StartDate" class="form-label"></label>
+                <input asp-for="StartDate" type="date" class="form-control" value="@Model.StartDate.ToString("yyyy-MM-dd")" required />
+                <span asp-validation-for="StartDate" class="text-danger small"></span>
+            </div>
+
+            <div class="col-md-4">
+                <label asp-for="EndDate" class="form-label"></label>
+                <input asp-for="EndDate" type="date" class="form-control" value="@(Model.EndDate?.ToString("yyyy-MM-dd") ?? "")" />
+                <span asp-validation-for="EndDate" class="text-danger small"></span>
+            </div>
+
+            <div class="col-md-4">
+                <label asp-for="TargetBeneficiaries" class="form-label"></label>
+                <input asp-for="TargetBeneficiaries" type="number" class="form-control" required />
+                <span asp-validation-for="TargetBeneficiaries" class="text-danger small"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="Location" class="form-label"></label>
+                <input asp-for="Location" class="form-control" required />
+                <span asp-validation-for="Location" class="text-danger small"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="NgoId" class="form-label"></label>
+                <select asp-for="NgoId" class="form-select">
+                    <option value="">-- NGEOS Central Team --</option>
+                    @foreach (var ngo in ngos)
+                    {
+                        <option value="@ngo.Id" selected="@(ngo.Id == Model.NgoId)">@ngo.Name</option>
+                    }
+                </select>
+            </div>
+
+            <div class="col-12">
+                <label asp-for="ImageUrl" class="form-label"></label>
+                <input asp-for="ImageUrl" class="form-control" required />
+                <span asp-validation-for="ImageUrl" class="text-danger small"></span>
+            </div>
+
+            <div class="col-12">
+                <label asp-for="ShortDescription" class="form-label"></label>
+                <textarea asp-for="ShortDescription" rows="2" class="form-control" required></textarea>
+                <span asp-validation-for="ShortDescription" class="text-danger small"></span>
+            </div>
+
+            <div class="col-12">
+                <label asp-for="FullDescription" class="form-label"></label>
+                <textarea asp-for="FullDescription" rows="5" class="form-control" required></textarea>
+                <span asp-validation-for="FullDescription" class="text-danger small"></span>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-check mt-2">
+                    <input asp-for="IsActive" class="form-check-input" type="checkbox" />
+                    <label asp-for="IsActive" class="form-check-label fw-semibold">Active Programme</label>
+                </div>
+            </div>
+
+            <div class="col-12 mt-4 pt-3 border-top">
+                <button type="submit" class="btn btn-orange btn-lg px-5 shadow">
+                    <i class="bi bi-check-lg me-1"></i> Update Programme
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

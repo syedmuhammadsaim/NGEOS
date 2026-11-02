@@ -1,0 +1,145 @@
+@model NGEOS.ViewModels.LoginViewModel
+@{
+    ViewData["Title"] = "Login to NGEOS";
+}
+
+<div class="container section-padding">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6 col-xl-5" data-aos="zoom-in" data-aos-duration="600">
+            <div class="form-card shadow-lg">
+                <div class="text-center mb-4">
+                    <a asp-controller="Home" asp-action="Index" class="d-inline-block mb-3 text-decoration-none" title="Return to NGEOS Home">
+                        <img src="~/images/ngeos-logo.svg" alt="NGEOS Official Logo" class="brand-logo mx-auto shadow-sm" style="width: 52px; height: 52px;" asp-append-version="true" />
+                    </a>
+                    <h3 class="fw-bold text-dark">Welcome Back</h3>
+                    <p class="text-muted small">Sign in to your NGEOS portal to manage donations and view initiatives.</p>
+                </div>
+
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show small mb-3 shadow-sm" role="alert">
+                        <i class="bi bi-check-circle-fill me-2"></i>@TempData["SuccessMessage"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+
+                @if (TempData["InfoMessage"] != null)
+                {
+                    <div id="logoutAlert" class="alert alert-info alert-dismissible fade show small mb-3 shadow-sm" role="alert">
+                        <i class="bi bi-info-circle-fill me-2"></i>@TempData["InfoMessage"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show small mb-3 shadow-sm" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>@TempData["ErrorMessage"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+
+                @if (!string.IsNullOrEmpty(Model.ReturnUrl) && Model.ReturnUrl.Contains("Donate", StringComparison.OrdinalIgnoreCase))
+                {
+                    <div id="donationLoginAlert" class="alert alert-warning small mb-4 shadow-sm d-flex align-items-center gap-3 alert-dismissible fade show" role="alert">
+                        <i class="bi bi-shield-lock-fill fs-4 text-warning"></i>
+                        <div class="flex-grow-1">
+                            <strong class="d-block text-dark">Donation Login Required</strong>
+                            Please sign in or register to complete your donation. This ensures your contribution is safely recorded in your donor account.
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+
+                <form asp-controller="Account" asp-action="Login" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="ReturnUrl" />
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger small mb-3"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label fw-semibold">Email Address or Mobile Phone</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-person-badge"></i></span>
+                            <input asp-for="Email" type="text" class="form-control" placeholder="name@domain.com or 0300 1234567" required autofocus />
+                        </div>
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Password" class="form-label"></label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                            <input asp-for="Password" class="form-control" placeholder="Enter your password" required />
+                        </div>
+                        <span asp-validation-for="Password" class="text-danger small"></span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div class="form-check">
+                            <input asp-for="RememberMe" class="form-check-input" type="checkbox" />
+                            <label asp-for="RememberMe" class="form-check-label small text-muted"></label>
+                        </div>
+                        <a asp-controller="Account" asp-action="ForgotPassword" class="small text-warning fw-semibold text-decoration-none">
+                            <i class="bi bi-key me-1"></i>Forgot Password?
+                        </a>
+                    </div>
+
+                    <button type="submit" class="btn btn-orange btn-lg w-100 mb-3 shadow">
+                        <i class="bi bi-box-arrow-in-right me-1"></i> Sign In
+                    </button>
+
+                    <div class="d-flex align-items-center my-3">
+                        <hr class="flex-grow-1 my-0 text-muted" />
+                        <span class="px-3 text-muted small text-uppercase fw-semibold" style="letter-spacing: 1px;">or</span>
+                        <hr class="flex-grow-1 my-0 text-muted" />
+                    </div>
+
+                    <a asp-controller="Account" asp-action="GoogleLogin" asp-route-returnUrl="@Model.ReturnUrl" class="btn btn-outline-dark w-100 py-2 d-flex align-items-center justify-content-center gap-2 shadow-sm border bg-white text-dark fw-semibold google-btn mb-3" style="border-radius: 8px;">
+                        <svg width="20" height="20" viewBox="0 0 48 48" class="me-1">
+                            <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+                            <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+                            <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+                            <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+                            <path fill="none" d="M0 0h48v48H0z"/>
+                        </svg>
+                        <span>Continue with Google</span>
+                    </a>
+
+                    <p class="text-center text-muted small mb-0">
+                        Don't have an account yet? <a asp-controller="Account" asp-action="Register" asp-route-returnUrl="@Model.ReturnUrl" class="fw-bold text-warning">Register Here</a>
+                    </p>
+                </form>    
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const donationAlert = document.getElementById("donationLoginAlert");
+            if (donationAlert) {
+                setTimeout(function () {
+                    donationAlert.style.transition = "opacity 0.5s ease, max-height 0.5s ease, margin 0.5s ease, padding 0.5s ease";
+                    donationAlert.style.opacity = "0";
+                    setTimeout(() => donationAlert.remove(), 500);
+                }, 3000); // Disappear after exactly 3 seconds
+            }
+
+            const logoutAlert = document.getElementById("logoutAlert");
+            if (logoutAlert) {
+                setTimeout(function () {
+                    if (window.bootstrap && bootstrap.Alert) {
+                        const bsAlert = bootstrap.Alert.getOrCreateInstance(logoutAlert);
+                        bsAlert.close();
+                    } else {
+                        logoutAlert.style.transition = "opacity 0.4s ease, max-height 0.4s ease, margin 0.4s ease, padding 0.4s ease";
+                        logoutAlert.style.opacity = "0";
+                        setTimeout(() => logoutAlert.remove(), 400);
+                    }
+                }, 2000); // Disappear after exactly 2 seconds
+            }
+        });
+    </script>
+}

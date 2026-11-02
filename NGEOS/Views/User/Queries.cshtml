@@ -1,0 +1,82 @@
+@model List<NGEOS.Models.UserQuery>
+@{
+    ViewData["Title"] = "My Support Queries - NGEOS";
+}
+
+<div class="py-5 text-white position-relative" style="background: linear-gradient(135deg, rgba(11, 25, 44, 0.9), rgba(15, 23, 42, 0.82)), url('https://images.unsplash.com/photo-1450133064473-71024230f91b?w=1600') center/cover no-repeat;" data-aos="fade-down">
+    <div class="container py-3 text-center">
+        <span class="hero-tag mb-2 d-inline-block"><i class="bi bi-chat-dots-fill text-warning"></i> Helpdesk Portal</span>
+        <h1 class="display-6 fw-bold text-white mb-1">My Support Queries</h1>
+        <p class="text-white-50 mb-0 small mx-auto" style="max-width: 650px;">Track questions and view official responses from the NGEOS Support Team.</p>
+    </div>
+</div>
+
+<div class="container section-padding">
+    <!-- Quick Navigation Pills -->
+    <div class="d-flex flex-wrap justify-content-center gap-2 mb-5" data-aos="fade-up">
+        <a asp-action="Dashboard" class="btn btn-outline-navy btn-sm rounded-pill px-4 fw-semibold">Overview</a>
+        <a asp-action="Donations" class="btn btn-outline-navy btn-sm rounded-pill px-4 fw-semibold">Donation History</a>
+        <a asp-action="Programmes" class="btn btn-outline-navy btn-sm rounded-pill px-4 fw-semibold">My Programmes</a>
+        <a asp-action="Queries" class="btn btn-orange btn-sm rounded-pill px-4 shadow-sm fw-semibold">My Queries</a>
+        <a asp-action="InviteFriends" class="btn btn-outline-navy btn-sm rounded-pill px-4 fw-semibold">Invite Friends</a>
+        <a asp-action="Profile" class="btn btn-outline-navy btn-sm rounded-pill px-4 fw-semibold">Profile Settings</a>
+    </div>
+
+    <!-- Centered Section Action Bar -->
+    <div class="d-flex justify-content-center gap-3 mb-4" data-aos="fade-up">
+        <a asp-action="Dashboard" class="btn btn-outline-navy btn-sm rounded-pill px-4"><i class="bi bi-arrow-left me-1"></i> Dashboard Overview</a>
+        <a asp-controller="Home" asp-action="RaiseQuery" class="btn btn-orange btn-sm rounded-pill px-4 shadow-sm"><i class="bi bi-send-plus me-1"></i> Submit New Query</a>
+    </div>
+
+    @if (Model.Any())
+    {
+        <div class="row g-4">
+            @foreach (var q in Model)
+            {
+                <div class="col-lg-6">
+                    <div class="giveaid-card p-4">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div>
+                                <span class="badge bg-light text-dark border small mb-1">@q.Category</span>
+                                <h5 class="fw-bold mb-0 text-dark">@q.Subject</h5>
+                            </div>
+                            <span class="badge @(q.Status == "Replied" ? "bg-success" : "bg-warning text-dark")">@q.Status</span>
+                        </div>
+                        <span class="text-muted small d-block mb-3"><i class="bi bi-clock me-1"></i> Submitted: @q.CreatedAt.ToString("MMM dd, yyyy - hh:mm tt")</span>
+
+                        <div class="p-3 bg-light rounded-3 mb-3">
+                            <strong class="d-block small text-muted mb-1">My Message:</strong>
+                            <p class="small text-secondary mb-0">@q.Message</p>
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(q.AdminReply))
+                        {
+                            <div class="p-3 rounded-3 bg-success-subtle border border-success-subtle">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <strong class="small text-success"><i class="bi bi-shield-check me-1"></i> Admin Response:</strong>
+                                    <span class="small text-muted" style="font-size: 0.75rem;">@(q.RepliedAt?.ToString("MMM dd, yyyy") ?? "")</span>
+                                </div>
+                                <p class="small text-dark mb-0">@q.AdminReply</p>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="p-2 text-center text-muted small bg-light rounded">
+                                <i class="bi bi-hourglass-split me-1 text-warning"></i> Response in progress by administrator.
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="giveaid-card p-5 text-center">
+            <i class="bi bi-chat-left-dots fs-1 text-muted mb-2 d-block"></i>
+            <h5 class="fw-bold">No Queries Raised</h5>
+            <p class="text-muted small">Have any questions or need help? Raise a query anytime.</p>
+            <a asp-controller="Home" asp-action="RaiseQuery" class="btn btn-orange btn-sm mt-2">Raise Query Now</a>
+        </div>
+    }
+</div>

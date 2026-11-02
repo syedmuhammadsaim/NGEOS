@@ -1,0 +1,241 @@
+@model NGEOS.ViewModels.UserDashboardViewModel
+@{
+    ViewData["Title"] = "User Dashboard - " + Model.User.FullName;
+}
+
+<div class="py-5 text-white position-relative" style="background: linear-gradient(135deg, rgba(11, 25, 44, 0.9), rgba(15, 23, 42, 0.82)), url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1600') center/cover no-repeat;" data-aos="fade-down">
+    <div class="container py-3">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+            <div class="d-flex align-items-center gap-3">
+                @if (!string.IsNullOrEmpty(Model.User.ProfileImageUrl))
+                {
+                    <img src="@Model.User.ProfileImageUrl" alt="@Model.User.FullName" class="rounded-circle shadow border border-2 border-warning" style="width: 58px; height: 58px; object-fit: cover;" data-aos="zoom-in" />
+                }
+                else
+                {
+                    <div class="brand-icon" style="width: 55px; height: 55px; font-size: 1.6rem;" data-aos="zoom-in">
+                        <i class="bi bi-person-fill"></i>
+                    </div>
+                }
+                <div>
+                    <h1 class="display-6 fw-bold text-white mb-0" data-aos="fade-up" data-aos-delay="100">Hello, @Model.User.FullName!</h1>
+                    <p class="text-white-50 mb-0 small" data-aos="fade-up" data-aos-delay="150">
+                        <i class="bi bi-briefcase me-1 text-warning"></i> @Model.User.Profession | <i class="bi bi-building me-1"></i> @Model.User.Organization
+                    </p>
+                </div>
+            </div>
+            <div class="d-flex gap-2" data-aos="zoom-in" data-aos-delay="200">
+                <a asp-controller="Donate" asp-action="Index" class="btn btn-orange btn-sm px-3 rounded-pill shadow">
+                    <i class="bi bi-heart-fill me-1"></i> Make A Donation
+                </a>
+                <a asp-action="InviteFriends" class="btn btn-outline-light btn-sm px-3 rounded-pill">
+                    <i class="bi bi-envelope-heart me-1"></i> Invite Friends
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container section-padding">
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show shadow-sm mb-4" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i>@TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["InfoMessage"] != null)
+    {
+        <div class="alert alert-info alert-dismissible fade show shadow-sm mb-4" role="alert">
+            <i class="bi bi-info-circle-fill me-2"></i>@TempData["InfoMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show shadow-sm mb-4" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>@TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <!-- User KPI Cards -->
+    <div class="row g-4 mb-5">
+        <div class="col-6 col-lg-3" data-aos="zoom-in" data-aos-delay="100">
+            <div class="stat-card p-4">
+                <div class="stat-number text-success">$@Model.TotalDonated.ToString("N0")</div>
+                <p class="stat-label">Total Donated</p>
+            </div>
+        </div>
+        <div class="col-6 col-lg-3" data-aos="zoom-in" data-aos-delay="180">
+            <div class="stat-card p-4">
+                <div class="stat-number text-primary">@Model.CausesSupportedCount</div>
+                <p class="stat-label">Causes Supported</p>
+            </div>
+        </div>
+        <div class="col-6 col-lg-3" data-aos="zoom-in" data-aos-delay="260">
+            <div class="stat-card p-4">
+                <div class="stat-number text-warning">@Model.ProgrammesJoinedCount</div>
+                <p class="stat-label">Programmes Joined</p>
+            </div>
+        </div>
+        <div class="col-6 col-lg-3" data-aos="zoom-in" data-aos-delay="340">
+            <div class="stat-card p-4">
+                <div class="stat-number text-info">@Model.QueriesCount</div>
+                <p class="stat-label">Queries Raised</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Navigation Pills -->
+    <div class="d-flex flex-wrap justify-content-center gap-2 mb-5" data-aos="fade-up">
+        <a asp-action="Dashboard" class="btn btn-orange btn-sm rounded-pill px-4 shadow-sm fw-semibold">Overview</a>
+        <a asp-action="Donations" class="btn btn-outline-navy btn-sm rounded-pill px-4 fw-semibold">Donation History</a>
+        <a asp-action="Programmes" class="btn btn-outline-navy btn-sm rounded-pill px-4 fw-semibold">My Programmes</a>
+        <a asp-action="Queries" class="btn btn-outline-navy btn-sm rounded-pill px-4 fw-semibold">My Queries</a>
+        <a asp-action="InviteFriends" class="btn btn-outline-navy btn-sm rounded-pill px-4 fw-semibold">Invite Friends</a>
+        <a asp-action="Profile" class="btn btn-outline-navy btn-sm rounded-pill px-4 fw-semibold">Profile Settings</a>
+    </div>
+
+    <div class="row g-5">
+        <!-- Recent Donations -->
+        <div class="col-lg-7">
+            <div class="giveaid-card p-4 mb-4">
+                <div class="text-center mb-4 pb-2 border-bottom">
+                    <h5 class="fw-bold mb-1"><i class="bi bi-clock-history text-warning me-2"></i> Recent Donations</h5>
+                    <a asp-action="Donations" class="small text-warning fw-bold text-decoration-none">View All Donations <i class="bi bi-arrow-right"></i></a>
+                </div>
+
+                @if (Model.RecentDonations.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light small">
+                                <tr>
+                                    <th>Cause</th>
+                                    <th>Amount</th>
+                                    <th>Date</th>
+                                    <th>Receipt</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var d in Model.RecentDonations)
+                                {
+                                    <tr>
+                                        <td>
+                                            <span class="fw-semibold text-dark small d-block">@(d.Cause?.Title ?? "Charity Relief")</span>
+                                            <span class="badge bg-light text-muted border" style="font-size: 0.7rem;">@d.TransactionId</span>
+                                        </td>
+                                        <td class="fw-bold text-success">$@d.Amount.ToString("N2")</td>
+                                        <td class="small text-muted">@d.DonationDate.ToString("MMM dd, yyyy")</td>
+                                        <td>
+                                            <a asp-controller="Donate" asp-action="Confirmation" asp-route-transactionId="@d.TransactionId" class="btn btn-sm btn-outline-secondary py-0 px-2" title="View Receipt">
+                                                <i class="bi bi-receipt"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center py-4 text-muted small">
+                        <i class="bi bi-heart fs-3 d-block mb-1 text-muted"></i>
+                        You have not made any donations yet.
+                        <div class="mt-2">
+                            <a asp-controller="Donate" asp-action="Index" class="btn btn-orange btn-sm">Make Your First Donation</a>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <!-- Recent Programme Interests -->
+            <div class="giveaid-card p-4">
+                <div class="text-center mb-4 pb-2 border-bottom">
+                    <h5 class="fw-bold mb-1"><i class="bi bi-calendar2-heart text-primary me-2"></i> Registered Programmes</h5>
+                    <a asp-action="Programmes" class="small text-warning fw-bold text-decoration-none">View All Programmes <i class="bi bi-arrow-right"></i></a>
+                </div>
+
+                @if (Model.MyProgrammeInterests.Any())
+                {
+                    <div class="list-group list-group-flush">
+                        @foreach (var pi in Model.MyProgrammeInterests)
+                        {
+                            <div class="list-group-item px-0 py-2 d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="fw-bold mb-0 small">@(pi.Programme?.Title ?? "Programme")</h6>
+                                    <span class="text-muted" style="font-size: 0.75rem;">Role: <strong>@pi.InterestType</strong> | Submitted: @pi.SubmittedAt.ToString("MMM dd, yyyy")</span>
+                                </div>
+                                <span class="badge @(pi.Status == "Approved" ? "bg-success" : "bg-warning text-dark") small">@pi.Status</span>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center py-3 text-muted small">
+                        You haven't shown interest in any programmes yet.
+                        <a asp-controller="Programmes" asp-action="Index" class="d-block text-warning mt-1">Explore Programmes</a>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Sidebar: Queries & Friend Invites -->
+        <div class="col-lg-5">
+            <!-- Raised Queries Widget -->
+            <div class="giveaid-card p-4 mb-4">
+                <div class="text-center mb-4 pb-2 border-bottom">
+                    <h5 class="fw-bold mb-1"><i class="bi bi-chat-dots-fill text-info me-2"></i> My Support Queries</h5>
+                    <a asp-action="Queries" class="small text-warning fw-bold text-decoration-none">View All Queries <i class="bi bi-arrow-right"></i></a>
+                </div>
+
+                @if (Model.MyQueries.Any())
+                {
+                    <div class="list-group list-group-flush">
+                        @foreach (var q in Model.MyQueries)
+                        {
+                            <div class="list-group-item px-0 py-2">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <span class="fw-bold small text-dark">@q.Subject</span>
+                                    <span class="badge @(q.Status == "Replied" ? "bg-success" : "bg-secondary") small" style="font-size: 0.7rem;">@q.Status</span>
+                                </div>
+                                <p class="text-muted small mb-1 text-truncate">@q.Message</p>
+                                @if (!string.IsNullOrEmpty(q.AdminReply))
+                                {
+                                    <div class="p-2 bg-light rounded text-success small border-start border-3 border-success">
+                                        <strong>Admin:</strong> @q.AdminReply
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted small mb-2">No queries submitted.</p>
+                }
+
+                <a asp-controller="Home" asp-action="RaiseQuery" class="btn btn-outline-navy btn-sm w-100 mt-2">
+                    <i class="bi bi-plus-circle me-1"></i> Raise A New Query
+                </a>
+            </div>
+
+            <!-- Invite Friends Card -->
+            <div class="giveaid-card p-4 text-center border-start border-4 border-warning">
+                <div class="action-card-icon icon-volunteer mx-auto mb-2" style="width: 48px; height: 48px; font-size: 1.3rem;">
+                    <i class="bi bi-envelope-heart"></i>
+                </div>
+                <h5 class="fw-bold mb-1">Invite Friends to NGEOS</h5>
+                <p class="text-muted small mb-3">
+                    Spread the word and inspire friends and colleagues to support life-changing charity causes.
+                </p>
+                <a asp-action="InviteFriends" class="btn btn-orange btn-sm w-100">
+                    <i class="bi bi-send-fill me-1"></i> Send Friend Invitation
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

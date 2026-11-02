@@ -1,0 +1,85 @@
+@model List<NGEOS.Models.GalleryItem>
+@{
+    ViewData["Title"] = "Media Photo Gallery - NGEOS in Action";
+    var categories = ViewBag.Categories as List<string> ?? new List<string>();
+    var selectedCategory = ViewBag.SelectedCategory as string ?? "All";
+    var gIdx = 0;
+}
+
+<div class="py-5 text-white position-relative" style="background: linear-gradient(135deg, rgba(11, 25, 44, 0.9), rgba(15, 23, 42, 0.82)), url('https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=1600') center/cover no-repeat;" data-aos="fade-down">
+    <div class="container text-center py-4">
+        <span class="hero-tag mb-2" data-aos="fade-up"><i class="bi bi-camera-fill text-warning"></i> Photo Chronicles</span>
+        <h1 class="display-4 fw-bold text-white mb-2" data-aos="fade-up" data-aos-delay="100">Humanitarian Action in Pictures</h1>
+        <p class="text-white-50 mx-auto" style="max-width: 650px;" data-aos="fade-up" data-aos-delay="150">
+            Explore real moments of joy, medical relief, school distribution, and community empowerment captured across our welfare programmes.
+        </p>
+    </div>
+</div>
+
+<div class="container section-padding">
+    <!-- Category Tabs -->
+    <div class="d-flex flex-wrap gap-2 justify-content-center mb-5" data-aos="fade-up" data-aos-delay="100">
+        @foreach (var cat in categories)
+        {
+            <a asp-action="Index" asp-route-category="@cat" 
+               class="btn @(selectedCategory.ToLower() == cat.ToLower() ? "btn-orange" : "btn-outline-navy") rounded-pill px-4 btn-sm">
+                @cat
+            </a>
+        }
+    </div>
+
+    <div class="row g-4">
+        @foreach (var item in Model)
+        {
+            <div class="col-lg-4 col-md-6" data-aos="zoom-in" data-aos-delay="@((gIdx++ % 3) * 100)">
+                <div class="gallery-card" data-img-src="@item.ImageUrl" data-img-title="@item.Title" data-img-desc="@item.Description" data-img-cat="@item.Category">
+                    <img src="@item.ImageUrl" alt="@item.Title">
+                    <div class="gallery-overlay">
+                        <span class="badge bg-warning text-dark align-self-start mb-2">@item.Category</span>
+                        <h6 class="fw-bold mb-1">@item.Title</h6>
+                        <p class="small text-white-50 mb-0"><i class="bi bi-zoom-in me-1"></i> Click to preview</p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- PROFESSIONAL GALLERY LIGHTBOX MODAL -->
+<div class="modal fade gallery-lightbox-modal" id="galleryLightboxModal" tabindex="-1" aria-hidden="true" data-lenis-prevent>
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content border-0 bg-transparent shadow-none">
+            <div class="lightbox-shell position-relative mx-auto w-100">
+                <!-- Top Control Bar -->
+                <div class="lightbox-topbar d-flex justify-content-between align-items-center mb-2 px-1">
+                    <div class="d-flex align-items-center gap-2">
+                        <span id="lightboxCategory" class="badge bg-warning text-dark px-3 py-1 rounded-pill fw-semibold">Photo</span>
+                        <span id="lightboxCounter" class="badge bg-dark border border-secondary text-white-50 px-2 py-1 rounded-pill small">1 / 1</span>
+                    </div>
+                    <button type="button" class="lightbox-close-btn" data-bs-dismiss="modal" aria-label="Close" title="Close Preview (Esc)">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                </div>
+
+                <!-- Main Image Stage with Nav Buttons -->
+                <div class="lightbox-stage position-relative rounded-4 overflow-hidden shadow-lg">
+                    <img id="lightboxImage" src="" alt="Photo Preview" class="lightbox-img w-100">
+                    
+                    <!-- Prev / Next Navigation Arrows -->
+                    <button type="button" class="lightbox-nav-btn lightbox-prev-btn" id="lightboxPrevBtn" aria-label="Previous Photo" title="Previous (←)">
+                        <i class="bi bi-chevron-left"></i>
+                    </button>
+                    <button type="button" class="lightbox-nav-btn lightbox-next-btn" id="lightboxNextBtn" aria-label="Next Photo" title="Next (→)">
+                        <i class="bi bi-chevron-right"></i>
+                    </button>
+                </div>
+
+                <!-- Bottom Caption Bar -->
+                <div class="lightbox-caption mt-2 p-3 rounded-3">
+                    <h5 id="lightboxTitle" class="fw-bold text-white mb-1"></h5>
+                    <p id="lightboxDesc" class="text-white-50 small mb-0"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

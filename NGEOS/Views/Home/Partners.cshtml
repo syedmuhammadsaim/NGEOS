@@ -1,0 +1,50 @@
+@model List<NGEOS.Models.Partner>
+@{
+    ViewData["Title"] = "Our Partners & Corporate Benefactors";
+    var ptnIdx = 0;
+}
+
+<div class="py-5 text-white position-relative" style="background: linear-gradient(135deg, rgba(11, 25, 44, 0.9), rgba(15, 23, 42, 0.82)), url('https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=1600') center/cover no-repeat;" data-aos="fade-down">
+    <div class="container text-center py-4">
+        <span class="hero-tag mb-2" data-aos="fade-up"><i class="bi bi-award-fill text-warning"></i> Strategic Alliances</span>
+        <h1 class="display-4 fw-bold text-white mb-2" data-aos="fade-up" data-aos-delay="100">Our Esteemed Corporate Partners</h1>
+        <p class="text-white-50 mx-auto" style="max-width: 650px;" data-aos="fade-up" data-aos-delay="150">
+            NGEOS has been established and continuously powered by major multinational corporations, corporate social responsibility trusts, and industry pioneers.
+        </p>
+    </div>
+</div>
+
+<div class="container section-padding">
+    <div class="row g-4 mb-5">
+        @foreach (var partner in Model)
+        {
+            <div class="col-md-6 col-lg-4" data-aos="zoom-in" data-aos-delay="@((ptnIdx++ % 3) * 100)">
+                <div class="giveaid-card p-4 text-center">
+                    <div class="d-flex align-items-center justify-content-center p-3 mb-3 bg-light rounded-3" style="height: 120px;">
+                        <img src="@partner.LogoUrl" alt="@partner.Name" style="max-height: 70px; max-width: 180px; object-fit: contain;">
+                    </div>
+                    <span class="badge bg-warning text-dark align-self-center mb-2 px-3 py-1">@partner.Category</span>
+                    <h5 class="fw-bold mb-2">@partner.Name</h5>
+                    <p class="text-muted small flex-grow-1 mb-3">@partner.Description</p>
+                    @if (!string.IsNullOrEmpty(partner.WebsiteUrl))
+                    {
+                        <a href="@partner.WebsiteUrl" target="_blank" class="btn btn-outline-navy btn-sm mt-auto">
+                            Visit Official Website <i class="bi bi-box-arrow-up-right ms-1"></i>
+                        </a>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Become a Corporate Partner Box -->
+    <div class="p-5 rounded-4 text-white shadow-lg text-center position-relative overflow-hidden" style="background: linear-gradient(135deg, rgba(11, 25, 44, 0.92), rgba(255, 114, 0, 0.85)), url('https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=1600') center/cover no-repeat;" data-aos="zoom-in-up">
+        <h3 class="fw-bold mb-2">Become A NGEOS Corporate Benefactor</h3>
+        <p class="text-white-50 mx-auto mb-4" style="max-width: 600px;">
+            Join our alliance to direct your organization's CSR initiatives towards verified, high-impact child welfare, healthcare, and education projects.
+        </p>
+        <a asp-controller="Home" asp-action="Contact" class="btn btn-light text-dark fw-bold px-4 py-2 rounded-pill">
+            <i class="bi bi-chat-heart-fill text-warning me-1"></i> Partner With Us Today
+        </a>
+    </div>
+</div>

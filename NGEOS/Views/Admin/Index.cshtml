@@ -1,0 +1,228 @@
+@model NGEOS.ViewModels.AdminDashboardViewModel
+@{
+    ViewData["Title"] = "Admin Control Center";
+    Layout = "_AdminLayout";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold mb-1">Executive Dashboard</h2>
+        <p class="text-muted small mb-0">Overview of NGEOS's platform operations, funding metrics, and active welfare projects.</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a asp-action="CreateCause" class="btn btn-orange btn-sm shadow-sm"><i class="bi bi-plus-circle me-1"></i> Add Cause</a>
+        <a asp-action="CreateProgramme" class="btn btn-navy btn-sm"><i class="bi bi-plus-circle me-1"></i> Add Programme</a>
+    </div>
+</div>
+
+<!-- KPI Cards -->
+<div class="row g-3 mb-4">
+    <div class="col-12 col-sm-6 col-xl-3">
+        <div class="admin-kpi-card">
+            <div>
+                <span class="text-muted small d-block mb-1">Total Funds Mobilized</span>
+                <h3 class="fw-bold text-success mb-0">$@Model.TotalDonationsAmount.ToString("N0")</h3>
+                <span class="badge bg-success-subtle text-success small mt-1">@Model.TotalDonationsCount Transactions</span>
+            </div>
+            <div class="kpi-icon-box bg-success-subtle text-success">
+                <i class="bi bi-currency-dollar"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-sm-6 col-xl-3">
+        <div class="admin-kpi-card">
+            <div>
+                <span class="text-muted small d-block mb-1">Registered Members</span>
+                <h3 class="fw-bold text-primary mb-0">@Model.TotalUsers</h3>
+                <span class="badge bg-primary-subtle text-primary small mt-1"><i class="bi bi-person-check me-1"></i> Verified</span>
+            </div>
+            <div class="kpi-icon-box bg-primary-subtle text-primary">
+                <i class="bi bi-people-fill"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-sm-6 col-xl-3">
+        <div class="admin-kpi-card">
+            <div>
+                <span class="text-muted small d-block mb-1">Active Causes</span>
+                <h3 class="fw-bold text-warning mb-0">@Model.TotalCauses</h3>
+                <span class="badge bg-warning-subtle text-warning small mt-1">Across 7 Categories</span>
+            </div>
+            <div class="kpi-icon-box bg-warning-subtle text-warning">
+                <i class="bi bi-heart-pulse-fill"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 col-sm-6 col-xl-3">
+        <div class="admin-kpi-card">
+            <div>
+                <span class="text-muted small d-block mb-1">Partner NGOs</span>
+                <h3 class="fw-bold text-info mb-0">@Model.TotalNgos</h3>
+                <span class="badge bg-info-subtle text-info small mt-1">@Model.TotalProgrammes Programmes</span>
+            </div>
+            <div class="kpi-icon-box bg-info-subtle text-info">
+                <i class="bi bi-building-fill"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Recent Donations Table -->
+    <div class="col-lg-7">
+        <div class="giveaid-card p-4 mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold mb-0"><i class="bi bi-cash-stack text-success me-2"></i> Recent Transactions</h5>
+                <a asp-action="Donations" class="small text-warning fw-bold">View Master Ledger</a>
+            </div>
+
+            @if (Model.RecentDonations.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light small">
+                            <tr>
+                                <th>Donor</th>
+                                <th>Cause</th>
+                                <th>Amount</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var d in Model.RecentDonations)
+                            {
+                                <tr>
+                                    <td>
+                                        <strong class="d-block text-dark small">@d.DonorName</strong>
+                                        <span class="text-muted" style="font-size: 0.75rem;">@d.DonorEmail</span>
+                                    </td>
+                                    <td class="small">@(d.Cause?.Title ?? "General Relief")</td>
+                                    <td class="fw-bold text-success small">$@d.Amount.ToString("N2")</td>
+                                    <td class="text-muted small">@d.DonationDate.ToString("MMM dd")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <p class="text-muted small mb-0">No donations recorded yet.</p>
+            }
+        </div>
+
+        <!-- Recent Registered Members -->
+        <div class="giveaid-card p-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold mb-0"><i class="bi bi-person-lines-fill text-primary me-2"></i> Recently Registered Members</h5>
+                <a asp-action="Users" class="small text-warning fw-bold">View All Members</a>
+            </div>
+
+            @if (Model.RecentUsers.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light small">
+                            <tr>
+                                <th>Name & Email</th>
+                                <th>Profession</th>
+                                <th>Organization</th>
+                                <th>Joined</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var u in Model.RecentUsers)
+                            {
+                                <tr>
+                                    <td>
+                                        <strong class="d-block text-dark small">@u.FullName</strong>
+                                        <span class="text-muted" style="font-size: 0.75rem;">@u.Email</span>
+                                    </td>
+                                    <td class="small">@u.Profession</td>
+                                    <td class="small text-muted">@u.Organization</td>
+                                    <td class="small text-muted">@u.CreatedAt.ToString("MMM dd")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <p class="text-muted small mb-0">No members registered yet.</p>
+            }
+        </div>
+    </div>
+
+    <!-- Sidebar: Pending Queries & Participant Interests -->
+    <div class="col-lg-5">
+        <!-- User Queries Widget -->
+        <div class="giveaid-card p-4 mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold mb-0">
+                    <i class="bi bi-chat-left-dots-fill text-warning me-2"></i> Pending Queries
+                    @if (Model.PendingQueriesCount > 0)
+                    {
+                        <span class="badge bg-danger rounded-pill ms-1" style="font-size: 0.7rem;">@Model.PendingQueriesCount</span>
+                    }
+                </h5>
+                <a asp-action="Queries" class="small text-warning fw-bold">Manage Queries</a>
+            </div>
+
+            @if (Model.RecentQueries.Any())
+            {
+                <div class="list-group list-group-flush">
+                    @foreach (var q in Model.RecentQueries)
+                    {
+                        <div class="list-group-item px-0 py-2">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="fw-bold small text-dark">@q.Subject</span>
+                                <span class="badge @(q.Status == "Replied" ? "bg-success" : "bg-warning text-dark")" style="font-size: 0.7rem;">@q.Status</span>
+                            </div>
+                            <p class="text-muted small mb-1 text-truncate">@q.Message</p>
+                            <div class="d-flex justify-content-between align-items-center small">
+                                <span class="text-muted" style="font-size: 0.75rem;">By: @q.FullName</span>
+                                <a asp-action="ReplyQuery" asp-route-id="@q.Id" class="text-warning fw-bold">Reply <i class="bi bi-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <p class="text-muted small mb-0">No pending queries.</p>
+            }
+        </div>
+
+        <!-- Recent Volunteers/Participants -->
+        <div class="giveaid-card p-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold mb-0"><i class="bi bi-person-raised-hand text-info me-2"></i> Programme Volunteers</h5>
+                <a asp-action="ProgrammeInterests" class="small text-warning fw-bold">View All</a>
+            </div>
+
+            @if (Model.RecentProgrammeInterests.Any())
+            {
+                <div class="list-group list-group-flush">
+                    @foreach (var pi in Model.RecentProgrammeInterests)
+                    {
+                        <div class="list-group-item px-0 py-2 d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong class="d-block small text-dark">@pi.FullName</strong>
+                                <span class="text-muted" style="font-size: 0.75rem;">@(pi.Programme?.Title ?? "Programme") (@pi.InterestType)</span>
+                            </div>
+                            <span class="badge @(pi.Status == "Approved" ? "bg-success" : "bg-warning text-dark")" style="font-size: 0.7rem;">@pi.Status</span>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <p class="text-muted small mb-0">No recent volunteer submissions.</p>
+            }
+        </div>
+    </div>
+</div>

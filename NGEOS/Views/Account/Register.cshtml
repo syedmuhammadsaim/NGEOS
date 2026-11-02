@@ -1,0 +1,182 @@
+@model NGEOS.ViewModels.RegisterViewModel
+@{
+    ViewData["Title"] = "Create Account - NGEOS";
+}
+
+<div class="container section-padding">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-xl-7" data-aos="zoom-in" data-aos-duration="600">
+            <div class="form-card shadow-lg">
+                <div class="text-center mb-4">
+                    <a asp-controller="Home" asp-action="Index" class="d-inline-block mb-3 text-decoration-none" title="Return to NGEOS Home">
+                        <img src="~/images/ngeos-logo.svg" alt="NGEOS Official Logo" class="brand-logo mx-auto shadow-sm" style="width: 52px; height: 52px;" asp-append-version="true" />
+                    </a>
+                    <h3 class="fw-bold text-dark">Join The NGEOS Community</h3>
+                    <p class="text-muted small">Create your account to support causes, participate in NGO programmes, and track your humanitarian impact.</p>
+                </div>
+
+                @if (!string.IsNullOrEmpty(Model.ReturnUrl) && Model.ReturnUrl.Contains("Donate", StringComparison.OrdinalIgnoreCase))
+                {
+                    <div class="alert alert-warning small mb-4 shadow-sm d-flex align-items-center gap-3" role="alert">
+                        <i class="bi bi-shield-lock-fill fs-4 text-warning"></i>
+                        <div>
+                            <strong class="d-block text-dark">Donation Registration</strong>
+                            Create your account to complete your donation. After registering, you will be taken right back to finalize your contribution!
+                        </div>
+                    </div>
+                }
+
+                <form asp-controller="Account" asp-action="Register" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="ReturnUrl" />
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger small mb-3"></div>
+
+                    <!-- Personal Information Section -->
+                    <div class="mb-4">
+                        <h6 class="fw-bold text-uppercase small text-warning border-bottom pb-2 mb-3">
+                            <i class="bi bi-person-badge-fill me-1"></i> 1. Personal Information
+                        </h6>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label asp-for="FullName" class="form-label"></label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                    <input asp-for="FullName" class="form-control" placeholder="e.g. Your Name" required data-rule="letters-only" />
+                                </div>
+                                <span asp-validation-for="FullName" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="Email" class="form-label"></label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                                    <input asp-for="Email" type="email" class="form-control" placeholder="your@mail.com" required />
+                                </div>
+                                <span asp-validation-for="Email" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="Phone" class="form-label"></label>
+                                <div class="intl-phone-wrapper">
+                                    <div class="input-group">
+                                        <button class="btn btn-outline-secondary dropdown-toggle country-picker-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <span class="country-flag-icon">🇵🇰</span>
+                                            <span class="country-dial-code">+92</span>
+                                        </button>
+                                        <ul class="dropdown-menu country-dropdown-menu shadow">
+                                            <li class="country-search-box">
+                                                <input type="text" class="form-control form-control-sm country-search-input" placeholder="Search country or code..." />
+                                            </li>
+                                            <div class="country-items-list"></div>
+                                        </ul>
+                                        <input type="tel" class="form-control country-phone-input" placeholder="300 1234567" maxlength="10" data-rule="numbers-only" />
+                                        <input type="hidden" asp-for="Phone" class="phone-actual-input" />
+                                    </div>
+                                    <div class="phone-meta-row">
+                                        <span class="phone-helper-text">Max 10 digits for Pakistan (+92)</span>
+                                        <span class="phone-digit-counter">0/10</span>
+                                    </div>
+                                </div>
+                                <span asp-validation-for="Phone" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="Address" class="form-label"></label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-geo-alt"></i></span>
+                                    <input asp-for="Address" class="form-control" placeholder="City, Country" />
+                                </div>
+                                <span asp-validation-for="Address" class="text-danger small"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Professional Information Section -->
+                    <div class="mb-4">
+                        <h6 class="fw-bold text-uppercase small text-warning border-bottom pb-2 mb-3">
+                            <i class="bi bi-briefcase-fill me-1"></i> 2. Professional Background
+                        </h6>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label asp-for="Profession" class="form-label"></label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-person-workspace"></i></span>
+                                    <input asp-for="Profession" class="form-control" placeholder="e.g. Software Engineer / Doctor / Student" required data-rule="letters-only" />
+                                </div>
+                                <span asp-validation-for="Profession" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="Organization" class="form-label"></label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-buildings"></i></span>
+                                    <input asp-for="Organization" class="form-control" placeholder="e.g. Acme Tech / University / Self-employed" required />
+                                </div>
+                                <span asp-validation-for="Organization" class="text-danger small"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Security / Password Section -->
+                    <div class="mb-4">
+                        <h6 class="fw-bold text-uppercase small text-warning border-bottom pb-2 mb-3">
+                            <i class="bi bi-shield-lock-fill me-1"></i> 3. Account Security
+                        </h6>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label asp-for="Password" class="form-label"></label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                                    <input asp-for="Password" class="form-control" placeholder="Minimum 6 characters" required />
+                                </div>
+                                <span asp-validation-for="Password" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="ConfirmPassword" class="form-label"></label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                                    <input asp-for="ConfirmPassword" class="form-control" placeholder="Re-type password" required />
+                                </div>
+                                <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-check mb-4">
+                        <input asp-for="AgreeToTerms" class="form-check-input" type="checkbox" required />
+                        <label asp-for="AgreeToTerms" class="form-check-label small text-muted">
+                            I agree to the NGEOS <a href="#" class="text-warning">Terms of Service</a> & <a href="#" class="text-warning">Privacy Policy</a>.
+                        </label>
+                        <span asp-validation-for="AgreeToTerms" class="text-danger d-block small"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-orange btn-lg w-100 mb-3 shadow">
+                        <i class="bi bi-person-check-fill me-1"></i> Register Account
+                    </button>
+
+                    <div class="d-flex align-items-center my-3">
+                        <hr class="flex-grow-1 my-0 text-muted" />
+                        <span class="px-3 text-muted small text-uppercase fw-semibold" style="letter-spacing: 1px;">or</span>
+                        <hr class="flex-grow-1 my-0 text-muted" />
+                    </div>
+
+                    <a asp-controller="Account" asp-action="GoogleLogin" asp-route-returnUrl="@Model.ReturnUrl" class="btn btn-outline-dark w-100 py-2 d-flex align-items-center justify-content-center gap-2 shadow-sm border bg-white text-dark fw-semibold google-btn mb-3" style="border-radius: 8px;">
+                        <svg width="20" height="20" viewBox="0 0 48 48" class="me-1">
+                            <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+                            <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+                            <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+                            <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+                            <path fill="none" d="M0 0h48v48H0z"/>
+                        </svg>
+                        <span>Continue with Google</span>
+                    </a>
+
+                    <p class="text-center text-muted small mb-0">
+                        Already have an account? <a asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Model.ReturnUrl" class="fw-bold text-warning">Login Here</a>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

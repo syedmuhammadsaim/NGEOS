@@ -1,0 +1,51 @@
+@model List<NGEOS.Models.Partner>
+@{
+    var aboutPage = ViewBag.AboutPage as NGEOS.Models.AboutPage;
+    ViewData["Title"] = "Our Supporters & Corporate Allies";
+    var sIdx = 0;
+}
+
+<div class="py-5 text-white position-relative" style="background: linear-gradient(135deg, rgba(11, 25, 44, 0.9), rgba(15, 23, 42, 0.8)), url('https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=1600') center/cover no-repeat;" data-aos="fade-down">
+    <div class="container text-center py-4">
+        <span class="hero-tag mb-2" data-aos="fade-up"><i class="bi bi-building-check text-warning"></i> Philanthropic Benefactors</span>
+        <h1 class="display-4 fw-bold text-white mb-2" data-aos="fade-up" data-aos-delay="100">Our Supporters</h1>
+        <p class="text-white-50 mx-auto" style="max-width: 650px;" data-aos="fade-up" data-aos-delay="150">
+            Recognizing the philanthropic corporations, foundations, and institutional allies whose generous contributions established and power NGEOS.
+        </p>
+    </div>
+</div>
+
+<div class="container section-padding">
+    <div class="row g-4 mb-5">
+        @foreach (var p in Model)
+        {
+            <div class="col-md-6 col-lg-4" data-aos="zoom-in" data-aos-delay="@((sIdx++ % 3) * 100)">
+                <div class="giveaid-card p-4 text-center">
+                    <div class="d-flex align-items-center justify-content-center p-3 mb-3 bg-light rounded-3" style="height: 120px;">
+                        <img src="@p.LogoUrl" alt="@p.Name" style="max-height: 70px; max-width: 180px; object-fit: contain;">
+                    </div>
+                    <span class="badge bg-warning text-dark align-self-center mb-2 px-3 py-1">@p.Category</span>
+                    <h5 class="fw-bold mb-2">@p.Name</h5>
+                    <p class="text-muted small flex-grow-1 mb-3">@p.Description</p>
+                    @if (!string.IsNullOrEmpty(p.WebsiteUrl))
+                    {
+                        <a href="@p.WebsiteUrl" target="_blank" class="btn btn-outline-navy btn-sm mt-auto">
+                            Visit Partner Website <i class="bi bi-box-arrow-up-right ms-1"></i>
+                        </a>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Corporate Giving Matching Box -->
+    <div class="p-5 rounded-4 text-white text-center shadow-lg position-relative overflow-hidden" style="background: linear-gradient(135deg, rgba(11, 25, 44, 0.92), rgba(255, 114, 0, 0.85)), url('https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=1600') center/cover no-repeat;" data-aos="zoom-in-up">
+        <h3 class="fw-bold mb-2">Corporate Matching Gift Programs</h3>
+        <p class="text-white-50 mx-auto mb-4" style="max-width: 600px;">
+            Many employers match charitable donations made by their employees dollar-for-dollar. Ask your HR department about NGEOS payroll matching or become a sponsor.
+        </p>
+        <a asp-controller="Home" asp-action="Contact" class="btn btn-light text-dark fw-bold px-4 py-2 rounded-pill">
+            <i class="bi bi-chat-dots-fill text-warning me-1"></i> Contact Corporate Giving Team
+        </a>
+    </div>
+</div>

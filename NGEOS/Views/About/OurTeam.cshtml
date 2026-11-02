@@ -1,0 +1,66 @@
+@model List<NGEOS.Models.TeamMember>
+@{
+    var aboutPage = ViewBag.AboutPage as NGEOS.Models.AboutPage;
+    ViewData["Title"] = "Our Team - NGEOS Leadership";
+    var tIdx = 0;
+}
+
+<div class="py-5 text-white position-relative" style="background: linear-gradient(135deg, rgba(11, 25, 44, 0.9), rgba(15, 23, 42, 0.8)), url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1600') center/cover no-repeat;" data-aos="fade-down">
+    <div class="container text-center py-4">
+        <span class="hero-tag mb-2" data-aos="fade-up"><i class="bi bi-people-fill text-warning"></i> Dedicated Leadership</span>
+        <h1 class="display-4 fw-bold text-white mb-2" data-aos="fade-up" data-aos-delay="100">Our Team & Humanitarian Leaders</h1>
+        <p class="text-white-50 mx-auto" style="max-width: 650px;" data-aos="fade-up" data-aos-delay="150">
+            Meet the visionary individuals, healthcare professionals, and field directors committed to transforming lives around the world.
+        </p>
+    </div>
+</div>
+
+<div class="container section-padding">
+    <div class="row g-4 mb-5">
+        @foreach (var member in Model)
+        {
+            <div class="col-md-6 col-lg-3" data-aos="zoom-in" data-aos-delay="@((tIdx++ % 4) * 90)">
+                <div class="giveaid-card text-center overflow-hidden">
+                    <div class="card-img-wrapper" style="height: 260px;">
+                        <img src="@member.PhotoUrl" alt="@member.Name">
+                    </div>
+                    <div class="p-4 flex-grow-1 d-flex flex-column">
+                        <h5 class="fw-bold mb-1 text-dark">@member.Name</h5>
+                        <p class="text-warning fw-semibold small mb-2">@member.Role</p>
+                        <p class="text-muted small mb-3 flex-grow-1">@member.Bio</p>
+                        <div class="d-flex justify-content-center gap-2 pt-2 border-top">
+                            @if (!string.IsNullOrEmpty(member.Email))
+                            {
+                                <a href="mailto:@member.Email" class="social-icon-link bg-light text-dark"><i class="bi bi-envelope-fill"></i></a>
+                            }
+                            @if (!string.IsNullOrEmpty(member.LinkedInUrl))
+                            {
+                                <a href="@member.LinkedInUrl" target="_blank" class="social-icon-link bg-light text-dark"><i class="bi bi-linkedin"></i></a>
+                            }
+                            @if (!string.IsNullOrEmpty(member.TwitterUrl))
+                            {
+                                <a href="@member.TwitterUrl" target="_blank" class="social-icon-link bg-light text-dark"><i class="bi bi-twitter-x"></i></a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Volunteer Team CTA Box -->
+    <div class="p-5 rounded-4 text-white text-center shadow-lg position-relative overflow-hidden" style="background: linear-gradient(135deg, rgba(11, 25, 44, 0.92), rgba(255, 114, 0, 0.85)), url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1600') center/cover no-repeat;" data-aos="zoom-in-up">
+        <h3 class="fw-bold mb-2">Want to Join Our Humanitarian Team?</h3>
+        <p class="text-white-50 mx-auto mb-4" style="max-width: 600px;">
+            We are always looking for passionate professionals, healthcare workers, and community leaders. Check out our open roles or volunteer opportunities.
+        </p>
+        <div class="d-flex justify-content-center gap-3">
+            <a asp-controller="About" asp-action="CareerWithUs" class="btn btn-light text-dark fw-bold px-4 rounded-pill">
+                <i class="bi bi-briefcase-fill me-1"></i> View Career Openings
+            </a>
+            <a asp-controller="Programmes" asp-action="Index" class="btn btn-outline-light px-4 rounded-pill">
+                <i class="bi bi-person-raised-hand me-1"></i> Volunteer In Programmes
+            </a>
+        </div>
+    </div>
+</div>

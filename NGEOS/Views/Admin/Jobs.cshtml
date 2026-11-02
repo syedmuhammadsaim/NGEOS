@@ -1,0 +1,56 @@
+@model List<NGEOS.Models.JobOpportunity>
+@{
+    ViewData["Title"] = "Manage Career Postings - Admin";
+    Layout = "_AdminLayout";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h3 class="fw-bold mb-1">Career & Volunteer Postings</h3>
+        <p class="text-muted small mb-0">Publish and manage job vacancies displayed on the Career with Us page.</p>
+    </div>
+    <a asp-action="CreateJob" class="btn btn-orange btn-sm shadow-sm">
+        <i class="bi bi-plus-circle me-1"></i> Add New Posting
+    </a>
+</div>
+
+<div class="giveaid-card p-4">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Position Title</th>
+                    <th>Department</th>
+                    <th>Job Type</th>
+                    <th>Location</th>
+                    <th>Posted Date</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var j in Model)
+                {
+                    <tr>
+                        <td><strong class="text-dark small">@j.Title</strong></td>
+                        <td><span class="badge bg-light text-dark border">@j.Department</span></td>
+                        <td><span class="badge bg-warning text-dark">@j.JobType</span></td>
+                        <td class="small text-muted">@j.Location</td>
+                        <td class="small text-muted">@j.PostedDate.ToString("MMM dd, yyyy")</td>
+                        <td>
+                            <span class="badge @(j.IsActive ? "bg-success" : "bg-secondary")">@(j.IsActive ? "Active" : "Closed")</span>
+                        </td>
+                        <td>
+                            <form asp-action="DeleteJob" asp-route-id="@j.Id" method="post" onsubmit="return confirm('Delete this job posting?');" class="d-inline">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete Job">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

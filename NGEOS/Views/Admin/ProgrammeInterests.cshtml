@@ -1,0 +1,70 @@
+@model List<NGEOS.Models.ProgrammeInterest>
+@{
+    ViewData["Title"] = "Programme Participants & Volunteers - Admin";
+    Layout = "_AdminLayout";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h3 class="fw-bold mb-1">Programme Volunteers & Participants</h3>
+        <p class="text-muted small mb-0">Review interested volunteers, supporters, and participants for welfare drives.</p>
+    </div>
+    <a asp-action="Programmes" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left me-1"></i> Back to Programmes</a>
+</div>
+
+<div class="giveaid-card p-4">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Applicant</th>
+                    <th>Programme</th>
+                    <th>Role / Type</th>
+                    <th>Contact Phone</th>
+                    <th>Message / Skills</th>
+                    <th>Submitted</th>
+                    <th>Status</th>
+                    <th>Update</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            <strong class="d-block text-dark small">@item.FullName</strong>
+                            <span class="text-muted" style="font-size: 0.75rem;">@item.Email</span>
+                            @if (!string.IsNullOrEmpty(item.Occupation))
+                            {
+                                <span class="badge bg-light text-muted border small mt-1">@item.Occupation</span>
+                            }
+                        </td>
+                        <td>
+                            <strong class="d-block text-dark small">@(item.Programme?.Title ?? "Programme")</strong>
+                            <span class="small text-muted">@(item.Programme?.Category ?? "")</span>
+                        </td>
+                        <td><span class="badge bg-primary-subtle text-primary">@item.InterestType</span></td>
+                        <td class="small text-muted">@item.Phone</td>
+                        <td class="small text-secondary" style="max-width: 220px;">@(item.Message ?? "-")</td>
+                        <td class="small text-muted">@item.SubmittedAt.ToString("MMM dd, yyyy")</td>
+                        <td>
+                            <span class="badge @(item.Status == "Approved" ? "bg-success" : (item.Status == "Contacted" ? "bg-info" : "bg-warning text-dark"))">
+                                @item.Status
+                            </span>
+                        </td>
+                        <td>
+                            <form asp-action="UpdateInterestStatus" asp-route-id="@item.Id" method="post" class="d-flex gap-1">
+                                @Html.AntiForgeryToken()
+                                <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
+                                    <option value="Pending" selected="@(item.Status == "Pending")">Pending</option>
+                                    <option value="Approved" selected="@(item.Status == "Approved")">Approved</option>
+                                    <option value="Contacted" selected="@(item.Status == "Contacted")">Contacted</option>
+                                </select>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

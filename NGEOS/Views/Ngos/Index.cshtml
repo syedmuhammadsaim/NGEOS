@@ -1,0 +1,57 @@
+@model List<NGEOS.Models.NGO>
+@{
+    ViewData["Title"] = "Our Partner NGOs";
+    var focusAreas = ViewBag.FocusAreas as List<string> ?? new List<string>();
+    var selectedFocus = ViewBag.SelectedFocus as string ?? "All";
+    var nIdx = 0;
+}
+
+<div class="py-5 text-white position-relative" style="background: linear-gradient(135deg, rgba(11, 25, 44, 0.9), rgba(15, 23, 42, 0.82)), url('https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=1600') center/cover no-repeat;" data-aos="fade-down">
+    <div class="container text-center py-4">
+        <span class="hero-tag mb-2" data-aos="fade-up"><i class="bi bi-building-check text-warning"></i> Accredited Allies</span>
+        <h1 class="display-4 fw-bold text-white mb-2" data-aos="fade-up" data-aos-delay="100">Our Partner NGOs</h1>
+        <p class="text-white-50 mx-auto" style="max-width: 650px;" data-aos="fade-up" data-aos-delay="150">
+            NGEOS connects you with rigorously vetted, accredited non-profit organizations committed to direct on-ground impact.
+        </p>
+    </div>
+</div>
+
+<div class="container section-padding">
+    <!-- Focus Area Tabs -->
+    <div class="d-flex flex-wrap gap-2 justify-content-center mb-5" data-aos="fade-up" data-aos-delay="100">
+        @foreach (var f in focusAreas)
+        {
+            <a asp-action="Index" asp-route-focus="@f" 
+               class="btn @(selectedFocus.ToLower() == f.ToLower() ? "btn-orange" : "btn-outline-navy") rounded-pill px-4 btn-sm">
+                @f
+            </a>
+        }
+    </div>
+
+    <div class="row g-4">
+        @foreach (var ngo in Model)
+        {
+            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="@((nIdx++ % 3) * 120)">
+                <div class="giveaid-card p-4">
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <img src="@ngo.LogoUrl" alt="@ngo.Name" class="rounded-3 shadow-sm" style="width: 64px; height: 64px; object-fit: cover;">
+                        <div>
+                            <h5 class="fw-bold mb-0 text-dark">@ngo.Name</h5>
+                            <span class="badge bg-light text-muted border small mt-1"><i class="bi bi-patch-check-fill text-primary me-1"></i> Reg: @ngo.RegistrationNumber</span>
+                        </div>
+                    </div>
+                    <p class="text-muted small mb-3 flex-grow-1">@ngo.ShortDescription</p>
+                    <div class="p-2 bg-light rounded-3 mb-3 text-center small">
+                        <span class="text-muted"><i class="bi bi-bullseye text-warning me-1"></i> Focus: <strong>@ngo.FocusArea</strong></span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+                        <span class="small text-muted"><i class="bi bi-calendar-event me-1"></i> Est. @ngo.EstablishedYear</span>
+                        <a asp-action="Details" asp-route-id="@ngo.Id" class="btn btn-orange btn-sm">
+                            View NGO Profile <i class="bi bi-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

@@ -1,0 +1,81 @@
+@model NGEOS.ViewModels.RaiseQueryRequestViewModel
+@{
+    ViewData["Title"] = "Raise A Query";
+}
+
+<div class="py-5 text-white position-relative" style="background: linear-gradient(135deg, rgba(11, 25, 44, 0.9), rgba(15, 23, 42, 0.82)), url('https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=1600') center/cover no-repeat;" data-aos="fade-down">
+    <div class="container text-center py-4">
+        <span class="hero-tag mb-2"><i class="bi bi-patch-question-fill text-warning"></i> User Support</span>
+        <h1 class="display-4 fw-bold text-white mb-2">Raise A Query</h1>
+        <p class="text-white-50 mx-auto" style="max-width: 600px;">
+            Submit your questions, support requests, or partnership inquiries directly to the NGEOS Administrative Council.
+        </p>
+    </div>
+</div>
+
+<div class="container section-padding">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="form-card">
+                <div class="d-flex align-items-center gap-3 mb-4 pb-3 border-bottom">
+                    <div class="action-card-icon icon-volunteer mb-0">
+                        <i class="bi bi-chat-dots-fill"></i>
+                    </div>
+                    <div>
+                        <h4 class="fw-bold mb-0">Submit Your Query</h4>
+                        <p class="text-muted small mb-0">You will receive an official response in your user dashboard and email.</p>
+                    </div>
+                </div>
+
+                <form asp-action="RaiseQuery" method="post">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label asp-for="FullName" class="form-label"></label>
+                            <input asp-for="FullName" class="form-control" placeholder="Your full name" required />
+                            <span asp-validation-for="FullName" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="Email" class="form-label"></label>
+                            <input asp-for="Email" type="email" class="form-control" placeholder="yourname@domain.com" required />
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="Category" class="form-label"></label>
+                            <select asp-for="Category" class="form-select" required>
+                                <option value="General Inquiry">General Inquiry</option>
+                                <option value="Donation Assistance">Donation Assistance</option>
+                                <option value="NGO Partnership">NGO Partnership</option>
+                                <option value="Volunteering & Programmes">Volunteering & Programmes</option>
+                                <option value="Technical Issue">Technical Issue</option>
+                            </select>
+                            <span asp-validation-for="Category" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="Subject" class="form-label"></label>
+                            <input asp-for="Subject" class="form-control" placeholder="Brief subject" required />
+                            <span asp-validation-for="Subject" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-12">
+                            <label asp-for="Message" class="form-label"></label>
+                            <textarea asp-for="Message" rows="5" class="form-control" placeholder="Please describe your query or question in detail..." required></textarea>
+                            <span asp-validation-for="Message" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-12 mt-4">
+                            <button type="submit" class="btn btn-orange btn-lg w-100">
+                                <i class="bi bi-send-fill me-1"></i> Submit Query
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

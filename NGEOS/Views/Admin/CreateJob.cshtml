@@ -1,0 +1,69 @@
+@model NGEOS.Models.JobOpportunity
+@{
+    ViewData["Title"] = "Create Job Posting - Admin";
+    Layout = "_AdminLayout";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h3 class="fw-bold mb-1">Create Job Opportunity</h3>
+        <p class="text-muted small mb-0">Publish an open position for NGEOS operations or field roles.</p>
+    </div>
+    <a asp-action="Jobs" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left me-1"></i> Back to Postings</a>
+</div>
+
+<div class="giveaid-card p-4 p-md-5">
+    <form asp-action="CreateJob" method="post">
+        @Html.AntiForgeryToken()
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger small mb-3"></div>
+
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label asp-for="Title" class="form-label">Job Title</label>
+                <input asp-for="Title" class="form-control" placeholder="e.g. Field Operations Coordinator" required />
+                <span asp-validation-for="Title" class="text-danger small"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="Department" class="form-label">Department / Division</label>
+                <input asp-for="Department" class="form-control" placeholder="e.g. Field Programs / Marketing" required />
+                <span asp-validation-for="Department" class="text-danger small"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="JobType" class="form-label">Employment Type</label>
+                <select asp-for="JobType" class="form-select" required>
+                    <option value="Full Time">Full Time</option>
+                    <option value="Part Time">Part Time</option>
+                    <option value="Volunteer">Volunteer</option>
+                    <option value="Internship">Internship</option>
+                </select>
+                <span asp-validation-for="JobType" class="text-danger small"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="Location" class="form-label">Work Location</label>
+                <input asp-for="Location" class="form-control" placeholder="e.g. Headquarters / Remote / Field" required />
+                <span asp-validation-for="Location" class="text-danger small"></span>
+            </div>
+
+            <div class="col-12">
+                <label asp-for="Description" class="form-label">Role Description & Responsibilities</label>
+                <textarea asp-for="Description" rows="4" class="form-control" placeholder="Describe key duties and daily impact..." required></textarea>
+                <span asp-validation-for="Description" class="text-danger small"></span>
+            </div>
+
+            <div class="col-12">
+                <label asp-for="Requirements" class="form-label">Requirements & Experience</label>
+                <textarea asp-for="Requirements" rows="3" class="form-control" placeholder="Degree requirements, years of experience, key technical skills..." required></textarea>
+                <span asp-validation-for="Requirements" class="text-danger small"></span>
+            </div>
+
+            <div class="col-12 mt-4 pt-3 border-top">
+                <button type="submit" class="btn btn-orange btn-lg px-5 shadow">
+                    <i class="bi bi-briefcase me-1"></i> Publish Job Posting
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

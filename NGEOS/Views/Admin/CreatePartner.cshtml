@@ -1,0 +1,71 @@
+@model NGEOS.Models.Partner
+@{
+    ViewData["Title"] = "Add Corporate Partner - Admin";
+    Layout = "_AdminLayout";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h3 class="fw-bold mb-1">Add Corporate Partner</h3>
+        <p class="text-muted small mb-0">Add a sponsoring company or partner logo to NGEOS.</p>
+    </div>
+    <a asp-action="Partners" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left me-1"></i> Back to Partners</a>
+</div>
+
+<div class="giveaid-card p-4 p-md-5">
+    <form asp-action="CreatePartner" method="post">
+        @Html.AntiForgeryToken()
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger small mb-3"></div>
+
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label asp-for="Name" class="form-label">Partner Organization Name</label>
+                <input asp-for="Name" class="form-control" placeholder="e.g. Apex Global Technologies" required />
+                <span asp-validation-for="Name" class="text-danger small"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="Category" class="form-label">Sponsorship Category / Tier</label>
+                <select asp-for="Category" class="form-select" required>
+                    <option value="Corporate Sponsor">Corporate Sponsor</option>
+                    <option value="Technology Partner">Technology Partner</option>
+                    <option value="Healthcare Partner">Healthcare Partner</option>
+                    <option value="Community Ally">Community Ally</option>
+                    <option value="Media & Outreach">Media & Outreach</option>
+                    <option value="Sustainability Sponsor">Sustainability Sponsor</option>
+                </select>
+                <span asp-validation-for="Category" class="text-danger small"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="LogoUrl" class="form-label">Logo Image URL</label>
+                <input asp-for="LogoUrl" class="form-control" placeholder="https://images.unsplash.com/..." required />
+                <span asp-validation-for="LogoUrl" class="text-danger small"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="WebsiteUrl" class="form-label">Official Website URL (Optional)</label>
+                <input asp-for="WebsiteUrl" class="form-control" placeholder="https://company.example.com" />
+                <span asp-validation-for="WebsiteUrl" class="text-danger small"></span>
+            </div>
+
+            <div class="col-12">
+                <label asp-for="Description" class="form-label">Sponsorship Details / Contribution Scope</label>
+                <textarea asp-for="Description" rows="3" class="form-control" placeholder="Describe how this partner supports NGEOS (e.g., funding, tech resources, freight)..."></textarea>
+                <span asp-validation-for="Description" class="text-danger small"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="DisplayOrder" class="form-label">Display Order Index</label>
+                <input asp-for="DisplayOrder" type="number" class="form-control" value="0" />
+                <span asp-validation-for="DisplayOrder" class="text-danger small"></span>
+            </div>
+
+            <div class="col-12 mt-4 pt-3 border-top">
+                <button type="submit" class="btn btn-orange btn-lg px-5 shadow">
+                    <i class="bi bi-award me-1"></i> Save Partner
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

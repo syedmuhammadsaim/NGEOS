@@ -1,0 +1,84 @@
+@model List<NGEOS.Models.NGO>
+@{
+    ViewData["Title"] = "Manage Associated NGOs - Admin";
+    Layout = "_AdminLayout";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h3 class="fw-bold mb-1">Associated Partner NGOs</h3>
+        <p class="text-muted small mb-0">Onboard and manage accredited non-governmental organizations.</p>
+    </div>
+    <a asp-action="CreateNgo" class="btn btn-orange btn-sm shadow-sm">
+        <i class="bi bi-plus-circle me-1"></i> Add New NGO
+    </a>
+</div>
+
+<div class="giveaid-card p-4">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th style="min-width: 200px;">NGO Details</th>
+                    <th>Primary Focus</th>
+                    <th>Contact Info</th>
+                    <th>Initiatives</th>
+                    <th>Status</th>
+                    <th class="text-end" style="min-width: 90px;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var ngo in Model)
+                {
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center gap-3">
+                                <img src="@ngo.LogoUrl" alt="@ngo.Name" class="rounded-3 shadow-sm flex-shrink-0" style="width: 44px; height: 44px; object-fit: cover;">
+                                <div>
+                                    <strong class="d-block text-dark small">@ngo.Name</strong>
+                                    <div class="d-flex align-items-center gap-2 mt-1">
+                                        <span class="badge bg-light text-muted border font-monospace" style="font-size: 0.72rem;">@ngo.RegistrationNumber</span>
+                                        <span class="text-muted" style="font-size: 0.72rem;">Est. @ngo.EstablishedYear</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge bg-light text-dark border">@ngo.FocusArea</span>
+                        </td>
+                        <td>
+                            <span class="d-block small text-dark"><i class="bi bi-envelope me-1 text-muted"></i>@ngo.Email</span>
+                            <span class="small text-muted d-block"><i class="bi bi-telephone me-1 text-muted"></i>@ngo.Phone</span>
+                        </td>
+                        <td>
+                            <div class="d-flex flex-column gap-1">
+                                <span class="badge bg-light text-muted border small text-start">
+                                    <i class="bi bi-heart text-warning me-1"></i>@ngo.Causes.Count Causes
+                                </span>
+                                <span class="badge bg-light text-muted border small text-start">
+                                    <i class="bi bi-calendar2-check text-primary me-1"></i>@ngo.Programmes.Count Programmes
+                                </span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge @(ngo.IsActive ? "bg-success" : "bg-secondary")">@(ngo.IsActive ? "Active" : "Inactive")</span>
+                        </td>
+                        <td class="text-end">
+                            <div class="d-inline-flex gap-1">
+                                <a asp-action="EditNgo" asp-route-id="@ngo.Id" class="btn btn-sm btn-outline-primary" title="Edit NGO">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                                <form asp-action="DeleteNgo" asp-route-id="@ngo.Id" method="post" onsubmit="return confirm('Are you sure you want to remove this NGO?');" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete NGO">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

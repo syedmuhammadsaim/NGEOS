@@ -1,0 +1,196 @@
+@model List<NGEOS.Models.Donation>
+@{
+    ViewData["Title"] = "Master Donation Ledger - Admin";
+    Layout = "_AdminLayout";
+    var totalAmount = (decimal)(ViewBag.TotalZakatAmount ?? 0m) + (decimal)(ViewBag.TotalGeneralAmount ?? 0m);
+    var currentFilter = (string)(ViewBag.CurrentFilter ?? "all");
+}
+
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+    <div>
+        <h3 class="fw-bold mb-1">Master Donation & Zakat Ledger</h3>
+        <p class="text-muted small mb-0">Complete audit log of all financial contributions, Zakat allocations, and automated email receipts.</p>
+    </div>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show small mb-3 shadow-sm border border-success-subtle" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i>@TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show small mb-3 shadow-sm border border-danger-subtle" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>@TempData["ErrorMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<!-- KPI Metrics Overview Row -->
+<div class="row g-3 mb-4">
+    <!-- Total Verified Funding -->
+    <div class="col-sm-6 col-xl-3">
+        <div class="giveaid-card p-3 border">
+            <span class="text-muted small d-block mb-1">Total Verified Funding</span>
+            <h4 class="fw-bold text-dark mb-0">$@totalAmount.ToString("N2") <span class="fs-6 text-muted font-monospace">USD</span></h4>
+            <small class="text-muted"><i class="bi bi-shield-check text-success me-1"></i>All Completed</small>
+        </div>
+    </div>
+
+    <!-- Zakat Collected -->
+    <div class="col-sm-6 col-xl-3">
+        <div class="giveaid-card p-3 border border-warning-subtle" style="background: #fffcf4;">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <span class="text-warning-emphasis small d-block mb-1 fw-semibold"><i class="bi bi-moon-stars-fill text-warning me-1"></i> Zakat Contributions</span>
+                    <h4 class="fw-bold text-dark mb-0">$@(((decimal)(ViewBag.TotalZakatAmount ?? 0m)).ToString("N2"))</h4>
+                    <small class="text-muted">@ViewBag.ZakatCount Verified Zakat Gifts</small>
+                </div>
+                <span class="badge bg-warning-subtle text-warning-emphasis border border-warning">100% Policy</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- General Donations -->
+    <div class="col-sm-6 col-xl-3">
+        <div class="giveaid-card p-3 border">
+            <span class="text-muted small d-block mb-1"><i class="bi bi-heart-fill text-danger me-1"></i> General Sadaqah & Gifts</span>
+            <h4 class="fw-bold text-dark mb-0">$@(((decimal)(ViewBag.TotalGeneralAmount ?? 0m)).ToString("N2"))</h4>
+            <small class="text-muted">@ViewBag.GeneralCount General Donations</small>
+        </div>
+    </div>
+
+    <!-- Automated Receipt Delivery -->
+    <div class="col-sm-6 col-xl-3">
+        <div class="giveaid-card p-3 border border-success-subtle" style="background: #f6fdf9;">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <span class="text-success small d-block mb-1 fw-semibold"><i class="bi bi-envelope-check-fill text-success me-1"></i> Receipt Emails Sent</span>
+                    <h4 class="fw-bold text-success mb-0">@ViewBag.TotalEmailsSent Delivered</h4>
+                    <small class="text-muted">Live Brevo SMTP Relay</small>
+                </div>
+                <span class="badge bg-success-subtle text-success border border-success"><i class="bi bi-check2"></i> Active</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Ledger Card with Filter Pills -->
+<div class="giveaid-card p-4">
+    <!-- Filter Navigation Tabs -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2 border-bottom pb-3">
+        <div class="btn-group btn-group-sm" role="group">
+            <a asp-action="Donations" asp-route-filter="all" class="btn @(currentFilter == "all" ? "btn-dark active" : "btn-outline-secondary")">
+                All Transactions (@( (int)(ViewBag.ZakatCount ?? 0) + (int)(ViewBag.GeneralCount ?? 0) ))
+            </a>
+            <a asp-action="Donations" asp-route-filter="zakat" class="btn @(currentFilter == "zakat" ? "btn-warning active fw-bold text-dark" : "btn-outline-secondary")">
+                <i class="bi bi-moon-stars me-1"></i> Zakat Only (@ViewBag.ZakatCount)
+            </a>
+            <a asp-action="Donations" asp-route-filter="general" class="btn @(currentFilter == "general" ? "btn-primary active" : "btn-outline-secondary")">
+                <i class="bi bi-heart me-1"></i> General Only (@ViewBag.GeneralCount)
+            </a>
+        </div>
+        <span class="text-muted small">Showing @Model.Count record(s)</span>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Txn ID</th>
+                    <th>Donor Details</th>
+                    <th>Contribution Type</th>
+                    <th>Supported Cause</th>
+                    <th>Amount</th>
+                    <th>Card & Method</th>
+                    <th>Date & Time</th>
+                    <th>Email Receipt Status</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Any())
+                {
+                    @foreach (var d in Model)
+                    {
+                        <tr>
+                            <td><code>@d.TransactionId</code></td>
+                            <td>
+                                <strong class="d-block text-dark small">@d.DonorName</strong>
+                                <span class="text-muted" style="font-size: 0.75rem;">@d.DonorEmail</span>
+                                @if (!string.IsNullOrEmpty(d.DonorPhone))
+                                {
+                                    <span class="text-muted d-block" style="font-size: 0.7rem;"><i class="bi bi-telephone"></i> @d.DonorPhone</span>
+                                }
+                            </td>
+                            <td>
+                                @if (d.IsZakat)
+                                {
+                                    <span class="badge bg-warning-subtle text-dark border border-warning px-2 py-1 fw-bold">
+                                        <i class="bi bi-moon-stars-fill text-warning me-1"></i> Zakat
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-light text-muted border px-2 py-1">
+                                        <i class="bi bi-heart-fill text-danger me-1"></i> General
+                                    </span>
+                                }
+                            </td>
+                            <td>
+                                <strong class="d-block text-dark small">@(d.Cause?.Title ?? "General Relief")</strong>
+                                <span class="badge bg-light text-muted border small" style="font-size: 0.7rem;">@(d.Cause?.Category ?? "Welfare")</span>
+                            </td>
+                            <td class="fw-bold text-success">$@d.Amount.ToString("N2")</td>
+                            <td>
+                                <span class="small d-block text-dark">@d.CardType</span>
+                                <span class="small text-muted" style="font-size: 0.75rem;"><code>@d.MaskedCardNumber</code></span>
+                                <span class="text-muted d-block" style="font-size: 0.7rem;">Holder: @d.CardHolderName</span>
+                            </td>
+                            <td class="small text-muted">@d.DonationDate.ToString("MMM dd, yyyy - hh:mm tt")</td>
+                            <td>
+                                @if (d.IsReceiptEmailSent)
+                                {
+                                    <span class="badge bg-success-subtle text-success border border-success px-2 py-1" title="Email delivered to donor">
+                                        <i class="bi bi-envelope-check-fill me-1"></i> Email Sent
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary-subtle text-muted border px-2 py-1" title="Email delivery pending or failed">
+                                        <i class="bi bi-envelope-dash me-1"></i> Not Sent
+                                    </span>
+                                }
+                            </td>
+                            <td class="text-end">
+                                <div class="btn-group btn-group-sm">
+                                    <a asp-controller="Donate" asp-action="Confirmation" asp-route-transactionId="@d.TransactionId" target="_blank" class="btn btn-outline-secondary" title="View Official Receipt">
+                                        <i class="bi bi-receipt"></i>
+                                    </a>
+                                    <form asp-action="ResendDonationReceipt" asp-route-id="@d.Id" method="post" class="d-inline" onsubmit="return confirm('Resend official receipt email to @d.DonorEmail?');">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-outline-primary" title="Resend Receipt Email to @d.DonorEmail">
+                                            <i class="bi bi-send-fill"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="9" class="text-center py-5 text-muted">
+                            <i class="bi bi-inbox fs-1 d-block mb-2 text-secondary"></i>
+                            No donation transactions found for this filter.
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

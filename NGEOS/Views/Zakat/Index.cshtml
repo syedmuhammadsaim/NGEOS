@@ -1,0 +1,544 @@
+@{
+    ViewData["Title"] = "Smart Zakat Calculator - NGEOS";
+}
+
+<!-- HERO HEADER -->
+<div class="py-5 text-white position-relative" style="background: linear-gradient(135deg, rgba(11, 25, 44, 0.9), rgba(15, 23, 42, 0.82)), url('https://images.unsplash.com/photo-1783227610905-fda5920a9eab?w=1600') center/cover no-repeat;" data-aos="fade-down">
+    <div class="container text-center py-4">
+        <span class="hero-tag mb-2" data-aos="fade-up">
+            <i class="bi bi-moon-stars-fill text-warning"></i> 100% Shariah-Compliant Zakat
+        </span>
+        <h1 class="display-4 fw-bold text-white mb-2" data-aos="fade-up" data-aos-delay="100">
+            Smart Zakat Calculator
+        </h1>
+        <p class="text-white-50 mx-auto" style="max-width: 680px;" data-aos="fade-up" data-aos-delay="150">
+            Accurately calculate your annual Zakat obligation in seconds. Simple, transparent, and aligned with authentic Shariah standards.
+        </p>
+    </div>
+</div>
+
+<div class="container section-padding">
+    <div class="row g-5">
+        <!-- LEFT COLUMN: SIMPLE 3-STEP CALCULATOR -->
+        <div class="col-lg-7" data-aos="fade-up">
+            
+            <!-- Unit Preference Bar -->
+            <div class="d-flex justify-content-between align-items-center mb-4 p-3 bg-white rounded-4 border shadow-sm">
+                <div class="d-flex align-items-center gap-2">
+                    <span class="fw-bold small text-muted text-uppercase">Currency:</span>
+                    <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2 rounded-pill fw-bold">
+                        <i class="bi bi-currency-dollar me-1"></i> USD ($)
+                    </span>
+                </div>
+                
+                <div class="d-flex align-items-center gap-2">
+                    <span class="fw-bold small text-muted text-uppercase">Gold Unit:</span>
+                    <div class="btn-group btn-group-sm" role="group">
+                        <button type="button" class="btn btn-navy active" id="btnUnitGrams" onclick="setGoldUnit('grams')">Grams (g)</button>
+                        <button type="button" class="btn btn-outline-navy" id="btnUnitTola" onclick="setGoldUnit('tola')">Tola</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 1: CASH & LIQUID SAVINGS -->
+            <div class="giveaid-card p-4 p-md-4 mb-4 border-2 shadow-sm" style="border-left: 5px solid var(--primary-orange) !important;">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center text-white flex-shrink-0" style="width: 44px; height: 44px; background: #f25c05; font-size: 1.25rem;">
+                        <i class="bi bi-cash-stack"></i>
+                    </div>
+                    <div>
+                        <h5 class="fw-bold mb-0">Step 1: Cash &amp; Bank Balance</h5>
+                        <p class="text-muted small mb-0">Cash in hand, checking &amp; savings bank deposits, bonds</p>
+                    </div>
+                </div>
+
+                <div class="input-group input-group-lg">
+                    <span class="input-group-text fw-bold text-dark">$</span>
+                    <input type="number" min="0" step="any" id="inputCash" class="form-control fw-bold fs-5 calc-input" placeholder="0.00" />
+                    <span class="input-group-text small text-muted">USD</span>
+                </div>
+                <div class="d-flex flex-wrap gap-2 mt-2">
+                    <button type="button" class="btn btn-sm btn-light border text-muted" onclick="quickAdd('inputCash', 500)">+$500</button>
+                    <button type="button" class="btn btn-sm btn-light border text-muted" onclick="quickAdd('inputCash', 1000)">+$1,000</button>
+                    <button type="button" class="btn btn-sm btn-light border text-muted" onclick="quickAdd('inputCash', 5000)">+$5,000</button>
+                    <button type="button" class="btn btn-sm btn-light border text-muted" onclick="quickAdd('inputCash', 10000)">+$10,000</button>
+                </div>
+            </div>
+
+            <!-- STEP 2: GOLD & SILVER -->
+            <div class="giveaid-card p-4 p-md-4 mb-4 border-2 shadow-sm" style="border-left: 5px solid #eab308 !important;">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center text-dark flex-shrink-0" style="width: 44px; height: 44px; background: #fef08a; font-size: 1.25rem;">
+                        <i class="bi bi-gem"></i>
+                    </div>
+                    <div>
+                        <h5 class="fw-bold mb-0">Step 2: Gold &amp; Silver Holdings</h5>
+                        <p class="text-muted small mb-0">Value of physical gold, silver jewellery, and bullions</p>
+                    </div>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small text-muted">Gold Quantity:</label>
+                        <div class="input-group">
+                            <input type="number" min="0" step="any" id="inputGold" class="form-control fw-bold calc-input" placeholder="0" />
+                            <span class="input-group-text gold-unit-label">Grams</span>
+                        </div>
+                        <small class="text-muted" id="goldRateHint">Market Rate: ~$75 / gram</small>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small text-muted">Silver Quantity (Optional):</label>
+                        <div class="input-group">
+                            <input type="number" min="0" step="any" id="inputSilver" class="form-control fw-bold calc-input" placeholder="0" />
+                            <span class="input-group-text gold-unit-label">Grams</span>
+                        </div>
+                        <small class="text-muted" id="silverRateHint">Market Rate: ~$1.00 / gram</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 3: DEBTS & LIABILITIES -->
+            <div class="giveaid-card p-4 p-md-4 mb-4 border-2 shadow-sm" style="border-left: 5px solid #64748b !important;">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center text-white flex-shrink-0" style="width: 44px; height: 44px; background: #64748b; font-size: 1.25rem;">
+                        <i class="bi bi-dash-circle-fill"></i>
+                    </div>
+                    <div>
+                        <h5 class="fw-bold mb-0">Step 3: Immediate Debts &amp; Liabilities (Deductions)</h5>
+                        <p class="text-muted small mb-0">Unpaid bills, short-term debt, or installments due immediately</p>
+                    </div>
+                </div>
+
+                <div class="input-group input-group-lg">
+                    <span class="input-group-text fw-bold text-dark">$</span>
+                    <input type="number" min="0" step="any" id="inputDebt" class="form-control fw-bold fs-5 calc-input text-danger" placeholder="0.00" />
+                    <span class="input-group-text small text-muted">USD</span>
+                </div>
+                <small class="text-muted mt-1 d-block"><i class="bi bi-info-circle me-1"></i> This liability amount is subtracted directly from your total gross assets.</small>
+            </div>
+
+            <div class="text-end">
+                <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill px-3" onclick="resetCalculator()">
+                    <i class="bi bi-arrow-counterclockwise me-1"></i> Reset All Fields
+                </button>
+            </div>
+        </div>
+
+        <!-- RIGHT COLUMN: LIVE REAL-TIME RESULT CARD -->
+        <div class="col-lg-5" data-aos="fade-left" data-aos-delay="150">
+            <div class="giveaid-card p-4 p-md-5 border-0 shadow-xl rounded-4 text-white position-sticky" style="top: 100px; background: linear-gradient(145deg, #0b192c 0%, #1e293b 100%); border: 1px solid rgba(255, 255, 255, 0.1);">
+                <div class="d-flex align-items-center justify-content-between mb-4 pb-3 border-bottom border-secondary">
+                    <div>
+                        <span class="badge bg-warning text-dark px-3 py-1 rounded-pill fw-bold"><i class="bi bi-calculator me-1"></i>Live Zakat Summary</span>
+                        <h4 class="fw-bold text-white mb-0 mt-2">Your Calculation</h4>
+                    </div>
+                    <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; background: rgba(242, 92, 5, 0.2); color: #f25c05; font-size: 1.5rem;">
+                        <i class="bi bi-calculator-fill"></i>
+                    </div>
+                </div>
+
+                <!-- Breakdown Rows -->
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between py-2 border-bottom border-secondary-subtle">
+                        <span class="text-white-50">Cash &amp; Bank Deposits:</span>
+                        <strong class="text-white" id="resCash">$0.00</strong>
+                    </div>
+                    <div class="d-flex justify-content-between py-2 border-bottom border-secondary-subtle">
+                        <span class="text-white-50">Gold &amp; Silver Value:</span>
+                        <strong class="text-white" id="resGold">$0.00</strong>
+                    </div>
+                    <div class="d-flex justify-content-between py-2 border-bottom border-secondary-subtle">
+                        <span class="text-white-50">Less Deductions / Debts:</span>
+                        <strong class="text-danger" id="resDebt">- $0.00</strong>
+                    </div>
+                    <div class="d-flex justify-content-between py-2 mt-2">
+                        <span class="text-white fw-bold">Total Zakatable Wealth:</span>
+                        <strong class="text-warning fs-5" id="resTotalWealth">$0.00</strong>
+                    </div>
+                </div>
+
+                <!-- Nisab Status Banner -->
+                <div id="nisabBanner" class="p-3 rounded-3 mb-4 text-center" style="background: rgba(255, 255, 255, 0.06); border: 1px dashed rgba(255, 255, 255, 0.2);">
+                    <span class="badge bg-secondary px-3 py-1 rounded-pill mb-1" id="nisabBadge">Enter Your Assets</span>
+                    <p class="small text-white-50 mb-0 mt-1" id="nisabNote">Add your savings above to view your live Nisab status.</p>
+                </div>
+
+                <!-- Big Result Box -->
+                <div class="p-4 rounded-4 text-center mb-4 shadow" style="background: linear-gradient(135deg, rgba(22, 101, 52, 0.4), rgba(21, 128, 61, 0.2)); border: 2px solid #22c55e;">
+                    <span class="text-uppercase small text-success-emphasis fw-bold letter-spacing-1 d-block text-white-50 mb-1">Total Zakat Due (2.5%)</span>
+                    <div class="display-5 fw-extrabold text-success mb-1" id="resZakatDue">
+                        $0.00
+                    </div>
+                    <span class="small text-white-50">USD Currency &bull; 100% Direct Allocation</span>
+                </div>
+
+                <!-- Direct Action Button -->
+                <a href="/Donate?donationType=Zakat" id="btnPayZakatNow" class="btn btn-orange btn-lg w-100 py-3 rounded-pill fw-bold shadow-lg d-flex align-items-center justify-content-center gap-2">
+                    <i class="bi bi-heart-fill"></i>
+                    <span>Fulfill &amp; Pay Zakat Now</span>
+                </a>
+
+                <div class="mt-3 text-center">
+                    <small class="text-white-50 d-inline-flex align-items-center gap-1">
+                        <i class="bi bi-shield-check text-success"></i> 100% Shariah-Audited Zakat Ledger &bull; Instant Email Receipt
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- IMPORTANT INFORMATION ABOUT ZAKAT & SHARIAH GUIDELINES (AHAM MALOOMAT) -->
+    <div class="mt-5 pt-5 border-top" id="zakatKnowledgeSection">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <span class="section-tag"><i class="bi bi-journal-bookmark-fill me-1"></i> Knowledge &amp; Shariah Guidelines</span>
+            <h2 class="display-6 fw-bold mt-2">Important Information About Zakat</h2>
+            <p class="text-muted mx-auto" style="max-width: 700px;">
+                Verified Islamic jurisprudence, authentic Nisab calculation benchmarks in USD ($), and NGEOS's certified 100% donation distribution pledge.
+            </p>
+        </div>
+
+        <!-- 4 KEY PILLARS CARDS -->
+        <div class="row g-4 mb-5" data-aos="fade-up" data-aos-delay="50">
+            <div class="col-md-6 col-lg-3">
+                <div class="giveaid-card p-4 h-100 border-0 shadow-sm rounded-4 text-center" style="background: #ffffff; border-top: 4px solid var(--primary-orange) !important;">
+                    <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 56px; height: 56px; background: rgba(242, 92, 5, 0.12); color: #f25c05; font-size: 1.5rem;">
+                        <i class="bi bi-percent"></i>
+                    </div>
+                    <h6 class="fw-bold text-dark mb-2">Standard Rate: 2.5%</h6>
+                    <p class="text-muted small mb-0">Calculated annually at 2.5% (1/40th) on your total qualifying net surplus wealth.</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="giveaid-card p-4 h-100 border-0 shadow-sm rounded-4 text-center" style="background: #ffffff; border-top: 4px solid #eab308 !important;">
+                    <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 56px; height: 56px; background: rgba(234, 179, 8, 0.15); color: #ca8a04; font-size: 1.5rem;">
+                        <i class="bi bi-gem"></i>
+                    </div>
+                    <h6 class="fw-bold text-dark mb-2">Nisab Threshold in USD</h6>
+                    <p class="text-muted small mb-0">Silver Standard (~$550 USD / 612.36g) or Gold Standard (~$6,500 USD / 87.48g).</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="giveaid-card p-4 h-100 border-0 shadow-sm rounded-4 text-center" style="background: #ffffff; border-top: 4px solid #0284c7 !important;">
+                    <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 56px; height: 56px; background: rgba(2, 132, 199, 0.12); color: #0284c7; font-size: 1.5rem;">
+                        <i class="bi bi-moon-stars-fill"></i>
+                    </div>
+                    <h6 class="fw-bold text-dark mb-2">Ramadan Blessings</h6>
+                    <p class="text-muted small mb-0">Valid year-round upon Hawl completion, but earns up to 70x rewards during Ramadan.</p>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="giveaid-card p-4 h-100 border-0 shadow-sm rounded-4 text-center" style="background: #ffffff; border-top: 4px solid #16a34a !important;">
+                    <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 56px; height: 56px; background: rgba(22, 163, 74, 0.12); color: #16a34a; font-size: 1.5rem;">
+                        <i class="bi bi-patch-check-fill"></i>
+                    </div>
+                    <h6 class="fw-bold text-dark mb-2">100% Zakat Policy</h6>
+                    <p class="text-muted small mb-0">0% admin deductions. 100% of your dollars delivered directly to verified Mustahiqeen.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- DETAILED FAQS & SHARIAH RULES ACCORDION -->
+        <div class="row justify-content-center" data-aos="fade-up" data-aos-delay="100">
+            <div class="col-lg-10">
+                <div class="accordion custom-accordion shadow-sm" id="zakatFaqAccordion">
+                    
+                    <!-- FAQ 1 -->
+                    <div class="accordion-item mb-3 border rounded-3 overflow-hidden shadow-xs">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button fw-bold py-3" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                                <i class="bi bi-check2-circle text-orange me-2 fs-5"></i> 1. Who is obligated to pay Zakat?
+                            </button>
+                        </h2>
+                        <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#zakatFaqAccordion">
+                            <div class="accordion-body text-secondary lh-lg pt-2 pb-4">
+                                Zakat is the third pillar of Islam and a mandatory religious duty. It is compulsory upon every individual who meets all of the following conditions:
+                                <ul class="mt-2 mb-2">
+                                    <li><strong>Muslim:</strong> Must be a follower of Islam.</li>
+                                    <li><strong>Adult &amp; Sane:</strong> Has reached puberty and possesses sound mental capacity.</li>
+                                    <li><strong>Nisab Threshold:</strong> Possesses net qualifying wealth equal to or greater than the Nisab benchmark.</li>
+                                    <li><strong>One Lunar Year (Hawl):</strong> Has held this minimum wealth continuously for one complete Islamic lunar year (approximately 354 days).</li>
+                                    <li><strong>Above Essential Living Needs:</strong> The assets are surplus to primary living necessities (such as primary housing, family sustenance, daily transport, and clothing).</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 2 -->
+                    <div class="accordion-item mb-3 border rounded-3 overflow-hidden shadow-xs">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed fw-bold py-3" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                                <i class="bi bi-calendar-event text-orange me-2 fs-5"></i> 2. Is Zakat only paid during the holy month of Ramadan?
+                            </button>
+                        </h2>
+                        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#zakatFaqAccordion">
+                            <div class="accordion-body text-secondary lh-lg pt-2 pb-4">
+                                <p class="mb-2"><strong>No, Zakat is not restricted only to Ramadan.</strong> Technically, Zakat becomes due on the specific date when your personal lunar year (Hawl) completes on your Nisab.</p>
+                                <p class="mb-0">However, the vast majority of Muslims globally choose to calculate and distribute their Zakat during Ramadan because the rewards for mandatory and righteous deeds are multiplied up to <strong>70 times</strong> during this sacred month. Under Islamic jurisprudence, paying your Zakat in advance or dedicating it during Ramadan is fully permissible and highly recommended.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 3 -->
+                    <div class="accordion-item mb-3 border rounded-3 overflow-hidden shadow-xs">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed fw-bold py-3" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                                <i class="bi bi-coin text-orange me-2 fs-5"></i> 3. What is the Nisab threshold and how is it calculated in US Dollars ($)?
+                            </button>
+                        </h2>
+                        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#zakatFaqAccordion">
+                            <div class="accordion-body text-secondary lh-lg pt-2 pb-4">
+                                Nisab is the minimum threshold of surplus wealth a Muslim must own before Zakat becomes obligatory. Historically established by the Prophet Muhammad (peace be upon him), it is based on two standards:
+                                <div class="row g-3 my-2">
+                                    <div class="col-md-6">
+                                        <div class="p-3 rounded-3 bg-light border">
+                                            <span class="badge bg-warning text-dark mb-1">Silver Standard (Recommended)</span>
+                                            <p class="small text-muted mb-0"><strong>52.5 Tolas (612.36 grams)</strong> of silver. At current global silver rates (~$1.00/g), Nisab is approximately <strong>~$550 - $612 USD</strong>.</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="p-3 rounded-3 bg-light border">
+                                            <span class="badge bg-primary mb-1">Gold Standard</span>
+                                            <p class="small text-muted mb-0"><strong>7.5 Tolas (87.48 grams)</strong> of gold. At current gold rates (~$75/g), Nisab is approximately <strong>~$6,500 USD</strong>.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="small text-muted mb-0"><i class="bi bi-info-circle me-1"></i> Prominent contemporary scholars recommend applying the <strong>Silver standard</strong> for cash, bank balances, and financial portfolios so that more impoverished families receive vital support.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 4 -->
+                    <div class="accordion-item mb-3 border rounded-3 overflow-hidden shadow-xs">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed fw-bold py-3" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                                <i class="bi bi-card-checklist text-orange me-2 fs-5"></i> 4. Which assets are subject to Zakat, and which are exempt?
+                            </button>
+                        </h2>
+                        <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#zakatFaqAccordion">
+                            <div class="accordion-body text-secondary lh-lg pt-2 pb-4">
+                                <div class="row g-4">
+                                    <div class="col-md-6">
+                                        <h6 class="fw-bold text-success mb-2"><i class="bi bi-check-circle-fill me-1"></i> Zakatable Assets (Subject to 2.5%):</h6>
+                                        <ul class="small text-muted ps-3 mb-0">
+                                            <li>Cash on hand, physical currency, and digital wallets</li>
+                                            <li>Checking, savings, and fixed-deposit bank accounts</li>
+                                            <li>Gold and silver (bullion, coins, and wearable jewelry)</li>
+                                            <li>Stock investments, mutual funds, and tradable shares</li>
+                                            <li>Business commercial inventory and merchandise for resale</li>
+                                            <li>Liquid cryptocurrency holdings and foreign currencies</li>
+                                            <li>Money loaned out that you firmly expect will be repaid</li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6 class="fw-bold text-danger mb-2"><i class="bi bi-x-circle-fill me-1"></i> Exempt Assets (No Zakat Due):</h6>
+                                        <ul class="small text-muted ps-3 mb-0">
+                                            <li>Your primary residential house or apartment</li>
+                                            <li>Personal everyday vehicles (cars, motorcycles)</li>
+                                            <li>Home furniture, kitchen appliances, and personal clothing</li>
+                                            <li>Machinery, tools, and office equipment used for operations</li>
+                                            <li>Personal electronics (phones, computers) for private use</li>
+                                            <li>Real estate purchased solely for rental income (only rental profit is zakatable)</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 5 -->
+                    <div class="accordion-item mb-3 border rounded-3 overflow-hidden shadow-xs">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed fw-bold py-3" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
+                                <i class="bi bi-people-fill text-orange me-2 fs-5"></i> 5. Who is eligible to receive Zakat funds (Mustahiqeen)?
+                            </button>
+                        </h2>
+                        <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#zakatFaqAccordion">
+                            <div class="accordion-body text-secondary lh-lg pt-2 pb-4">
+                                The Holy Quran explicitly outlines eight categories eligible to receive Zakat in <strong>Surah At-Tawbah (Verse 60)</strong>:
+                                <ol class="mt-2 mb-2">
+                                    <li><strong>The Poor (Al-Fuqara):</strong> Those with little or no income.</li>
+                                    <li><strong>The Destitute (Al-Masakin):</strong> Individuals who cannot meet their basic survival needs.</li>
+                                    <li><strong>Zakat Administrators (Al-Amilina Alayha):</strong> Those appointed to collect and disburse Zakat.</li>
+                                    <li><strong>New Muslims / Reconciled Hearts (Al-Mu'allafatu Qulubuhum):</strong> To strengthen faith and solidarity.</li>
+                                    <li><strong>Freeing Captives (Fir-Riqab):</strong> Liberating bonded laborers and captives.</li>
+                                    <li><strong>Those in Debt (Al-Gharimin):</strong> People overwhelmed by legitimate debts they cannot repay.</li>
+                                    <li><strong>In the Cause of Allah (Fi Sabilillah):</strong> Struggling for humanitarian and religious welfare.</li>
+                                    <li><strong>Stranded Wayfarers (Ibn As-Sabil):</strong> Travelers cut off from their funds and stranded.</li>
+                                </ol>
+                                <p class="small text-muted mb-0"><i class="bi bi-check-circle-fill text-success me-1"></i> NGEOS specifically channels your Zakat directly to destitute orphans, impoverished widows, emergency disaster survivors, and urgent medical patients.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 6 -->
+                    <div class="accordion-item mb-3 border rounded-3 overflow-hidden shadow-xs">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed fw-bold py-3" type="button" data-bs-toggle="collapse" data-bs-target="#faq6">
+                                <i class="bi bi-shield-lock-fill text-orange me-2 fs-5"></i> 6. What is NGEOS's 100% Zakat Policy?
+                            </button>
+                        </h2>
+                        <div id="faq6" class="accordion-collapse collapse" data-bs-parent="#zakatFaqAccordion">
+                            <div class="accordion-body text-secondary lh-lg pt-2 pb-4">
+                                NGEOS maintains an absolute <strong>100% Zakat Policy</strong>:
+                                <p class="mt-2 mb-2">
+                                    Every single dollar ($) contributed as Zakat is deposited directly into a segregated, Shariah-monitored sub-ledger. We <strong>never deduct administrative fees, management costs, or promotional overheads</strong> from Zakat funds. All operational expenses are sustained entirely through separate voluntary general donations, private grants, and Gift Aid tax recovery.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 7 -->
+                    <div class="accordion-item mb-3 border rounded-3 overflow-hidden shadow-xs">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed fw-bold py-3" type="button" data-bs-toggle="collapse" data-bs-target="#faq7">
+                                <i class="bi bi-receipt-cutoff text-orange me-2 fs-5"></i> 7. Do I receive an official tax and charity receipt?
+                            </button>
+                        </h2>
+                        <div id="faq7" class="accordion-collapse collapse" data-bs-parent="#zakatFaqAccordion">
+                            <div class="accordion-body text-secondary lh-lg pt-2 pb-4">
+                                Yes. The moment your Zakat payment is processed through our secure gateway, an official certified electronic receipt is generated and emailed to you. The receipt includes your unique Transaction ID, exact USD amount, designated Shariah purpose, non-profit registration credentials, and timestamp for your personal tax filing and records.
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- BOTTOM CALLOUT BANNER -->
+                <div class="mt-5 p-4 p-md-5 rounded-4 text-center text-white position-relative" style="background: linear-gradient(135deg, rgba(11, 25, 44, 0.92), rgba(15, 23, 42, 0.85)), url('https://images.unsplash.com/photo-1624862304458-0bb3d6f4b13c?w=1600') center/cover no-repeat; border: 1px solid rgba(255, 255, 255, 0.1);">
+                    <span class="badge bg-warning text-dark px-3 py-1 rounded-pill fw-bold mb-2">
+                        <i class="bi bi-heart-fill text-danger me-1"></i> Purify Your Wealth Today
+                    </span>
+                    <h3 class="fw-bold text-white mb-2">Fulfill Your Religious Obligation with NGEOS</h3>
+                    <p class="text-white-50 mx-auto mb-4" style="max-width: 600px;">
+                        Join thousands of donors worldwide. Calculate your exact Zakat above or make an immediate donation with complete peace of mind.
+                    </p>
+                    <div class="d-flex flex-wrap justify-content-center gap-3">
+                        <button type="button" class="btn btn-outline-light rounded-pill px-4 py-2 fw-semibold" onclick="document.getElementById('inputCash').focus(); window.scrollTo({top: 250, behavior: 'smooth'});">
+                            <i class="bi bi-arrow-up-circle me-1"></i> Calculate Above
+                        </button>
+                        <a href="/Donate?donationType=Zakat" class="btn btn-orange rounded-pill px-4 py-2 fw-bold shadow">
+                            <i class="bi bi-heart-fill me-1"></i> Pay Zakat in USD ($) Now
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // SMART ZAKAT CALCULATOR (USD STANDARD)
+        let currentGoldUnit = 'grams';
+
+        // Rates in USD
+        const RATES_USD = {
+            goldPerGram: 75,
+            silverPerGram: 1.00,
+            gramsPerTola: 11.664,
+            silverNisabGrams: 612.36
+        };
+
+        function setGoldUnit(unit) {
+            currentGoldUnit = unit;
+            document.getElementById('btnUnitGrams').className = unit === 'grams' ? 'btn btn-navy active' : 'btn btn-outline-navy';
+            document.getElementById('btnUnitTola').className = unit === 'tola' ? 'btn btn-navy active' : 'btn btn-outline-navy';
+
+            document.querySelectorAll('.gold-unit-label').forEach(el => el.textContent = unit === 'grams' ? 'Grams' : 'Tola');
+            updateHints();
+            calculateZakat();
+        }
+
+        function updateHints() {
+            const goldRate = currentGoldUnit === 'grams' ? RATES_USD.goldPerGram : Math.round(RATES_USD.goldPerGram * RATES_USD.gramsPerTola);
+            const silverRate = currentGoldUnit === 'grams' ? RATES_USD.silverPerGram : (RATES_USD.silverPerGram * RATES_USD.gramsPerTola).toFixed(2);
+
+            document.getElementById('goldRateHint').textContent = `Market Rate: ~$${goldRate.toLocaleString()} / ${currentGoldUnit}`;
+            document.getElementById('silverRateHint').textContent = `Market Rate: ~$${silverRate} / ${currentGoldUnit}`;
+        }
+
+        function quickAdd(inputId, amount) {
+            const input = document.getElementById(inputId);
+            const current = parseFloat(input.value) || 0;
+            input.value = (current + amount).toFixed(2);
+            calculateZakat();
+        }
+
+        function calculateZakat() {
+            const cash = parseFloat(document.getElementById('inputCash').value) || 0;
+            const goldQty = parseFloat(document.getElementById('inputGold').value) || 0;
+            const silverQty = parseFloat(document.getElementById('inputSilver').value) || 0;
+            const debt = parseFloat(document.getElementById('inputDebt').value) || 0;
+
+            // Convert Gold & Silver to Grams
+            const goldGrams = currentGoldUnit === 'grams' ? goldQty : (goldQty * RATES_USD.gramsPerTola);
+            const silverGrams = currentGoldUnit === 'grams' ? silverQty : (silverQty * RATES_USD.gramsPerTola);
+
+            const goldVal = Math.round(goldGrams * RATES_USD.goldPerGram);
+            const silverVal = Math.round(silverGrams * RATES_USD.silverPerGram);
+            const totalPreciousVal = goldVal + silverVal;
+
+            // Total Zakatable Wealth
+            const totalWealth = Math.max(0, (cash + totalPreciousVal) - debt);
+
+            // Silver Nisab Threshold in USD (~$550 - $612)
+            const nisabThreshold = Math.round(RATES_USD.silverNisabGrams * RATES_USD.silverPerGram);
+            const isNisabReached = totalWealth >= nisabThreshold && totalWealth > 0;
+
+            // Zakat Due (2.5%)
+            const zakatDue = isNisabReached ? (totalWealth * 0.025) : 0;
+
+            // Update UI elements
+            document.getElementById('resCash').textContent = `$${cash.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            document.getElementById('resGold').textContent = `$${totalPreciousVal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            document.getElementById('resDebt').textContent = `- $${debt.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            document.getElementById('resTotalWealth').textContent = `$${totalWealth.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            document.getElementById('resZakatDue').textContent = `$${zakatDue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+            // Update Nisab Badge & Banner in English
+            const nisabBadge = document.getElementById('nisabBadge');
+            const nisabNote = document.getElementById('nisabNote');
+            const btnPay = document.getElementById('btnPayZakatNow');
+
+            if (totalWealth <= 0) {
+                nisabBadge.className = 'badge bg-secondary px-3 py-1 rounded-pill mb-1';
+                nisabBadge.textContent = 'Enter Your Assets';
+                nisabNote.textContent = `Nisab Threshold (Silver standard): ~$${nisabThreshold.toLocaleString()} USD`;
+                btnPay.href = `/Donate?donationType=Zakat`;
+            } else if (isNisabReached) {
+                nisabBadge.className = 'badge bg-success px-3 py-1 rounded-pill mb-1';
+                nisabBadge.innerHTML = '<i class="bi bi-check-circle-fill me-1"></i> Nisab Reached (Zakat is Obligatory)';
+                nisabNote.textContent = `Your net wealth exceeds the Nisab threshold of ~$${nisabThreshold.toLocaleString()} USD.`;
+                const finalPayUsd = Math.max(1, Math.round(zakatDue));
+                btnPay.href = `/Donate?amount=${finalPayUsd}&donationType=Zakat`;
+            } else {
+                nisabBadge.className = 'badge bg-info text-dark px-3 py-1 rounded-pill mb-1';
+                nisabBadge.innerHTML = '<i class="bi bi-info-circle-fill me-1"></i> Below Nisab Threshold';
+                nisabNote.textContent = `Your net wealth is below the Nisab threshold (~$${nisabThreshold.toLocaleString()} USD). Zakat is not obligatory, but voluntary Sadaqah is welcome.`;
+                btnPay.href = `/Donate?amount=25&donationType=Zakat`;
+            }
+        }
+
+        function resetCalculator() {
+            document.getElementById('inputCash').value = '';
+            document.getElementById('inputGold').value = '';
+            document.getElementById('inputSilver').value = '';
+            document.getElementById('inputDebt').value = '';
+            calculateZakat();
+        }
+
+        // Attach live input listeners
+        document.querySelectorAll('.calc-input').forEach(input => {
+            input.addEventListener('input', calculateZakat);
+        });
+
+        // Initialize on page load
+        updateHints();
+        calculateZakat();
+    </script>
+}

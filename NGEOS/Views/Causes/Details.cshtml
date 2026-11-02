@@ -1,0 +1,135 @@
+@model NGEOS.Models.Cause
+@{
+    ViewData["Title"] = Model.Title;
+    var recentDonations = ViewBag.RecentDonations as List<NGEOS.Models.Donation> ?? new List<NGEOS.Models.Donation>();
+    var relatedCauses = ViewBag.RelatedCauses as List<NGEOS.Models.Cause> ?? new List<NGEOS.Models.Cause>();
+}
+
+<div class="py-5 text-white position-relative" style="background: linear-gradient(135deg, rgba(11, 25, 44, 0.9), rgba(15, 23, 42, 0.82)), url('@(string.IsNullOrEmpty(Model.ImageUrl) ? "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=1600" : Model.ImageUrl)') center/cover no-repeat;" data-aos="fade-down">
+    <div class="container py-3">
+        <h1 class="display-5 fw-bold text-white mb-0" data-aos="fade-up" data-aos-delay="100">@Model.Title</h1>
+    </div>
+</div>
+
+<div class="container section-padding">
+    <div class="row g-5">
+        <!-- Main Cause Content -->
+        <div class="col-lg-8" data-aos="fade-up">
+            <div class="giveaid-card p-0 overflow-hidden mb-5">
+                <img src="@Model.ImageUrl" alt="@Model.Title" class="w-100" style="max-height: 480px; object-fit: cover;">
+                <div class="p-4 p-md-5">
+                    <div class="d-flex align-items-center gap-3 text-muted small mb-4 pb-3 border-bottom">
+                        <span><i class="bi bi-building text-warning me-1"></i> Partner NGO: <strong>@(Model.Ngo?.Name ?? "NGEOS Alliance")</strong></span>
+                        <span>•</span>
+                        <span><i class="bi bi-clock-history me-1"></i> Launched: @Model.CreatedAt.ToString("MMM dd, yyyy")</span>
+                    </div>
+
+                    <h3 class="fw-bold mb-3">About This Campaign</h3>
+                    <p class="lead text-secondary mb-4">@Model.ShortDescription</p>
+
+                    <div class="text-secondary lh-lg mb-5" style="font-size: 1.05rem;">
+                        <p>@Model.FullDescription</p>
+                    </div>
+
+                    <!-- Direct Action Bar -->
+                    <div class="p-4 bg-light rounded-4 border d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3" data-aos="zoom-in">
+                        <div>
+                            <h5 class="fw-bold mb-1">Make an Immediate Difference</h5>
+                            <p class="text-muted small mb-0">Your support delivers direct relief within 48 hours.</p>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <a asp-controller="Donate" asp-action="Index" asp-route-causeId="@Model.Id" class="btn btn-orange px-4 shadow">
+                                <i class="bi bi-heart-fill"></i> Donate Now
+                            </a>
+                            <a asp-controller="User" asp-action="InviteFriends" asp-route-causeId="@Model.Id" class="btn btn-outline-navy px-3" title="Invite Friends to Support">
+                                <i class="bi bi-share-fill me-1"></i> Share
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Donors Wall -->
+            <div class="giveaid-card p-4" data-aos="fade-up" data-aos-delay="100">
+                <h4 class="fw-bold mb-4"><i class="bi bi-people-fill text-warning me-2"></i> Recent Generous Donors</h4>
+                @if (recentDonations.Any())
+                {
+                    <div class="list-group list-group-flush">
+                        @foreach (var d in recentDonations)
+                        {
+                            <div class="list-group-item px-0 py-3 d-flex justify-content-between align-items-center">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="brand-icon" style="width: 38px; height: 38px; font-size: 1rem; background: var(--bg-subtle); color: var(--primary-orange);">
+                                        <i class="bi bi-heart-fill"></i>
+                                    </div>
+                                    <div>
+                                        <h6 class="fw-bold mb-0">@d.DonorName</h6>
+                                        <span class="text-muted small"><i class="bi bi-clock me-1"></i> @d.DonationDate.ToString("MMM dd, yyyy")</span>
+                                    </div>
+                                </div>
+                                <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2 fw-bold" style="font-size: 0.95rem;">
+                                    + $@d.Amount.ToString("N0")
+                                </span>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted small mb-0">Be the very first donor to spark hope for this cause!</p>
+                }
+            </div>
+        </div>
+
+        <!-- Sidebar: Donation Meter & Partner Info -->
+        <div class="col-lg-4" data-aos="fade-left" data-aos-delay="150">
+            <div class="sticky-sidebar">
+                <!-- Funding Progress Card -->
+                <div class="giveaid-card p-4">
+                    <h4 class="fw-bold mb-3">Campaign Goal</h4>
+
+                    <div class="d-flex justify-content-between align-items-baseline mb-2">
+                        <span class="display-6 fw-bold text-dark">$@Model.RaisedAmount.ToString("N0")</span>
+                        <span class="text-muted small">Target: $@Model.TargetAmount.ToString("N0")</span>
+                    </div>
+
+                    <div class="custom-progress mb-3" style="height: 12px;">
+                        <div class="progress-bar-orange" style="width: @(Model.PercentageRaised)%"></div>
+                    </div>
+
+                    <div class="d-flex justify-content-between small text-muted mb-4">
+                        <span><strong>@Model.PercentageRaised%</strong> Funded</span>
+                        <span><strong>@Model.Donations.Count</strong> Donors</span>
+                    </div>
+
+                    <a asp-controller="Donate" asp-action="Index" asp-route-causeId="@Model.Id" class="btn btn-orange btn-lg w-100 mb-3 shadow">
+                        <i class="bi bi-heart-fill me-1"></i> Donate To This Cause
+                    </a>
+
+                    <a asp-controller="User" asp-action="InviteFriends" asp-route-causeId="@Model.Id" class="btn btn-outline-navy w-100">
+                        <i class="bi bi-envelope-heart me-1"></i> Invite Friends To Help
+                    </a>
+
+                    <hr class="my-4">
+
+                    <!-- NGO Profile snippet -->
+                    @if (Model.Ngo != null)
+                    {
+                        <h6 class="fw-bold mb-3"><i class="bi bi-patch-check-fill text-primary me-1"></i> Verified Managing NGO</h6>
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <img src="@Model.Ngo.LogoUrl" alt="@Model.Ngo.Name" class="rounded-3 shadow-sm" style="width: 50px; height: 50px; object-fit: cover;">
+                            <div>
+                                <h6 class="fw-bold mb-0 text-dark">@Model.Ngo.Name</h6>
+                                <span class="small text-muted">Reg: @Model.Ngo.RegistrationNumber</span>
+                            </div>
+                        </div>
+                        <p class="text-muted small mb-3">@Model.Ngo.ShortDescription</p>
+                        <a asp-controller="Ngos" asp-action="Details" asp-route-id="@Model.Ngo.Id" class="btn btn-sm btn-light border w-100">
+                            View NGO Profile
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

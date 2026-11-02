@@ -1,0 +1,318 @@
+@model NGEOS.Models.AboutPage
+@{
+    ViewData["Title"] = Model.Title;
+
+    var bannerUrl = string.IsNullOrWhiteSpace(Model.BannerImageUrl)
+        ? "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=1600"
+        : Model.BannerImageUrl;
+
+    // Sidebar links: yahan se add / remove karein
+    var navItems = new[]
+    {
+        new { Slug = "what-we-do",        Action = "WhatWeDo",        Icon = "bi-activity",       Text = "What We Do" },
+        new { Slug = "our-mission",       Action = "OurMission",      Icon = "bi-compass",        Text = "Our Mission" },
+        new { Slug = "our-team",          Action = "OurTeam",         Icon = "bi-people",         Text = "Our Team" },
+        new { Slug = "career-with-us",    Action = "CareerWithUs",    Icon = "bi-briefcase",      Text = "Career With Us" },
+        new { Slug = "our-achievements",  Action = "OurAchievements", Icon = "bi-trophy",         Text = "Our Achievements" },
+        new { Slug = "our-supporters",    Action = "OurSupporters",   Icon = "bi-building-check", Text = "Our Supporters" },
+        new { Slug = "read-about-us",     Action = "ReadAboutUs",     Icon = "bi-book-half",      Text = "Read About Us" }
+    };
+}
+
+@section Styles {
+    <style>
+        /* ================= HERO ================= */
+        .about-hero {
+            position: relative;
+            padding: 90px 0 80px;
+            color: #fff;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(11,25,44,.92), rgba(15,23,42,.78)), url('@bannerUrl') center/cover no-repeat;
+        }
+        .about-hero::after {
+            content: "";
+            position: absolute;
+            left: 0; right: 0; bottom: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-orange), #ffb885, var(--primary-orange));
+        }
+        .about-hero-inner { max-width: 760px; margin: 0 auto; }
+        .about-hero h1 { color: #fff; font-size: 2.8rem; font-weight: 800; margin-bottom: 12px; }
+        .about-hero p { color: rgba(255,255,255,.8); font-size: 1.1rem; margin: 0 auto; }
+
+        .about-breadcrumb {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: .85rem;
+            font-weight: 600;
+            margin-top: 22px;
+            padding: 6px 16px;
+            border-radius: 9999px;
+            background: rgba(255,255,255,.1);
+            border: 1px solid rgba(255,255,255,.15);
+        }
+        .about-breadcrumb a { color: rgba(255,255,255,.85); }
+        .about-breadcrumb a:hover { color: var(--primary-orange); }
+        .about-breadcrumb .current { color: #ffb885; }
+
+        /* ================= LAYOUT ================= */
+        .about-section { padding: 70px 0; }
+
+        .about-layout {
+            display: grid;
+            grid-template-columns: 340px minmax(0, 1fr);
+            gap: 36px;
+            align-items: start;
+        }
+
+        .about-sidebar {
+            position: sticky;
+            top: 100px;             /* sticky navbar ke neeche */
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* ================= SIDEBAR NAV ================= */
+        .about-nav-card {
+            background: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            padding: 22px;
+        }
+        .about-nav-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--navy-dark);
+            padding-bottom: 14px;
+            margin-bottom: 14px;
+            border-bottom: 1px solid var(--border-light);
+        }
+        .about-nav-title i { color: var(--primary-orange); }
+
+        .about-nav-list { display: flex; flex-direction: column; gap: 4px; }
+
+        .about-nav-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 11px 14px;
+            border-radius: var(--radius-sm);
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: .92rem;
+            transition: var(--transition-fast);
+        }
+        .about-nav-item .left { display: flex; align-items: center; gap: 12px; }
+        .about-nav-item .left i { color: var(--text-muted); font-size: 1.05rem; transition: var(--transition-fast); }
+        .about-nav-item .arrow { font-size: .75rem; opacity: 0; transform: translateX(-6px); transition: var(--transition-fast); }
+
+        .about-nav-item:hover {
+            background: var(--primary-orange-light);
+            color: var(--primary-orange);
+        }
+        .about-nav-item:hover .left i { color: var(--primary-orange); }
+        .about-nav-item:hover .arrow { opacity: 1; transform: translateX(0); }
+
+        .about-nav-item.active {
+            background: linear-gradient(135deg, var(--primary-orange), #ff7a29);
+            color: #fff;
+            box-shadow: 0 6px 16px rgba(242,92,5,.3);
+        }
+        .about-nav-item.active .left i { color: #fff; }
+        .about-nav-item.active .arrow { opacity: 1; transform: translateX(0); color: #fff; }
+
+        /* ================= CTA ================= */
+        .about-cta {
+            border-radius: var(--radius-lg);
+            padding: 28px 24px;
+            text-align: center;
+            color: #fff;
+            background: linear-gradient(135deg, var(--navy-dark), var(--navy-surface) 55%, var(--primary-orange));
+            box-shadow: var(--shadow-lg);
+        }
+        .about-cta-icon {
+            width: 56px; height: 56px;
+            margin: 0 auto 14px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 50%;
+            background: rgba(255,255,255,.15);
+            font-size: 1.5rem;
+        }
+        .about-cta h5 { color: #fff; font-weight: 700; margin-bottom: 8px; }
+        .about-cta p { color: rgba(255,255,255,.75); font-size: .88rem; margin-bottom: 18px; }
+
+        /* ================= CONTENT ================= */
+        .about-content-card {
+            background: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+        }
+        .about-content-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 18px 36px;
+            background: var(--bg-subtle);
+            border-bottom: 1px solid var(--border-color);
+        }
+        .about-content-head .label {
+            display: inline-flex; align-items: center; gap: 8px;
+            font-weight: 700; font-size: .8rem;
+            text-transform: uppercase; letter-spacing: .08em;
+            color: var(--primary-orange);
+        }
+        .about-content-head .verified {
+            display: inline-flex; align-items: center; gap: 6px;
+            font-size: .8rem; font-weight: 600; color: var(--success-color);
+        }
+        .about-content-body { padding: 40px 36px; }
+
+        .about-content {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            line-height: 1.85;
+        }
+        .about-content h1, .about-content h2, .about-content h3, .about-content h4 {
+            color: var(--navy-dark);
+            font-weight: 700;
+            margin: 1.6em 0 .6em;
+        }
+        .about-content h2 { font-size: 1.7rem; }
+        .about-content h3 { font-size: 1.35rem; }
+        .about-content > :first-child { margin-top: 0; }
+        .about-content p { margin-bottom: 1.1em; }
+        .about-content img { max-width: 100%; height: auto; border-radius: var(--radius-md); margin: 14px 0; }
+        .about-content ul, .about-content ol { padding-left: 1.3em; margin-bottom: 1.2em; }
+        .about-content li { margin-bottom: .4em; }
+        .about-content a { color: var(--primary-orange); font-weight: 600; }
+        .about-content blockquote {
+            margin: 1.5em 0;
+            padding: 16px 22px;
+            border-left: 4px solid var(--primary-orange);
+            background: var(--primary-orange-light);
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            color: var(--navy-dark);
+            font-style: italic;
+        }
+        .about-content table { width: 100%; border-collapse: collapse; margin-bottom: 1.2em; display: block; overflow-x: auto; }
+        .about-content th, .about-content td { padding: 10px 14px; border: 1px solid var(--border-color); }
+        .about-content th { background: var(--bg-subtle); color: var(--navy-dark); }
+
+        .about-content-foot {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 18px 36px;
+            border-top: 1px solid var(--border-light);
+            font-size: .85rem;
+            color: var(--text-muted);
+        }
+        .about-content-foot i { color: var(--primary-orange); }
+
+        /* ================= RESPONSIVE ================= */
+        @@media (max-width: 991.98px) {
+            .about-layout { grid-template-columns: 1fr; }
+            .about-sidebar { position: static; order: 2; }
+            .about-main { order: 1; }
+            .about-hero { padding: 64px 0 56px; }
+            .about-hero h1 { font-size: 2.1rem; }
+            .about-section { padding: 44px 0; }
+        }
+        @@media (max-width: 575.98px) {
+            .about-hero h1 { font-size: 1.75rem; }
+            .about-content-head, .about-content-foot { padding: 14px 20px; }
+            .about-content-body { padding: 26px 20px; }
+        }
+    </style>
+}
+
+<!-- ================= HERO ================= -->
+<div class="about-hero" data-aos="fade-down">
+    <div class="container">
+        <div class="about-hero-inner">
+            <span class="hero-tag" data-aos="fade-up"><i class="bi bi-info-circle-fill text-warning"></i> About NGEOS</span>
+            <h1 data-aos="fade-up" data-aos-delay="100">@Model.Title</h1>
+            @if (!string.IsNullOrEmpty(Model.Subtitle))
+            {
+                <p data-aos="fade-up" data-aos-delay="150">@Model.Subtitle</p>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- ================= BODY ================= -->
+<div class="about-section">
+    <div class="container">
+        <div class="about-layout">
+
+            <!-- SIDEBAR -->
+            <div class="about-sidebar" data-aos="fade-right">
+                <div class="about-nav-card">
+                    <div class="about-nav-title">
+                        <i class="bi bi-compass"></i> About Us Navigation
+                    </div>
+                    <div class="about-nav-list">
+                        @foreach (var item in navItems)
+                        {
+                            <a asp-controller="About" asp-action="@item.Action"
+                               class="about-nav-item @(Model.Slug == item.Slug ? "active" : "")">
+                                <div class="left">
+                                    <i class="bi @item.Icon"></i>
+                                    <span>@item.Text</span>
+                                </div>
+                                <i class="bi bi-arrow-right arrow"></i>
+                            </a>
+                        }
+                    </div>
+                </div>
+
+                <div class="about-cta">
+                    <div class="about-cta-icon"><i class="bi bi-heart-fill"></i></div>
+                    <h5>Support Our Cause</h5>
+                    <p>Join hands with NGEOS to bring hope and essential relief to children and families.</p>
+                    <a asp-controller="Donate" asp-action="Index" class="btn btn-light fw-bold rounded-pill px-4">
+                        <i class="bi bi-heart-fill text-danger me-1"></i> Make A Donation
+                    </a>
+                </div>
+            </div>
+
+            <!-- MAIN CONTENT -->
+            <div class="about-main" data-aos="fade-left">
+                <div class="about-content-card">
+                    <div class="about-content-head">
+                        <span class="label"><i class="bi bi-journal-text"></i> @Model.Title</span>
+                        <span class="verified"><i class="bi bi-shield-check"></i> Verified by NGEOS Secretariat</span>
+                    </div>
+
+                    <div class="about-content-body">
+                        <div class="about-content">
+                            @Html.Raw(Model.ContentHtml)
+                        </div>
+                    </div>
+
+                    <div class="about-content-foot">
+                        <span><i class="bi bi-clock-history me-1"></i> Last updated: @Model.LastUpdated.ToString("MMMM dd, yyyy")</span>
+                        <a asp-controller="Home" asp-action="Contact" class="text-decoration-none fw-semibold" style="color: var(--primary-orange);">
+                            Questions? Contact us <i class="bi bi-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

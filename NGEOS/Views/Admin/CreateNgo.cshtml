@@ -1,0 +1,94 @@
+@model NGEOS.Models.NGO
+@{
+    ViewData["Title"] = "Onboard New NGO - Admin";
+    Layout = "_AdminLayout";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h3 class="fw-bold mb-1">Onboard New Partner NGO</h3>
+        <p class="text-muted small mb-0">Register an accredited non-profit organization into the NGEOS network.</p>
+    </div>
+    <a asp-action="Ngos" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left me-1"></i> Back to NGOs</a>
+</div>
+
+<div class="giveaid-card p-4 p-md-5">
+    <form asp-action="CreateNgo" method="post">
+        @Html.AntiForgeryToken()
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger small mb-3"></div>
+
+        <div class="row g-3">
+            <div class="col-md-8">
+                <label asp-for="Name" class="form-label">NGO Organization Name</label>
+                <input asp-for="Name" class="form-control" placeholder="e.g. Global Children Life Trust" required />
+                <span asp-validation-for="Name" class="text-danger small"></span>
+            </div>
+
+            <div class="col-md-4">
+                <label asp-for="RegistrationNumber" class="form-label">Registration / License Number</label>
+                <input asp-for="RegistrationNumber" class="form-control" placeholder="e.g. NGO-88210-CH" required />
+                <span asp-validation-for="RegistrationNumber" class="text-danger small"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="FocusArea" class="form-label">Primary Welfare Focus Area</label>
+                <input asp-for="FocusArea" class="form-control" placeholder="e.g. Child Protection & Nutrition" required />
+                <span asp-validation-for="FocusArea" class="text-danger small"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="EstablishedYear" class="form-label">Established Year</label>
+                <input asp-for="EstablishedYear" type="number" class="form-control" placeholder="2016" required />
+                <span asp-validation-for="EstablishedYear" class="text-danger small"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="Email" class="form-label">Official Email</label>
+                <input asp-for="Email" type="email" class="form-control" placeholder="contact@ngodomain.org" required />
+                <span asp-validation-for="Email" class="text-danger small"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="Phone" class="form-label">Contact Phone</label>
+                <input asp-for="Phone" class="form-control" placeholder="+1 (555) 000-0000" required />
+                <span asp-validation-for="Phone" class="text-danger small"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="LogoUrl" class="form-label">Logo Image URL</label>
+                <input asp-for="LogoUrl" class="form-control" placeholder="https://images.unsplash.com/..." required />
+                <span asp-validation-for="LogoUrl" class="text-danger small"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="Website" class="form-label">Official Website URL (Optional)</label>
+                <input asp-for="Website" class="form-control" placeholder="https://ngo.example.org" />
+                <span asp-validation-for="Website" class="text-danger small"></span>
+            </div>
+
+            <div class="col-12">
+                <label asp-for="Address" class="form-label">Headquarters Address</label>
+                <input asp-for="Address" class="form-control" placeholder="City, State, Country" />
+                <span asp-validation-for="Address" class="text-danger small"></span>
+            </div>
+
+            <div class="col-12">
+                <label asp-for="ShortDescription" class="form-label">Short Mission Summary</label>
+                <textarea asp-for="ShortDescription" rows="2" class="form-control" placeholder="Brief summary of what this NGO does..." required></textarea>
+                <span asp-validation-for="ShortDescription" class="text-danger small"></span>
+            </div>
+
+            <div class="col-12">
+                <label asp-for="FullDescription" class="form-label">Full Organization Background & Track Record</label>
+                <textarea asp-for="FullDescription" rows="5" class="form-control" placeholder="Detailed background, field operations, past accomplishments..." required></textarea>
+                <span asp-validation-for="FullDescription" class="text-danger small"></span>
+            </div>
+
+            <div class="col-12 mt-4 pt-3 border-top">
+                <button type="submit" class="btn btn-orange btn-lg px-5 shadow">
+                    <i class="bi bi-building-add me-1"></i> Register Partner NGO
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

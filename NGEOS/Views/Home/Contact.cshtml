@@ -1,0 +1,136 @@
+@model NGEOS.ViewModels.ContactUsViewModel
+@{
+    ViewData["Title"] = "Contact Us";
+}
+
+<!-- Hero Section -->
+<div class="giveaid-hero py-5" style="min-height: 300px; padding-bottom: 50px !important; background: linear-gradient(135deg, rgba(11, 25, 44, 0.9), rgba(15, 23, 42, 0.82)), url('https://images.unsplash.com/photo-1521791136064-7986c2920216?w=1600') center/cover no-repeat !important;" data-aos="fade-down">
+    <div class="container text-center position-relative z-1">
+        <span class="hero-tag mb-3" data-aos="fade-up"><i class="bi bi-chat-heart-fill"></i> Get In Touch</span>
+        <h1 class="display-5 fw-bold text-white mb-3" style="font-family: var(--font-heading);" data-aos="fade-up" data-aos-delay="100">We Would Love To Hear From You</h1>
+        <p class="text-white-50 mx-auto" style="max-width: 650px; font-size: 1.1rem;" data-aos="fade-up" data-aos-delay="150">
+            Have questions about donations, partnership opportunities, or volunteering? Our team is always here to assist you.
+        </p>
+    </div>
+</div>
+
+<!-- Main Content -->
+<div class="container section-padding pt-5">
+    <div class="row g-4">
+        
+        <!-- Left Side: Contact Information -->
+        <div class="col-lg-5" data-aos="fade-right">
+            <div class="d-flex flex-column h-100">
+                <div class="mb-4">
+                    <span class="section-tag"><i class="bi bi-info-circle"></i> Contact Info</span>
+                    <h3 class="fw-bold mt-2" style="font-family: var(--font-heading); color: var(--navy-dark);">Reach Out To Us</h3>
+                    <p class="text-muted small">Our dedicated support team is available to answer your queries.</p>
+                </div>
+                
+                <!-- Address Card -->
+                <div class="giveaid-card p-4 mb-3 d-flex align-items-center gap-3">
+                    <div class="action-card-icon icon-volunteer mb-0 flex-shrink-0" style="width: 50px; height: 50px; font-size: 1.3rem;">
+                        <i class="bi bi-geo-alt-fill"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-1 text-navy" style="font-family: var(--font-heading);">Central Headquarters</h6>
+                        <p class="text-muted small mb-0 lh-base">
+                            100 Edhi Street, Saddar,<br> Karachi, Pakistan
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Email Card -->
+                <div class="giveaid-card p-4 mb-3 d-flex align-items-center gap-3">
+                    <div class="action-card-icon icon-donate mb-0 flex-shrink-0" style="width: 50px; height: 50px; font-size: 1.3rem;">
+                        <i class="bi bi-envelope-fill"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-1 text-navy" style="font-family: var(--font-heading);">Email Inquiries</h6>
+                        <p class="text-muted small mb-0">Official Contact: <a href="mailto:ngeos@gmail.com" class="text-orange">ngeos@gmail.com</a></p>
+                        <p class="text-muted small mb-0">General Support: <a href="mailto:ngeos@gmail.com" class="text-orange">ngeos@gmail.com</a></p>
+                    </div>
+                </div>
+
+                <!-- Phone Card -->
+                <div class="giveaid-card p-4 mb-3 d-flex align-items-center gap-3">
+                    <div class="action-card-icon icon-cause mb-0 flex-shrink-0" style="width: 50px; height: 50px; font-size: 1.3rem;">
+                        <i class="bi bi-telephone-fill"></i>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-1 text-navy" style="font-family: var(--font-heading);">Toll-Free Phone Helpline</h6>
+                        <p class="text-muted small mb-0"> +92 (300) 123-4567</p>
+                        <p class="text-muted small mb-0">Mon - Fri: 8:00 AM - 7:00 PM EST</p>
+                    </div>
+                </div>
+
+                <!-- Social Links (Pushed to bottom with mt-auto) -->
+                <div class="p-4 rounded-4 mt-auto" style="background-color: var(--primary-orange-light); border: 1px dashed rgba(242, 92, 5, 0.3);">
+                    <h6 class="fw-bold mb-3 text-center" style="font-family: var(--font-heading); color: var(--navy-dark);">Connect With Us</h6>
+                    <div class="d-flex justify-content-center gap-3">
+                        <a href="https://facebook.com" class="social-icon-link" style="background: #ffffff; color: var(--navy-dark) !important;"><i class="bi bi-facebook"></i></a>
+                        <a href="https://twitter.com" class="social-icon-link" style="background: #ffffff; color: var(--navy-dark) !important;"><i class="bi bi-twitter-x"></i></a>
+                        <a href="https://instagram.com" class="social-icon-link" style="background: #ffffff; color: var(--navy-dark) !important;"><i class="bi bi-instagram"></i></a>
+                        <a href="https://linkedin.com" class="social-icon-link" style="background: #ffffff; color: var(--navy-dark) !important;"><i class="bi bi-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side: Contact Form -->
+        <div class="col-lg-7" data-aos="fade-left">
+            <div class="form-card h-100 d-flex flex-column" style="padding: 40px;">
+                <div class="mb-4">
+                    <span class="section-tag"><i class="bi bi-envelope-paper"></i> Message Us</span>
+                    <h3 class="fw-bold mb-2 mt-2" style="font-family: var(--font-heading); color: var(--navy-dark);">Send Us A Message</h3>
+                    <p class="text-muted small">Fill in the details below and we will get back to you within 24 hours.</p>
+                </div>
+
+                <form asp-action="Contact" method="post" class="d-flex flex-column h-100">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger small py-2 mb-3" style="display: none;"></div>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label asp-for="Name" class="form-label">Full Name <span class="text-danger">*</span></label>
+                            <input asp-for="Name" class="form-control" placeholder="Your Name" required />
+                            <span asp-validation-for="Name" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="Email" class="form-label">Email Address <span class="text-danger">*</span></label>
+                            <input asp-for="Email" type="email" class="form-control" placeholder="your@mail.com" required />
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="Phone" class="form-label">Phone Number</label>
+                            <input asp-for="Phone" type="tel" class="form-control" placeholder="+92 (300) 123-4567" />
+                            <span asp-validation-for="Phone" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="Subject" class="form-label">Subject <span class="text-danger">*</span></label>
+                            <input asp-for="Subject" class="form-control" placeholder="How can we help?" required />
+                            <span asp-validation-for="Subject" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-12">
+                            <label asp-for="Message" class="form-label">Your Message <span class="text-danger">*</span></label>
+                            <textarea asp-for="Message" rows="5" class="form-control" placeholder="Write your message here..." required></textarea>
+                            <span asp-validation-for="Message" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Button pushed to bottom -->
+                        <div class="col-12 mt-auto pt-4">
+                            <button type="submit" class="btn btn-orange w-100 py-3 text-uppercase" style="letter-spacing: 0.5px; font-size: 0.95rem;">
+                                <i class="bi bi-send-fill me-2"></i> Send Message Now
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>  

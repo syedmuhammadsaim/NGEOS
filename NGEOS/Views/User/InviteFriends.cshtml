@@ -1,0 +1,108 @@
+@model NGEOS.ViewModels.InviteFriendViewModel
+@{
+    ViewData["Title"] = "Invite Friends To Support Causes - NGEOS";
+}
+
+<div class="py-5 text-white position-relative" style="background: linear-gradient(135deg, rgba(11, 25, 44, 0.9), rgba(15, 23, 42, 0.82)), url('https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1600') center/cover no-repeat;" data-aos="fade-down">
+    <div class="container text-center py-4">
+        <span class="hero-tag mb-2"><i class="bi bi-envelope-heart-fill text-warning"></i> Community Advocacy</span>
+        <h1 class="display-4 fw-bold text-white mb-2">Invite Friends To NGEOS</h1>
+        <p class="text-white-50 mx-auto" style="max-width: 600px;">
+            Inspire your friends, colleagues, and family members to discover and support verified humanitarian initiatives.
+        </p>
+    </div>
+</div>
+
+<div class="container section-padding">
+    <!-- Quick Navigation Pills -->
+    <div class="d-flex flex-wrap justify-content-center gap-2 mb-5" data-aos="fade-up">
+        <a asp-action="Dashboard" class="btn btn-outline-navy btn-sm rounded-pill px-4 fw-semibold">Overview</a>
+        <a asp-action="Donations" class="btn btn-outline-navy btn-sm rounded-pill px-4 fw-semibold">Donation History</a>
+        <a asp-action="Programmes" class="btn btn-outline-navy btn-sm rounded-pill px-4 fw-semibold">My Programmes</a>
+        <a asp-action="Queries" class="btn btn-outline-navy btn-sm rounded-pill px-4 fw-semibold">My Queries</a>
+        <a asp-action="InviteFriends" class="btn btn-orange btn-sm rounded-pill px-4 shadow-sm fw-semibold">Invite Friends</a>
+        <a asp-action="Profile" class="btn btn-outline-navy btn-sm rounded-pill px-4 fw-semibold">Profile Settings</a>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="form-card shadow-lg">
+                <div class="text-center mb-4 pb-3 border-bottom">
+                    <div class="action-card-icon icon-volunteer mx-auto mb-2" style="width: 52px; height: 52px; font-size: 1.4rem;">
+                        <i class="bi bi-send-heart-fill"></i>
+                    </div>
+                    <h4 class="fw-bold mb-1">Send An Email Invitation</h4>
+                    <p class="text-muted small mb-0">Your friend will receive a personalized invitation with a direct link.</p>
+                </div>
+
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>@TempData["ErrorMessage"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <i class="bi bi-check-circle-fill me-2"></i>@TempData["SuccessMessage"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+
+                <form asp-action="InviteFriends" method="post">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger small mb-3"></div>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label asp-for="SenderName" class="form-label"></label>
+                            <input asp-for="SenderName" class="form-control" required />
+                            <span asp-validation-for="SenderName" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="SenderEmail" class="form-label"></label>
+                            <input asp-for="SenderEmail" type="email" class="form-control" required />
+                            <span asp-validation-for="SenderEmail" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="FriendEmail" class="form-label"></label>
+                            <input asp-for="FriendEmail" type="email" class="form-control" placeholder="friend@example.com" required />
+                            <span asp-validation-for="FriendEmail" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="CauseId" class="form-label"></label>
+                            <select asp-for="CauseId" class="form-select">
+                                <option value="">-- General NGEOS Platform Invitation --</option>
+                                @if (Model.Causes != null)
+                                {
+                                    @foreach (var c in Model.Causes)
+                                    {
+                                        <option value="@c.Id" selected="@(c.Id == Model.CauseId)">@c.Title (@c.Category)</option>
+                                    }
+                                }
+                            </select>
+                            <span asp-validation-for="CauseId" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-12">
+                            <label asp-for="PersonalMessage" class="form-label"></label>
+                            <textarea asp-for="PersonalMessage" rows="4" class="form-control" required></textarea>
+                            <span asp-validation-for="PersonalMessage" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-12 mt-4">
+                            <button type="submit" class="btn btn-orange btn-lg w-100 shadow">
+                                <i class="bi bi-send-fill me-1"></i> Send Invitation Email
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

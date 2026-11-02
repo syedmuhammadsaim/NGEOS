@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="favGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff7a29"/>
+      <stop offset="50%" stop-color="#f25c05"/>
+      <stop offset="100%" stop-color="#d94800"/>
+    </linearGradient>
+    <linearGradient id="favHeartGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#fff1e8"/>
+    </linearGradient>
+    <linearGradient id="favGoldSpark" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a"/>
+      <stop offset="100%" stop-color="#f59e0b"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="16" fill="url(#favGrad)"/>
+  <rect x="1" y="1" width="62" height="62" rx="15" fill="none" stroke="#ffffff" stroke-width="1.2" stroke-opacity="0.35"/>
+  <g fill="url(#favGoldSpark)">
+    <circle cx="32" cy="11.5" r="2.2"/>
+    <circle cx="25" cy="14" r="1.5"/>
+    <circle cx="39" cy="14" r="1.5"/>
+  </g>
+  <path d="M 32 21 C 29.5 16.5, 23 15, 19 18.5 C 15 22.5, 15.5 28.5, 21.5 34 C 25.5 38, 30 41, 32 42.2 C 34 41, 38.5 38, 42.5 34 C 48.5 28.5, 49 22.5, 45 18.5 C 41 15, 34.5 16.5, 32 21 Z" fill="url(#favHeartGrad)"/>
+  <path d="M 14 46 C 11 41, 11 34, 15.5 30 C 16.6 29, 18.5 29.5, 19.2 31 C 19.8 32.5, 19.2 34.2, 18 35.2 C 15 38, 15.5 42, 18 45 C 21.5 49, 26.5 50, 30 48.8 C 31.2 48.4, 32.5 49.3, 32.8 50.5 C 33.1 51.7, 32.2 53, 31 53.4 C 25 55.4, 18 53, 14 46 Z" fill="#ffffff" fill-opacity="0.95"/>
+  <path d="M 50 46 C 53 41, 53 34, 48.5 30 C 47.4 29, 45.5 29.5, 44.8 31 C 44.2 32.5, 44.8 34.2, 46 35.2 C 49 38, 48.5 42, 46 45 C 42.5 49, 37.5 50, 34 48.8 C 32.8 48.4, 31.5 49.3, 31.2 50.5 C 30.9 51.7, 31.8 53, 33 53.4 C 39 55.4, 46 53, 50 46 Z" fill="#ffffff" fill-opacity="0.95"/>
+  <path d="M 21 38 C 24 41.5, 27.5 43.5, 32 43.8 C 36.5 43.5, 40 41.5, 43 38 C 44 36.8, 45.8 36.8, 46.8 37.8 C 47.7 39, 47.5 40.5, 46.4 41.6 C 42.2 45.8, 37.5 48, 32 48 C 26.5 48, 21.8 45.8, 17.6 41.6 C 16.5 40.5, 16.3 39, 17.2 37.8 C 18.2 36.8, 20 36.8, 21 38 Z" fill="#ffffff" fill-opacity="0.92"/>
+</svg>
