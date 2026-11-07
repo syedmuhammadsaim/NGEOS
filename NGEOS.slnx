@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="NGEOS/NGEOS.csproj" />
+  <Project Path="NGEOS.Desktop/NGEOS.Desktop.csproj" />
+</Solution>

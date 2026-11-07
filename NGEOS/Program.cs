@@ -1,3 +1,7 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using NGEOS.Hubs;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
 using Microsoft.AspNetCore.Authentication.Google;
@@ -137,6 +141,8 @@ builder.Services.AddSession(options =>
 
 
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
+builder.Services.AddSignalR();
 
 
 
@@ -391,6 +397,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 
+
+app.MapHub<NgeosRealtimeHub>("/hubs/ngeos");
 
 app.MapControllerRoute(
 

@@ -48,3 +48,9 @@ publish/
 
 # Temporary receipts preview generated during test / simulation
 NGEOS/wwwroot/temp_receipts/
+
+# WPF Desktop build & publish outputs
+desktop_publish/
+NGEOS.Desktop/bin/
+NGEOS.Desktop/obj/
+NGEOS.Desktop/.vs/

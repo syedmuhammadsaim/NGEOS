@@ -1,0 +1,124 @@
+<UserControl x:Class="NGEOS.Desktop.Views.QueriesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid>
+        <StackPanel>
+            <Grid Margin="0,0,0,20">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="Support Requests &amp; Inquiries" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" />
+                    <TextBlock Text="{Binding Queries.Count, StringFormat={} ({0} Total)}" FontSize="14" Foreground="{DynamicResource TextSecondaryBrush}" Margin="8,2,0,0" />
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Command="{Binding RefreshCommand}" Style="{StaticResource SecondaryButtonStyle}" Content="🔄 Refresh" Height="34" Margin="0,0,8,0" />
+                    <Button Command="{Binding OpenSubmitDialogCommand}" Style="{StaticResource PrimaryButtonStyle}" Content="➕ Raise New Query" Height="34" />
+                </StackPanel>
+            </Grid>
+
+            <ItemsControl ItemsSource="{Binding Queries}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource CardBorderStyle}" Margin="0,0,0,12" Padding="18">
+                            <StackPanel>
+                                <Grid Margin="0,0,0,6">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding Subject}" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,8,0" />
+                                        <Border Background="#F1F5F9" CornerRadius="4" Padding="6,1" VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding Category}" FontSize="11" FontWeight="SemiBold" Foreground="#475569" />
+                                        </Border>
+                                    </StackPanel>
+
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                        <Border CornerRadius="4" Padding="8,2">
+                                            <Border.Style>
+                                                <Style TargetType="Border">
+                                                    <Setter Property="Background" Value="#FEF3C7" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Status}" Value="Replied">
+                                                            <Setter Property="Background" Value="#DCFCE7" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Border.Style>
+                                            <TextBlock Text="{Binding Status}" FontWeight="Bold" FontSize="11">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                        <Setter Property="Foreground" Value="#D97706" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding Status}" Value="Replied">
+                                                                <Setter Property="Foreground" Value="#16A34A" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
+                                        </Border>
+                                    </StackPanel>
+                                </Grid>
+
+                                <TextBlock Text="{Binding Message}" FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap" Margin="0,0,0,8" />
+
+                                <!-- Admin Reply Box (if present) -->
+                                <Border Background="#F0FDF4" BorderBrush="#BBF7D0" BorderThickness="1" CornerRadius="6" Padding="12" Margin="0,4,0,0" Visibility="{Binding AdminReply, Converter={x:Null}}">
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding AdminReply, Converter={x:Null}}" Value="">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+                                    <StackPanel>
+                                        <TextBlock Text="Admin Response:" FontSize="12" FontWeight="Bold" Foreground="#166534" Margin="0,0,0,2" />
+                                        <TextBlock Text="{Binding AdminReply}" FontSize="12" Foreground="#15803D" TextWrapping="Wrap" />
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+
+        <!-- Submit Modal -->
+        <Grid Background="#70000000" Visibility="{Binding IsSubmitDialogOpen, Converter={x:Null}}">
+            <Grid.Style>
+                <Style TargetType="Grid">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsSubmitDialogOpen}" Value="True">
+                            <Setter Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+
+            <Border Style="{StaticResource CardBorderStyle}" Width="480" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="28">
+                <StackPanel>
+                    <TextBlock Text="Submit Inquiries &amp; Support Request" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,16" />
+
+                    <TextBlock Text="Subject" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,4" />
+                    <TextBox Text="{Binding NewSubject, UpdateSourceTrigger=PropertyChanged}" Height="36" Padding="8,6" FontSize="13" Margin="0,0,0,12" />
+
+                    <TextBlock Text="Category" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,4" />
+                    <ComboBox SelectedValue="{Binding NewCategory}" SelectedValuePath="Content" Height="36" Margin="0,0,0,12">
+                        <ComboBoxItem Content="General Inquiry" IsSelected="True" />
+                        <ComboBoxItem Content="Donation Assistance" />
+                        <ComboBoxItem Content="Tax Exemption" />
+                        <ComboBoxItem Content="Volunteering" />
+                    </ComboBox>
+
+                    <TextBlock Text="Your Message" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,4" />
+                    <TextBox Text="{Binding NewMessage, UpdateSourceTrigger=PropertyChanged}" Height="80" TextWrapping="Wrap" AcceptsReturn="True" Padding="8,6" FontSize="13" Margin="0,0,0,20" />
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Command="{Binding CloseSubmitDialogCommand}" Style="{StaticResource SecondaryButtonStyle}" Content="Cancel" Margin="0,0,8,0" Width="90" />
+                        <Button Command="{Binding SubmitQueryCommand}" Style="{StaticResource PrimaryButtonStyle}" Content="Submit Query" Width="120" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

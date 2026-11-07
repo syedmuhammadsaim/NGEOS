@@ -1,0 +1,51 @@
+<UserControl x:Class="NGEOS.Desktop.Views.ProjectsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <StackPanel>
+        <Grid Margin="0,0,0,20">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <TextBlock Text="Welfare Programmes &amp; Community Projects" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" />
+                <TextBlock Text="{Binding Programmes.Count, StringFormat={} ({0} Total)}" FontSize="14" Foreground="{DynamicResource TextSecondaryBrush}" Margin="8,2,0,0" />
+            </StackPanel>
+            <Button Command="{Binding RefreshCommand}" Style="{StaticResource SecondaryButtonStyle}" Content="🔄 Refresh" Height="34" HorizontalAlignment="Right" />
+        </Grid>
+
+        <ItemsControl ItemsSource="{Binding Programmes}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Border Style="{StaticResource CardBorderStyle}" Width="360" Margin="0,0,16,16">
+                        <StackPanel>
+                            <Grid Margin="0,0,0,8">
+                                <Border Background="#FEF3C7" CornerRadius="4" Padding="6,2" HorizontalAlignment="Left">
+                                    <TextBlock Text="{Binding Category}" FontSize="11" FontWeight="Bold" Foreground="#B45309" />
+                                </Border>
+                                <TextBlock Text="Active" Foreground="#16A34A" FontSize="11" FontWeight="Bold" HorizontalAlignment="Right" />
+                            </Grid>
+
+                            <TextBlock Text="{Binding Title}" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" TextWrapping="Wrap" Margin="0,0,0,6" MaxHeight="44" />
+                            <TextBlock Text="{Binding ShortDescription}" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap" Margin="0,0,0,12" MaxHeight="50" TextTrimming="CharacterEllipsis" />
+
+                            <Separator Background="{DynamicResource BorderBrush}" Margin="0,0,0,10" />
+
+                            <Grid>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="📍 " FontSize="11" />
+                                    <TextBlock Text="{Binding Location}" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                    <TextBlock Text="Target: " FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" />
+                                    <TextBlock Text="{Binding TargetBeneficiaries, StringFormat={}{0:N0} lives}" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" />
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </StackPanel>
+</UserControl>

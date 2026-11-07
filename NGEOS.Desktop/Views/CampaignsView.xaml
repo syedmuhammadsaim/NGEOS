@@ -1,0 +1,115 @@
+<UserControl x:Class="NGEOS.Desktop.Views.CampaignsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid>
+        <StackPanel>
+            <!-- Header Toolbar -->
+            <Grid Margin="0,0,0,20">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="Active Charity Causes &amp; Campaigns" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" />
+                    <TextBlock Text="{Binding Causes.Count, StringFormat={} ({0} Total)}" FontSize="14" Foreground="{DynamicResource TextSecondaryBrush}" Margin="8,2,0,0" />
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Command="{Binding RefreshCommand}" Style="{StaticResource SecondaryButtonStyle}" Content="🔄 Refresh" Height="34" Margin="0,0,8,0" />
+                    <!-- Admin Only Create Button -->
+                    <Button Command="{Binding OpenCreateDialogCommand}" Content="➕ Create Campaign" Height="34">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource PrimaryButtonStyle}">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsAdmin}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                </StackPanel>
+            </Grid>
+
+            <!-- Campaigns Grid -->
+            <ItemsControl ItemsSource="{Binding Causes}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource CardBorderStyle}" Width="360" Margin="0,0,16,16">
+                            <StackPanel>
+                                <Grid Margin="0,0,0,8">
+                                    <Border Background="#F1F5F9" CornerRadius="4" Padding="6,2" HorizontalAlignment="Left">
+                                        <TextBlock Text="{Binding Category}" FontSize="11" FontWeight="Bold" Foreground="#0F172A" />
+                                    </Border>
+                                    <TextBlock Text="Verified Cause" Foreground="#16A34A" FontSize="11" FontWeight="Bold" HorizontalAlignment="Right" />
+                                </Grid>
+
+                                <TextBlock Text="{Binding Title}" FontSize="15" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" TextWrapping="Wrap" Margin="0,0,0,6" MaxHeight="44" />
+                                <TextBlock Text="{Binding ShortDescription}" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap" Margin="0,0,0,12" MaxHeight="50" TextTrimming="CharacterEllipsis" />
+
+                                <!-- Progress Bar -->
+                                <ProgressBar Value="{Binding RaisedAmount}" Maximum="{Binding TargetAmount}" Height="8" Foreground="{StaticResource AccentOrangeBrush}" Background="#E2E8F0" Margin="0,0,0,8" />
+
+                                <Grid>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Raised: " FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" />
+                                        <TextBlock Text="{Binding RaisedAmount, StringFormat={}Rs {0:N0}}" FontSize="12" FontWeight="Bold" Foreground="#16A34A" />
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                        <TextBlock Text="Goal: " FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" />
+                                        <TextBlock Text="{Binding TargetAmount, StringFormat={}Rs {0:N0}}" FontSize="12" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" />
+                                    </StackPanel>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+
+        <!-- Create Campaign Modal Dialog (Visible when IsCreatePopupOpen = true) -->
+        <Grid Background="#70000000" Visibility="{Binding IsCreatePopupOpen, Converter={x:Null}}">
+            <Grid.Style>
+                <Style TargetType="Grid">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsCreatePopupOpen}" Value="True">
+                            <Setter Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+
+            <Border Style="{StaticResource CardBorderStyle}" Width="480" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="28">
+                <StackPanel>
+                    <TextBlock Text="Create New Cause / Campaign" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,16" />
+
+                    <TextBlock Text="Campaign Title" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,4" />
+                    <TextBox Text="{Binding NewTitle, UpdateSourceTrigger=PropertyChanged}" Height="36" Padding="8,6" FontSize="13" Margin="0,0,0,12" />
+
+                    <TextBlock Text="Category" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,4" />
+                    <ComboBox SelectedValue="{Binding NewCategory}" SelectedValuePath="Content" Height="36" Margin="0,0,0,12">
+                        <ComboBoxItem Content="Education" IsSelected="True" />
+                        <ComboBoxItem Content="Healthcare" />
+                        <ComboBoxItem Content="Food Relief" />
+                        <ComboBoxItem Content="Emergency Disaster" />
+                        <ComboBoxItem Content="Clean Water" />
+                    </ComboBox>
+
+                    <TextBlock Text="Target Goal Amount (PKR)" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,4" />
+                    <TextBox Text="{Binding NewTargetAmount, UpdateSourceTrigger=PropertyChanged}" Height="36" Padding="8,6" FontSize="13" Margin="0,0,0,12" />
+
+                    <TextBlock Text="Description" FontSize="12" FontWeight="SemiBold" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,4" />
+                    <TextBox Text="{Binding NewDescription, UpdateSourceTrigger=PropertyChanged}" Height="70" TextWrapping="Wrap" AcceptsReturn="True" Padding="8,6" FontSize="13" Margin="0,0,0,20" />
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Command="{Binding CloseCreateDialogCommand}" Style="{StaticResource SecondaryButtonStyle}" Content="Cancel" Margin="0,0,8,0" Width="90" />
+                        <Button Command="{Binding SaveCampaignCommand}" Style="{StaticResource PrimaryButtonStyle}" Content="Save Campaign" Width="130" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>
