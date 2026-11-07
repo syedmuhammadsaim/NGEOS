@@ -156,7 +156,7 @@ Support: {_settings.From}";
                             <!-- Amount Box -->
                             <div style='background-color:#fff7ed; border:2px dashed #f25c05; border-radius:12px; padding:20px; text-align:center; margin-bottom:28px;'>
                                 <span style='display:block; color:#9a3412; font-size:12px; text-transform:uppercase; font-weight:600; letter-spacing:1px;'>Amount Contributed</span>
-                                <span style='display:block; font-size:34px; font-weight:800; color:#15803d; margin:6px 0;'>${amount:N2} <span style='font-size:16px; color:#64748b;'>USD</span></span>
+                                <span style='display:block; font-size:34px; font-weight:800; color:#15803d; margin:6px 0;'>Rs {amount:N2} <span style='font-size:16px; color:#64748b;'>PKR</span></span>
                                 <span style='display:inline-block; background-color:#ffedd5; color:#c2410c; font-size:12px; font-weight:700; padding:4px 12px; border-radius:50px;'>{typeLabel}</span>
                             </div>
 
@@ -221,7 +221,7 @@ Dear {displayName},
 Thank you for your generous contribution to NGEOS.
 
 Receipt ID: {transactionId}
-Amount: ${amount:N2} USD
+Amount: Rs {amount:N2} PKR
 Type: {typeLabel}
 Purpose: {causeTitle}
 Partner NGO: {ngoName}
@@ -449,6 +449,30 @@ NGEOS Central Secretariat, Karachi, Pakistan";
             message.AlternateViews.Add(htmlView);
             message.IsBodyHtml = true;
 
+                        // Check if SMTP Password is configured
+            if (string.IsNullOrWhiteSpace(_settings.Password))
+            {
+                _logger.LogWarning("[EMAIL SIMULATION] SMTP Password is not configured. Email to {ToEmail} saved locally as preview. To enable live delivery to Gmail inboxes, set a 16-character Google App Password in appsettings.json or .env (SMTP_PASSWORD).", toEmail);
+
+                try
+                {
+                    var previewDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "temp_receipts");
+                    Directory.CreateDirectory(previewDir);
+                    var cleanSubject = string.Concat(subject.Split(Path.GetInvalidFileNameChars())).Replace(" ", "_");
+                    if (cleanSubject.Length > 40) cleanSubject = cleanSubject.Substring(0, 40);
+                    var safeFileName = $"{DateTime.UtcNow:yyyyMMdd_HHmmss}_{cleanSubject}.html";
+                    var filePath = Path.Combine(previewDir, safeFileName);
+                    await File.WriteAllTextAsync(filePath, htmlBody, Encoding.UTF8);
+                    _logger.LogInformation("[EMAIL SIMULATION] Local email preview written to {Path}", filePath);
+                }
+                catch (Exception diskEx)
+                {
+                    _logger.LogWarning(diskEx, "[EMAIL SIMULATION] Could not write local email preview file.");
+                }
+
+                return;
+            }
+
             using var client = new SmtpClient(_settings.Host, _settings.Port)
             {
                 EnableSsl = _settings.EnableSsl,
@@ -459,7 +483,8 @@ NGEOS Central Secretariat, Karachi, Pakistan";
             if (!string.IsNullOrWhiteSpace(_settings.Username) && !string.IsNullOrWhiteSpace(_settings.Password))
             {
                 client.UseDefaultCredentials = false;
-                client.Credentials = new NetworkCredential(_settings.Username, _settings.Password);
+                var cleanPassword = _settings.Password.Replace(" ", "").Trim();
+                client.Credentials = new NetworkCredential(_settings.Username.Trim(), cleanPassword);
             }
 
             try
@@ -470,7 +495,18 @@ NGEOS Central Secretariat, Karachi, Pakistan";
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "SMTP delivery failed for recipient {ToEmail} via {Host}:{Port}", toEmail, _settings.Host, _settings.Port);
+                _logger.LogError(ex, "SMTP delivery failed for recipient {ToEmail} via {Host}:{Port}. Saving local preview.", toEmail, _settings.Host, _settings.Port);
+                try
+                {
+                    var previewDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "temp_receipts");
+                    Directory.CreateDirectory(previewDir);
+                    var cleanSubject = string.Concat(subject.Split(Path.GetInvalidFileNameChars())).Replace(" ", "_");
+                    if (cleanSubject.Length > 40) cleanSubject = cleanSubject.Substring(0, 40);
+                    var safeFileName = $"{DateTime.UtcNow:yyyyMMdd_HHmmss}_FAILED_{cleanSubject}.html";
+                    var filePath = Path.Combine(previewDir, safeFileName);
+                    await File.WriteAllTextAsync(filePath, htmlBody, Encoding.UTF8);
+                }
+                catch { }
                 throw;
             }
         }

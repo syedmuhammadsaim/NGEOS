@@ -38,11 +38,11 @@ namespace NGEOS.Services
         /// Returns (Success, ErrorMessage, SecondsRemainingForCooldown, UserFound)
         /// Note: To prevent account enumeration, caller should show a generic message to user unless there is a cooldown error.
         /// </summary>
-        public async Task<(bool Success, string? ErrorMessage, int SecondsRemaining, bool UserExists)> RequestResetCodeAsync(string email)
+        public async Task<(bool Success, string? ErrorMessage, int SecondsRemaining, bool UserExists, string? Code)> RequestResetCodeAsync(string email)
         {
             if (string.IsNullOrWhiteSpace(email))
             {
-                return (false, "Please enter a valid email address.", 0, false);
+                return (false, "Please enter a valid email address.", 0, false, null);
             }
 
             var normalizedEmail = email.Trim().ToLower();
@@ -52,12 +52,12 @@ namespace NGEOS.Services
             {
                 // Do not reveal whether user exists to prevent email harvesting
                 _logger.LogInformation("Password reset requested for non-existent email {Email}", normalizedEmail);
-                return (true, null, 0, false);
+                return (true, null, 0, false, null);
             }
 
             if (!user.IsActive)
             {
-                return (false, "This account is inactive. Please contact NGEOS support.", 0, true);
+                return (false, "This account is inactive. Please contact NGEOS support.", 0, true, null);
             }
 
             var oneHourAgo = DateTime.UtcNow.AddHours(-1);
@@ -66,7 +66,7 @@ namespace NGEOS.Services
 
             if (recentTokensCount >= MaxRequestsPerHour)
             {
-                return (false, "Too many password reset requests. For your security, please wait 1 hour before trying again.", 0, true);
+                return (false, "Too many password reset requests. For your security, please wait 1 hour before trying again.", 0, true, null);
             }
 
             // Check for resend cooldown (e.g. 60 seconds)
@@ -81,7 +81,7 @@ namespace NGEOS.Services
                 if (elapsedSeconds < CooldownSeconds)
                 {
                     var remaining = CooldownSeconds - (int)elapsedSeconds;
-                    return (false, $"Please wait {remaining} second(s) before requesting another code.", remaining, true);
+                    return (false, $"Please wait {remaining} second(s) before requesting another code.", remaining, true, null);
                 }
             }
 
@@ -114,12 +114,12 @@ namespace NGEOS.Services
             {
                 await _emailSender.SendPasswordResetCodeAsync(user.Email, user.FullName, code, ExpirationMinutes);
                 _logger.LogInformation("Password reset code sent to {Email}", user.Email);
-                return (true, null, 0, true);
+                return (true, null, 0, true, code);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to deliver password reset email to {Email}", user.Email);
-                return (false, "Unable to deliver verification email at this moment. Please check your email configuration or contact support.", 0, true);
+                return (false, "Unable to deliver verification email at this moment. Please check your email configuration or contact support.", 0, true, code);
             }
         }
 

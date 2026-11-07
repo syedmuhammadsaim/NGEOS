@@ -102,7 +102,7 @@
                 </p>
 
                 <!-- Statistics Grid -->
-                <div class="row g-3 mb-4">
+                <div class="row g-2 g-md-3 mb-4">
                     <div class="col-6 col-sm-3" data-aos="zoom-in" data-aos-delay="100">
                         <div class="stat-card">
                             <div class="stat-number">12K+</div>
@@ -173,8 +173,8 @@
                             
                             <!-- Progress Meta -->
                             <div class="progress-meta">
-                                <span class="text-muted small">Raised: <strong class="text-dark">$@cause.RaisedAmount.ToString("N0")</strong></span>
-                                <span class="text-muted small">Goal: <strong class="text-dark">$@cause.TargetAmount.ToString("N0")</strong></span>
+                                <span class="text-muted small">Raised: <strong class="text-dark">Rs @cause.RaisedAmount.ToString("N0")</strong></span>
+                                <span class="text-muted small">Goal: <strong class="text-dark">Rs @cause.TargetAmount.ToString("N0")</strong></span>
                             </div>
                             <div class="custom-progress">
                                 <div class="progress-bar-orange" style="width: @(cause.PercentageRaised)%"></div>
@@ -221,8 +221,8 @@
 
                         <!-- Progress info -->
                         <div class="d-flex justify-content-between text-white font-weight-bold mb-1">
-                            <span>Raised: <strong>$@highlightCampaign.RaisedAmount.ToString("N0")</strong></span>
-                            <span>Target: <strong>$@highlightCampaign.TargetAmount.ToString("N0")</strong></span>
+                            <span>Raised: <strong>Rs @highlightCampaign.RaisedAmount.ToString("N0")</strong></span>
+                            <span>Target: <strong>Rs @highlightCampaign.TargetAmount.ToString("N0")</strong></span>
                         </div>
                         <div class="custom-progress mb-4" style="height: 10px; background: rgba(255,255,255,0.2);">
                             <div class="progress-bar-orange" style="width: @(highlightCampaign.PercentageRaised)%"></div>

@@ -63,7 +63,7 @@
     <div class="row g-4 mb-5">
         <div class="col-6 col-lg-3" data-aos="zoom-in" data-aos-delay="100">
             <div class="stat-card p-4">
-                <div class="stat-number text-success">$@Model.TotalDonated.ToString("N0")</div>
+                <div class="stat-number text-success">Rs @Model.TotalDonated.ToString("N0")</div>
                 <p class="stat-label">Total Donated</p>
             </div>
         </div>
@@ -126,12 +126,17 @@
                                             <span class="fw-semibold text-dark small d-block">@(d.Cause?.Title ?? "Charity Relief")</span>
                                             <span class="badge bg-light text-muted border" style="font-size: 0.7rem;">@d.TransactionId</span>
                                         </td>
-                                        <td class="fw-bold text-success">$@d.Amount.ToString("N2")</td>
-                                        <td class="small text-muted">@d.DonationDate.ToString("MMM dd, yyyy")</td>
+                                        <td class="fw-bold text-success">Rs @d.Amount.ToString("N2")</td>
+                                        <td class="small text-muted">@d.DonationDate.AddHours(5).ToString("MMM dd, yyyy")</td>
                                         <td>
-                                            <a asp-controller="Donate" asp-action="Confirmation" asp-route-transactionId="@d.TransactionId" class="btn btn-sm btn-outline-secondary py-0 px-2" title="View Receipt">
-                                                <i class="bi bi-receipt"></i>
-                                            </a>
+                                            <div class="d-flex gap-1">
+                                                <a asp-controller="Donate" asp-action="DownloadReceipt" asp-route-transactionId="@d.TransactionId" target="_blank" class="btn btn-sm btn-outline-danger py-0 px-2 fw-semibold" title="Download PDF">
+                                                    <i class="bi bi-file-earmark-pdf-fill"></i> PDF
+                                                </a>
+                                                <a asp-controller="Donate" asp-action="Confirmation" asp-route-transactionId="@d.TransactionId" class="btn btn-sm btn-outline-secondary py-0 px-2" title="View Receipt">
+                                                    <i class="bi bi-eye"></i>
+                                                </a>
+                                            </div>
                                         </td>
                                     </tr>
                                 }

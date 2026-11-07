@@ -1,583 +1,1385 @@
 @{
+
     var action = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
 
+
+
     var groups = new[]
+
     {
+
         new { Title = "Overview", Items = new[] {
+
             new { Action = "Index", Icon = "bi-speedometer2", Text = "Dashboard Overview", Match = "Index", Exact = true, Exclude = "" }
+
         }},
+
         new { Title = "Fundraising", Items = new[] {
+
             new { Action = "Causes",    Icon = "bi-heart-pulse", Text = "Welfare Causes",       Match = "Cause",     Exact = false, Exclude = "" },
-            new { Action = "Donations", Icon = "bi-cash-stack",  Text = "Donations & Ledger",   Match = "Donations", Exact = true,  Exclude = "" },
+
+            new { Action = "Donations", Icon = "bi-cash-stack",  Text = "Donations & Ledger",   Match = "Donation", Exact = false,  Exclude = "" },
+
             new { Action = "Users",     Icon = "bi-people",      Text = "Registered Members",   Match = "Users",     Exact = true,  Exclude = "" }
+
         }},
+
         new { Title = "Organization", Items = new[] {
+
             new { Action = "Ngos",               Icon = "bi-building",           Text = "Associated NGOs",        Match = "Ngo",                Exact = false, Exclude = "" },
+
             new { Action = "Partners",           Icon = "bi-award",              Text = "Corporate Partners",     Match = "Partner",            Exact = false, Exclude = "" },
+
             new { Action = "Programmes",         Icon = "bi-calendar2-check",    Text = "Our Programmes",         Match = "Programme",          Exact = false, Exclude = "ProgrammeInterests" },
+
             new { Action = "ProgrammeInterests", Icon = "bi-person-raised-hand", Text = "Participant / Volunteers", Match = "ProgrammeInterests", Exact = true,  Exclude = "" },
+
             new { Action = "Events",             Icon = "bi-calendar-event",     Text = "Charity Events",         Match = "Event",              Exact = false, Exclude = "" }
+
         }},
+
         new { Title = "Content (CMS)", Items = new[] {
+
             new { Action = "Gallery",    Icon = "bi-images",                Text = "Media Gallery",        Match = "Gallery", Exact = false, Exclude = "" },
+
             new { Action = "AboutPages", Icon = "bi-file-earmark-richtext"  , Text = "About Sub-Pages (CMS)", Match = "About",   Exact = false, Exclude = "" },
+
             new { Action = "TeamMembers",Icon = "bi-person-vcard",          Text = "Leadership Team",      Match = "Team",    Exact = false, Exclude = "" },
+
             new { Action = "Jobs",       Icon = "bi-briefcase",             Text = "Job Postings",         Match = "Job",     Exact = false, Exclude = "" },
+
             new { Action = "Faqs",       Icon = "bi-question-circle",       Text = "Help Centre & FAQs",   Match = "Faq",     Exact = false, Exclude = "" }
+
         }},
+
         new { Title = "Support", Items = new[] {
-            new { Action = "Queries",         Icon = "bi-chat-left-dots", Text = "User Queries",     Match = "Querie",          Exact = false, Exclude = "" },
+
+            new { Action = "Queries",         Icon = "bi-chat-left-dots", Text = "User Queries",     Match = "Quer",          Exact = false, Exclude = "" },
+
             new { Action = "ContactMessages", Icon = "bi-envelope",       Text = "Contact Inquiries", Match = "ContactMessages", Exact = true,  Exclude = "" }
+
         }}
+
     };
+
 }
+
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
+
     <meta charset="utf-8" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>@ViewData["Title"] - NGEOS Admin Control Center</title>
 
+
+
     <!-- Fonts & Icons -->
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
+
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
+
+
     <!-- Bootstrap 5 CSS -->
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 
+    <link rel="stylesheet" href="~/css/chatbot.css?v=1.0" asp-append-version="true" />
+
+
+
     <!-- Favicon & Brand Icons -->
+
     <link rel="icon" type="image/svg+xml" href="~/favicon.svg" asp-append-version="true" />
+
     <link rel="alternate icon" type="image/x-icon" href="~/favicon.ico" asp-append-version="true" />
 
+
+
     <style>
+
             :root {
+
                 --admin-topbar-h: 60px;
-                --admin-side-w: 270px;
+
+                --admin-side-w: 260px;
+
             }
+
+
+
+            /* Natural Window Scrolling (Supports Mouse Wheel, Laptop Touchpad, and Scrollbar Drag) */
+
+            html {
+
+                overflow-x: hidden !important;
+
+                overflow-y: scroll !important;
+
+                box-sizing: border-box;
+
+                scroll-behavior: smooth;
+
+                overscroll-behavior: auto !important;
+
+                overscroll-behavior-y: auto !important;
+
+                background-color: #f8fafc !important;
+
+            }
+
+
+
+            *, *::before, *::after {
+
+                box-sizing: border-box;
+
+            }
+
+
 
             body.admin-body {
+
                 --primary-orange: #f25c05 !important;
+
                 --primary-orange-hover: #d94e00 !important;
+
                 --primary-orange-light: #fff4ed !important;
+
                 --primary-orange-glow: rgba(242, 92, 5, 0.25) !important;
+
                 --shadow-orange: 0 12px 28px -6px rgba(242, 92, 5, 0.35) !important;
+
                 --navy-dark: #0b192c !important;
+
                 --bg-page: #f8fafc !important;
+
                 --bg-surface: #ffffff !important;
+
                 --bg-subtle: #f1f5f9 !important;
-                display: block; /* site.css ka flex-column yahan nahi chahiye */
+
+                display: block !important;
+
                 background: #f8fafc !important;
-                min-height: 100vh;
+
+                min-height: 100vh !important;
+
+                margin: 0 !important;
+
+                padding: 0 !important;
+
+                width: 100% !important;
+
+                max-width: 100% !important;
+
+                overflow-x: hidden !important;
+
+                overflow-y: visible !important;
+
+                overscroll-behavior: auto !important;
+
+                overscroll-behavior-y: auto !important;
+
             }
 
-            /* ---------- TOP BAR ---------- */
+
+
+            /* ---------- TOP BAR (PERMANENTLY FIXED AT TOP) ---------- */
+
             .admin-topbar {
-                position: sticky;
-                top: 0;
-                z-index: 1050;
-                height: var(--admin-topbar-h);
-                background: var(--navy-dark);
-                border-bottom: 2px solid var(--primary-orange);
-                display: flex;
-                align-items: center;
-                padding: 0 16px;
+
+                position: fixed !important;
+
+                top: 0 !important;
+
+                left: 0 !important;
+
+                right: 0 !important;
+
+                z-index: 1050 !important;
+
+                height: var(--admin-topbar-h) !important;
+
+                background: var(--navy-dark) !important;
+
+                border-bottom: 2px solid var(--primary-orange) !important;
+
+                display: flex !important;
+
+                align-items: center !important;
+
+                padding: 0 20px !important;
+
+                width: 100% !important;
+
+                box-sizing: border-box !important;
+
             }
 
-                .admin-topbar .navbar-brand {
+
+
+                            .admin-topbar {
+                overflow: visible !important;
+            }
+            .admin-user-dropdown {
+                position: relative !important;
+            }
+            .admin-user-dropdown .dropdown-menu {
+                position: absolute !important;
+                top: 100% !important;
+                right: 0 !important;
+                left: auto !important;
+                display: none !important;
+                margin-top: 8px !important;
+                background-color: #ffffff !important;
+                border-radius: 12px !important;
+                box-shadow: 0 12px 35px rgba(0,0,0,0.28) !important;
+                z-index: 99999 !important;
+                min-width: 150px !important;
+            }
+            .admin-user-dropdown .dropdown-menu.show {
+                display: block !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+            }
+            .admin-user-dropdown .dropdown-item:hover {
+                background-color: #f1f5f9 !important;
+            }
+            .admin-user-dropdown .dropdown-item.text-danger:hover {
+                background-color: #fef2f2 !important;
+                color: #dc2626 !important;
+            }
+
+            .admin-topbar .navbar-brand {
+
                     margin: 0;
+
                     font-size: 1.15rem;
+
                     color: #fff !important;
+
                 }
+
+
 
             .admin-menu-btn {
+
                 display: none;  
+
                 background: transparent;
+
                 border: 1px solid rgba(255,255,255,.25);
+
                 color: #fff;
+
                 border-radius: 8px;
+
                 width: 40px;
+
                 height: 40px;
+
                 min-width: 40px;
+
                 min-height: 40px;
+
                 align-items: center;
+
                 justify-content: center;
+
                 font-size: 1.3rem;
-                margin-right: 10px;
+
+                margin-right: 12px;
+
                 cursor: pointer;
+
                 touch-action: manipulation;
+
                 transition: background .15s ease, border-color .15s ease;
+
             }
+
+
 
                 .admin-menu-btn:hover,
+
                 .admin-menu-btn:focus-visible {
+
                     background: rgba(255, 255, 255, 0.12);
+
                     color: #fff;
+
                     outline: none;
+
                 }
 
-            /* ---------- SHELL ---------- */
+
+
+            /* ---------- SHELL (PADDED BY HEADER HEIGHT SO CONTENT NEVER HIDES) ---------- */
+
             .admin-shell {
-                display: block;
-                min-height: calc(100vh - var(--admin-topbar-h));
+
+                display: block !important;
+
+                width: 100% !important;
+
+                max-width: 100% !important;
+
+                min-height: 100vh !important;
+
+                box-sizing: border-box !important;
+
+                padding-top: var(--admin-topbar-h) !important;
+
+                overflow-x: hidden !important;
+
+                overflow-y: visible !important;
+
             }
 
-            /* ---------- SIDEBAR ---------- */
+
+
+            /* ---------- SIDEBAR (FIXED BELOW HEADER) ---------- */
+
             .admin-side {
-                position: fixed;
-                top: var(--admin-topbar-h);
-                left: 0;
-                bottom: 0;
-                width: var(--admin-side-w);
-                z-index: 1040;
-                overflow-y: auto;
-                overflow-x: hidden;
-                background: var(--navy-dark);
-                color: #fff;
-                padding: 8px 0 24px;
+
+                position: fixed !important;
+
+                top: var(--admin-topbar-h) !important;
+
+                left: 0 !important;
+
+                bottom: 0 !important;
+
+                width: var(--admin-side-w) !important;
+
+                z-index: 1040 !important;
+
+                overflow-y: auto !important;
+
+                overflow-x: hidden !important;
+
+                background: var(--navy-dark) !important;
+
+                color: #fff !important;
+
+                padding: 8px 0 24px !important;
+
                 scrollbar-width: thin;
+
                 scrollbar-color: rgba(255,255,255,.25) transparent;
+
+                box-sizing: border-box !important;
+
             }
+
+
 
                 .admin-side::-webkit-scrollbar {
+
                     width: 6px;
+
                 }
+
+
 
                 .admin-side::-webkit-scrollbar-thumb {
+
                     background: rgba(255,255,255,.25);
+
                     border-radius: 6px;
+
                 }
+
+
 
             .admin-side-drawer-header {
+
                 display: none;
+
                 padding: 14px 16px;
+
                 border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+
                 align-items: center;
+
                 justify-content: space-between;
+
                 margin-bottom: 6px;
+
             }
+
+
 
             .admin-side-group {
-                padding: 14px 12px 4px;
+
+                padding: 12px 12px 4px;
+
             }
+
+
 
             .admin-side-title {
+
                 font-size: .68rem;
+
                 font-weight: 700;
+
                 letter-spacing: .1em;
+
                 text-transform: uppercase;
+
                 color: rgba(255,255,255,.4);
+
                 padding: 0 10px 8px;
+
             }
+
+
 
             .admin-side-link,
+
             .admin-side-link:hover,
+
             .admin-side-link:focus,
+
             .admin-side-link:active {
+
                 text-decoration: none !important;
+
             }
+
+
 
             .admin-side-link {
+
                 display: flex;
+
                 align-items: center;
+
                 gap: 12px;
-                padding: 10px 14px;
-                min-height: 42px;
+
+                padding: 9px 14px;
+
+                min-height: 40px;
+
                 margin-bottom: 2px;
+
                 border-radius: 10px;
+
                 border-left: 3px solid transparent; 
+
                 color: rgba(255,255,255,.75);
-                font-size: .9rem;
+
+                font-size: .88rem;
+
                 font-weight: 500;
+
                 transition: var(--transition-fast);
+
             }
+
+
 
                 .admin-side-link i {
-                    font-size: 1.1rem;
+
+                    font-size: 1.05rem;
+
                     width: 20px;
+
                     text-align: center;
+
                 }
+
+
 
                 .admin-side-link:hover {
+
                     background: rgba(255,255,255,.07);
+
                     color: #fff;
+
                 }
+
+
 
                 .admin-side-link.active {
+
                     background: rgba(242,92,5,.18);
+
                     color: var(--primary-orange);
+
                     border-left-color: var(--primary-orange);
+
                     font-weight: 600;
+
                 }
 
-            /* ---------- CONTENT CANVAS ---------- */
+
+
+            /* ---------- CONTENT CANVAS (PERFECT 100% FIT FIX) ---------- */
+
+            body.admin-body main.admin-main,
+
             .admin-main {
-                margin-left: var(--admin-side-w);
-                min-width: 0;
-                padding: 30px;
+
+                display: block !important;
+
+                margin-left: var(--admin-side-w) !important;
+
+                width: calc(100% - var(--admin-side-w)) !important;
+
+                max-width: calc(100% - var(--admin-side-w)) !important;
+
+                min-width: 0 !important;
+
+                flex: none !important;
+
+                padding: 24px 28px !important;
+
+                box-sizing: border-box !important;
+
+                background: #f8fafc !important;
+
+                overflow-x: hidden !important;
+
+                overflow-y: visible !important;
+
             }
+
+
 
             .admin-overlay {
-                display: none;
+                display: none !important;
+                pointer-events: none !important;
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
             }
+
+
+
+            /* Row & Grid Alignment inside Admin */
+
+            .admin-main .row {
+
+                margin-left: -8px !important;
+
+                margin-right: -8px !important;
+
+            }
+
+
+
+            .admin-main .row > [class*="col"] {
+
+                padding-left: 8px !important;
+
+                padding-right: 8px !important;
+
+            }
+
+
+
+            /* Cards inside Admin (overflow: visible allows touchpad scroll to pass through without trapping) */
+
+            .admin-main .giveaid-card,
+
+            .admin-main .card {
+
+                background: #ffffff !important;
+
+                border: 1px solid #e2e8f0 !important;
+
+                border-radius: 12px !important;
+
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+
+                width: 100% !important;
+
+                max-width: 100% !important;
+
+                box-sizing: border-box !important;
+
+                overflow: visible !important;
+
+                margin-bottom: 20px;
+
+            }
+
+
+
+            /* KPI Cards */
+
+            .admin-main .admin-kpi-card {
+
+                background: #ffffff !important;
+
+                border: 1px solid #e2e8f0 !important;
+
+                border-radius: 12px !important;
+
+                padding: 18px 20px !important;
+
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+
+                display: flex !important;
+
+                align-items: center !important;
+
+                justify-content: space-between !important;
+
+                gap: 12px !important;
+
+                height: 100% !important;
+
+                box-sizing: border-box !important;
+
+                transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+
+            }
+
+
+
+            .admin-main .admin-kpi-card:hover {
+
+                transform: translateY(-2px) !important;
+
+                box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08) !important;
+
+            }
+
+
+
+            .admin-main .admin-kpi-card h3 {
+
+                font-size: 1.45rem !important;
+
+                font-weight: 700 !important;
+
+            }
+
+
+
+            .admin-main .kpi-icon-box {
+
+                width: 48px !important;
+
+                height: 48px !important;
+
+                border-radius: 10px !important;
+
+                display: flex !important;
+
+                align-items: center !important;
+
+                justify-content: center !important;
+
+                font-size: 1.3rem !important;
+
+                flex-shrink: 0 !important;
+
+            }
+
+
 
             /* ---------- CLEAN TABLES & PREVENT OVERFLOW ---------- */
+
             .admin-main .table-responsive {
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-                border-radius: var(--radius-md, 10px);
-                margin-bottom: 0;
+
+                overflow-x: auto !important;
+
+                -webkit-overflow-scrolling: touch !important;
+
+                border-radius: 10px !important;
+
+                margin-bottom: 0 !important;
+
+                width: 100% !important;
+
+                max-width: 100% !important;
+
+                box-sizing: border-box !important;
+
             }
+
+
 
             .admin-main .table {
-                width: 100%;
-                margin-bottom: 0;
+
+                width: 100% !important;
+
+                margin-bottom: 0 !important;
+
+                border-collapse: separate !important;
+
+                border-spacing: 0 !important;
+
             }
+
+
 
             .admin-main .table th {
-                white-space: nowrap;
-                padding: 12px 14px;
-                vertical-align: middle;
+
+                background-color: #f8fafc !important;
+
+                color: #475569 !important;
+
+                font-weight: 600 !important;
+
+                font-size: 0.8rem !important;
+
+                text-transform: uppercase !important;
+
+                letter-spacing: 0.04em !important;
+
+                padding: 12px 14px !important;
+
+                vertical-align: middle !important;
+
+                border-bottom: 1px solid #e2e8f0 !important;
+
+                white-space: nowrap !important;
+
             }
+
+
 
             .admin-main .table td {
-                padding: 12px 14px;
-                vertical-align: middle;
+
+                padding: 12px 14px !important;
+
+                vertical-align: middle !important;
+
+                border-bottom: 1px solid #f1f5f9 !important;
+
+                font-size: 0.88rem !important;
+
             }
+
+
+
+            .admin-main .table tr:last-child td {
+
+                border-bottom: none !important;
+
+            }
+
+
 
             .admin-main .table td:last-child {
-                white-space: nowrap;
+
+                white-space: nowrap !important;
+
             }
+
+
 
             .admin-main .table img {
-                flex-shrink: 0;
+
+                flex-shrink: 0 !important;
+
             }
 
-            .admin-main .table .d-flex,
-            .admin-main .table .d-inline-flex {
-                flex-wrap: nowrap;
-                gap: 4px;
-            }
+
 
             .admin-main .table .btn-sm {
-                padding: 4px 8px;
-                font-size: 0.8rem;
-                line-height: 1.3;
+
+                padding: 4px 8px !important;
+
+                font-size: 0.8rem !important;
+
+                line-height: 1.3 !important;
+
             }
+
+
+
+            /* Section Header responsiveness */
+
+            .admin-main > .d-flex.justify-content-between:first-child {
+
+                display: flex !important;
+
+                flex-wrap: wrap !important;
+
+                align-items: center !important;
+
+                justify-content: space-between !important;
+
+                gap: 14px !important;
+
+                margin-bottom: 22px !important;
+
+            }
+
+
 
             /* Modals & Dialogs inside admin */
+
             .admin-main .modal-dialog {
+
                 margin: 0.5rem auto;
+
                 max-width: 95vw;
+
             }
+
+
 
             @@media (min-width: 576px) {
+
                 .admin-main .modal-dialog {
-                    max-width: 500px;
+
+                    max-width: 540px;
+
                     margin: 1.75rem auto;
+
                 }
+
             }
+
+
 
             /* Alerts inside admin */
+
             .admin-main .alert {
+
                 border-radius: 10px;
+
                 padding: 12px 16px;
+
             }
 
+
+
             /* ==========================================================
+
                RESPONSIVE BREAKPOINTS
+
                ========================================================== */
 
-            /* Laptop & Desktop (>= 992px) */
-            @@media (min-width: 992px) {
-                .admin-side {
-                    position: fixed;
-                    top: var(--admin-topbar-h);
-                    left: 0;
-                    bottom: 0;
-                    width: var(--admin-side-w);
-                    z-index: 1040;
-                    transform: none !important;
+
+
+            /* Laptop, Desktop & Tablets (>= 768px) - Clean Docked Sidebar with Zero Blur */
+            @@media (min-width: 768px) {
+                .admin-menu-btn {
+                    display: inline-flex !important;
                 }
 
+                .admin-side {
+                    position: fixed !important;
+                    top: var(--admin-topbar-h) !important;
+                    left: 0 !important;
+                    bottom: 0 !important;
+                    width: var(--admin-side-w) !important;
+                    z-index: 1040 !important;
+                    transform: none !important;
+                    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05) !important;
+                    transition: transform 0.25s ease, width 0.25s ease !important;
+                }
+
+                .admin-side-drawer-header {
+                    display: none !important;
+                }
+
+                body.admin-body main.admin-main,
                 .admin-main {
-                    margin-left: var(--admin-side-w);
-                    padding: 30px;
+                    margin-left: var(--admin-side-w) !important;
+                    width: calc(100% - var(--admin-side-w)) !important;
+                    max-width: calc(100% - var(--admin-side-w)) !important;
+                    padding: 24px 28px !important;
+                    transition: margin-left 0.25s ease, width 0.25s ease !important;
+                }
+
+                /* Sidebar collapse toggle on desktop/tablets - zero blur, clean canvas */
+                body.admin-sidebar-collapsed .admin-side {
+                    transform: translateX(-100%) !important;
+                }
+
+                body.admin-sidebar-collapsed main.admin-main,
+                body.admin-sidebar-collapsed .admin-main {
+                    margin-left: 0 !important;
+                    width: 100% !important;
+                    max-width: 100% !important;
+                }
+
+                .admin-overlay,
+                .admin-overlay.show {
+                    display: none !important;
+                    pointer-events: none !important;
+                    backdrop-filter: none !important;
+                    -webkit-backdrop-filter: none !important;
+                }
+            }
+
+            /* Mobile Handheld Devices (< 768px) - Clean Drawer with Zero Blur */
+            @@media (max-width: 767.98px) {
+                .admin-menu-btn {
+                    display: inline-flex !important;
+                }
+
+                .admin-side-drawer-header {
+                    display: flex !important;
+                }
+
+                .admin-side {
+                    top: 0 !important;
+                    bottom: 0 !important;
+                    left: 0 !important;
+                    width: min(290px, 86vw) !important;
+                    z-index: 1060 !important;
+                    transform: translateX(-100%) !important;
+                    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1) !important;
+                    box-shadow: none !important;
+                    overscroll-behavior: contain !important;
+                }
+
+                .admin-side.open {
+                    transform: translateX(0) !important;
+                    box-shadow: 0 0 35px rgba(0, 0, 0, 0.45) !important;
                 }
 
                 .admin-overlay {
                     display: none !important;
-                }
-            }
-
-            /* Mobile & Tablets (< 992px) */
-            @@media (max-width: 991.98px) {
-                .admin-menu-btn {
-                    display: inline-flex;
+                    pointer-events: none !important;
+                    backdrop-filter: none !important;
+                    -webkit-backdrop-filter: none !important;
                 }
 
-                .admin-side-drawer-header {
-                    display: flex;
+                .admin-overlay.show {
+                    display: block !important;
+                    position: fixed !important;
+                    inset: 0 !important;
+                    background: rgba(15, 23, 42, 0.45) !important;
+                    backdrop-filter: none !important;
+                    -webkit-backdrop-filter: none !important;
+                    z-index: 1055 !important;
+                    pointer-events: auto !important;
                 }
-
-                .admin-side {
-                    top: 0;
-                    bottom: 0;
-                    left: 0;
-                    width: min(290px, 86vw);
-                    z-index: 1060;
-                    transform: translateX(-100%);
-                    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
-                    box-shadow: none;
-                    overscroll-behavior: contain;
-                }
-
-                    .admin-side.open {
-                        transform: translateX(0);
-                        box-shadow: 0 0 35px rgba(0, 0, 0, 0.45);
-                    }
-
-                .admin-overlay {
-                    position: fixed;
-                    inset: 0;
-                    background: rgba(11, 25, 44, 0.65);
-                    backdrop-filter: blur(2px);
-                    z-index: 1055;
-                    opacity: 0;
-                    pointer-events: none;
-                    transition: opacity 0.25s ease;
-                }
-
-                    .admin-overlay.show {
-                        opacity: 1;
-                        pointer-events: auto;
-                        display: block;
-                    }
 
                 body.admin-drawer-open {
-                    overflow: hidden;
+                    overflow: hidden !important;
                 }
 
+                body.admin-body main.admin-main,
                 .admin-main {
-                    margin-left: 0;
-                    padding: 22px 18px;
-                }
-            }
-
-            /* Tablets Portrait & Medium Mobile (< 768px) */
-            @@media (max-width: 767.98px) {
-                .admin-main {
-                    padding: 16px 14px;
+                    margin-left: 0 !important;
+                    width: 100% !important;
+                    max-width: 100% !important;
+                    padding: 14px 10px !important;
                 }
 
-                /* Admin Page Header responsiveness */
-                .admin-main > .d-flex.justify-content-between {
+                .admin-main > .d-flex.justify-content-between:first-child {
                     flex-direction: column !important;
                     align-items: stretch !important;
                     gap: 12px !important;
                 }
 
-                .admin-main > .d-flex.justify-content-between > div:last-child,
-                .admin-main > .d-flex.justify-content-between > a.btn,
-                .admin-main > .d-flex.justify-content-between > span.badge {
-                    display: flex !important;
-                    flex-wrap: wrap !important;
-                    width: 100% !important;
-                    gap: 8px !important;
-                }
-
-                .admin-main > .d-flex.justify-content-between > a.btn,
-                .admin-main > .d-flex.justify-content-between > span.badge {
-                    justify-content: center !important;
-                    text-align: center !important;
-                }
-
-                .admin-main > .d-flex.justify-content-between > div:last-child > .btn {
-                    flex: 1 1 auto;
-                    justify-content: center;
-                    text-align: center;
-                }
-
                 .admin-main h2, .admin-main h3 {
-                    font-size: 1.35rem;
+                    font-size: 1.3rem !important;
                 }
             }
 
             /* Small Mobile Devices (320px – 480px) */
+
             @@media (max-width: 480px) {
+
                 :root {
+
                     --admin-topbar-h: 56px;
+
                 }
+
+
 
                 .admin-topbar {
+
                     padding: 0 10px;
+
                 }
+
+
 
                 .admin-menu-btn {
-                    width: 38px;
-                    height: 38px;
-                    min-width: 38px;
-                    min-height: 38px;
-                    font-size: 1.2rem;
+
+                    width: 36px;
+
+                    height: 36px;
+
+                    min-width: 36px;
+
+                    min-height: 36px;
+
+                    font-size: 1.15rem;
+
                     margin-right: 6px;
+
                 }
+
+
 
                 .admin-topbar .navbar-brand {
-                    font-size: 1.02rem;
+
+                    font-size: 1rem;
+
                 }
+
+
 
                 .admin-main {
-                    padding: 12px 10px;
+
+                    padding: 10px 8px !important;
+
                 }
+
+
 
                 .admin-main .giveaid-card,
+
                 .admin-main .card {
+
                     padding: 14px 12px !important;
-                    border-radius: 12px;
+
+                    border-radius: 10px !important;
+
                 }
+
+
 
                 .admin-main .table th,
+
                 .admin-main .table td {
-                    padding: 10px 10px;
-                    font-size: 0.82rem;
+
+                    padding: 9px 8px !important;
+
+                    font-size: 0.8rem !important;
+
                 }
+
+
 
                 .admin-kpi-card {
-                    padding: 16px 14px;
+
+                    padding: 14px 12px !important;
+
                 }
+
+
 
                 .admin-kpi-card h3 {
-                    font-size: 1.35rem;
+
+                    font-size: 1.25rem !important;
+
                 }
+
+
 
                 .kpi-icon-box {
-                    width: 44px;
-                    height: 44px;
-                    font-size: 1.2rem;
+
+                    width: 40px !important;
+
+                    height: 40px !important;
+
+                    font-size: 1.1rem !important;
+
                 }
 
-                /* Form submit buttons full width on small mobile */
-                .admin-main form .btn-lg,
-                .admin-main form button[type="submit"] {
-                    width: 100%;
-                    padding-left: 1rem !important;
-                    padding-right: 1rem !important;
-                    font-size: 0.95rem;
-                }
-
-                .admin-main .form-control,
-                .admin-main .form-select {
-                    font-size: 0.9rem;
-                }
             }
+
     </style>
+
 </head>
+
 <body class="admin-body">
 
+
+
     <!-- Top Admin Header -->
+
     <header class="admin-topbar">
+
         <button type="button" class="admin-menu-btn" id="adminMenuBtn" aria-label="Toggle navigation menu">
+
             <i class="bi bi-list"></i>
+
         </button>
 
+
+
         <a class="navbar-brand d-flex align-items-center gap-2" asp-controller="Admin" asp-action="Index" title="NGEOS Admin Portal">
+
             <img src="~/images/ngeos-logo-admin.svg" alt="NGEOS Admin Logo" class="brand-logo" width="30" height="30" asp-append-version="true" />
+
             <span class="text-white fw-bold">NGE<span class="brand-accent">OS</span></span>
+
             <span class="badge bg-warning text-dark fw-semibold d-none d-md-inline" style="font-size: 0.65rem;">ADMIN PORTAL</span>
+
         </a>
 
+
+
         <div class="d-flex align-items-center gap-2 gap-sm-3 ms-auto">
+
             <a asp-controller="Home" asp-action="Index" target="_blank" class="btn btn-outline-light btn-sm rounded-pill px-2 px-sm-3 d-inline-flex align-items-center" title="View Live Public Site">
+
                 <i class="bi bi-box-arrow-up-right me-0 me-sm-1"></i>
+
                 <span class="d-none d-sm-inline">Live Site</span>
+
             </a>
-            <div class="dropdown">
-                <button class="btn btn-sm btn-dark dropdown-toggle text-white rounded-pill px-2 px-sm-3 border border-secondary d-inline-flex align-items-center" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Account menu">
+
+            <div class="dropdown admin-user-dropdown">
+
+                <button class="btn btn-sm btn-dark dropdown-toggle text-white rounded-pill px-2 px-sm-3 border border-secondary d-inline-flex align-items-center gap-1 shadow-xs" 
+                        type="button" 
+                        id="adminUserDropdownBtn" 
+                        aria-expanded="false" 
+                        title="Account menu"
+                        style="cursor: pointer;">
+
                     <i class="bi bi-person-circle text-warning me-0 me-sm-1"></i>
-                    <span class="d-none d-sm-inline">@User.Identity?.Name</span>
+
+                    <span class="d-none d-sm-inline fw-semibold">@(User.Identity?.Name ?? "Administrator")</span>
+
                 </button>
-                <ul class="dropdown-menu dropdown-menu-end shadow">
-                    <li><span class="dropdown-item-text small text-muted"><i class="bi bi-shield-lock me-1"></i> Administrator</span></li>
-                    <li><hr class="dropdown-divider"></li>
+
+                <ul class="dropdown-menu dropdown-menu-end shadow-sm border border-secondary border-opacity-25 mt-2 p-1" 
+                    id="adminUserDropdownMenu" 
+                    aria-labelledby="adminUserDropdownBtn"
+                    style="min-width: 150px;">
                     <li>
                         <form asp-controller="Account" asp-action="Logout" method="post" class="m-0">
                             @Html.AntiForgeryToken()
-                            <button type="submit" class="dropdown-item text-danger"><i class="bi bi-box-arrow-right me-1"></i> Logout</button>
+                            <button type="submit" class="dropdown-item py-2 px-3 rounded-2 small text-danger fw-bold d-flex align-items-center gap-2 w-100" style="cursor: pointer;">
+                                <i class="bi bi-box-arrow-right fs-6"></i> Logout
+                            </button>
                         </form>
                     </li>
                 </ul>
+
             </div>
+
         </div>
+
     </header>
+
+
 
     <div class="admin-overlay" id="adminOverlay"></div>
 
+
+
     <div class="admin-shell">
 
+
+
         <!-- Sidebar Navigation (Responsive Drawer) -->
+
         <aside class="admin-side" id="adminSide">
+
             <!-- Mobile Drawer Header -->
+
             <div class="admin-side-drawer-header">
+
                 <div class="d-flex align-items-center gap-2">
+
                     <img src="~/images/ngeos-logo-admin.svg" alt="NGEOS Logo" width="26" height="26" asp-append-version="true" />
+
                     <span class="text-white fw-bold fs-6">Admin <span class="brand-accent">Menu</span></span>
+
                 </div>
+
                 <button type="button" class="btn-close btn-close-white" id="adminCloseBtn" aria-label="Close navigation"></button>
+
             </div>
 
+
+
             @foreach (var group in groups)
+
             {
+
                 <div class="admin-side-group">
+
                     <div class="admin-side-title">@group.Title</div>
+
                     @foreach (var item in group.Items)
+
                     {
+
                         var isActive = item.Exact
+
                             ? action == item.Match
+
                             : action.Contains(item.Match) && (item.Exclude == "" || !action.Contains(item.Exclude));
 
+
+
                         <a asp-controller="Admin" asp-action="@item.Action" class="admin-side-link @(isActive ? "active" : "")">
+
                             <i class="bi @item.Icon"></i> <span>@item.Text</span>
+
                         </a>
+
                     }
+
                 </div>
+
             }
+
+            <!-- Quick Logout in Sidebar -->
+            <div class="admin-side-group mt-auto pt-3 border-top border-secondary border-opacity-25">
+                <a asp-controller="Home" asp-action="Index" class="admin-side-link text-white-50">
+                    <i class="bi bi-house-door text-info"></i> <span>Home Page</span>
+                </a>
+                <form asp-controller="Account" asp-action="Logout" method="post" class="m-0">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="admin-side-link text-danger border-0 bg-transparent w-100 text-start" style="cursor: pointer;">
+                        <i class="bi bi-box-arrow-right text-danger"></i> <span class="fw-bold">Logout</span>
+                    </button>
+                </form>
+            </div>
+
         </aside>
 
+
+
         <!-- Main Content Canvas -->
+
         <main class="admin-main">
+
             @if (TempData["SuccessMessage"] != null)
+
             {
+
                 <div class="alert alert-success alert-dismissible fade show shadow-sm d-flex align-items-center mb-4" role="alert">
+
                     <i class="bi bi-check-circle-fill text-success fs-5 me-2 flex-shrink-0"></i>
+
                     <div>@TempData["SuccessMessage"]</div>
+
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close alert"></button>
+
                 </div>
+
             }
+
             @if (TempData["ErrorMessage"] != null)
+
             {
+
                 <div class="alert alert-danger alert-dismissible fade show shadow-sm d-flex align-items-center mb-4" role="alert">
+
                     <i class="bi bi-exclamation-triangle-fill text-danger fs-5 me-2 flex-shrink-0"></i>
+
                     <div>@TempData["ErrorMessage"]</div>
+
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close alert"></button>
+
                 </div>
+
             }
+
             @RenderBody()
+
         </main>
+
     </div>
 
+
+
     <!-- Scripts -->
+
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <!-- Bootstrap 5.3.3 Bundle JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+
+
+
+    <!-- Admin Isolated Script (Completely independent of public site scripts) -->
 
     <script>
+
+        // Relocate all Bootstrap modals to <body> to prevent stacking context or transform clipping
+
+        document.addEventListener('DOMContentLoaded', function () {
+
+            document.querySelectorAll('.modal').forEach(function (m) {
+
+                if (m.parentElement !== document.body) {
+
+                    document.body.appendChild(m);
+
+                }
+
+            });
+
+        });
+
+    </script>
+
+
+
+    <script>
+
         document.addEventListener("DOMContentLoaded", function () {
+
             const side = document.getElementById('adminSide');
+
             const overlay = document.getElementById('adminOverlay');
+
             const btn = document.getElementById('adminMenuBtn');
+
             const closeBtn = document.getElementById('adminCloseBtn');
+
+            // Admin User Dropdown Handler (Vanilla JS, Guaranteed Reliability)
+            const userBtn = document.getElementById('adminUserDropdownBtn');
+            const userMenu = document.getElementById('adminUserDropdownMenu');
+
+            if (userBtn && userMenu) {
+                userBtn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const isOpen = userMenu.classList.contains('show');
+                    if (isOpen) {
+                        userMenu.classList.remove('show');
+                        userBtn.setAttribute('aria-expanded', 'false');
+                    } else {
+                        userMenu.classList.add('show');
+                        userBtn.setAttribute('aria-expanded', 'true');
+                    }
+                });
+
+                document.addEventListener('click', function (e) {
+                    if (userMenu.classList.contains('show')) {
+                        if (!userBtn.contains(e.target) && !userMenu.contains(e.target)) {
+                            userMenu.classList.remove('show');
+                            userBtn.setAttribute('aria-expanded', 'false');
+                        }
+                    }
+                });
+
+                document.addEventListener('keydown', function (e) {
+                    if (e.key === 'Escape' && userMenu.classList.contains('show')) {
+                        userMenu.classList.remove('show');
+                        userBtn.setAttribute('aria-expanded', 'false');
+                    }
+                });
+            }
+
+
 
             function openSide() {
                 side.classList.add('open');
@@ -594,10 +1396,16 @@
             if (btn) {
                 btn.addEventListener('click', function (e) {
                     e.stopPropagation();
-                    if (side.classList.contains('open')) {
-                        closeSide();
+                    if (window.innerWidth >= 768) {
+                        // Desktop/Tablet: toggle clean sidebar collapse (no blur, no overlay)
+                        document.body.classList.toggle('admin-sidebar-collapsed');
                     } else {
-                        openSide();
+                        // Mobile: toggle drawer
+                        if (side.classList.contains('open')) {
+                            closeSide();
+                        } else {
+                            openSide();
+                        }
                     }
                 });
             }
@@ -615,31 +1423,48 @@
 
             side.querySelectorAll('a').forEach(a => {
                 a.addEventListener('click', function () {
-                    if (window.innerWidth < 992) {
+                    if (window.innerWidth < 768) {
                         closeSide();
                     }
                 });
             });
 
             document.addEventListener('keydown', function (e) {
-                if (e.key === 'Escape' && side.classList.contains('open')) {
-                    closeSide();
+                if (e.key === 'Escape') {
+                    if (side.classList.contains('open')) {
+                        closeSide();
+                    }
                 }
             });
 
             window.addEventListener('resize', function () {
-                if (window.innerWidth >= 992) {
+                if (window.innerWidth >= 768) {
                     closeSide();
                 }
             });
 
             // Active link ko sidebar mein nazar ke saamne le aao
+
             const active = side.querySelector('.admin-side-link.active');
+
             if (active) {
+
                 active.scrollIntoView({ block: 'nearest' });
+
             }
+
         });
+
     </script>
+
+    <!-- NGEOS AI Assistant Chatbot Partial -->
+
+    @await Html.PartialAsync("_ChatbotWidget")
+
+    <script src="~/js/chatbot.js?v=1.0" asp-append-version="true"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
+
 </body>
+
 </html>

@@ -139,11 +139,13 @@ namespace NGEOS.ViewModels
         public int TotalEvents { get; set; }
         public int PendingQueriesCount { get; set; }
         public int TotalVolunteersCount { get; set; }
+        public int UnreadMessagesCount { get; set; }
 
         public List<Donation> RecentDonations { get; set; } = new();
         public List<UserQuery> RecentQueries { get; set; } = new();
         public List<User> RecentUsers { get; set; } = new();
         public List<ProgrammeInterest> RecentProgrammeInterests { get; set; } = new();
+        public List<ContactMessage> RecentMessages { get; set; } = new();
     }
 
     public class AdminReplyQueryViewModel

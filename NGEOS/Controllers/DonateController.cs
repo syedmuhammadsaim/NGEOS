@@ -1,11 +1,18 @@
+using System;
+using System.Linq;
 using System.Security.Claims;
 using System.Text.Json;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using NGEOS.Data;
 using NGEOS.Models;
 using NGEOS.Services;
+using NGEOS.Services.Payments.Core;
+using NGEOS.Services.Payments.Dtos;
+using NGEOS.Services.Payments.Orchestration;
 using NGEOS.ViewModels;
 
 namespace NGEOS.Controllers
@@ -14,18 +21,27 @@ namespace NGEOS.Controllers
     {
         private const string PendingDonationSessionKey = "PendingDonation_Data";
         private readonly ApplicationDbContext _context;
+        private readonly IPaymentOrchestrationService _orchestrationService;
+        private readonly IPaymentGatewayFactory _gatewayFactory;
         private readonly IEmailSender _emailSender;
         private readonly ILogger<DonateController> _logger;
 
-        public DonateController(ApplicationDbContext context, IEmailSender emailSender, ILogger<DonateController> logger)
+        public DonateController(
+            ApplicationDbContext context,
+            IPaymentOrchestrationService orchestrationService,
+            IPaymentGatewayFactory gatewayFactory,
+            IEmailSender emailSender,
+            ILogger<DonateController> logger)
         {
             _context = context;
+            _orchestrationService = orchestrationService;
+            _gatewayFactory = gatewayFactory;
             _emailSender = emailSender;
             _logger = logger;
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(int? causeId, decimal? amount = null, string? donationType = null)
+        public async Task<IActionResult> Index(int? causeId, int? programmeId, decimal? amount = null, string? donationType = null)
         {
             var causes = await _context.Causes
                 .Where(c => c.IsActive)
@@ -39,8 +55,11 @@ namespace NGEOS.Controllers
             var model = new DonateRequestViewModel
             {
                 CauseId = causeId ?? (causes.FirstOrDefault()?.Id ?? 0),
-                Amount = amount.HasValue && amount.Value > 0 ? Math.Round(amount.Value, 2) : 50,
+                ProgrammeId = programmeId,
+                Amount = amount.HasValue && amount.Value > 0 ? Math.Round(amount.Value, 2) : 1000,
                 DonationType = selectedType,
+                PaymentGateway = "Safepay",
+                Currency = "PKR",
                 AvailableCauses = causes
             };
 
@@ -52,6 +71,9 @@ namespace NGEOS.Controllers
                 model.CardHolderName = model.DonorName;
             }
 
+            // Expose supported gateways capability info to the view
+            ViewBag.AvailableGateways = _gatewayFactory.GetAllGateways().Select(g => g.Capabilities).ToList();
+
             return View(model);
         }
 
@@ -59,7 +81,7 @@ namespace NGEOS.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ProcessDonation(DonateRequestViewModel model)
         {
-            // If user is not logged in, immediately store filled data in session and redirect to Login!
+            // If user is not logged in, immediately store filled data in session and redirect to Login
             if (User.Identity?.IsAuthenticated != true)
             {
                 model.AvailableCauses = null;
@@ -71,6 +93,7 @@ namespace NGEOS.Controllers
 
             var causes = await _context.Causes.Where(c => c.IsActive).ToListAsync();
             model.AvailableCauses = causes;
+            ViewBag.AvailableGateways = _gatewayFactory.GetAllGateways().Select(g => g.Capabilities).ToList();
 
             if (!ModelState.IsValid)
             {
@@ -84,7 +107,7 @@ namespace NGEOS.Controllers
                 return View("Index", model);
             }
 
-            return await ExecuteDonationAsync(model, cause);
+            return await InitiateGatewayDonationAsync(model);
         }
 
         [Authorize]
@@ -114,20 +137,8 @@ namespace NGEOS.Controllers
                 return RedirectToAction("Index");
             }
 
-            // Remove from session to prevent duplicate charges
+            // Remove from session to prevent duplicate runs
             HttpContext.Session.Remove(PendingDonationSessionKey);
-
-            var cause = await _context.Causes.Include(c => c.Ngo).FirstOrDefaultAsync(c => c.Id == model.CauseId && c.IsActive);
-            if (cause == null)
-            {
-                cause = await _context.Causes.Include(c => c.Ngo).FirstOrDefaultAsync(c => c.IsActive);
-            }
-
-            if (cause == null)
-            {
-                TempData["ErrorMessage"] = "No active campaign found.";
-                return RedirectToAction("Index");
-            }
 
             // If donor details were blank, fallback to authenticated user claims
             if (string.IsNullOrWhiteSpace(model.DonorName) && !string.IsNullOrWhiteSpace(User.Identity?.Name))
@@ -140,24 +151,11 @@ namespace NGEOS.Controllers
                 model.DonorEmail = emailClaim;
             }
 
-            if (string.IsNullOrWhiteSpace(model.CardNumber)) model.CardNumber = "4111 2222 3333 4444";
-            if (string.IsNullOrWhiteSpace(model.CardHolderName)) model.CardHolderName = model.DonorName ?? "Valued Donor";
-            if (string.IsNullOrWhiteSpace(model.CardType)) model.CardType = "Credit Card";
-
-            return await ExecuteDonationAsync(model, cause);
+            return await InitiateGatewayDonationAsync(model);
         }
 
-        private async Task<IActionResult> ExecuteDonationAsync(DonateRequestViewModel model, Cause cause)
+        private async Task<IActionResult> InitiateGatewayDonationAsync(DonateRequestViewModel model)
         {
-            // Clean card number and create masked version (e.g., "**** **** **** 1234")
-            var digitsOnly = new string((model.CardNumber ?? "").Where(char.IsDigit).ToArray());
-            var last4 = digitsOnly.Length >= 4 ? digitsOnly.Substring(digitsOnly.Length - 4) : "4242";
-            var maskedCard = $"****-****-****-{last4}";
-
-            // Generate unique realistic transaction ID
-            var randomHex = Guid.NewGuid().ToString("N").Substring(0, 6).ToUpper();
-            var txnId = $"GA-TXN-{DateTime.UtcNow:yyyyMM}-{randomHex}";
-
             int? userId = null;
             if (User.Identity?.IsAuthenticated == true)
             {
@@ -168,70 +166,40 @@ namespace NGEOS.Controllers
                 }
             }
 
-            var donationType = (model.DonationType?.Equals("Zakat", StringComparison.OrdinalIgnoreCase) == true) ? "Zakat" : "General";
-            var userRawNote = model.Notes?.Trim() ?? "";
-            var initialNotes = string.IsNullOrWhiteSpace(userRawNote)
-                ? $"[Type:{donationType}] [Email:Pending]"
-                : $"[Type:{donationType}] [Email:Pending] {userRawNote}";
+            var clientIp = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "127.0.0.1";
+            var baseUrl = $"{Request.Scheme}://{Request.Host}{Request.PathBase}";
 
-            var donation = new Donation
+            var initResult = await _orchestrationService.StartDonationPaymentAsync(model, userId, clientIp, baseUrl);
+
+            if (!initResult.IsSuccess)
             {
-                TransactionId = txnId,
-                CauseId = cause.Id,
-                UserId = userId,
-                DonorName = model.DonorName.Trim(),
-                DonorEmail = model.DonorEmail.Trim(),
-                DonorPhone = model.DonorPhone?.Trim(),
-                Amount = model.Amount,
-                CardType = model.CardType,
-                CardHolderName = model.CardHolderName.Trim(),
-                MaskedCardNumber = maskedCard,
-                PaymentStatus = "Completed",
-                Notes = initialNotes,
-                DonationDate = DateTime.UtcNow
-            };
-
-            _context.Donations.Add(donation);
-
-            // Increment cause raised amount
-            cause.RaisedAmount += model.Amount;
-
-            await _context.SaveChangesAsync();
-
-            // Auto-send formal donation receipt email via Brevo SMTP
-            bool emailSent = false;
-            try
-            {
-                await _emailSender.SendDonationReceiptAsync(
-                    donation.DonorEmail,
-                    donation.DonorName,
-                    donation.TransactionId,
-                    donation.Amount,
-                    donationType,
-                    cause.Title,
-                    cause.Ngo?.Name ?? "NGEOS Foundation",
-                    donation.DonationDate,
-                    donation.CardType,
-                    donation.MaskedCardNumber
-                );
-                emailSent = true;
-                _logger.LogInformation("Donation receipt emailed successfully to {Email} for Txn {TxnId}", donation.DonorEmail, donation.TransactionId);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Failed to email donation receipt to {Email}", donation.DonorEmail);
+                ModelState.AddModelError("", initResult.ErrorMessage ?? "Payment gateway initialization failed. Please choose another payment method or try again.");
+                model.AvailableCauses = await _context.Causes.Where(c => c.IsActive).ToListAsync();
+                ViewBag.AvailableGateways = _gatewayFactory.GetAllGateways().Select(g => g.Capabilities).ToList();
+                return View("Index", model);
             }
 
-            // Update Email status tag in donation record
-            var finalEmailTag = emailSent ? "[Email:Sent]" : "[Email:Failed]";
-            donation.Notes = string.IsNullOrWhiteSpace(userRawNote)
-                ? $"[Type:{donationType}] {finalEmailTag}"
-                : $"[Type:{donationType}] {finalEmailTag} {userRawNote}";
+            switch (initResult.ActionType)
+            {
+                case PaymentActionType.Redirect:
+                    return Redirect(initResult.RedirectUrl);
 
-            await _context.SaveChangesAsync();
+                case PaymentActionType.PostForm:
+                    return View("PaymentRedirect", initResult);
 
-            TempData["SuccessMessage"] = $"Thank you for your generous {donationType} contribution of ${model.Amount:N2} to '{cause.Title}'!";
-            return RedirectToAction("Confirmation", new { transactionId = txnId });
+                case PaymentActionType.DirectSuccess:
+                    TempData["SuccessMessage"] = $"Thank you for your generous contribution of {initResult.Amount:N2} {initResult.Currency}!";
+                    return RedirectToAction("Confirmation", new { transactionId = initResult.InternalReference });
+
+                default:
+                    return RedirectToAction("PaymentResult", new
+                    {
+                        status = "Failed",
+                        reference = initResult.InternalReference,
+                        gateway = initResult.GatewayName,
+                        message = "Unexpected payment response from the gateway."
+                    });
+            }
         }
 
         [HttpGet]
@@ -245,6 +213,7 @@ namespace NGEOS.Controllers
             var donation = await _context.Donations
                 .Include(d => d.Cause)
                 .ThenInclude(c => c!.Ngo)
+                .Include(d => d.Transactions)
                 .FirstOrDefaultAsync(d => d.TransactionId == transactionId);
 
             if (donation == null)
@@ -252,9 +221,14 @@ namespace NGEOS.Controllers
                 return NotFound();
             }
 
+            var latestTxn = donation.Transactions?.OrderByDescending(t => t.Id).FirstOrDefault();
+
             var receipt = new DonationReceiptViewModel
             {
                 TransactionId = donation.TransactionId,
+                GatewayReference = latestTxn?.GatewayReference ?? donation.TransactionId,
+                PaymentGateway = donation.PaymentGateway ?? donation.CardType ?? "Online",
+                Currency = donation.Currency ?? "PKR",
                 CauseTitle = donation.Cause?.Title ?? "General Charity Relief",
                 Category = donation.Cause?.Category ?? "Welfare",
                 NgoName = donation.Cause?.Ngo?.Name ?? "NGEOS Foundation",
@@ -262,7 +236,7 @@ namespace NGEOS.Controllers
                 DonorEmail = donation.DonorEmail,
                 DonorPhone = donation.DonorPhone,
                 Amount = donation.Amount,
-                CardType = donation.CardType,
+                CardType = donation.PaymentGateway ?? donation.CardType ?? "Online",
                 MaskedCardNumber = donation.MaskedCardNumber,
                 DonationDate = donation.DonationDate,
                 PaymentStatus = donation.PaymentStatus,
@@ -272,6 +246,63 @@ namespace NGEOS.Controllers
             };
 
             return View(receipt);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> PaymentResult(string? status, string? reference, string? gateway, string? message)
+        {
+            ViewBag.Status = status ?? "Failed";
+            ViewBag.Reference = reference ?? "N/A";
+            ViewBag.Gateway = gateway ?? "Payment Gateway";
+            ViewBag.Message = message ?? "Your transaction could not be verified or was cancelled by the user.";
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DownloadReceipt(string transactionId)
+        {
+            if (string.IsNullOrEmpty(transactionId))
+            {
+                return RedirectToAction("Index");
+            }
+
+            var donation = await _context.Donations
+                .Include(d => d.Cause)
+                .ThenInclude(c => c!.Ngo)
+                .Include(d => d.Transactions)
+                .FirstOrDefaultAsync(d => d.TransactionId == transactionId);
+
+            if (donation == null)
+            {
+                return NotFound();
+            }
+
+            var latestTxn = donation.Transactions?.OrderByDescending(t => t.Id).FirstOrDefault();
+
+            var receipt = new DonationReceiptViewModel
+            {
+                TransactionId = donation.TransactionId,
+                GatewayReference = latestTxn?.GatewayReference ?? donation.TransactionId,
+                PaymentGateway = donation.PaymentGateway ?? donation.CardType ?? "Online",
+                Currency = donation.Currency ?? "PKR",
+                CauseTitle = donation.Cause?.Title ?? "General Charity Relief",
+                Category = donation.Cause?.Category ?? "Welfare",
+                NgoName = donation.Cause?.Ngo?.Name ?? "NGEOS Foundation",
+                DonorName = donation.DonorName,
+                DonorEmail = donation.DonorEmail,
+                DonorPhone = donation.DonorPhone,
+                Amount = donation.Amount,
+                CardType = donation.PaymentGateway ?? donation.CardType ?? "Online",
+                MaskedCardNumber = donation.MaskedCardNumber,
+                DonationDate = donation.DonationDate,
+                PaymentStatus = donation.PaymentStatus,
+                DonationType = donation.DonationType,
+                IsReceiptEmailSent = donation.IsReceiptEmailSent,
+                Notes = donation.CleanNotes
+            };
+
+            ViewBag.PrintMode = true;
+            return View("ReceiptPrint", receipt);
         }
     }
 }

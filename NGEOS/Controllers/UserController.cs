@@ -50,11 +50,12 @@ namespace NGEOS.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            var donations = await _context.Donations
-                .Include(d => d.Cause)
-                .Where(d => d.UserId == user.Id || d.DonorEmail.ToLower() == user.Email.ToLower())
-                .OrderByDescending(d => d.DonationDate)
-                .ToListAsync();
+            var donationsQuery = _context.Donations.Include(d => d.Cause).AsQueryable();
+            if (user.Role != "Admin")
+            {
+                donationsQuery = donationsQuery.Where(d => d.UserId == user.Id || d.DonorEmail.ToLower() == user.Email.ToLower());
+            }
+            var donations = await donationsQuery.OrderByDescending(d => d.DonationDate).ToListAsync();
 
             var interests = await _context.ProgrammeInterests
                 .Include(pi => pi.Programme)
@@ -95,11 +96,12 @@ namespace NGEOS.Controllers
             var user = await GetCurrentUserAsync();
             if (user == null) return RedirectToAction("Login", "Account");
 
-            var donations = await _context.Donations
-                .Include(d => d.Cause)
-                .Where(d => d.UserId == user.Id || d.DonorEmail.ToLower() == user.Email.ToLower())
-                .OrderByDescending(d => d.DonationDate)
-                .ToListAsync();
+            var donationsQuery = _context.Donations.Include(d => d.Cause).AsQueryable();
+            if (user.Role != "Admin")
+            {
+                donationsQuery = donationsQuery.Where(d => d.UserId == user.Id || d.DonorEmail.ToLower() == user.Email.ToLower());
+            }
+            var donations = await donationsQuery.OrderByDescending(d => d.DonationDate).ToListAsync();
 
             return View(donations);
         }

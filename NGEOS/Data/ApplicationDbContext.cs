@@ -29,6 +29,7 @@ namespace NGEOS.Data
         public DbSet<UserQuery> UserQueries => Set<UserQuery>();
         public DbSet<ContactMessage> ContactMessages => Set<ContactMessage>();
         public DbSet<FriendInvitation> FriendInvitations => Set<FriendInvitation>();
+        public DbSet<PaymentTransaction> PaymentTransactions => Set<PaymentTransaction>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -67,6 +68,26 @@ namespace NGEOS.Data
                 .WithMany(u => u.Donations)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.SetNull);
+
+            modelBuilder.Entity<Donation>()
+                .HasOne(d => d.Programme)
+                .WithMany()
+                .HasForeignKey(d => d.ProgrammeId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            // Payment Transaction Relationships & Indexes
+            modelBuilder.Entity<PaymentTransaction>()
+                .HasOne(pt => pt.Donation)
+                .WithMany(d => d.Transactions)
+                .HasForeignKey(pt => pt.DonationId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<PaymentTransaction>()
+                .HasIndex(pt => pt.InternalReference)
+                .IsUnique();
+
+            modelBuilder.Entity<PaymentTransaction>()
+                .HasIndex(pt => new { pt.GatewayName, pt.GatewayReference });
 
             // Programme Interest Relationships
             modelBuilder.Entity<ProgrammeInterest>()

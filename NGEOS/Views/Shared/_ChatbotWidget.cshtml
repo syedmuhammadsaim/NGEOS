@@ -1,0 +1,148 @@
+<!-- ============================================================
+     NGEOS AI CHATBOT WIDGET
+     Multi-Provider (Groq Llama 3.3 + Gemini Fallback)
+     Live SQL Server Database Grounded
+     ============================================================ -->
+<div id="ngeos-chatbot-container" class="ngeos-chatbot-wrapper" aria-label="NGEOS AI Chatbot">
+    <!-- Floating Action Trigger Button -->
+    <button id="ngeos-chatbot-toggle-btn" 
+            class="ngeos-chatbot-trigger shadow-lg" 
+            type="button" 
+            aria-label="Open NGEOS AI Assistant" 
+            aria-expanded="false" 
+            aria-controls="ngeos-chatbot-window"
+            title="Chat with NGEOS AI Assistant">
+        <span class="trigger-icon-open"><i class="bi bi-chat-heart-fill"></i></span>
+        <span class="trigger-icon-close"><i class="bi bi-chevron-down"></i></span>
+        <span class="status-pulse-dot" title="AI Assistant Online"></span>
+        <span class="trigger-label-pill d-none d-md-inline-flex">AI Assistant</span>
+    </button>
+
+    <!-- Chatbot Main Window -->
+    <div id="ngeos-chatbot-window" class="ngeos-chat-window shadow-2xl" role="dialog" aria-modal="true" aria-labelledby="chat-header-title">
+        <!-- Header -->
+        <div class="ngeos-chat-header">
+            <div class="d-flex align-items-center gap-2">
+                <div class="chat-avatar-wrapper position-relative">
+                    <div class="chat-avatar-icon">
+                        <img src="~/images/ngeos-logo.svg" alt="NGEOS Logo" class="chat-avatar-img" asp-append-version="true" />
+                    </div>
+                    <span class="chat-online-badge" title="Live Database Grounded"></span>
+                </div>
+                <div>
+                    <h6 class="mb-0 fw-bold text-white d-flex align-items-center gap-2" id="chat-header-title">
+                        NGEOS AI Assistant
+                    </h6>
+                    <small class="text-white-50 d-flex align-items-center gap-1 font-monospace" style="font-size: 0.72rem;">
+                        <span id="ngeos-chat-provider-badge" class="badge rounded-pill bg-light text-dark fw-medium px-2" style="font-size: 0.65rem;">Groq + Gemini</span>
+                        <span>• Live Verified</span>
+                    </small>
+                </div>
+            </div>
+            <div class="d-flex align-items-center gap-1">
+                <button type="button" 
+                        id="ngeos-chat-clear-btn" 
+                        class="chat-header-btn" 
+                        title="Clear conversation" 
+                        aria-label="Clear chat">
+                    <i class="bi bi-arrow-counterclockwise"></i>
+                </button>
+                <button type="button" 
+                        id="ngeos-chat-minimize-btn" 
+                        class="chat-header-btn" 
+                        title="Minimize" 
+                        aria-label="Minimize chat">
+                    <i class="bi bi-dash-lg"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Chat Conversation Messages Body -->
+        <div id="ngeos-chat-messages" class="ngeos-chat-body" tabindex="0" role="log" aria-live="polite">
+            <!-- Initial Welcome Message Card -->
+            <div class="chat-msg chat-msg-bot">
+                <div class="msg-avatar"><img src="~/images/ngeos-logo.svg" alt="NGEOS Logo" class="msg-avatar-img" asp-append-version="true" /></div>
+                <div class="msg-content">
+                    <div class="msg-bubble welcome-bubble">
+                        <p class="mb-1 fw-semibold text-dark">
+                            Assalam-o-Alaikum! Welcome to <strong>NGEOS (Give-AID)</strong>.
+                        </p>
+                        <p class="mb-2 text-secondary" style="font-size: 0.88rem;">
+                            Main NGEOS ka verified AI Assistant hoon. Aap mujh se active causes, verified donation funds, programmes, volunteer jobs, aur Zakat/Sadqah ke baray mein kisi bhi zaban mein pooch sakte hain:
+                        </p>
+                        <div class="lang-pills mb-2">
+                            <span class="badge bg-light text-dark border">English</span>
+                            <span class="badge bg-light text-dark border">Roman Urdu</span>
+                            <span class="badge bg-light text-dark border">اردو</span>
+                        </div>
+                    </div>
+                    <span class="msg-timestamp">Just now</span>
+                </div>
+            </div>
+
+            <!-- Suggestion Chips Container -->
+            <div id="ngeos-chat-suggestions" class="chat-suggestions-area">
+                <div class="suggestions-label"><i class="bi bi-lightning-charge-fill me-1"></i> Quick questions:</div>
+                <div class="suggestions-chips">
+                    <button type="button" class="suggestion-chip" data-prompt="What active welfare causes are currently running?">
+                        <i class="bi bi-heart me-1"></i> Active Causes
+                    </button>
+                    <button type="button" class="suggestion-chip" data-prompt="How can I make a donation to NGEOS?">
+                        <i class="bi bi-credit-card me-1"></i> How to Donate?
+                    </button>
+                    <button type="button" class="suggestion-chip" data-prompt="What is the total verified donation amount raised so far?">
+                        <i class="bi bi-cash-stack me-1"></i> Total Funds Raised
+                    </button>
+                    <button type="button" class="suggestion-chip" data-prompt="What community programmes and events are organized?">
+                        <i class="bi bi-calendar-event me-1"></i> Programmes
+                    </button>
+                    <button type="button" class="suggestion-chip" data-prompt="Are there any volunteer or job opportunities available?">
+                        <i class="bi bi-people me-1"></i> Volunteer Jobs
+                    </button>
+                    <button type="button" class="suggestion-chip" data-prompt="How does NGEOS handle Zakat and Sadqah funds?">
+                        <i class="bi bi-shield-check me-1"></i> Zakat & Sadqah
+                    </button>
+                </div>
+            </div>
+
+            <!-- Dynamic Messages will append here -->
+
+            <!-- Typing Indicator (Hidden by default) -->
+            <div id="ngeos-chat-typing-indicator" class="chat-msg chat-msg-bot d-none" aria-hidden="true">
+                <div class="msg-avatar"><img src="~/images/ngeos-logo.svg" alt="NGEOS Logo" class="msg-avatar-img" asp-append-version="true" /></div>
+                <div class="msg-content">
+                    <div class="msg-bubble typing-bubble">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Input Form -->
+        <div class="ngeos-chat-footer">
+            <form id="ngeos-chat-form" class="chat-input-form" onsubmit="return false;">
+                <div class="input-group">
+                    <input type="text" 
+                           id="ngeos-chat-input" 
+                           class="form-control chat-input" 
+                           placeholder="Ask in English, Urdu ya Roman Urdu..." 
+                           maxlength="1000" 
+                           autocomplete="off"
+                           aria-label="Type your message" />
+                    <button type="submit" 
+                            id="ngeos-chat-send-btn" 
+                            class="btn btn-chat-send" 
+                            aria-label="Send message" 
+                            title="Send message">
+                        <i class="bi bi-send-fill"></i>
+                    </button>
+                </div>
+            </form>
+            <div class="chat-footer-disclaimer">
+                <i class="bi bi-shield-lock-fill text-success me-1"></i> Grounded in live SQL Server data • PII Protected
+            </div>
+        </div>
+    </div>
+</div>

@@ -4,7 +4,7 @@
     Layout = "_AdminLayout";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-4">
+<div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4">
     <div>
         <h3 class="fw-bold mb-1">Programme Volunteers & Participants</h3>
         <p class="text-muted small mb-0">Review interested volunteers, supporters, and participants for welfare drives.</p>
@@ -24,7 +24,8 @@
                     <th>Message / Skills</th>
                     <th>Submitted</th>
                     <th>Status</th>
-                    <th>Update</th>
+                    <th>Update Status</th>
+                    <th class="text-end">Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -60,6 +61,14 @@
                                     <option value="Approved" selected="@(item.Status == "Approved")">Approved</option>
                                     <option value="Contacted" selected="@(item.Status == "Contacted")">Contacted</option>
                                 </select>
+                            </form>
+                        </td>
+                        <td class="text-end">
+                            <form asp-action="DeleteProgrammeInterest" asp-route-id="@item.Id" method="post" onsubmit="return confirm('Delete volunteer entry from @item.FullName?');" class="d-inline">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete Volunteer Entry">
+                                    <i class="bi bi-trash"></i>
+                                </button>
                             </form>
                         </td>
                     </tr>

@@ -36,3 +36,15 @@ NGEOS/.vs/
 publish/
 *.zip
 *.log
+
+# Sensitive environment and configuration files
+.env
+*.env
+!.env.example
+.env.local
+.env.production
+
+
+
+# Temporary receipts preview generated during test / simulation
+NGEOS/wwwroot/temp_receipts/

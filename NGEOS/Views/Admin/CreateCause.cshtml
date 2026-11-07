@@ -6,7 +6,7 @@
     var categories = ViewBag.Categories as List<string> ?? new List<string>();
 }
 
-<div class="d-flex justify-content-between align-items-center mb-4">
+<div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4">
     <div>
         <h3 class="fw-bold mb-1">Add New Welfare Cause</h3>
         <p class="text-muted small mb-0">Create a new fundraising campaign for public donations.</p>
@@ -38,13 +38,13 @@
             </div>
 
             <div class="col-md-4">
-                <label asp-for="TargetAmount" class="form-label">Funding Goal ($ USD)</label>
+                <label asp-for="TargetAmount" class="form-label">Funding Goal (PKR / Rs)</label>
                 <input asp-for="TargetAmount" type="number" step="100" class="form-control" placeholder="50000" required />
                 <span asp-validation-for="TargetAmount" class="text-danger small"></span>
             </div>
 
             <div class="col-md-4">
-                <label asp-for="RaisedAmount" class="form-label">Initial Raised Amount ($ USD)</label>
+                <label asp-for="RaisedAmount" class="form-label">Initial Raised Amount (PKR / Rs)</label>
                 <input asp-for="RaisedAmount" type="number" step="10" class="form-control" value="0" />
                 <span asp-validation-for="RaisedAmount" class="text-danger small"></span>
             </div>

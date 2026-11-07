@@ -829,37 +829,22 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-    // Prevent white rubber-band overscroll gap above header & below footer
-    window.addEventListener('wheel', function (e) {
-        if (window.scrollY <= 0 && e.deltaY < 0) {
-            e.preventDefault();
+    // Overscroll prevention is handled natively via CSS (overscroll-behavior: none).
+    // Active wheel/touchmove listeners with preventDefault() are removed to guarantee smooth mouse wheel scrolling.
+    if (document.body.classList.contains('admin-body') || window.location.pathname.toLowerCase().includes('/admin')) {
+        document.documentElement.style.setProperty('overflow-y', 'auto', 'important');
+        document.documentElement.style.setProperty('overflow-x', 'hidden', 'important');
+        document.body.style.setProperty('overflow-y', 'visible', 'important');
+        document.body.style.setProperty('overflow-x', 'hidden', 'important');
+        const adminMain = document.querySelector('.admin-main');
+        if (adminMain) {
+            adminMain.style.setProperty('overflow-y', 'visible', 'important');
         }
-        const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
-        if (window.scrollY >= maxScroll - 1 && e.deltaY > 0) {
-            e.preventDefault();
+        const adminShell = document.querySelector('.admin-shell');
+        if (adminShell) {
+            adminShell.style.setProperty('overflow-y', 'visible', 'important');
         }
-    }, { passive: false });
-
-    let touchStartY = 0;
-    window.addEventListener('touchstart', function (e) {
-        if (e.touches && e.touches.length === 1) {
-            touchStartY = e.touches[0].clientY;
-        }
-    }, { passive: true });
-
-    window.addEventListener('touchmove', function (e) {
-        if (e.touches && e.touches.length === 1) {
-            const touchY = e.touches[0].clientY;
-            const deltaY = touchY - touchStartY;
-            if (window.scrollY <= 0 && deltaY > 0) {
-                e.preventDefault();
-            }
-            const maxScroll = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
-            if (window.scrollY >= maxScroll - 1 && deltaY < 0) {
-                e.preventDefault();
-            }
-        }
-    }, { passive: false });
+    }
 
     // Ensure English default and clean up any past language overrides
     try {

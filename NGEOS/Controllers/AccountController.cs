@@ -208,6 +208,14 @@ namespace NGEOS.Controllers
 
                 }
 
+                if (!string.IsNullOrEmpty(returnUrl) && returnUrl.Contains("Admin", StringComparison.OrdinalIgnoreCase))
+
+                {
+
+                    return RedirectToAction("AccessDenied", "Account");
+
+                }
+
                 return RedirectToAction("Dashboard", "User");
 
             }
@@ -886,7 +894,8 @@ namespace NGEOS.Controllers
 
 
 
-            var (success, errorMessage, remainingSeconds, userExists) = await _resetService.RequestResetCodeAsync(model.Email);
+            var (success, errorMessage, remainingSeconds, userExists, generatedCode) = await _resetService.RequestResetCodeAsync(model.Email);
+            
 
 
 
@@ -1008,7 +1017,8 @@ namespace NGEOS.Controllers
 
 
 
-            var (success, errorMessage, remainingSeconds, userExists) = await _resetService.RequestResetCodeAsync(email);
+            var (success, errorMessage, remainingSeconds, userExists, generatedCode) = await _resetService.RequestResetCodeAsync(email);
+            
 
 
 

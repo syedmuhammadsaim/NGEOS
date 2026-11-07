@@ -15,6 +15,10 @@ namespace NGEOS.Models
         [ForeignKey("CauseId")]
         public virtual Cause? Cause { get; set; }
 
+        public int? ProgrammeId { get; set; }
+        [ForeignKey("ProgrammeId")]
+        public virtual Programme? Programme { get; set; }
+
         public int? UserId { get; set; }
         [ForeignKey("UserId")]
         public virtual User? User { get; set; }
@@ -45,10 +49,19 @@ namespace NGEOS.Models
         [Required, MaxLength(30)]
         public string PaymentStatus { get; set; } = "Completed"; // "Completed", "Pending", "Failed"
 
+        [MaxLength(50)]
+        public string PaymentGateway { get; set; } = "Credit Card"; // "Safepay", "JazzCash", "Easypaisa", "PayFast"
+
+        [MaxLength(10)]
+        public string Currency { get; set; } = "PKR";
+
         [MaxLength(500)]
         public string? Notes { get; set; }
 
         public DateTime DonationDate { get; set; } = DateTime.UtcNow;
+
+        // Navigation
+        public virtual ICollection<PaymentTransaction> Transactions { get; set; } = new List<PaymentTransaction>();
 
         [NotMapped]
         public string DonationType => (Notes != null && Notes.Contains("[Type:Zakat]", StringComparison.OrdinalIgnoreCase)) ? "Zakat" : "General";
@@ -60,12 +73,15 @@ namespace NGEOS.Models
         public bool IsReceiptEmailSent => Notes != null && Notes.Contains("[Email:Sent]", StringComparison.OrdinalIgnoreCase);
 
         [NotMapped]
+        public DateTime PktDate => DonationDate.AddHours(5);
+
+        [NotMapped]
         public string CleanNotes
         {
             get
             {
                 if (string.IsNullOrWhiteSpace(Notes)) return string.Empty;
-                return System.Text.RegularExpressions.Regex.Replace(Notes, @"\[(Type|Email):[^\]]+\]\s*", "").Trim();
+                return System.Text.RegularExpressions.Regex.Replace(Notes, @"\[(Type|Email|Gateway):[^\]]+\]\s*", "").Trim();
             }
         }
     }

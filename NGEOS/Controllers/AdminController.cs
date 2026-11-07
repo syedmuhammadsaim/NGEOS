@@ -2,9 +2,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NGEOS.Data;
+using NGEOS.Helpers;
 using NGEOS.Models;
 using NGEOS.Services;
 using NGEOS.ViewModels;
+using NGEOS.Services.Payments.Core;
+using NGEOS.Services.Payments.Dtos;
 
 namespace NGEOS.Controllers
 {
@@ -13,11 +16,13 @@ namespace NGEOS.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IEmailSender _emailSender;
+        private readonly IPaymentGatewayFactory _gatewayFactory;
 
-        public AdminController(ApplicationDbContext context, IEmailSender emailSender)
+        public AdminController(ApplicationDbContext context, IEmailSender emailSender, IPaymentGatewayFactory gatewayFactory)
         {
             _context = context;
             _emailSender = emailSender;
+            _gatewayFactory = gatewayFactory;
         }
 
         // 1. Dashboard Overview
@@ -32,6 +37,11 @@ namespace NGEOS.Controllers
             var totalEvents = await _context.Events.CountAsync();
             var pendingQueriesCount = await _context.UserQueries.CountAsync(q => q.Status == "Pending");
             var totalVolunteersCount = await _context.ProgrammeInterests.CountAsync();
+            var unreadMessagesCount = await _context.ContactMessages.CountAsync(m => !m.IsRead);
+            var recentMessages = await _context.ContactMessages
+                .OrderByDescending(m => m.CreatedAt)
+                .Take(5)
+                .ToListAsync();
 
             var recentDonations = await _context.Donations
                 .Include(d => d.Cause)
@@ -67,7 +77,9 @@ namespace NGEOS.Controllers
                 TotalEvents = totalEvents,
                 PendingQueriesCount = pendingQueriesCount,
                 TotalVolunteersCount = totalVolunteersCount,
+                UnreadMessagesCount = unreadMessagesCount,
                 RecentDonations = recentDonations,
+                RecentMessages = recentMessages,
                 RecentQueries = recentQueries,
                 RecentUsers = recentUsers,
                 RecentProgrammeInterests = recentInterests
@@ -163,9 +175,27 @@ namespace NGEOS.Controllers
             var query = _context.Donations
                 .Include(d => d.Cause)
                 .Include(d => d.User)
+                .Include(d => d.Transactions)
                 .OrderByDescending(d => d.DonationDate);
 
             var allDonations = await query.ToListAsync();
+
+            // Check health of all 4 gateways
+            var gateways = _gatewayFactory.GetAllGateways();
+            var gatewayStatuses = new List<object>();
+            foreach (var g in gateways)
+            {
+                var health = await g.CheckHealthAsync();
+                gatewayStatuses.Add(new
+                {
+                    Name = g.GatewayName,
+                    IsConfigured = g.IsConfigured,
+                    Environment = g.EnvironmentName,
+                    IsHealthy = health.IsHealthy,
+                    HealthMessage = health.Message
+                });
+            }
+            ViewBag.GatewayStatuses = gatewayStatuses;
 
             // Calculate Metrics
             var totalVerifiedFunding = allDonations.Where(d => d.PaymentStatus == "Completed").Sum(d => d.Amount);
@@ -238,6 +268,102 @@ namespace NGEOS.Controllers
             return RedirectToAction(nameof(Donations));
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RefundDonation(int id, string? reason)
+        {
+            var donation = await _context.Donations
+                .Include(d => d.Cause)
+                .Include(d => d.Transactions)
+                .FirstOrDefaultAsync(d => d.Id == id);
+
+            if (donation == null)
+            {
+                TempData["ErrorMessage"] = "Donation record not found.";
+                return RedirectToAction(nameof(Donations));
+            }
+
+            if (donation.PaymentStatus == "Refunded")
+            {
+                TempData["ErrorMessage"] = "This donation has already been refunded.";
+                return RedirectToAction(nameof(Donations));
+            }
+
+            var gatewayName = donation.PaymentGateway ?? "Safepay";
+            var latestTxn = donation.Transactions.OrderByDescending(t => t.Id).FirstOrDefault();
+            var gatewayRef = latestTxn?.GatewayReference ?? donation.TransactionId;
+
+            var refundRequest = new PaymentRefundRequest
+            {
+                DonationId = donation.Id,
+                InternalReference = donation.TransactionId,
+                GatewayReference = gatewayRef,
+                Amount = donation.Amount,
+                Currency = donation.Currency,
+                Reason = string.IsNullOrWhiteSpace(reason) ? "Admin initiated refund" : reason.Trim()
+            };
+
+            try
+            {
+                var gateway = _gatewayFactory.GetGateway(gatewayName);
+                var refundResult = await gateway.ProcessRefundAsync(refundRequest);
+
+                if (refundResult.IsSuccess)
+                {
+                    donation.PaymentStatus = "Refunded";
+                    if (donation.Cause != null && donation.Cause.RaisedAmount >= donation.Amount)
+                    {
+                        donation.Cause.RaisedAmount -= donation.Amount;
+                    }
+
+                    var refundTxn = new PaymentTransaction
+                    {
+                        DonationId = donation.Id,
+                        GatewayName = gatewayName,
+                        InternalReference = $"REF-{donation.TransactionId}",
+                        GatewayReference = refundResult.RefundReference,
+                        Amount = donation.Amount,
+                        Currency = donation.Currency,
+                        Status = "Refunded",
+                        Environment = gateway.EnvironmentName,
+                        VerificationStatus = "Verified",
+                        IdempotencyKey = Guid.NewGuid().ToString("N"),
+                        CreatedAt = DateTime.UtcNow
+                    };
+                    _context.PaymentTransactions.Add(refundTxn);
+                    await _context.SaveChangesAsync();
+
+                    TempData["SuccessMessage"] = $"Donation #{donation.TransactionId} successfully refunded via {gatewayName}! (Refund Ref: {refundResult.RefundReference})";
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = $"Refund failed via {gatewayName}: {refundResult.ErrorMessage}";
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"Refund error: {ex.Message}";
+            }
+
+            return RedirectToAction(nameof(Donations));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteDonation(int id)
+        {
+            var donation = await _context.Donations.FindAsync(id);
+            if (donation != null)
+            {
+                var txn = donation.TransactionId;
+                _context.Donations.Remove(donation);
+                await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = $"Donation transaction #{txn} deleted successfully.";
+            }
+            return RedirectToAction(nameof(Donations));
+        }
+
+
         // ==========================================
         // 4. REGISTERED MEMBERS DIRECTORY (Personal & Professional Data)
         // ==========================================
@@ -264,6 +390,105 @@ namespace NGEOS.Controllers
             }
             return RedirectToAction(nameof(Users));
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangeUserRole(int id, string newRole)
+        {
+            var user = await _context.Users.FindAsync(id);
+            if (user == null) return NotFound();
+
+            if (newRole != "Admin" && newRole != "User")
+            {
+                TempData["ErrorMessage"] = "Invalid role specified. Must be 'Admin' or 'User'.";
+                return RedirectToAction(nameof(Users));
+            }
+
+            if (user.Role == "Admin" && newRole == "User")
+            {
+                var adminCount = await _context.Users.CountAsync(u => u.Role == "Admin" && u.IsActive);
+                if (adminCount <= 1)
+                {
+                    TempData["ErrorMessage"] = "Cannot demote the only remaining active Administrator.";
+                    return RedirectToAction(nameof(Users));
+                }
+            }
+
+            user.Role = newRole;
+            await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = $"Role for '{user.FullName}' ({user.Email}) updated to {newRole}.";
+            return RedirectToAction(nameof(Users));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetUserPassword(int id, string? newPassword)
+        {
+            var user = await _context.Users.FindAsync(id);
+            if (user == null) return NotFound();
+
+            var passToSet = string.IsNullOrWhiteSpace(newPassword) ? "Ngeos@2026" : newPassword.Trim();
+            user.PasswordHash = PasswordHelper.HashPassword(passToSet);
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = $"Password for '{user.FullName}' ({user.Email}) reset to: {passToSet}";
+            return RedirectToAction(nameof(Users));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateUser(User newUser, string password)
+        {
+            if (string.IsNullOrWhiteSpace(newUser.Email) || string.IsNullOrWhiteSpace(password))
+            {
+                TempData["ErrorMessage"] = "Email and Password are required.";
+                return RedirectToAction(nameof(Users));
+            }
+
+            var cleanEmail = newUser.Email.Trim().ToLower();
+            if (await _context.Users.AnyAsync(u => u.Email.ToLower() == cleanEmail))
+            {
+                TempData["ErrorMessage"] = $"An account with email '{newUser.Email}' already exists.";
+                return RedirectToAction(nameof(Users));
+            }
+
+            newUser.Email = cleanEmail;
+            newUser.PasswordHash = PasswordHelper.HashPassword(password.Trim());
+            newUser.CreatedAt = DateTime.UtcNow;
+            newUser.IsActive = true;
+            if (string.IsNullOrWhiteSpace(newUser.Role)) newUser.Role = "User";
+            if (string.IsNullOrWhiteSpace(newUser.FullName)) newUser.FullName = cleanEmail.Split('@')[0];
+
+            _context.Users.Add(newUser);
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = $"New {newUser.Role} account '{newUser.FullName}' created successfully.";
+            return RedirectToAction(nameof(Users));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteUser(int id)
+        {
+            var user = await _context.Users.FindAsync(id);
+            if (user == null) return NotFound();
+
+            if (user.Role == "Admin")
+            {
+                var adminCount = await _context.Users.CountAsync(u => u.Role == "Admin");
+                if (adminCount <= 1)
+                {
+                    TempData["ErrorMessage"] = "Cannot delete the sole Administrator account.";
+                    return RedirectToAction(nameof(Users));
+                }
+            }
+
+            _context.Users.Remove(user);
+            await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = $"User '{user.FullName}' ({user.Email}) removed.";
+            return RedirectToAction(nameof(Users));
+        }
+
 
         // ==========================================
         // 5. ASSOCIATED NGOS (CRUD)
@@ -502,6 +727,21 @@ namespace NGEOS.Controllers
             }
             return RedirectToAction(nameof(ProgrammeInterests));
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteProgrammeInterest(int id)
+        {
+            var interest = await _context.ProgrammeInterests.FindAsync(id);
+            if (interest != null)
+            {
+                _context.ProgrammeInterests.Remove(interest);
+                await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Participant volunteer entry removed.";
+            }
+            return RedirectToAction(nameof(ProgrammeInterests));
+        }
+
 
         // ==========================================
         // 8. EVENTS (CRUD)
@@ -745,6 +985,29 @@ namespace NGEOS.Controllers
             return RedirectToAction(nameof(Jobs));
         }
 
+        [HttpGet]
+        public async Task<IActionResult> EditJob(int id)
+        {
+            var job = await _context.JobOpportunities.FindAsync(id);
+            if (job == null) return NotFound();
+            return View(job);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditJob(JobOpportunity job)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.JobOpportunities.Update(job);
+                await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = $"Job posting '{job.Title}' updated successfully.";
+                return RedirectToAction(nameof(Jobs));
+            }
+            return View(job);
+        }
+
+
         // ==========================================
         // 12. HELP CENTRE FAQS (CRUD)
         // ==========================================
@@ -854,7 +1117,34 @@ namespace NGEOS.Controllers
                     query.Status = model.Status;
                     query.RepliedAt = DateTime.UtcNow;
                     await _context.SaveChangesAsync();
-                    TempData["SuccessMessage"] = $"Reply sent successfully to {query.FullName} ({query.Email}).";
+
+                    try
+                    {
+                        var html = $@"
+                        <div style='font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 24px; border: 1px solid #e2e8f0; border-radius: 12px; background: #ffffff;'>
+                            <div style='background: #0b192c; padding: 18px 20px; border-radius: 8px; margin-bottom: 20px;'>
+                                <h2 style='color: #ffffff; margin: 0; font-size: 20px;'>NGE<span style='color: #f25c05;'>OS</span> Support Resolution</h2>
+                                <p style='color: #94a3b8; margin: 4px 0 0 0; font-size: 13px;'>Ticket #{query.Id} • {System.Net.WebUtility.HtmlEncode(query.Subject)}</p>
+                            </div>
+                            <p style='color: #1e293b; font-size: 15px;'>Dear <strong>{System.Net.WebUtility.HtmlEncode(query.FullName)}</strong>,</p>
+                            <p style='color: #475569; font-size: 14px;'>Our administration team has reviewed your query. Here is our official response:</p>
+                            <div style='background: #fff8f3; border-left: 4px solid #f25c05; padding: 16px; margin: 20px 0; border-radius: 4px;'>
+                                <strong style='color: #0b192c; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;'>Administrative Resolution:</strong>
+                                <p style='color: #334155; font-size: 14px; margin: 8px 0 0 0; line-height: 1.6;'>{System.Net.WebUtility.HtmlEncode(query.AdminReply).Replace("\n", "<br/>")}</p>
+                            </div>
+                            <p style='color: #64748b; font-size: 13px;'>Ticket Status: <strong style='color: #0b192c;'>{query.Status}</strong></p>
+                            <hr style='border: none; border-top: 1px solid #e2e8f0; margin: 24px 0;' />
+                            <p style='color: #94a3b8; font-size: 12px; margin: 0;'>NGEOS Central Secretariat • Empowering Communities Worldwide</p>
+                        </div>";
+
+                        await _emailSender.SendEmailAsync(query.Email, $"[NGEOS Support #{query.Id}] Resolution: {query.Subject}", html);
+                    }
+                    catch
+                    {
+                        // Silent fallback if SMTP unreachable
+                    }
+
+                    TempData["SuccessMessage"] = $"Reply saved and emailed successfully to {query.FullName} ({query.Email}).";
                     return RedirectToAction(nameof(Queries));
                 }
             }

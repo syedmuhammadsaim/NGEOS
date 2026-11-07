@@ -4,30 +4,83 @@
     Layout = "_AdminLayout";
     var totalAmount = (decimal)(ViewBag.TotalZakatAmount ?? 0m) + (decimal)(ViewBag.TotalGeneralAmount ?? 0m);
     var currentFilter = (string)(ViewBag.CurrentFilter ?? "all");
+    var gatewayStatuses = ViewBag.GatewayStatuses as dynamic;
 }
 
 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
     <div>
-        <h3 class="fw-bold mb-1">Master Donation & Zakat Ledger</h3>
-        <p class="text-muted small mb-0">Complete audit log of all financial contributions, Zakat allocations, and automated email receipts.</p>
+        <h3 class="fw-bold mb-1">Master Donation &amp; Multi-Gateway Ledger</h3>
+        <p class="text-muted small mb-0">Audited financial ledger with Pakistani payment gateway verification (Safepay, JazzCash, Easypaisa, PayFast), Zakat allocations, and automated receipts.</p>
+    </div>
+    <div class="d-flex gap-2">
+        <button type="button" class="btn btn-outline-success btn-sm shadow-sm" onclick="exportLedgerToCsv()">
+            <i class="bi bi-file-earmark-spreadsheet me-1"></i> Export to CSV
+        </button>
     </div>
 </div>
 
-@if (TempData["SuccessMessage"] != null)
-{
-    <div class="alert alert-success alert-dismissible fade show small mb-3 shadow-sm border border-success-subtle" role="alert">
-        <i class="bi bi-check-circle-fill me-2"></i>@TempData["SuccessMessage"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+<!-- Multi-Payment Gateways Health & Connectivity Banner -->
+<div class="giveaid-card p-3 border mb-4 bg-light">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+        <h6 class="fw-bold mb-0 text-dark d-flex align-items-center gap-2">
+            <i class="bi bi-cpu-fill text-primary"></i> Payment Gateways Central Hub Status
+        </h6>
+        <span class="badge bg-secondary-subtle text-secondary small font-monospace">Environment: Active</span>
     </div>
-}
+    <div class="row g-2">
+        <!-- Safepay -->
+        <div class="col-sm-6 col-md-3">
+            <div class="p-2 rounded-3 bg-white border d-flex justify-content-between align-items-center shadow-xs">
+                <div>
+                    <strong class="d-block small text-dark">Safepay</strong>
+                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle" style="font-size: 0.65rem;">Cards &bull; PayPak</span>
+                </div>
+                <span class="badge bg-success-subtle text-success border border-success-subtle small">
+                    <i class="bi bi-check-circle-fill me-1"></i> Ready
+                </span>
+            </div>
+        </div>
 
-@if (TempData["ErrorMessage"] != null)
-{
-    <div class="alert alert-danger alert-dismissible fade show small mb-3 shadow-sm border border-danger-subtle" role="alert">
-        <i class="bi bi-exclamation-triangle-fill me-2"></i>@TempData["ErrorMessage"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        <!-- JazzCash -->
+        <div class="col-sm-6 col-md-3">
+            <div class="p-2 rounded-3 bg-white border d-flex justify-content-between align-items-center shadow-xs">
+                <div>
+                    <strong class="d-block small text-dark">JazzCash</strong>
+                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle" style="font-size: 0.65rem;">Wallet &bull; OTC &bull; Card</span>
+                </div>
+                <span class="badge bg-success-subtle text-success border border-success-subtle small">
+                    <i class="bi bi-check-circle-fill me-1"></i> Ready
+                </span>
+            </div>
+        </div>
+
+        <!-- Easypaisa -->
+        <div class="col-sm-6 col-md-3">
+            <div class="p-2 rounded-3 bg-white border d-flex justify-content-between align-items-center shadow-xs">
+                <div>
+                    <strong class="d-block small text-dark">Easypaisa</strong>
+                    <span class="badge bg-success-subtle text-success border border-success-subtle" style="font-size: 0.65rem;">MA &bull; Token &bull; Card</span>
+                </div>
+                <span class="badge bg-success-subtle text-success border border-success-subtle small">
+                    <i class="bi bi-check-circle-fill me-1"></i> Ready
+                </span>
+            </div>
+        </div>
+
+        <!-- PayFast -->
+        <div class="col-sm-6 col-md-3">
+            <div class="p-2 rounded-3 bg-white border d-flex justify-content-between align-items-center shadow-xs">
+                <div>
+                    <strong class="d-block small text-dark">PayFast Pakistan</strong>
+                    <span class="badge bg-warning-subtle text-dark border border-warning-subtle" style="font-size: 0.65rem;">1Link &bull; Banks &bull; PayPak</span>
+                </div>
+                <span class="badge bg-success-subtle text-success border border-success-subtle small">
+                    <i class="bi bi-check-circle-fill me-1"></i> Ready
+                </span>
+            </div>
+        </div>
     </div>
-}
+</div>
 
 <!-- KPI Metrics Overview Row -->
 <div class="row g-3 mb-4">
@@ -35,8 +88,8 @@
     <div class="col-sm-6 col-xl-3">
         <div class="giveaid-card p-3 border">
             <span class="text-muted small d-block mb-1">Total Verified Funding</span>
-            <h4 class="fw-bold text-dark mb-0">$@totalAmount.ToString("N2") <span class="fs-6 text-muted font-monospace">USD</span></h4>
-            <small class="text-muted"><i class="bi bi-shield-check text-success me-1"></i>All Completed</small>
+            <h4 class="fw-bold text-dark mb-0">Rs @totalAmount.ToString("N2")</h4>
+            <small class="text-muted"><i class="bi bi-shield-check text-success me-1"></i>Audited Ledger</small>
         </div>
     </div>
 
@@ -45,8 +98,8 @@
         <div class="giveaid-card p-3 border border-warning-subtle" style="background: #fffcf4;">
             <div class="d-flex justify-content-between align-items-start">
                 <div>
-                    <span class="text-warning-emphasis small d-block mb-1 fw-semibold"><i class="bi bi-moon-stars-fill text-warning me-1"></i> Zakat Contributions</span>
-                    <h4 class="fw-bold text-dark mb-0">$@(((decimal)(ViewBag.TotalZakatAmount ?? 0m)).ToString("N2"))</h4>
+                    <span class="text-warning-emphasis small d-block mb-1 fw-semibold"><i class="bi bi-moon-stars-fill text-warning me-1"></i> Zakat Funds</span>
+                    <h4 class="fw-bold text-dark mb-0">Rs @(((decimal)(ViewBag.TotalZakatAmount ?? 0m)).ToString("N2"))</h4>
                     <small class="text-muted">@ViewBag.ZakatCount Verified Zakat Gifts</small>
                 </div>
                 <span class="badge bg-warning-subtle text-warning-emphasis border border-warning">100% Policy</span>
@@ -57,8 +110,8 @@
     <!-- General Donations -->
     <div class="col-sm-6 col-xl-3">
         <div class="giveaid-card p-3 border">
-            <span class="text-muted small d-block mb-1"><i class="bi bi-heart-fill text-danger me-1"></i> General Sadaqah & Gifts</span>
-            <h4 class="fw-bold text-dark mb-0">$@(((decimal)(ViewBag.TotalGeneralAmount ?? 0m)).ToString("N2"))</h4>
+            <span class="text-muted small d-block mb-1"><i class="bi bi-heart-fill text-danger me-1"></i> General Sadaqah &amp; Gifts</span>
+            <h4 class="fw-bold text-dark mb-0">Rs @(((decimal)(ViewBag.TotalGeneralAmount ?? 0m)).ToString("N2"))</h4>
             <small class="text-muted">@ViewBag.GeneralCount General Donations</small>
         </div>
     </div>
@@ -70,7 +123,7 @@
                 <div>
                     <span class="text-success small d-block mb-1 fw-semibold"><i class="bi bi-envelope-check-fill text-success me-1"></i> Receipt Emails Sent</span>
                     <h4 class="fw-bold text-success mb-0">@ViewBag.TotalEmailsSent Delivered</h4>
-                    <small class="text-muted">Live Brevo SMTP Relay</small>
+                    <small class="text-muted">Live SMTP Relay</small>
                 </div>
                 <span class="badge bg-success-subtle text-success border border-success"><i class="bi bi-check2"></i> Active</span>
             </div>
@@ -78,10 +131,10 @@
     </div>
 </div>
 
-<!-- Ledger Card with Filter Pills -->
+<!-- Ledger Card with Filter Pills & Live Search -->
 <div class="giveaid-card p-4">
-    <!-- Filter Navigation Tabs -->
-    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2 border-bottom pb-3">
+    <!-- Filter Navigation Tabs & Live Search -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3 border-bottom pb-3">
         <div class="btn-group btn-group-sm" role="group">
             <a asp-action="Donations" asp-route-filter="all" class="btn @(currentFilter == "all" ? "btn-dark active" : "btn-outline-secondary")">
                 All Transactions (@( (int)(ViewBag.ZakatCount ?? 0) + (int)(ViewBag.GeneralCount ?? 0) ))
@@ -93,21 +146,28 @@
                 <i class="bi bi-heart me-1"></i> General Only (@ViewBag.GeneralCount)
             </a>
         </div>
-        <span class="text-muted small">Showing @Model.Count record(s)</span>
+        <div class="d-flex align-items-center gap-2">
+            <div class="input-group input-group-sm" style="max-width: 280px;">
+                <span class="input-group-text bg-light"><i class="bi bi-search"></i></span>
+                <input type="text" id="ledgerSearchInput" class="form-control" placeholder="Search donor, txn, email..." onkeyup="filterLedgerTable()" />
+            </div>
+            <span class="text-muted small">@Model.Count record(s)</span>
+        </div>
     </div>
 
     <div class="table-responsive">
-        <table class="table table-hover align-middle mb-0">
+        <table class="table table-hover align-middle mb-0" id="ledgerTable">
             <thead class="table-light">
                 <tr>
                     <th>Txn ID</th>
                     <th>Donor Details</th>
-                    <th>Contribution Type</th>
+                    <th>Type</th>
                     <th>Supported Cause</th>
                     <th>Amount</th>
-                    <th>Card & Method</th>
-                    <th>Date & Time</th>
-                    <th>Email Receipt Status</th>
+                    <th>Payment Gateway</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Receipt</th>
                     <th class="text-end">Actions</th>
                 </tr>
             </thead>
@@ -116,9 +176,19 @@
                 {
                     @foreach (var d in Model)
                     {
-                        <tr>
-                            <td><code>@d.TransactionId</code></td>
-                            <td>
+                        var latestTxn = d.Transactions?.OrderByDescending(t => t.Id).FirstOrDefault();
+                        var gwName = d.PaymentGateway ?? d.CardType ?? "Online";
+                        var isRefunded = d.PaymentStatus == "Refunded";
+
+                        <tr class="ledger-row">
+                            <td class="ledger-txn">
+                                <code class="small">@d.TransactionId</code>
+                                @if (latestTxn != null && !string.IsNullOrEmpty(latestTxn.GatewayReference))
+                                {
+                                    <small class="d-block text-muted font-monospace" style="font-size: 0.68rem;">GW: @latestTxn.GatewayReference</small>
+                                }
+                            </td>
+                            <td class="ledger-donor">
                                 <strong class="d-block text-dark small">@d.DonorName</strong>
                                 <span class="text-muted" style="font-size: 0.75rem;">@d.DonorEmail</span>
                                 @if (!string.IsNullOrEmpty(d.DonorPhone))
@@ -140,22 +210,44 @@
                                     </span>
                                 }
                             </td>
-                            <td>
+                            <td class="ledger-cause">
                                 <strong class="d-block text-dark small">@(d.Cause?.Title ?? "General Relief")</strong>
                                 <span class="badge bg-light text-muted border small" style="font-size: 0.7rem;">@(d.Cause?.Category ?? "Welfare")</span>
                             </td>
-                            <td class="fw-bold text-success">$@d.Amount.ToString("N2")</td>
-                            <td>
-                                <span class="small d-block text-dark">@d.CardType</span>
-                                <span class="small text-muted" style="font-size: 0.75rem;"><code>@d.MaskedCardNumber</code></span>
-                                <span class="text-muted d-block" style="font-size: 0.7rem;">Holder: @d.CardHolderName</span>
+                            <td class="fw-bold @(isRefunded ? "text-danger text-decoration-line-through" : "text-success") ledger-amount">
+                                @d.Amount.ToString("N2") <small class="text-muted font-monospace">@(d.Currency ?? "PKR")</small>
                             </td>
-                            <td class="small text-muted">@d.DonationDate.ToString("MMM dd, yyyy - hh:mm tt")</td>
+                            <td>
+                                <span class="badge bg-primary-subtle text-primary border border-primary-subtle fw-bold small">
+                                    @gwName
+                                </span>
+                            </td>
+                            <td>
+                                @if (d.PaymentStatus == "Completed")
+                                {
+                                    <span class="badge bg-success-subtle text-success border border-success px-2 py-1">
+                                        <i class="bi bi-check-circle-fill me-1"></i> Completed
+                                    </span>
+                                }
+                                else if (isRefunded)
+                                {
+                                    <span class="badge bg-danger-subtle text-danger border border-danger px-2 py-1">
+                                        <i class="bi bi-arrow-counterclockwise me-1"></i> Refunded
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-warning-subtle text-dark border border-warning px-2 py-1">
+                                        <i class="bi bi-hourglass-split me-1"></i> @d.PaymentStatus
+                                    </span>
+                                }
+                            </td>
+                            <td class="small text-muted">@d.DonationDate.AddHours(5).ToString("MMM dd, yyyy - hh:mm tt") PKT</td>
                             <td>
                                 @if (d.IsReceiptEmailSent)
                                 {
                                     <span class="badge bg-success-subtle text-success border border-success px-2 py-1" title="Email delivered to donor">
-                                        <i class="bi bi-envelope-check-fill me-1"></i> Email Sent
+                                        <i class="bi bi-envelope-check-fill me-1"></i> Sent
                                     </span>
                                 }
                                 else
@@ -167,13 +259,28 @@
                             </td>
                             <td class="text-end">
                                 <div class="btn-group btn-group-sm">
+                                    <a asp-controller="Donate" asp-action="DownloadReceipt" asp-route-transactionId="@d.TransactionId" target="_blank" class="btn btn-outline-danger" title="Download Official PDF Receipt">
+                                        <i class="bi bi-file-earmark-pdf-fill"></i>
+                                    </a>
                                     <a asp-controller="Donate" asp-action="Confirmation" asp-route-transactionId="@d.TransactionId" target="_blank" class="btn btn-outline-secondary" title="View Official Receipt">
                                         <i class="bi bi-receipt"></i>
                                     </a>
                                     <form asp-action="ResendDonationReceipt" asp-route-id="@d.Id" method="post" class="d-inline" onsubmit="return confirm('Resend official receipt email to @d.DonorEmail?');">
                                         @Html.AntiForgeryToken()
-                                        <button type="submit" class="btn btn-outline-primary" title="Resend Receipt Email to @d.DonorEmail">
+                                        <button type="submit" class="btn btn-outline-primary" title="Resend Receipt Email">
                                             <i class="bi bi-send-fill"></i>
+                                        </button>
+                                    </form>
+                                    @if (d.PaymentStatus == "Completed")
+                                    {
+                                        <button type="button" class="btn btn-outline-warning" title="Process Refund via @gwName" onclick="openRefundModal(@d.Id, '@d.TransactionId', '@d.Amount', '@(d.Currency ?? "PKR")', '@gwName')">
+                                            <i class="bi bi-arrow-counterclockwise"></i>
+                                        </button>
+                                    }
+                                    <form asp-action="DeleteDonation" asp-route-id="@d.Id" method="post" class="d-inline" onsubmit="return confirm('Delete donation transaction #@d.TransactionId?');">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-outline-danger" title="Delete Donation Record">
+                                            <i class="bi bi-trash"></i>
                                         </button>
                                     </form>
                                 </div>
@@ -184,9 +291,9 @@
                 else
                 {
                     <tr>
-                        <td colspan="9" class="text-center py-5 text-muted">
-                            <i class="bi bi-inbox fs-1 d-block mb-2 text-secondary"></i>
-                            No donation transactions found for this filter.
+                        <td colspan="10" class="text-center py-5 text-muted">
+                            <i class="bi bi-journal-x fs-1 d-block mb-2 text-secondary"></i>
+                            No donation records found matching the current filter.
                         </td>
                     </tr>
                 }
@@ -194,3 +301,92 @@
         </table>
     </div>
 </div>
+
+<!-- Refund Modal -->
+<div class="modal fade" id="refundModal" tabindex="-1" aria-labelledby="refundModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-4">
+            <form asp-action="RefundDonation" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="id" id="refundDonationId" />
+                <div class="modal-header border-bottom bg-light">
+                    <h5 class="modal-title fw-bold" id="refundModalLabel">
+                        <i class="bi bi-arrow-counterclockwise text-warning me-1"></i> Issue Gateway Refund
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="alert alert-warning small mb-3">
+                        <i class="bi bi-exclamation-triangle-fill me-1"></i> This will call the official payment gateway (<strong id="refundGatewayName">Safepay</strong>) to reverse the charge and update the NGEOS financial ledger.
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small text-muted">Transaction ID</label>
+                        <input type="text" id="refundTxnId" class="form-control font-monospace" readonly />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small text-muted">Refund Amount</label>
+                        <input type="text" id="refundAmount" class="form-control fw-bold" readonly />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold">Refund Reason</label>
+                        <textarea name="reason" class="form-control" rows="2" placeholder="e.g. Donor duplicate charge or cancellation request..." required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer border-top bg-light">
+                    <button type="button" class="btn btn-secondary rounded-pill px-3" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-warning rounded-pill px-4 fw-bold">Process Refund</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function openRefundModal(id, txnId, amount, currency, gateway) {
+            document.getElementById('refundDonationId').value = id;
+            document.getElementById('refundTxnId').value = txnId;
+            document.getElementById('refundAmount').value = amount + ' ' + currency;
+            document.getElementById('refundGatewayName').textContent = gateway;
+            var modal = new bootstrap.Modal(document.getElementById('refundModal'));
+            modal.show();
+        }
+
+        function filterLedgerTable() {
+            var input = document.getElementById("ledgerSearchInput");
+            var filter = input.value.toLowerCase();
+            var rows = document.querySelectorAll("#ledgerTable tbody tr.ledger-row");
+
+            rows.forEach(function (row) {
+                var text = row.textContent.toLowerCase();
+                if (text.indexOf(filter) > -1) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        }
+
+        function exportLedgerToCsv() {
+            var rows = document.querySelectorAll("#ledgerTable tr");
+            var csv = [];
+            for (var i = 0; i < rows.length; i++) {
+                var row = [], cols = rows[i].querySelectorAll("td, th");
+                for (var j = 0; j < cols.length - 1; j++) {
+                    var data = cols[j].innerText.replace(/(\r\n|\n|\r)/gm, " ").replace(/(\s\s+)/gm, " ");
+                    data = data.replace(/"/g, '""');
+                    row.push('"' + data + '"');
+                }
+                csv.push(row.join(","));
+            }
+            var csvFile = new Blob([csv.join("\n")], { type: "text/csv" });
+            var downloadLink = document.createElement("a");
+            downloadLink.download = "NGEOS_Ledger_" + new Date().toISOString().slice(0,10) + ".csv";
+            downloadLink.href = window.URL.createObjectURL(csvFile);
+            downloadLink.style.display = "none";
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+        }
+    </script>
+}

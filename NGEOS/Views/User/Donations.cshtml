@@ -63,16 +63,21 @@
                                         }
                                     </div>
                                 </td>
-                                <td class="fw-bold text-success">$@d.Amount.ToString("N2")</td>
+                                <td class="fw-bold text-success">Rs @d.Amount.ToString("N2")</td>
                                 <td class="small text-muted">@d.CardType (@d.MaskedCardNumber)</td>
-                                <td class="small text-muted">@d.DonationDate.ToString("MMM dd, yyyy - hh:mm tt")</td>
+                                <td class="small text-muted">@d.DonationDate.AddHours(5).ToString("MMM dd, yyyy - hh:mm tt") PKT</td>
                                 <td>
                                     <span class="badge bg-success-subtle text-success border border-success">@d.PaymentStatus</span>
                                 </td>
                                 <td>
-                                    <a asp-controller="Donate" asp-action="Confirmation" asp-route-transactionId="@d.TransactionId" class="btn btn-sm btn-outline-secondary">
-                                        <i class="bi bi-receipt me-1"></i> Receipt
-                                    </a>
+                                    <div class="d-flex gap-1">
+                                        <a asp-controller="Donate" asp-action="DownloadReceipt" asp-route-transactionId="@d.TransactionId" target="_blank" class="btn btn-sm btn-outline-danger fw-semibold" title="Download PDF Receipt">
+                                            <i class="bi bi-file-earmark-pdf-fill me-1"></i> PDF
+                                        </a>
+                                        <a asp-controller="Donate" asp-action="Confirmation" asp-route-transactionId="@d.TransactionId" class="btn btn-sm btn-outline-secondary" title="View Full Receipt">
+                                            <i class="bi bi-receipt me-1"></i> View
+                                        </a>
+                                    </div>
                                 </td>
                             </tr>
                         }

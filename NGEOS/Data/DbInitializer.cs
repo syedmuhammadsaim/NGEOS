@@ -10,7 +10,7 @@ namespace NGEOS.Data
             context.Database.EnsureCreated();
 
             // 1. Seed Admin User if not exists (No regular user is seeded - users register directly)
-            if (!context.Users.Any(u => u.Role == "Admin"))
+            if (!context.Users.Any(u => u.Email == "admin@ngeos.org"))
             {
                 var admin = new User
                 {

@@ -1,176 +1,338 @@
+@{
+
+    var ctrl = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
+
+    var act = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
+
+    var isAuthPage = (bool?)ViewData["HideHeaderFooter"] == true ||
+
+                     (ctrl.Equals("Account", StringComparison.OrdinalIgnoreCase) &&
+
+                      (act.Equals("Login", StringComparison.OrdinalIgnoreCase) ||
+
+                       act.Equals("Register", StringComparison.OrdinalIgnoreCase) ||
+
+                       act.Equals("ForgotPassword", StringComparison.OrdinalIgnoreCase) ||
+
+                       act.Equals("ResetPassword", StringComparison.OrdinalIgnoreCase) ||
+
+                       act.Equals("VerifyCode", StringComparison.OrdinalIgnoreCase) ||
+
+                       act.Equals("LinkAccount", StringComparison.OrdinalIgnoreCase)));
+
+}
+
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
+
     <meta charset="utf-8" />
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>@ViewData["Title"] - NGO | Professional NGO & Charity Platform</title>
+
     <meta name="description" content="NGEOS is a premier NGO charity platform empowering vulnerable children, education, health, women, and elderly care across communities." />
 
+
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
+
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" />
+
+
 
     <link rel="stylesheet" href="~/css/site.css?v=4.6" asp-append-version="true" />
 
+    <link rel="stylesheet" href="~/css/chatbot.css?v=1.0" asp-append-version="true" />
+
+
+
     <!-- Favicon & Brand Icons -->
+
     <link rel="icon" type="image/svg+xml" href="~/favicon.svg" asp-append-version="true" />
+
     <link rel="alternate icon" type="image/x-icon" href="~/favicon.ico" asp-append-version="true" />
+
     <!-- Progressive Web App (PWA) & Desktop App Integration -->
+
     <link rel="manifest" href="~/manifest.json" asp-append-version="true" />
+
     <meta name="theme-color" content="#f25c05" />
+
     <meta name="mobile-web-app-capable" content="yes" />
+
     <meta name="apple-mobile-web-app-capable" content="yes" />
+
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
     <meta name="apple-mobile-web-app-title" content="NGEOS" />
+
     <link rel="apple-touch-icon" href="~/images/icons/icon-192.png" />
 
 
+
+
+
     @await RenderSectionAsync("Styles", required: false)
+
 </head>
-<body>
+
+<body class="@(isAuthPage ? "auth-body-active" : "")">
+
+
+
+    @if (!isAuthPage)
+
+    {
 
     <!-- ============================================================
+
          1. TOP BAR (Modern Stylish Header Line)
+
          ============================================================ -->
+
     <div class="giveaid-topbar d-none d-lg-block w-100" id="giveaidTopbar">
+
         <div class="container d-flex justify-content-between align-items-center">
+
             <!-- Left: Contact Details with Styled Badges -->
+
             <div class="d-flex align-items-center">
+
                 <div class="topbar-item">
+
                     <span class="topbar-icon-badge"><i class="bi bi-geo-alt-fill"></i></span>
+
                     <span>100 Edhi Street, Saddar, Karachi, Pakistan</span>
+
                 </div>
+
                 <span class="topbar-divider"></span>
+
                 <a href="mailto:ngeos@gmail.com" class="topbar-item">
+
                     <span class="topbar-icon-badge"><i class="bi bi-envelope-fill"></i></span>
+
                     <span>ngeos@gmail.com</span>
+
                 </a>
+
                 <span class="topbar-divider"></span>
+
                 <a href="tel:+923001234567" class="topbar-item">
+
                     <span class="topbar-icon-badge"><i class="bi bi-telephone-fill"></i></span>
+
                     <span>+92 (300) 123-4567</span>
+
                 </a>
+
             </div>
+
+
 
             <!-- Right: Volunteer CTA & Social Media Links -->
+
             <div class="d-flex align-items-center gap-2">
+
                 <a asp-controller="Programmes" asp-action="Index" class="volunteer-top-btn">
+
                     <i class="bi bi-heart-pulse-fill"></i>
+
                     <span>Become A Volunteer</span>
+
                 </a>
+
                 <span class="topbar-divider"></span>
+
                 <div class="topbar-socials d-flex align-items-center">
+
                     <a href="https://facebook.com" target="_blank" class="social-icon-link" title="Follow us on Facebook" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+
                     <a href="https://twitter.com" target="_blank" class="social-icon-link" title="Follow us on X" aria-label="Twitter"><i class="bi bi-twitter-x"></i></a>
+
                     <a href="https://instagram.com" target="_blank" class="social-icon-link" title="Follow us on Instagram" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+
                     <a href="https://linkedin.com" target="_blank" class="social-icon-link" title="Connect on LinkedIn" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
+
                 </div>
+
             </div>
+
         </div>
+
     </div>
 
+
+
     <!-- ============================================================
+
          2. MAIN NAVBAR (sticky, body ka direct child)
+
          ============================================================ -->
+
     <nav class="navbar navbar-expand-xl giveaid-navbar w-100" id="giveaidNavbar">
+
         <div class="container">
 
+
+
             <!-- GIVE-AID BRAND LOGO -->
+
             <a class="navbar-brand d-flex align-items-center gap-2" asp-controller="Home" asp-action="Index" title="NGEOS Charity &amp; NGO Platform">
+
                 <img src="~/images/ngeos-logo.svg" alt="NGEOS Official Logo" class="brand-logo" width="42" height="42" asp-append-version="true" />
+
                 <span>NGE<span class="brand-accent">OS</span></span>
+
             </a>
 
+
+
             <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#giveaidNav" aria-controls="giveaidNav" aria-expanded="false" aria-label="Toggle navigation">
+
                 <i class="bi bi-list fs-2 text-dark"></i>
+
             </button>
 
+
+
             <div class="collapse navbar-collapse" id="giveaidNav">
+
                 <ul class="navbar-nav mx-auto mb-2 mb-xl-0 align-items-xl-center">
+
                     <li class="nav-item">
+
                         <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")" asp-controller="Home" asp-action="Index">Home</a>
+
                     </li>
+
+
 
                     <!-- ABOUT US DROPDOWN (working) -->
+
                     <li class="nav-item position-relative" id="customAboutDropdown">
+
                         <a class="nav-link dropdown-toggle @(ViewContext.RouteData.Values["controller"]?.ToString() == "About" ? "active" : "")"
+
                            href="#"
+
                            id="aboutToggle"
+
                            role="button"
+
                            aria-expanded="false">
+
                             About Us
+
                         </a>
+
                         <ul class="custom-dropdown-menu" id="aboutMenu">
+
                             <li><a class="dropdown-item" asp-controller="About" asp-action="WhatWeDo"><i class="bi bi-activity"></i> What We Do</a></li>
+
                             <li><a class="dropdown-item" asp-controller="About" asp-action="OurMission"><i class="bi bi-compass"></i> Our Mission</a></li>
+
                             <li><a class="dropdown-item" asp-controller="About" asp-action="OurTeam"><i class="bi bi-people"></i> Our Team</a></li>
+
                             <li><a class="dropdown-item" asp-controller="About" asp-action="CareerWithUs"><i class="bi bi-briefcase"></i> Career With Us</a></li>
+
                             <li><a class="dropdown-item" asp-controller="About" asp-action="OurAchievements"><i class="bi bi-trophy"></i> Our Achievements</a></li>
+
                             <li><a class="dropdown-item" asp-controller="About" asp-action="OurSupporters"><i class="bi bi-building-check"></i> Our Supporters</a></li>
+
                             <li><hr class="dropdown-divider"></li>
+
                             <li><a class="dropdown-item" asp-controller="About" asp-action="ReadAboutUs"><i class="bi bi-book-half"></i> Read About Us</a></li>
+
                         </ul>
+
                     </li>
 
+
+
                     <li class="nav-item"><a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Causes" ? "active" : "")" asp-controller="Causes" asp-action="Index">Causes</a></li>
+
                     <li class="nav-item"><a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Programmes" ? "active" : "")" asp-controller="Programmes" asp-action="Index">Programmes</a></li>
+
                     <li class="nav-item"><a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Ngos" ? "active" : "")" asp-controller="Ngos" asp-action="Index">NGOs</a></li>
+
                     <li class="nav-item"><a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Events" ? "active" : "")" asp-controller="Events" asp-action="Index">Events</a></li>
+
                     <li class="nav-item"><a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Gallery" ? "active" : "")" asp-controller="Gallery" asp-action="Index">Gallery</a></li>
+
                     <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Partners">Partners</a></li>
+
                     <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="HelpCentre">Help Centre</a></li>
+
                     <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Contact">Contact</a></li>
+
                 </ul>
 
-                <div class="d-flex align-items-center gap-2 mt-3 mt-xl-0 nav-auth-area">
-                    @if (User.Identity?.IsAuthenticated == true)
-                    {
-                        var userPic = User.FindFirst("ProfileImageUrl")?.Value;
-                        @if (User.IsInRole("Admin"))
+
+
+                <div class="nav-auth-area d-flex align-items-center gap-2 mt-3 mt-xl-0">
+                    <div class="nav-auth-buttons d-flex align-items-center gap-2">
+                        @if (User.Identity?.IsAuthenticated == true)
                         {
-                            <a asp-controller="Admin" asp-action="Index" class="btn btn-navy btn-sm px-3 rounded-pill d-inline-flex align-items-center gap-1"><i class="bi bi-speedometer2 me-1"></i> Admin</a>
+                            var userPic = User.FindFirst("ProfileImageUrl")?.Value;
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <a asp-controller="Admin" asp-action="Index" class="btn btn-navy btn-sm px-3 rounded-pill d-inline-flex align-items-center justify-content-center gap-1 flex-grow-1"><i class="bi bi-speedometer2 me-1"></i> Admin</a>
+                            }
+                            else
+                            {
+                                <a asp-controller="User" asp-action="Dashboard" class="btn btn-outline-navy btn-sm px-3 rounded-pill d-inline-flex align-items-center justify-content-center gap-2 flex-grow-1">
+                                    @if (!string.IsNullOrEmpty(userPic))
+                                    {
+                                        <img src="@userPic" alt="Avatar" class="rounded-circle" style="width: 22px; height: 22px; object-fit: cover;" />
+                                    }
+                                    else
+                                    {
+                                        <i class="bi bi-person-circle"></i>
+                                    }
+                                    <span>Dashboard</span>
+                                </a>
+                            }
+                            <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline m-0 p-0">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-sm btn-light border text-muted rounded-pill px-3 d-inline-flex align-items-center justify-content-center gap-1" title="Log out">
+                                    <i class="bi bi-box-arrow-right"></i><span class="d-inline d-xl-none ms-1">Logout</span>
+                                </button>
+                            </form>
                         }
                         else
                         {
-                            <a asp-controller="User" asp-action="Dashboard" class="btn btn-outline-navy btn-sm px-3 rounded-pill d-inline-flex align-items-center gap-2">
-                                @if (!string.IsNullOrEmpty(userPic))
-                                {
-                                    <img src="@userPic" alt="Avatar" class="rounded-circle" style="width: 22px; height: 22px; object-fit: cover;" />
-                                }
-                                else
-                                {
-                                    <i class="bi bi-person-circle"></i>
-                                }
-                                <span>Dashboard</span>
-                            </a>
+                            <a asp-controller="Account" asp-action="Login" class="btn btn-outline-navy btn-sm px-3 rounded-pill d-inline-flex align-items-center justify-content-center flex-grow-1"><i class="bi bi-box-arrow-in-right me-1"></i> Login</a>
+                            <a asp-controller="Account" asp-action="Register" class="btn btn-navy btn-sm px-3 rounded-pill d-inline-flex align-items-center justify-content-center flex-grow-1"><i class="bi bi-person-plus me-1"></i> Register</a>
                         }
-                        <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
-                            @Html.AntiForgeryToken()
-                            <button type="submit" class="btn btn-sm btn-light border text-muted rounded-pill px-3" title="Log out"><i class="bi bi-box-arrow-right"></i></button>
-                        </form>
-                    }
-                    else
-                    {
-                        <a asp-controller="Account" asp-action="Login" class="btn btn-outline-navy btn-sm px-3 rounded-pill"><i class="bi bi-box-arrow-in-right me-1"></i> Login</a>
-                        <a asp-controller="Account" asp-action="Register" class="btn btn-navy btn-sm px-3 rounded-pill"><i class="bi bi-person-plus me-1"></i> Register</a>
-                    }
-                    
-                                        <!-- Desktop App Install Button -->
-                    <button type="button" id="btnInstallPwa" class="btn btn-warning btn-sm px-3 rounded-pill d-none align-items-center gap-1 shadow-sm fw-bold me-1 text-dark" title="Install NGEOS Desktop App">
-                        <i class="bi bi-display"></i> <span class="d-none d-xxl-inline">App</span>
+                    </div>
+
+                    <!-- Desktop App Install Button -->
+                    <button type="button" id="btnInstallPwa" class="btn btn-warning btn-sm px-3 rounded-pill d-none align-items-center justify-content-center gap-1 shadow-sm fw-bold text-dark" title="Install NGEOS Desktop App">
+                        <i class="bi bi-display"></i> <span class="d-none d-xl-inline">App</span><span class="d-inline d-xl-none">Install Desktop App</span>
                     </button>
+
                     <!-- DONATE WITH DROPDOWN (General Donation + Zakat Calculator) -->
-                    <div class="dropdown d-inline-block ms-1" id="donateNavDropdown">
-                        <button class="btn-donate-nav dropdown-toggle border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <div class="dropdown d-inline-block" id="donateNavDropdown">
+                        <button class="btn-donate-nav dropdown-toggle border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-display="static">
                             <i class="bi bi-heart-fill"></i> DONATE
                         </button>
-                        <ul class="dropdown-menu dropdown-menu-end shadow-xl border-0 rounded-4 p-2 mt-2" style="min-width: 275px;">
+                        <ul class="dropdown-menu dropdown-menu-end shadow-xl border-0 rounded-4 p-2 mt-2">
                             <li>
                                 <a class="dropdown-item p-2 rounded-3 d-flex align-items-center gap-3" asp-controller="Donate" asp-action="Index">
-                                    <div class="rounded-circle d-flex align-items-center justify-content-center text-white" style="width: 36px; height: 36px; background: #f25c05; font-size: 1rem;">
+                                    <div class="rounded-circle d-flex align-items-center justify-content-center text-white flex-shrink-0" style="width: 36px; height: 36px; background: #f25c05; font-size: 1rem;">
                                         <i class="bi bi-heart-fill"></i>
                                     </div>
                                     <div>
@@ -182,7 +344,7 @@
                             <li><hr class="dropdown-divider my-1"></li>
                             <li>
                                 <a class="dropdown-item p-2 rounded-3 d-flex align-items-center gap-3" asp-controller="Zakat" asp-action="Index">
-                                    <div class="rounded-circle d-flex align-items-center justify-content-center text-dark" style="width: 36px; height: 36px; background: #fef08a; font-size: 1.05rem;">
+                                    <div class="rounded-circle d-flex align-items-center justify-content-center text-dark flex-shrink-0" style="width: 36px; height: 36px; background: #fef08a; font-size: 1.05rem;">
                                         <i class="bi bi-moon-stars-fill text-warning-emphasis"></i>
                                     </div>
                                     <div>
@@ -194,214 +356,460 @@
                         </ul>
                     </div>
                 </div>
+
             </div>
+
         </div>
+
     </nav>
 
+    }
+
+
+
     <!-- MAIN BODY -->
-    <main role="main" class="w-100">
+
+    <main role="main" class="w-100 @(isAuthPage ? "auth-main-wrapper" : "")">
+
         @RenderBody()
+
     </main>
 
+
+
+    @if (!isAuthPage)
+
+    {
+
     <!-- FOOTER -->
+
     <footer class="giveaid-footer w-100">
+
         <div class="container">
+
             <div class="row g-4">
+
                 <div class="col-lg-4 col-md-6">
+
                     <div class="d-flex align-items-center gap-2 mb-3">
+
                         <!-- FOOTER BRAND LOGO -->
+
                         <img src="~/images/ngeos-logo.svg" alt="NGEOS Official Logo" class="brand-logo" width="38" height="38" asp-append-version="true" />
+
                         <h4 class="text-white mb-0 fw-bold">NGE<span class="brand-accent">OS</span></h4>
+
                     </div>
+
                     <p class="text-white-50 small pe-lg-4 mb-4" data-i18n="foot_about_desc">NGEOS is a premier non-governmental charity alliance bringing together accredited NGOs, corporate benefactors, and global humanitarians to uplift vulnerable children, education, health, women, and elderly lives worldwide.</p>
+
                     <div class="d-flex gap-2">
+
                         <a href="https://facebook.com" class="social-icon-link"><i class="bi bi-facebook"></i></a>
+
                         <a href="https://twitter.com" class="social-icon-link"><i class="bi bi-twitter-x"></i></a>
+
                         <a href="https://instagram.com" class="social-icon-link"><i class="bi bi-instagram"></i></a>
+
                         <a href="https://linkedin.com" class="social-icon-link"><i class="bi bi-linkedin"></i></a>
+
                         <a href="https://youtube.com" class="social-icon-link"><i class="bi bi-youtube"></i></a>
+
                     </div>
+
                 </div>
+
+
 
                 <div class="col-lg-2 col-md-6 col-6">
+
                     <h5>Quick Links</h5>
+
                     <ul class="footer-links">
+
                         <li><a asp-controller="Home" asp-action="Index"><i class="bi bi-chevron-right"></i> Home</a></li>
+
                         <li><a asp-controller="About" asp-action="WhatWeDo"><i class="bi bi-chevron-right"></i> About Us</a></li>
+
                         <li><a asp-controller="Causes" asp-action="Index"><i class="bi bi-chevron-right"></i> Active Causes</a></li>
+
                         <li><a asp-controller="Programmes" asp-action="Index"><i class="bi bi-chevron-right"></i> Programmes</a></li>
+
                         <li><a asp-controller="Ngos" asp-action="Index"><i class="bi bi-chevron-right"></i> Partner NGOs</a></li>
+
                         <li><a asp-controller="Gallery" asp-action="Index"><i class="bi bi-chevron-right"></i> Photo Gallery</a></li>
+
                         <li><a asp-controller="Zakat" asp-action="Index"><i class="bi bi-chevron-right"></i> Zakat Calculator</a></li>
+
+
                     </ul>
+
                 </div>
+
+
 
                 <div class="col-lg-3 col-md-6 col-6">
+
                     <h5>Charity Causes</h5>
+
                     <ul class="footer-links">
+
                         <li><a asp-controller="Causes" asp-action="Index" asp-route-category="Children"><i class="bi bi-heart"></i> Children Welfare</a></li>
+
                         <li><a asp-controller="Causes" asp-action="Index" asp-route-category="Education"><i class="bi bi-book"></i> Universal Education</a></li>
+
                         <li><a asp-controller="Causes" asp-action="Index" asp-route-category="Healthcare"><i class="bi bi-hospital"></i> Medical Relief</a></li>
+
                         <li><a asp-controller="Causes" asp-action="Index" asp-route-category="Disabled Persons"><i class="bi bi-person-wheelchair"></i> Disabled Persons</a></li>
+
                         <li><a asp-controller="Causes" asp-action="Index" asp-route-category="Women"><i class="bi bi-gender-female"></i> Women Welfare</a></li>
+
                         <li><a asp-controller="Causes" asp-action="Index" asp-route-category="Elderly"><i class="bi bi-person-heart"></i> Elderly Care</a></li>
+
                     </ul>
+
                 </div>
+
+
 
                 <div class="col-lg-3 col-md-6">
+
                     <h5>Contact Us</h5>
+
                     <p class="text-white-50 small mb-2"><i class="bi bi-geo-alt-fill text-warning me-2"></i> 100 Edhi Street, Saddar, Karachi, Pakistan</p>
+
                     <p class="text-white-50 small mb-2"><i class="bi bi-envelope-fill text-warning me-2"></i> <a href="mailto:ngeos@gmail.com" class="text-white-50 text-decoration-none">ngeos@gmail.com</a></p>
+
                     <p class="text-white-50 small mb-3"><i class="bi bi-telephone-fill text-warning me-2"></i> +92 (300) 123-4567</p>
 
+
+
                     <h6 class="text-white fw-bold mb-2 small text-uppercase">Subscribe to Newsletter</h6>
+
                     <form id="footerNewsletterForm" asp-controller="Home" asp-action="SubscribeNewsletter" method="post" class="mt-2">
+
                         @Html.AntiForgeryToken()
+
                         <div class="input-group input-group-sm">
+
                             <input type="email" name="email" id="newsletterEmail" class="form-control" placeholder="Enter your email" aria-label="Newsletter Email" required />
+
                             <button class="btn btn-orange px-3" type="submit" id="newsletterSubmitBtn" title="Subscribe to NGEOS updates">
+
                                 <i class="bi bi-send-fill" id="newsletterBtnIcon"></i>
+
                             </button>
+
                         </div>
+
                         <div id="newsletterFeedback" class="small mt-2" style="display: none;"></div>
+
                     </form>
+
                 </div>
+
             </div>
+
+
 
             
+
             <!-- PROMINENT DESKTOP APP FOOTER SECTION -->
+
             <div class="row align-items-center justify-content-between py-4 my-3 border-top border-bottom border-white-10" id="footerDesktopSection">
+
                 <div class="col-md-7 mb-3 mb-md-0">
+
                     <div class="d-flex align-items-center gap-3">
+
                         <div class="rounded-circle d-flex align-items-center justify-content-center text-white flex-shrink-0" style="width: 48px; height: 48px; background: rgba(242, 92, 5, 0.2); border: 1px solid rgba(242, 92, 5, 0.4);">
+
                             <i class="bi bi-display fs-4 text-warning"></i>
+
                         </div>
+
                         <div>
+
                             <h5 class="text-white mb-1 fw-bold">NGEOS Desktop Application</h5>
+
                             <p class="text-white-50 small mb-0">Install on your computer or download standalone portable setup for offline-ready welfare management.</p>
+
                         </div>
+
                     </div>
+
                 </div>
+
                 <div class="col-md-5 text-md-end">
+
                     <button type="button" id="btnFooterDownloadDesktop" class="btn btn-warning rounded-pill px-4 py-2 fw-bold text-dark shadow-sm d-inline-flex align-items-center gap-2">
+
                         <i class="bi bi-download"></i> <span>Install Desktop Application</span>
+
                     </button>
+
                 </div>
+
             </div>
+
+
 
             <div class="footer-bottom d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+
                 <div>&copy; @DateTime.UtcNow.Year <strong class="text-white">NGEOS Foundation</strong>. All Rights Reserved.</div>
+
                 <div class="d-flex gap-3 small">
+
                     <a href="javascript:void(0);" id="footerInstallPwa" class="text-white-50"><i class="bi bi-laptop me-1"></i> Desktop App</a>
+
                     <a asp-controller="About" asp-action="ReadAboutUs" class="text-white-50">Our Story</a>
+
                     <a asp-controller="Home" asp-action="HelpCentre" class="text-white-50">Help Centre & FAQs</a>
+
                     <a asp-controller="Home" asp-action="Contact" class="text-white-50">Support</a>
+
                 </div>
+
             </div>
+
         </div>
+
     </footer>
 
+    }
+
+
+
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+
+
+    @if (!isAuthPage)
+
+    {
+
     <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
-    <script src="~/js/site.js?v=4.7" asp-append-version="true"></script>
+
+    <script src="~/js/site.js?v=4.8" asp-append-version="true"></script>
+
+
 
     <!-- NAVBAR SHADOW + ABOUT US DROPDOWN SCRIPT -->
+
     <script>
+
         document.addEventListener("DOMContentLoaded", function () {
 
-            // 1. Scroll par sirf shadow add hoti hai (height/margin change nahi)
+            // 1. Scroll shadow
+
             const navbar = document.getElementById('giveaidNavbar');
-            window.addEventListener('scroll', function () {
-                if (window.scrollY > 30) {
-                    navbar.classList.add('scrolled');
-                } else {
-                    navbar.classList.remove('scrolled');
-                }
-            }, { passive: true });
 
-            // 2. About Us dropdown
-            const toggle = document.getElementById('aboutToggle');
-            const menu = document.getElementById('aboutMenu');
-            const wrapper = document.getElementById('customAboutDropdown');
+            if (navbar) {
 
-            function closeMenu() {
-                menu.classList.remove('show');
-                toggle.setAttribute('aria-expanded', 'false');
+                window.addEventListener('scroll', function () {
+
+                    if (window.scrollY > 30) {
+
+                        navbar.classList.add('scrolled');
+
+                    } else {
+
+                        navbar.classList.remove('scrolled');
+
+                    }
+
+                }, { passive: true });
+
             }
 
-            toggle.addEventListener('click', function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-                const isOpen = menu.classList.toggle('show');
-                toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-            });
 
-            // Bahar click par band
-            document.addEventListener('click', function (e) {
-                if (!wrapper.contains(e.target)) {
-                    closeMenu();
-                }
-            });
 
-            // Escape key par band
-            document.addEventListener('keydown', function (e) {
-                if (e.key === 'Escape') {
-                    closeMenu();
+            // 2. About Us dropdown
+
+            const toggle = document.getElementById('aboutToggle');
+
+            const menu = document.getElementById('aboutMenu');
+
+            const wrapper = document.getElementById('customAboutDropdown');
+
+
+
+            if (toggle && menu && wrapper) {
+
+                function closeMenu() {
+
+                    menu.classList.remove('show');
+
+                    toggle.setAttribute('aria-expanded', 'false');
+
                 }
-            });
+
+
+
+                toggle.addEventListener('click', function (e) {
+
+                    e.preventDefault();
+
+                    e.stopPropagation();
+
+                    const isOpen = menu.classList.toggle('show');
+
+                    toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+
+                });
+
+
+
+                document.addEventListener('click', function (e) {
+
+                    if (!wrapper.contains(e.target)) {
+
+                        closeMenu();
+
+                    }
+
+                });
+
+
+
+                document.addEventListener('keydown', function (e) {
+
+                    if (e.key === 'Escape') {
+
+                        closeMenu();
+
+                    }
+
+                });
+
+            }
+
         });
+
     </script>
+
+    }
+
     @await RenderSectionAsync("Scripts", required: false)
 
+
+
+    @if (!isAuthPage)
+
+    {
+
     <!-- ============================================================
+
          DESKTOP APP PROMPT MODAL (Auto-popup on Website Open)
+
          ============================================================ -->
+
     <div class="modal fade" id="ngeosDesktopAppModal" tabindex="-1" aria-labelledby="ngeosDesktopAppModalLabel" aria-hidden="true">
+
         <div class="modal-dialog modal-dialog-centered" style="max-width: 480px;">
+
             <div class="modal-content border-0 shadow-2xl rounded-4 overflow-hidden">
+
                 <div class="modal-header text-white p-4 border-0 position-relative" style="background: linear-gradient(135deg, #0b192c 0%, #1e3e62 100%);">
+
                     <div class="d-flex align-items-center gap-3">
+
                         <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width: 50px; height: 50px; background: rgba(242, 92, 5, 0.18); border: 2px solid #f25c05;">
+
                             <img src="~/images/ngeos-logo.svg" alt="NGEOS Logo" width="30" height="30" />
+
                         </div>
+
                         <div>
+
                             <h5 class="modal-title fw-bold text-white mb-0" id="ngeosDesktopAppModalLabel">NGEOS Desktop App</h5>
+
                             <small class="text-warning fw-semibold">Official Windows Application</small>
+
                         </div>
+
                     </div>
+
                     <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Close" id="btnModalCloseCross"></button>
+
                 </div>
+
                 <div class="modal-body p-4 bg-white text-dark">
+
                     <p class="mb-3 text-secondary" style="font-size: 0.95rem; line-height: 1.6;">
+
                         Would you like to <strong>download and install the NGEOS Desktop Application</strong> on your computer for faster, offline-ready charity &amp; welfare management?
+
                     </p>
+
                     <div class="d-flex flex-column gap-2 p-3 rounded-3 mb-4" style="background: #f8fafc; border: 1px solid #e2e8f0; font-size: 0.85rem;">
+
                         <div class="d-flex align-items-center gap-2 text-dark">
+
                             <i class="bi bi-check-circle-fill text-success"></i>
+
                             <span>One-click desktop shortcut with official logo</span>
+
                         </div>
+
                         <div class="d-flex align-items-center gap-2 text-dark">
+
                             <i class="bi bi-check-circle-fill text-success"></i>
+
                             <span>Works offline locally with real-time online SMS OTP</span>
+
                         </div>
+
                         <div class="d-flex align-items-center gap-2 text-dark">
+
                             <i class="bi bi-check-circle-fill text-success"></i>
+
                             <span>Dedicated native window with zero browser URL bar or tabs</span>
+
                         </div>
+
                     </div>
+
                     <div class="d-flex gap-2 justify-content-end">
+
                         <button type="button" class="btn btn-light border px-4 py-2 rounded-pill text-muted fw-semibold" id="btnModalInstallNo" data-bs-dismiss="modal">
+
                             <i class="bi bi-x-lg me-1"></i> No / Later
+
                         </button>
+
                         <button type="button" class="btn btn-warning px-4 py-2 rounded-pill text-dark fw-bold shadow-sm d-inline-flex align-items-center gap-2" id="btnModalInstallYes">
+
                             <i class="bi bi-display"></i> Yes, Install Desktop App
+
                         </button>
+
                     </div>
+
                 </div>
+
             </div>
+
         </div>
+
     </div>
 
+    <!-- ============================================================
+
+         NGEOS AI ASSISTANT CHATBOT WIDGET
+
+         ============================================================ -->
+
+    @await Html.PartialAsync("_ChatbotWidget")
+
+    <script src="~/js/chatbot.js?v=1.0" asp-append-version="true"></script>
+
+    }
+
+
+
 </body>
+
 </html>

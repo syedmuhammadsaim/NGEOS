@@ -4,7 +4,7 @@
     Layout = "_AdminLayout";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-4">
+<div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4">
     <div>
         <h3 class="fw-bold mb-1">Career & Volunteer Postings</h3>
         <p class="text-muted small mb-0">Publish and manage job vacancies displayed on the Career with Us page.</p>
@@ -25,7 +25,7 @@
                     <th>Location</th>
                     <th>Posted Date</th>
                     <th>Status</th>
-                    <th>Action</th>
+                    <th class="text-end">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -40,13 +40,18 @@
                         <td>
                             <span class="badge @(j.IsActive ? "bg-success" : "bg-secondary")">@(j.IsActive ? "Active" : "Closed")</span>
                         </td>
-                        <td>
-                            <form asp-action="DeleteJob" asp-route-id="@j.Id" method="post" onsubmit="return confirm('Delete this job posting?');" class="d-inline">
-                                @Html.AntiForgeryToken()
-                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete Job">
-                                    <i class="bi bi-trash"></i>
-                                </button>
-                            </form>
+                        <td class="text-end">
+                            <div class="d-inline-flex gap-1">
+                                <a asp-action="EditJob" asp-route-id="@j.Id" class="btn btn-sm btn-outline-primary" title="Edit Job">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                                <form asp-action="DeleteJob" asp-route-id="@j.Id" method="post" onsubmit="return confirm('Delete this job posting?');" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete Job">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                 }

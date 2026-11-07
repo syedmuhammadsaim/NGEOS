@@ -27,7 +27,7 @@
                 <div class="d-flex align-items-center gap-2">
                     <span class="fw-bold small text-muted text-uppercase">Currency:</span>
                     <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2 rounded-pill fw-bold">
-                        <i class="bi bi-currency-dollar me-1"></i> USD ($)
+                        <i class="bi bi-cash-stack me-1"></i> PKR (Rs)
                     </span>
                 </div>
                 
@@ -53,15 +53,15 @@
                 </div>
 
                 <div class="input-group input-group-lg">
-                    <span class="input-group-text fw-bold text-dark">$</span>
+                    <span class="input-group-text fw-bold text-dark">Rs</span>
                     <input type="number" min="0" step="any" id="inputCash" class="form-control fw-bold fs-5 calc-input" placeholder="0.00" />
-                    <span class="input-group-text small text-muted">USD</span>
+                    <span class="input-group-text small text-muted">PKR</span>
                 </div>
                 <div class="d-flex flex-wrap gap-2 mt-2">
-                    <button type="button" class="btn btn-sm btn-light border text-muted" onclick="quickAdd('inputCash', 500)">+$500</button>
-                    <button type="button" class="btn btn-sm btn-light border text-muted" onclick="quickAdd('inputCash', 1000)">+$1,000</button>
-                    <button type="button" class="btn btn-sm btn-light border text-muted" onclick="quickAdd('inputCash', 5000)">+$5,000</button>
-                    <button type="button" class="btn btn-sm btn-light border text-muted" onclick="quickAdd('inputCash', 10000)">+$10,000</button>
+                    <button type="button" class="btn btn-sm btn-light border text-muted" onclick="quickAdd('inputCash', 50000)">+Rs 5,000</button>
+                    <button type="button" class="btn btn-sm btn-light border text-muted" onclick="quickAdd('inputCash', 100000)">+Rs 10,000</button>
+                    <button type="button" class="btn btn-sm btn-light border text-muted" onclick="quickAdd('inputCash', 50000)">+Rs 50,000</button>
+                    <button type="button" class="btn btn-sm btn-light border text-muted" onclick="quickAdd('inputCash', 100000)">+Rs 100,000</button>
                 </div>
             </div>
 
@@ -111,9 +111,9 @@
                 </div>
 
                 <div class="input-group input-group-lg">
-                    <span class="input-group-text fw-bold text-dark">$</span>
+                    <span class="input-group-text fw-bold text-dark">Rs</span>
                     <input type="number" min="0" step="any" id="inputDebt" class="form-control fw-bold fs-5 calc-input text-danger" placeholder="0.00" />
-                    <span class="input-group-text small text-muted">USD</span>
+                    <span class="input-group-text small text-muted">PKR</span>
                 </div>
                 <small class="text-muted mt-1 d-block"><i class="bi bi-info-circle me-1"></i> This liability amount is subtracted directly from your total gross assets.</small>
             </div>
@@ -142,19 +142,19 @@
                 <div class="mb-4">
                     <div class="d-flex justify-content-between py-2 border-bottom border-secondary-subtle">
                         <span class="text-white-50">Cash &amp; Bank Deposits:</span>
-                        <strong class="text-white" id="resCash">$0.00</strong>
+                        <strong class="text-white" id="resCash">Rs 0.00</strong>
                     </div>
                     <div class="d-flex justify-content-between py-2 border-bottom border-secondary-subtle">
                         <span class="text-white-50">Gold &amp; Silver Value:</span>
-                        <strong class="text-white" id="resGold">$0.00</strong>
+                        <strong class="text-white" id="resGold">Rs 0.00</strong>
                     </div>
                     <div class="d-flex justify-content-between py-2 border-bottom border-secondary-subtle">
                         <span class="text-white-50">Less Deductions / Debts:</span>
-                        <strong class="text-danger" id="resDebt">- $0.00</strong>
+                        <strong class="text-danger" id="resDebt">- Rs 0.00</strong>
                     </div>
                     <div class="d-flex justify-content-between py-2 mt-2">
                         <span class="text-white fw-bold">Total Zakatable Wealth:</span>
-                        <strong class="text-warning fs-5" id="resTotalWealth">$0.00</strong>
+                        <strong class="text-warning fs-5" id="resTotalWealth">Rs 0.00</strong>
                     </div>
                 </div>
 
@@ -168,9 +168,9 @@
                 <div class="p-4 rounded-4 text-center mb-4 shadow" style="background: linear-gradient(135deg, rgba(22, 101, 52, 0.4), rgba(21, 128, 61, 0.2)); border: 2px solid #22c55e;">
                     <span class="text-uppercase small text-success-emphasis fw-bold letter-spacing-1 d-block text-white-50 mb-1">Total Zakat Due (2.5%)</span>
                     <div class="display-5 fw-extrabold text-success mb-1" id="resZakatDue">
-                        $0.00
+                        Rs 0.00
                     </div>
-                    <span class="small text-white-50">USD Currency &bull; 100% Direct Allocation</span>
+                    <span class="small text-white-50">PKR Currency &bull; 100% Direct Allocation</span>
                 </div>
 
                 <!-- Direct Action Button -->
@@ -194,7 +194,7 @@
             <span class="section-tag"><i class="bi bi-journal-bookmark-fill me-1"></i> Knowledge &amp; Shariah Guidelines</span>
             <h2 class="display-6 fw-bold mt-2">Important Information About Zakat</h2>
             <p class="text-muted mx-auto" style="max-width: 700px;">
-                Verified Islamic jurisprudence, authentic Nisab calculation benchmarks in USD ($), and NGEOS's certified 100% donation distribution pledge.
+                Verified Islamic jurisprudence, authentic Nisab calculation benchmarks in PKR (Rs), and NGEOS's certified 100% donation distribution pledge.
             </p>
         </div>
 
@@ -215,8 +215,8 @@
                     <div class="rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 56px; height: 56px; background: rgba(234, 179, 8, 0.15); color: #ca8a04; font-size: 1.5rem;">
                         <i class="bi bi-gem"></i>
                     </div>
-                    <h6 class="fw-bold text-dark mb-2">Nisab Threshold in USD</h6>
-                    <p class="text-muted small mb-0">Silver Standard (~$550 USD / 612.36g) or Gold Standard (~$6,500 USD / 87.48g).</p>
+                    <h6 class="fw-bold text-dark mb-2">Nisab Threshold in PKR</h6>
+                    <p class="text-muted small mb-0">Silver Standard (~Rs 171,000 PKR / 612.36g) or Gold Standard (~Rs 2,050,000 PKR / 87.48g).</p>
                 </div>
             </div>
 
@@ -286,7 +286,7 @@
                     <div class="accordion-item mb-3 border rounded-3 overflow-hidden shadow-xs">
                         <h2 class="accordion-header">
                             <button class="accordion-button collapsed fw-bold py-3" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
-                                <i class="bi bi-coin text-orange me-2 fs-5"></i> 3. What is the Nisab threshold and how is it calculated in US Dollars ($)?
+                                <i class="bi bi-coin text-orange me-2 fs-5"></i> 3. What is the Nisab threshold and how is it calculated in Pakistani Rupees (PKR)?
                             </button>
                         </h2>
                         <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#zakatFaqAccordion">
@@ -296,13 +296,13 @@
                                     <div class="col-md-6">
                                         <div class="p-3 rounded-3 bg-light border">
                                             <span class="badge bg-warning text-dark mb-1">Silver Standard (Recommended)</span>
-                                            <p class="small text-muted mb-0"><strong>52.5 Tolas (612.36 grams)</strong> of silver. At current global silver rates (~$1.00/g), Nisab is approximately <strong>~$550 - $612 USD</strong>.</p>
+                                            <p class="small text-muted mb-0"><strong>52.5 Tolas (612.36 grams)</strong> of silver. At current global silver rates (~$1.00/g), Nisab is approximately <strong>~Rs 170,000 - Rs 180,000 PKR</strong>.</p>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="p-3 rounded-3 bg-light border">
                                             <span class="badge bg-primary mb-1">Gold Standard</span>
-                                            <p class="small text-muted mb-0"><strong>7.5 Tolas (87.48 grams)</strong> of gold. At current gold rates (~$75/g), Nisab is approximately <strong>~$6,500 USD</strong>.</p>
+                                            <p class="small text-muted mb-0"><strong>7.5 Tolas (87.48 grams)</strong> of gold. At current gold rates (~$75/g), Nisab is approximately <strong>~Rs 2,050,000 PKR</strong>.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -385,7 +385,7 @@
                             <div class="accordion-body text-secondary lh-lg pt-2 pb-4">
                                 NGEOS maintains an absolute <strong>100% Zakat Policy</strong>:
                                 <p class="mt-2 mb-2">
-                                    Every single dollar ($) contributed as Zakat is deposited directly into a segregated, Shariah-monitored sub-ledger. We <strong>never deduct administrative fees, management costs, or promotional overheads</strong> from Zakat funds. All operational expenses are sustained entirely through separate voluntary general donations, private grants, and Gift Aid tax recovery.
+                                    Every single rupee (PKR) contributed as Zakat is deposited directly into a segregated, Shariah-monitored sub-ledger. We <strong>never deduct administrative fees, management costs, or promotional overheads</strong> from Zakat funds. All operational expenses are sustained entirely through separate voluntary general donations, private grants, and Gift Aid tax recovery.
                                 </p>
                             </div>
                         </div>
@@ -400,7 +400,7 @@
                         </h2>
                         <div id="faq7" class="accordion-collapse collapse" data-bs-parent="#zakatFaqAccordion">
                             <div class="accordion-body text-secondary lh-lg pt-2 pb-4">
-                                Yes. The moment your Zakat payment is processed through our secure gateway, an official certified electronic receipt is generated and emailed to you. The receipt includes your unique Transaction ID, exact USD amount, designated Shariah purpose, non-profit registration credentials, and timestamp for your personal tax filing and records.
+                                Yes. The moment your Zakat payment is processed through our secure gateway, an official certified electronic receipt is generated and emailed to you. The receipt includes your unique Transaction ID, exact PKR amount, designated Shariah purpose, non-profit registration credentials, and timestamp for your personal tax filing and records.
                             </div>
                         </div>
                     </div>
@@ -421,7 +421,7 @@
                             <i class="bi bi-arrow-up-circle me-1"></i> Calculate Above
                         </button>
                         <a href="/Donate?donationType=Zakat" class="btn btn-orange rounded-pill px-4 py-2 fw-bold shadow">
-                            <i class="bi bi-heart-fill me-1"></i> Pay Zakat in USD ($) Now
+                            <i class="bi bi-heart-fill me-1"></i> Pay Zakat in PKR (Rs) Now
                         </a>
                     </div>
                 </div>
@@ -436,7 +436,7 @@
         // SMART ZAKAT CALCULATOR (USD STANDARD)
         let currentGoldUnit = 'grams';
 
-        // Rates in USD
+        // Rates in PKR
         const RATES_USD = {
             goldPerGram: 75,
             silverPerGram: 1.00,
@@ -486,7 +486,7 @@
             // Total Zakatable Wealth
             const totalWealth = Math.max(0, (cash + totalPreciousVal) - debt);
 
-            // Silver Nisab Threshold in USD (~$550 - $612)
+            // Silver Nisab Threshold in PKR (~$550 - $612)
             const nisabThreshold = Math.round(RATES_USD.silverNisabGrams * RATES_USD.silverPerGram);
             const isNisabReached = totalWealth >= nisabThreshold && totalWealth > 0;
 
@@ -494,11 +494,11 @@
             const zakatDue = isNisabReached ? (totalWealth * 0.025) : 0;
 
             // Update UI elements
-            document.getElementById('resCash').textContent = `$${cash.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-            document.getElementById('resGold').textContent = `$${totalPreciousVal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-            document.getElementById('resDebt').textContent = `- $${debt.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-            document.getElementById('resTotalWealth').textContent = `$${totalWealth.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-            document.getElementById('resZakatDue').textContent = `$${zakatDue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            document.getElementById('resCash').textContent = `Rs ${cash.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            document.getElementById('resGold').textContent = `Rs ${totalPreciousVal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            document.getElementById('resDebt').textContent = `- Rs ${debt.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            document.getElementById('resTotalWealth').textContent = `Rs ${totalWealth.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            document.getElementById('resZakatDue').textContent = `Rs ${zakatDue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
             // Update Nisab Badge & Banner in English
             const nisabBadge = document.getElementById('nisabBadge');
@@ -519,7 +519,7 @@
             } else {
                 nisabBadge.className = 'badge bg-info text-dark px-3 py-1 rounded-pill mb-1';
                 nisabBadge.innerHTML = '<i class="bi bi-info-circle-fill me-1"></i> Below Nisab Threshold';
-                nisabNote.textContent = `Your net wealth is below the Nisab threshold (~$${nisabThreshold.toLocaleString()} USD). Zakat is not obligatory, but voluntary Sadaqah is welcome.`;
+                nisabNote.textContent = `Your net wealth is below the Nisab threshold (~Rs ${nisabThreshold.toLocaleString()} PKR). Zakat is not obligatory, but voluntary Sadaqah is welcome.`;
                 btnPay.href = `/Donate?amount=25&donationType=Zakat`;
             }
         }

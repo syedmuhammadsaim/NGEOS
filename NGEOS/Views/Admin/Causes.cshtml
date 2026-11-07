@@ -4,7 +4,7 @@
     Layout = "_AdminLayout";
 }
 
-<div class="d-flex justify-content-between align-items-center mb-4">
+<div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4">
     <div>
         <h3 class="fw-bold mb-1">Charity Causes Management</h3>
         <p class="text-muted small mb-0">Create, edit, and monitor all fundraising campaigns across categories.</p>
@@ -44,8 +44,8 @@
                         <td class="small text-muted">@(c.Ngo?.Name ?? "NGEOS Central")</td>
                         <td style="min-width: 150px;">
                             <div class="d-flex justify-content-between small text-muted mb-1">
-                                <span>$@c.RaisedAmount.ToString("N0")</span>
-                                <span>$@c.TargetAmount.ToString("N0")</span>
+                                <span>Rs @c.RaisedAmount.ToString("N0")</span>
+                                <span>Rs @c.TargetAmount.ToString("N0")</span>
                             </div>
                             <div class="custom-progress mb-0" style="height: 6px;">
                                 <div class="progress-bar-orange" style="width: @(c.PercentageRaised)%"></div>

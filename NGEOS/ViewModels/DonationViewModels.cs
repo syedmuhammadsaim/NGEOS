@@ -9,14 +9,23 @@ namespace NGEOS.ViewModels
         [Display(Name = "Select Cause")]
         public int CauseId { get; set; }
 
+        public int? ProgrammeId { get; set; }
+
         [Required]
         [Display(Name = "Contribution Type")]
         public string DonationType { get; set; } = "General"; // "General" or "Zakat"
 
         [Required(ErrorMessage = "Please specify a donation amount.")]
-        [Range(1, 1000000, ErrorMessage = "Donation amount must be between $1 and $1,000,000.")]
-        [Display(Name = "Donation Amount ($)")]
-        public decimal Amount { get; set; } = 50;
+        [Range(1, 10000000, ErrorMessage = "Donation amount must be between 1 and 10,000,000.")]
+        [Display(Name = "Donation Amount")]
+        public decimal Amount { get; set; } = 1000;
+
+        [Required(ErrorMessage = "Please select a payment gateway.")]
+        [Display(Name = "Payment Gateway")]
+        public string PaymentGateway { get; set; } = "Safepay"; // Safepay, JazzCash, Easypaisa, PayFast
+
+        [Display(Name = "Currency")]
+        public string Currency { get; set; } = "PKR";
 
         [Required(ErrorMessage = "Your full name is required.")]
         [Display(Name = "Your Full Name")]
@@ -32,30 +41,12 @@ namespace NGEOS.ViewModels
         [Display(Name = "Phone Number (Optional)")]
         public string? DonorPhone { get; set; }
 
-        // Dummy Payment Card Details with Validation
-        [Required(ErrorMessage = "Card Type is required.")]
-        [Display(Name = "Payment Method")]
-        public string CardType { get; set; } = "Credit Card";
-
-        [Required(ErrorMessage = "Cardholder Name is required.")]
-        [Display(Name = "Name on Card")]
-        [StringLength(100, MinimumLength = 3)]
-        public string CardHolderName { get; set; } = string.Empty;
-
-        [Required(ErrorMessage = "16-digit Card Number is required.")]
-        [RegularExpression(@"^(?:\d[ -]*?){13,19}$", ErrorMessage = "Please enter a valid card number (13-19 digits).")]
-        [Display(Name = "Card Number")]
-        public string CardNumber { get; set; } = string.Empty;
-
-        [Required(ErrorMessage = "Expiry Date is required.")]
-        [RegularExpression(@"^[0-9]{1,2}\/?([0-9]{2,4})$", ErrorMessage = "Expiry format must be MM/YY or MM/YYYY.")]
-        [Display(Name = "Expiry Date (MM/YY)")]
-        public string ExpiryDate { get; set; } = string.Empty;
-
-        [Required(ErrorMessage = "CVV Security Code is required.")]
-        [RegularExpression(@"^[0-9]{3,4}$", ErrorMessage = "CVV must be 3 or 4 digits.")]
-        [Display(Name = "CVV / CVC")]
-        public string CVV { get; set; } = string.Empty;
+        // Optional legacy card fields (for compatibility)
+        public string? CardType { get; set; } = "Online Gateway";
+        public string? CardHolderName { get; set; }
+        public string? CardNumber { get; set; }
+        public string? ExpiryDate { get; set; }
+        public string? CVV { get; set; }
 
         [Display(Name = "Leave an Encouraging Note (Optional)")]
         [StringLength(500)]
@@ -67,6 +58,9 @@ namespace NGEOS.ViewModels
     public class DonationReceiptViewModel
     {
         public string TransactionId { get; set; } = string.Empty;
+        public string GatewayReference { get; set; } = string.Empty;
+        public string PaymentGateway { get; set; } = "Safepay";
+        public string Currency { get; set; } = "PKR";
         public string CauseTitle { get; set; } = string.Empty;
         public string Category { get; set; } = string.Empty;
         public string NgoName { get; set; } = string.Empty;
@@ -81,5 +75,13 @@ namespace NGEOS.ViewModels
         public string DonationType { get; set; } = "General";
         public bool IsReceiptEmailSent { get; set; }
         public string? Notes { get; set; }
+        public string CleanNotes
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(Notes)) return string.Empty;
+                return System.Text.RegularExpressions.Regex.Replace(Notes, @"\[(Type|Email|Gateway):[^\]]+\]\s*", "").Trim();
+            }
+        }
     }
 }

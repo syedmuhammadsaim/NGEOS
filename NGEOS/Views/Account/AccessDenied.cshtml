@@ -4,18 +4,25 @@
 
 <div class="container section-padding text-center">
     <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="giveaid-card p-5">
-                <div class="action-card-icon icon-volunteer mx-auto mb-3 bg-danger-subtle text-danger">
-                    <i class="bi bi-shield-x"></i>
+        <div class="col-md-6" data-aos="zoom-in" data-aos-duration="500">
+            <div class="giveaid-card p-5 shadow-sm border">
+                <div class="action-card-icon icon-volunteer mx-auto mb-3 bg-danger-subtle text-danger" style="width: 70px; height: 70px; font-size: 2rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto;">
+                    <i class="bi bi-shield-lock-fill"></i>
                 </div>
-                <h2 class="fw-bold text-danger mb-2">Access Restricted</h2>
+                <h2 class="fw-bold text-danger mb-2">Administrative Access Restricted</h2>
                 <p class="text-muted mb-4">
-                    You do not have administrative privileges to view this section. If you believe this is an error, please login with an authorized account.
+                    The requested section requires <strong>Executive Administrator</strong> privileges. You are currently signed in as a standard member. Please switch to an authorized administrator account to continue.
                 </p>
                 <div class="d-flex justify-content-center gap-3">
-                    <a asp-controller="Home" asp-action="Index" class="btn btn-navy">Back to Home</a>
-                    <a asp-controller="Account" asp-action="Login" class="btn btn-orange">Login with Admin</a>
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-navy px-4">
+                        <i class="bi bi-house me-1"></i> Public Site
+                    </a>
+                    <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-orange px-4 shadow">
+                            <i class="bi bi-box-arrow-right me-1"></i> Sign In as Admin
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>

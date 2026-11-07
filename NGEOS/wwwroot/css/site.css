@@ -65,8 +65,6 @@ html {
     scroll-behavior: smooth;
     scrollbar-width: thin;
     scrollbar-color: #cbd5e1 transparent;
-    overscroll-behavior: none;
-    overscroll-behavior-y: none;
     background-color: #071527; /* Dark navy matching topbar and footer so no white flash */
 }
 
@@ -83,11 +81,10 @@ body {
     padding: 0;
     width: 100%;
     overflow-x: clip; /* prevents horizontal shift without breaking sticky headers */
-    overscroll-behavior: none;
-    overscroll-behavior-y: none;
 }
 
-main[role="main"], main {
+body:not(.admin-body) main[role="main"],
+body:not(.admin-body) main {
     flex: 1 0 auto;
     background-color: var(--bg-page);
     width: 100%;
@@ -805,11 +802,17 @@ main[role="main"] {
 .stat-card {
     background: #ffffff;
     border-radius: var(--radius-md);
-    padding: 24px 20px;
+    padding: 20px 8px;
     box-shadow: var(--shadow-md);
     border: 1px solid var(--border-color);
     text-align: center;
     transition: var(--transition-base);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-width: 0;
+    height: 100%;
 }
 
     .stat-card:hover {
@@ -820,20 +823,24 @@ main[role="main"] {
 
 .stat-number {
     font-family: var(--font-heading);
-    font-size: 2.2rem;
+    font-size: 1.85rem;
     font-weight: 800;
     color: var(--primary-orange);
-    line-height: 1;
+    line-height: 1.1;
     margin-bottom: 6px;
 }
 
 .stat-label {
-    font-size: 0.85rem;
-    font-weight: 600;
+    font-size: 0.74rem;
+    font-weight: 700;
     color: var(--text-secondary);
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.02em;
     margin: 0;
+    line-height: 1.25;
+    text-align: center;
+    word-break: normal;
+    overflow-wrap: break-word;
 }
 
 /* ==========================================================
@@ -1502,23 +1509,79 @@ body:has(.gallery-lightbox-modal.show) .modal-backdrop.show {
         animation: none;
     }
 
-    .nav-auth-area {
-        flex-wrap: wrap;
-        padding-top: 12px;
-        border-top: 1px solid var(--border-light);
-        margin-top: 10px;
+        .nav-auth-area {
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
+        gap: 10px !important;
+        padding-top: 14px !important;
+        border-top: 1px solid var(--border-light) !important;
+        margin-top: 12px !important;
+        white-space: normal !important;
+    }
+
+    .nav-auth-buttons {
+        display: flex !important;
+        width: 100% !important;
+        gap: 8px !important;
+    }
+
+    .nav-auth-buttons .btn {
+        flex: 1 1 0 !important;
+        text-align: center !important;
+        justify-content: center !important;
+    }
+
+    .nav-auth-buttons form {
+        display: flex !important;
+        flex: 1 1 auto !important;
+    }
+
+    .nav-auth-buttons form button {
+        width: 100% !important;
+        justify-content: center !important;
+    }
+
+    #btnInstallPwa {
+        width: 100% !important;
+        justify-content: center !important;
+        margin: 0 !important;
+        padding: 8px 16px !important;
+    }
+
+    #donateNavDropdown {
+        width: 100% !important;
+        margin: 0 !important;
+        position: relative !important;
     }
 
     .btn-donate-nav {
-        width: 100%;
-        justify-content: center;
-        margin-top: 10px;
-        margin-left: 0 !important;
+        width: 100% !important;
+        justify-content: center !important;
+        margin: 0 !important;
+        padding: 10px 16px !important;
     }
 
-    .nav-auth-area .btn {
-        flex-grow: 1;
-        text-align: center;
+    /* Clean mobile dropdown menu - inside container, no clipping, full width */
+    #donateNavDropdown .dropdown-menu {
+        position: static !important;
+        transform: none !important;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        inset: auto !important;
+        width: 100% !important;
+        min-width: 100% !important;
+        max-width: 100% !important;
+        float: none !important;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06) !important;
+        border: 1px solid rgba(0, 0, 0, 0.08) !important;
+        margin-top: 8px !important;
+        box-sizing: border-box !important;
+    }
+
+    #donateNavDropdown .dropdown-item {
+        white-space: normal !important;
     }
 }
 
@@ -1989,12 +2052,136 @@ body.modal-open {
     box-sizing: border-box !important;
 }
 
-.nav-auth-area {
-    flex-shrink: 0 !important;
-    white-space: nowrap !important;
+@media (min-width: 1200px) {
+    .nav-auth-area {
+        flex-shrink: 0 !important;
+        white-space: nowrap !important;
+    }
+
+    .btn-donate-nav {
+        flex-shrink: 0 !important;
+        white-space: nowrap !important;
+    }
 }
 
-.btn-donate-nav {
-    flex-shrink: 0 !important;
-    white-space: nowrap !important;
+/* ==========================================================
+   Admin Panel Smooth Mouse & Laptop Scrolling Guarantee
+   ========================================================== */
+html:has(body.admin-body),
+html.admin-html {
+    overflow-x: hidden !important;
+    overflow-y: scroll !important;
+    height: 100% !important;
+    overscroll-behavior: auto !important;
+    overscroll-behavior-y: auto !important;
+}
+
+body.admin-body {
+    overflow-x: hidden !important;
+    overflow-y: visible !important;
+    min-height: 100vh !important;
+    overscroll-behavior: auto !important;
+    overscroll-behavior-y: auto !important;
+}
+
+body.admin-body .admin-topbar {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 1050 !important;
+}
+
+body.admin-body .admin-side {
+    position: fixed !important;
+    top: 60px !important;
+    left: 0 !important;
+    bottom: 0 !important;
+    z-index: 1040 !important;
+}
+
+body.admin-body .admin-shell {
+    padding-top: 60px !important;
+    overflow-x: hidden !important;
+    overflow-y: visible !important;
+}
+
+body.admin-body .admin-main {
+    overflow-x: hidden !important;
+    overflow-y: visible !important;
+}
+
+body.admin-body .admin-main .giveaid-card,
+body.admin-body .admin-main .card {
+    overflow: visible !important;
+}
+
+/* ==========================================================
+   Clean Dedicated Auth Page Styling (No Header & No Footer)
+   ========================================================== */
+html:has(body.auth-body-active) {
+    overflow-x: hidden !important;
+    overflow-y: scroll !important;
+    height: auto !important;
+    min-height: 100% !important;
+    overscroll-behavior: auto !important;
+    overscroll-behavior-y: auto !important;
+}
+
+body.auth-body-active {
+    background: linear-gradient(135deg, #071527 0%, #0b192c 50%, #0d223f 100%) !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow-x: hidden !important;
+    overflow-y: visible !important;
+    overscroll-behavior: auto !important;
+    overscroll-behavior-y: auto !important;
+}
+
+body.auth-body-active .auth-main-wrapper {
+    flex: 1 0 auto;
+    width: 100% !important;
+    min-height: 100vh !important;
+    height: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    padding: 30px 15px !important;
+    background: transparent !important;
+    overflow: visible !important;
+}
+
+body.auth-body-active .auth-main-wrapper .section-padding {
+    padding: 10px 0 !important;
+    width: 100% !important;
+    margin-top: auto !important;
+    margin-bottom: auto !important;
+}
+
+body.auth-body-active .auth-main-wrapper .form-card {
+    background: #ffffff !important;
+    border-radius: 18px !important;
+    box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.1) !important;
+    border: none !important;
+    overflow: visible !important;
+}
+
+body.auth-body-active .btn-return-home {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: rgba(255, 255, 255, 0.65);
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: color 0.2s ease;
+    margin-top: 18px;
+}
+
+body.auth-body-active .btn-return-home:hover {
+    color: #ffffff;
 }

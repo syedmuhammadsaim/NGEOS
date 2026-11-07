@@ -528,3 +528,30 @@ END;
 COMMIT;
 GO
 
+
+-- ==========================================
+-- SEED DEFAULT MASTER ADMINISTRATOR ACCOUNT
+-- Email: admin@ngeos.org | Password: Admin@123
+-- ==========================================
+IF NOT EXISTS (SELECT 1 FROM [Users] WHERE [Email] = 'admin@ngeos.org')
+BEGIN
+    INSERT INTO [Users] (
+        [FullName], [Email], [PasswordHash], [Phone], [Address],
+        [Profession], [Organization], [Role], [ProfileImageUrl],
+        [CreatedAt], [IsActive]
+    )
+    VALUES (
+        N'NGEOS Administrator',
+        N'admin@ngeos.org',
+        N'18749713f33bf217f1bc9b30fabb4f3454bcc736bd10ec6d02f872a1cd7034b6',
+        N'+92 300 1234567',
+        N'100 Charity Boulevard, Suite 500, New York, NY 10001',
+        N'System Director',
+        N'NGEOS Central Secretariat',
+        N'Admin',
+        N'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&auto=format&fit=crop&q=80',
+        GETUTCDATE(),
+        1
+    );
+END;
+GO

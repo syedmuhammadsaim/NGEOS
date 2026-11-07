@@ -1,0 +1,66 @@
+@model NGEOS.Services.Payments.Dtos.PaymentInitiateResult
+@{
+    ViewData["Title"] = $"Connecting to {Model.GatewayName}...";
+    Layout = "_Layout";
+}
+
+<div class="container py-5 my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-7 col-lg-6">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden text-center p-5">
+                <div class="mb-4">
+                    <div class="spinner-border text-primary" style="width: 3.5rem; height: 3.5rem;" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+
+                <h3 class="fw-bold mb-2">Connecting to @Model.GatewayName</h3>
+                <p class="text-muted mb-4">
+                    Please wait while we securely transfer you to the official @Model.GatewayName payment gateway to complete your contribution of 
+                    <strong class="text-dark">@Model.Amount.ToString("N2") @Model.Currency</strong>.
+                </p>
+
+                <div class="alert alert-light border small text-muted text-start mb-4">
+                    <div class="d-flex justify-content-between mb-1">
+                        <span>Transaction Reference:</span>
+                        <strong class="text-dark">@Model.InternalReference</strong>
+                    </div>
+                    <div class="d-flex justify-content-between mb-1">
+                        <span>Gateway:</span>
+                        <strong class="text-dark">@Model.GatewayName</strong>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span>Security:</span>
+                        <span class="badge bg-success-subtle text-success border border-success-subtle">256-Bit SSL Encrypted</span>
+                    </div>
+                </div>
+
+                <!-- Auto-submitting POST form -->
+                <form id="paymentRedirectForm" action="@Model.PostEndpoint" method="POST">
+                    @if (Model.FormFields != null)
+                    {
+                        @foreach (var field in Model.FormFields)
+                        {
+                            <input type="hidden" name="@field.Key" value="@field.Value" />
+                        }
+                    }
+
+                    <button type="submit" class="btn btn-outline-primary btn-sm rounded-pill px-4">
+                        Click here if you are not redirected automatically
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var form = document.getElementById("paymentRedirectForm");
+        if (form) {
+            setTimeout(function () {
+                form.submit();
+            }, 600);
+        }
+    });
+</script>

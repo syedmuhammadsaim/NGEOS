@@ -1,0 +1,172 @@
+@{
+    ViewData["Title"] = "Payment Sandbox Simulator";
+    Layout = "_Layout";
+
+    var txn = ViewBag.Txn as NGEOS.Models.PaymentTransaction;
+    var donation = ViewBag.Donation as NGEOS.Models.Donation;
+    string gateway = (ViewBag.Gateway as string ?? "JazzCash").Trim();
+
+    string brandColor = "#f25c05";
+    string brandSecondary = "#0b192c";
+    string gatewayTitle = gateway;
+    string iconClass = "bi-credit-card-2-front-fill";
+    string inputLabel = "Mobile Account / Wallet Number";
+    string inputPlaceholder = "0300-1234567";
+    string pinLabel = "4-Digit MPIN / OTP";
+
+    if (gateway.Equals("JazzCash", StringComparison.OrdinalIgnoreCase))
+    {
+        brandColor = "#e31b23";
+        brandSecondary = "#1a0304";
+        gatewayTitle = "JazzCash Mobile Account";
+        iconClass = "bi-phone-fill";
+        inputLabel = "JazzCash Mobile Number";
+        inputPlaceholder = "0300-1234567";
+        pinLabel = "JazzCash 4-Digit MPIN";
+    }
+    else if (gateway.Equals("Easypaisa", StringComparison.OrdinalIgnoreCase))
+    {
+        brandColor = "#00a950";
+        brandSecondary = "#022614";
+        gatewayTitle = "Easypaisa Mobile Wallet";
+        iconClass = "bi-wallet2";
+        inputLabel = "Easypaisa Account Number";
+        inputPlaceholder = "0345-1234567";
+        pinLabel = "5-Digit OTP / Secret PIN";
+    }
+    else if (gateway.Equals("Safepay", StringComparison.OrdinalIgnoreCase))
+    {
+        brandColor = "#4a154b";
+        brandSecondary = "#1b041c";
+        gatewayTitle = "Safepay Checkout (Visa / Mastercard)";
+        iconClass = "bi-shield-lock-fill";
+        inputLabel = "Card Number";
+        inputPlaceholder = "4242 4242 4242 4242";
+        pinLabel = "CVV / Security Code (3 Digits)";
+    }
+    else if (gateway.Equals("PayFast", StringComparison.OrdinalIgnoreCase))
+    {
+        brandColor = "#0d47a1";
+        brandSecondary = "#031530";
+        gatewayTitle = "PayFast Pakistan (1Link / UnionPay)";
+        iconClass = "bi-bank2";
+        inputLabel = "1Link / Account Number";
+        inputPlaceholder = "1001-9988-7766";
+        pinLabel = "Secure Transaction PIN";
+    }
+}
+
+<div class="py-5 bg-light min-vh-100 d-flex align-items-center">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-7 col-md-9">
+
+                <!-- Sandbox Simulator Notice Banner -->
+                <div class="alert alert-warning border-warning shadow-sm rounded-4 mb-4 d-flex align-items-start gap-3">
+                    <div class="fs-3 text-warning">
+                        <i class="bi bi-shield-shaded"></i>
+                    </div>
+                    <div>
+                        <div class="fw-bold text-dark">Sandbox Test Simulator Active</div>
+                        <div class="text-secondary small mt-1">
+                            Yeh <strong>@gatewayTitle</strong> ka official local testing simulator hai. Real Pakistani banking accounts ke baghair aap yahan transaction test kar sakte hain. Koi real charges nahi katenge. Payment complete hone par direct <strong>PDF Receipt Download</strong> mil jayega.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Checkout Card -->
+                <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                    <!-- Branded Gateway Header -->
+                    <div class="p-4 text-white d-flex align-items-center justify-content-between" style="background: linear-gradient(135deg, @brandColor 0%, @brandSecondary 100%);">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="rounded-circle d-flex align-items-center justify-content-center text-white" style="width: 48px; height: 48px; background: rgba(255,255,255,0.2);">
+                                <i class="bi @iconClass fs-4"></i>
+                            </div>
+                            <div>
+                                <h4 class="mb-0 fw-bold">@gateway</h4>
+                                <small class="text-white-50">@gatewayTitle &bull; Sandbox Mode</small>
+                            </div>
+                        </div>
+                        <div class="text-end">
+                            <div class="badge bg-white text-dark fw-bold px-3 py-2 rounded-pill shadow-sm">
+                                <i class="bi bi-patch-check-fill text-success me-1"></i> Verified Merchant
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-body p-4 p-md-5">
+                        <!-- Order Details Box -->
+                        <div class="bg-light p-3 p-md-4 rounded-4 mb-4 border">
+                            <div class="d-flex justify-content-between align-items-center pb-3 mb-3 border-bottom">
+                                <span class="text-secondary small fw-medium text-uppercase">Welfare Cause</span>
+                                <span class="fw-bold text-dark text-end">@(donation?.Cause?.Title ?? "NGEOS Welfare Cause")</span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center pb-3 mb-3 border-bottom">
+                                <span class="text-secondary small fw-medium text-uppercase">Donor Name</span>
+                                <span class="fw-semibold text-dark">@(donation?.DonorName ?? "Honourable Donor")</span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center pb-3 mb-3 border-bottom">
+                                <span class="text-secondary small fw-medium text-uppercase">Transaction Reference</span>
+                                <span class="font-monospace text-primary fw-bold">@(txn?.InternalReference ?? "GA-TXN-REF")</span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="text-dark fw-bold fs-5">Total Contribution</span>
+                                <span class="text-success fw-bolder fs-3">Rs @(txn?.Amount.ToString("N2") ?? "0.00") PKR</span>
+                            </div>
+                        </div>
+
+                        <!-- Form -->
+                        <form method="post" action="/payments/simulator/process">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="ref" value="@(txn?.InternalReference)" />
+                            <input type="hidden" name="gateway" value="@gateway" />
+
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold text-dark">@inputLabel</label>
+                                <div class="input-group input-group-lg">
+                                    <span class="input-group-text bg-white text-secondary"><i class="bi @iconClass"></i></span>
+                                    <input type="text" name="accountNo" class="form-control" placeholder="@inputPlaceholder" value="@inputPlaceholder" required />
+                                </div>
+                                <div class="form-text">Koi bhi test number ya sample card number enter kiya ja sakta hai.</div>
+                            </div>
+
+                            <div class="row mb-4">
+                                <div class="col-md-6 mb-3 mb-md-0">
+                                    <label class="form-label fw-semibold text-dark">@pinLabel</label>
+                                    <input type="password" name="pinCode" class="form-control form-control-lg" placeholder="••••" value="1234" required />
+                                    <div class="form-text">Test PIN: <code>1234</code></div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold text-dark">Receipt Delivery Email</label>
+                                    <input type="email" class="form-control form-control-lg" value="@(donation?.DonorEmail ?? "donor@example.com")" readonly />
+                                    <div class="form-text">Receipt automated verification</div>
+                                </div>
+                            </div>
+
+                            <!-- Buttons -->
+                            <div class="d-grid gap-2">
+                                <button type="submit" name="actionType" value="success" class="btn btn-lg text-white fw-bold py-3 rounded-3 shadow" style="background-color: @brandColor;">
+                                    <i class="bi bi-lock-fill me-2"></i> Confirm &amp; Pay Rs @(txn?.Amount.ToString("N0") ?? "0") Now
+                                </button>
+                                
+                                <div class="d-flex gap-2 mt-2">
+                                    <button type="submit" name="actionType" value="fail" class="btn btn-outline-danger w-50 py-2 rounded-3 small">
+                                        <i class="bi bi-x-circle me-1"></i> Simulate Failure
+                                    </button>
+                                    <button type="submit" name="actionType" value="cancel" class="btn btn-outline-secondary w-50 py-2 rounded-3 small">
+                                        <i class="bi bi-arrow-left me-1"></i> Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+
+                        <div class="text-center mt-4 text-secondary small">
+                            <i class="bi bi-patch-check-fill text-success me-1"></i> 256-bit SSL Cryptographic Grounding &bull; Instant PDF Receipt &bull; 100% Shariah Compliant
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
