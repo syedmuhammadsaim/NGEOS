@@ -1,3 +1,4 @@
+using System;
 using System.Security.Cryptography;
 using System.Text;
 using CommunityToolkit.Mvvm.Input;
@@ -73,6 +74,35 @@ namespace NGEOS.Desktop.ViewModels
             Password = "Admin@123";
         }
 
+        private LocalUser? TryOfflineLogin(string email, string password)
+        {
+            try
+            {
+                var creds = _secureStorage.GetOfflineCredentials(email);
+                if (creds == null) return null;
+
+                var enteredHash = Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(password)));
+                if (enteredHash != creds.PasswordHash) return null;
+
+                using var db = new OfflineDbContext();
+                db.Database.EnsureCreated();
+                var localUser = db.Users.FirstOrDefault(u => u.Email.ToLower() == email.Trim().ToLower())
+                    ?? new LocalUser
+                    {
+                        Id = creds.UserId,
+                        Email = creds.Email,
+                        FullName = creds.FullName,
+                        Role = creds.Role
+                    };
+
+                return localUser;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         private async Task ExecuteLoginAsync()
         {
             ErrorMessage = string.Empty;
@@ -93,7 +123,7 @@ namespace NGEOS.Desktop.ViewModels
 
                 if (isOnline)
                 {
-                    // 1. ONLINE AUTHENTICATION VIA SECURED REST API
+                    // 1. ONLINE AUTHENTICATION VIA REST API
                     var response = await _apiService.LoginAsync(Email, Password);
                     if (response.Success && response.Data != null)
                     {
@@ -125,31 +155,24 @@ namespace NGEOS.Desktop.ViewModels
                         return;
                     }
 
+                    // Fallback to offline credentials if live API v1 is not deployed yet or returns 404
+                    var offlineUser = TryOfflineLogin(Email, Password);
+                    if (offlineUser != null)
+                    {
+                        _onLoginSuccess(offlineUser);
+                        return;
+                    }
+
                     ErrorMessage = response.Message ?? "Invalid email or password.";
                 }
                 else
                 {
                     // 2. OFFLINE AUTHENTICATION VIA DPAPI CACHED CREDENTIALS
-                    var creds = _secureStorage.GetOfflineCredentials(Email);
-                    if (creds != null)
+                    var offlineUser = TryOfflineLogin(Email, Password);
+                    if (offlineUser != null)
                     {
-                        var enteredHash = Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(Password)));
-                        if (enteredHash == creds.PasswordHash)
-                        {
-                            using var db = new OfflineDbContext();
-                            await db.Database.EnsureCreatedAsync();
-                            var localUser = await db.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == Email.Trim().ToLower())
-                                ?? new LocalUser
-                                {
-                                    Id = creds.UserId,
-                                    Email = creds.Email,
-                                    FullName = creds.FullName,
-                                    Role = creds.Role
-                                };
-
-                            _onLoginSuccess(localUser);
-                            return;
-                        }
+                        _onLoginSuccess(offlineUser);
+                        return;
                     }
 
                     ErrorMessage = "Device is offline. No matching offline credentials found on this machine.";
@@ -157,6 +180,14 @@ namespace NGEOS.Desktop.ViewModels
             }
             catch (Exception ex)
             {
+                // Fallback attempt on any network or parsing failure
+                var offlineUser = TryOfflineLogin(Email, Password);
+                if (offlineUser != null)
+                {
+                    _onLoginSuccess(offlineUser);
+                    return;
+                }
+
                 ErrorMessage = $"Authentication error: {ex.Message}";
             }
             finally

@@ -73,9 +73,11 @@ namespace NGEOS.Desktop
                 try
                 {
                     Trace("OnStartup: Creating SQLite DB if needed...");
+                    var secureStorage = ServiceProvider.GetRequiredService<ISecureStorageService>();
                     using var db = new OfflineDbContext();
                     db.Database.EnsureCreated();
-                    Trace("OnStartup: SQLite DB ready");
+                    OfflineDbContext.SeedInitialData(db, secureStorage);
+                    Trace("OnStartup: SQLite DB ready and seeded");
                 }
                 catch (Exception ex)
                 {

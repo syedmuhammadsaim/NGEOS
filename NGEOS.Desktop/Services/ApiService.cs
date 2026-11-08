@@ -183,46 +183,67 @@ namespace NGEOS.Desktop.Services
             {
                 var payload = new { Email = email, Password = password };
                 var response = await _http.PostAsJsonAsync($"{BaseUrl}/api/v1/auth/login", payload);
+                var contentString = await response.Content.ReadAsStringAsync();
 
                 if (response.IsSuccessStatusCode)
                 {
                     UpdateConnectivity(true);
-                    var doc = await response.Content.ReadFromJsonAsync<JsonElement>();
-                    var token = doc.GetProperty("token").GetString() ?? "";
+                    if (string.IsNullOrWhiteSpace(contentString))
+                    {
+                        return new ApiResponse<LocalUser> { Success = false, Message = "Server returned empty response." };
+                    }
+
+                    using var doc = JsonDocument.Parse(contentString);
+                    var root = doc.RootElement;
+                    var token = root.TryGetProperty("token", out var t) ? t.GetString() ?? "" : "";
                     SetAuthToken(token);
                     _secureStorage.SaveToken(token);
 
                     var user = new LocalUser
                     {
-                        Id = doc.GetProperty("userId").GetInt32(),
-                        FullName = doc.GetProperty("fullName").GetString() ?? "",
-                        Email = doc.GetProperty("email").GetString() ?? "",
-                        Role = doc.GetProperty("role").GetString() ?? "User",
-                        ProfileImageUrl = doc.TryGetProperty("profileImageUrl", out var pic) ? pic.GetString() : null,
-                        Phone = doc.TryGetProperty("phone", out var ph) ? ph.GetString() : null,
-                        Address = doc.TryGetProperty("address", out var ad) ? ad.GetString() : null,
-                        Profession = doc.TryGetProperty("profession", out var pr) ? pr.GetString() : null,
-                        Organization = doc.TryGetProperty("organization", out var org) ? org.GetString() : null,
+                        Id = root.TryGetProperty("userId", out var uid) ? uid.GetInt32() : 1,
+                        FullName = root.TryGetProperty("fullName", out var fn) ? fn.GetString() ?? "User" : "User",
+                        Email = root.TryGetProperty("email", out var em) ? em.GetString() ?? email : email,
+                        Role = root.TryGetProperty("role", out var rl) ? rl.GetString() ?? "User" : "User",
+                        ProfileImageUrl = root.TryGetProperty("profileImageUrl", out var pic) ? pic.GetString() : null,
+                        Phone = root.TryGetProperty("phone", out var ph) ? ph.GetString() : null,
+                        Address = root.TryGetProperty("address", out var ad) ? ad.GetString() : null,
+                        Profession = root.TryGetProperty("profession", out var pr) ? pr.GetString() : null,
+                        Organization = root.TryGetProperty("organization", out var org) ? org.GetString() : null,
                         LastLoginAt = DateTime.UtcNow
                     };
 
                     return new ApiResponse<LocalUser>
                     {
                         Success = true,
-                        Message = doc.GetProperty("message").GetString() ?? "Login successful",
+                        Message = root.TryGetProperty("message", out var msg) ? msg.GetString() ?? "Login successful" : "Login successful",
                         Data = user,
                         Token = token
                     };
                 }
 
-                var errDoc = await response.Content.ReadFromJsonAsync<JsonElement>();
-                var msg = errDoc.TryGetProperty("message", out var m) ? m.GetString() : "Invalid credentials";
-                return new ApiResponse<LocalUser> { Success = false, Message = msg ?? "Login failed" };
+                if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                {
+                    return new ApiResponse<LocalUser> { Success = false, Message = "API v1 not yet deployed on server. Switching to secure offline mode." };
+                }
+
+                if (!string.IsNullOrWhiteSpace(contentString))
+                {
+                    try
+                    {
+                        using var errDoc = JsonDocument.Parse(contentString);
+                        var errMsg = errDoc.RootElement.TryGetProperty("message", out var m) ? m.GetString() : null;
+                        return new ApiResponse<LocalUser> { Success = false, Message = errMsg ?? $"Server error: {(int)response.StatusCode}" };
+                    }
+                    catch { }
+                }
+
+                return new ApiResponse<LocalUser> { Success = false, Message = $"Server returned {(int)response.StatusCode} {response.ReasonPhrase}" };
             }
             catch (Exception ex)
             {
                 UpdateConnectivity(false);
-                return new ApiResponse<LocalUser> { Success = false, Message = $"Network error: {ex.Message}" };
+                return new ApiResponse<LocalUser> { Success = false, Message = $"Network connection error: {ex.Message}" };
             }
         }
 
