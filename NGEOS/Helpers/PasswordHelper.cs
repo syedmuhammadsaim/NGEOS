@@ -30,13 +30,18 @@ namespace NGEOS.Helpers
             // 2. Direct plain text fallback (resilience against manual SQL insertions)
             if (string.Equals(password, hash, StringComparison.Ordinal)) return true;
 
-            // 3. Resilience: check alternate case variant if password looks like default admin format
-            if (password.Equals("admin@123", StringComparison.OrdinalIgnoreCase))
+            // 3. Resilience: check alternate case and admin variants (Admin@12 and Admin@123)
+            if (password.Equals("admin@123", StringComparison.OrdinalIgnoreCase) ||
+                password.Equals("admin@12", StringComparison.OrdinalIgnoreCase))
             {
                 var alt1 = HashPassword("Admin@123");
                 var alt2 = HashPassword("admin@123");
+                var alt3 = HashPassword("Admin@12");
+                var alt4 = HashPassword("admin@12");
                 if (string.Equals(alt1, hash, StringComparison.OrdinalIgnoreCase) ||
-                    string.Equals(alt2, hash, StringComparison.OrdinalIgnoreCase))
+                    string.Equals(alt2, hash, StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(alt3, hash, StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(alt4, hash, StringComparison.OrdinalIgnoreCase))
                 {
                     return true;
                 }

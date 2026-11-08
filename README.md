@@ -36,7 +36,7 @@
 
   <p align="center">
     <a href="#-live-production-website"><b>🌐 Live Site</b></a> •
-    <a href="#-admin--user-default-credentials"><b>🔑 Default Credentials</b></a> •
+    <a href="#-system-authentication--credentials"><b>🔑 Authentication & Admin</b></a> •
     <a href="#%EF%B8%8F-api-keys--environment-variables-setup"><b>⚙️ API Keys Setup</b></a> •
     <a href="#-quick-start--installation"><b>🚀 Quick Start</b></a> •
     <a href="#%EF%B8%8F-database-setup-local-ssms--cloud"><b>🗄️ Database Setup</b></a> •
@@ -64,23 +64,36 @@ The production version of **NGEOS** is deployed and active with high availabilit
 
 ---
 
-## 🔑 Admin & User Default Credentials
+## 🔑 System Authentication & Credentials
 
-NGEOS comes pre-seeded with ready-to-use executive and donor credentials that work both on the **Live Website** and in the **Offline Desktop Application**:
+### 👑 Official Administrator Account
+NGEOS features **one dedicated master administrator account** for full platform oversight, master ledger auditing, cause management, and CMS control:
 
-### 👑 Executive & Admin Accounts
-| Role | Email Address | Password | Permissions & Access |
-| :--- | :--- | :--- | :--- |
-| **Super Administrator** | `admin@ngeos.org` | `Admin@123` | Full Master Ledger, Causes, NGOs, Programmes, Members & CMS Control |
-| **System Administrator** | `ngeos@gmail.com` | `Admin@123` | Full Administrative & Operational Oversight |
-| **Director Admin** | `syedmuhammadsaim.contact@gmail.com` | `Admin@123` | Master Central Secretariat Access |
+| Attribute | Details |
+| :--- | :--- |
+| **Email Address** | `admin@ngeos.org` |
+| **Password** | `Admin@12` *(or `Admin@123`)* |
+| **Role & Permissions** | Super Administrator (Full Central Secretariat, Causes, Ledger, NGO Approval & CMS Control) |
+| **Admin Portal** | 🔗 **[`https://ngeos.runasp.net/Admin`](https://ngeos.runasp.net/Admin)** |
 
-### 👤 Member / Donor Account
-| Role | Email Address | Password | Permissions & Access |
-| :--- | :--- | :--- | :--- |
-| **Verified Donor** | `user@ngeos.org` | `User@123` | Personal Giving History, Tax-Exempt Receipts, Cause Bookmarking |
+> 💡 **Admin Login Tip:** Navigate to [`/Account/Login`](https://ngeos.runasp.net/Account/Login) and enter the Admin credentials above to access the Executive Control Center.
 
-> 💡 **Quick Login Tip:** On the login page ([`/Account/Login`](https://ngeos.runasp.net/Account/Login)), click the **"Auto Fill Admin"** button to fill these credentials automatically with one click!
+---
+
+### 👤 User & Donor Accounts (Self-Registration)
+There is **no pre-fixed or demo user account**. All donors, volunteers, and humanitarian supporters create their own authentic personal accounts via self-registration:
+
+1. **Navigate to Register:** Open 🔗 **[`/Account/Register`](https://ngeos.runasp.net/Account/Register)** or click *"Create an Account"* on the login page.
+2. **Fill Your Profile:**
+   * **Personal Details:** Full Name, Email, Mobile Phone, Residential Address/City.
+   * **Professional Details:** Profession / Occupation and Organization / Employer.
+   * **Account Security:** Password (minimum 6 characters).
+3. **Instant Activation & Auto Sign-In:** Upon clicking *"Create Account"*, the system immediately registers your credentials, signs you in, and redirects straight to your personal **User Dashboard (`/User/Dashboard`)**.
+4. **Member Capabilities:**
+   * Track your cumulative donations and contribution milestones.
+   * Download official tax-exempt PDF receipts for any completed donation.
+   * Bookmark welfare causes and enroll in NGO volunteer programmes.
+   * Update profile details and manage contact preferences.
 
 ---
 
