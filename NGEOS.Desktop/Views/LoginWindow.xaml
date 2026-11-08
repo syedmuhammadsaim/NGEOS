@@ -23,7 +23,7 @@
                     <!-- Mode Indicator -->
                     <Border Background="#F8FAFC" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" CornerRadius="6" Padding="10,6" Margin="0,0,0,16">
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                            <Ellipse Width="8" Height="8" Fill="{Binding IsOnlineMode, Converter={x:Null}}" Margin="0,0,6,0">
+                            <Ellipse Width="8" Height="8" Margin="0,0,6,0">
                                 <Ellipse.Style>
                                     <Style TargetType="Ellipse">
                                         <Setter Property="Fill" Value="#16A34A" />
@@ -35,7 +35,7 @@
                                     </Style>
                                 </Ellipse.Style>
                             </Ellipse>
-                            <TextBlock Text="{Binding IsOnlineMode, Converter={x:Null}}">
+                            <TextBlock>
                                 <TextBlock.Style>
                                     <Style TargetType="TextBlock">
                                         <Setter Property="Text" Value="Online Mode (Live Backend)" />
@@ -66,11 +66,11 @@
                     <TextBlock Text="{Binding ErrorMessage}" Foreground="#DC2626" FontSize="12" TextWrapping="Wrap" Margin="0,0,0,12" HorizontalAlignment="Center">
                         <TextBlock.Style>
                             <Style TargetType="TextBlock">
-                                <Setter Property="Visibility" Value="Collapsed" />
+                                <Setter Property="Visibility" Value="Visible" />
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding ErrorMessage, Converter={x:Null}}" Value="">
+                                    <Trigger Property="Text" Value="">
                                         <Setter Property="Visibility" Value="Collapsed" />
-                                    </DataTrigger>
+                                    </Trigger>
                                 </Style.Triggers>
                             </Style>
                         </TextBlock.Style>

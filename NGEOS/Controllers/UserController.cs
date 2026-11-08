@@ -50,44 +50,63 @@ namespace NGEOS.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            var donationsQuery = _context.Donations.Include(d => d.Cause).AsQueryable();
-            if (user.Role != "Admin")
+            try
             {
-                donationsQuery = donationsQuery.Where(d => d.UserId == user.Id || d.DonorEmail.ToLower() == user.Email.ToLower());
+                var userEmail = (user.Email ?? string.Empty).Trim().ToLower();
+
+                var donationsQuery = _context.Donations.Include(d => d.Cause).AsQueryable();
+                if (user.Role != "Admin")
+                {
+                    donationsQuery = donationsQuery.Where(d => d.UserId == user.Id || (!string.IsNullOrEmpty(d.DonorEmail) && d.DonorEmail.ToLower() == userEmail));
+                }
+                var donations = await donationsQuery.OrderByDescending(d => d.DonationDate).ToListAsync();
+
+                var interests = await _context.ProgrammeInterests
+                    .Include(pi => pi.Programme)
+                    .Where(pi => pi.UserId == user.Id || (!string.IsNullOrEmpty(pi.Email) && pi.Email.ToLower() == userEmail))
+                    .OrderByDescending(pi => pi.SubmittedAt)
+                    .ToListAsync();
+
+                var queries = await _context.UserQueries
+                    .Where(q => q.UserId == user.Id || (!string.IsNullOrEmpty(q.Email) && q.Email.ToLower() == userEmail))
+                    .OrderByDescending(q => q.CreatedAt)
+                    .ToListAsync();
+
+                var invitations = await _context.FriendInvitations
+                    .Include(fi => fi.Cause)
+                    .Where(fi => fi.UserId == user.Id || (!string.IsNullOrEmpty(fi.SenderEmail) && fi.SenderEmail.ToLower() == userEmail))
+                    .OrderByDescending(fi => fi.SentAt)
+                    .ToListAsync();
+
+                var viewModel = new UserDashboardViewModel
+                {
+                    User = user,
+                    TotalDonated = donations.Where(d => d.PaymentStatus == "Completed").Sum(d => d.Amount),
+                    CausesSupportedCount = donations.Select(d => d.CauseId).Distinct().Count(),
+                    ProgrammesJoinedCount = interests.Count,
+                    QueriesCount = queries.Count,
+                    RecentDonations = donations.Take(5).ToList(),
+                    MyProgrammeInterests = interests.Take(5).ToList(),
+                    MyQueries = queries.Take(5).ToList(),
+                    MyInvitations = invitations.Take(5).ToList()
+                };
+
+                return View(viewModel);
             }
-            var donations = await donationsQuery.OrderByDescending(d => d.DonationDate).ToListAsync();
-
-            var interests = await _context.ProgrammeInterests
-                .Include(pi => pi.Programme)
-                .Where(pi => pi.UserId == user.Id || pi.Email.ToLower() == user.Email.ToLower())
-                .OrderByDescending(pi => pi.SubmittedAt)
-                .ToListAsync();
-
-            var queries = await _context.UserQueries
-                .Where(q => q.UserId == user.Id || q.Email.ToLower() == user.Email.ToLower())
-                .OrderByDescending(q => q.CreatedAt)
-                .ToListAsync();
-
-            var invitations = await _context.FriendInvitations
-                .Include(fi => fi.Cause)
-                .Where(fi => fi.UserId == user.Id || fi.SenderEmail.ToLower() == user.Email.ToLower())
-                .OrderByDescending(fi => fi.SentAt)
-                .ToListAsync();
-
-            var viewModel = new UserDashboardViewModel
+            catch (Exception ex)
             {
-                User = user,
-                TotalDonated = donations.Where(d => d.PaymentStatus == "Completed").Sum(d => d.Amount),
-                CausesSupportedCount = donations.Select(d => d.CauseId).Distinct().Count(),
-                ProgrammesJoinedCount = interests.Count,
-                QueriesCount = queries.Count,
-                RecentDonations = donations.Take(5).ToList(),
-                MyProgrammeInterests = interests.Take(5).ToList(),
-                MyQueries = queries.Take(5).ToList(),
-                MyInvitations = invitations.Take(5).ToList()
-            };
-
-            return View(viewModel);
+                _logger.LogError(ex, "Error loading User Dashboard for user {UserId}", user.Id);
+                var fallbackModel = new UserDashboardViewModel
+                {
+                    User = user,
+                    TotalDonated = 0,
+                    CausesSupportedCount = 0,
+                    ProgrammesJoinedCount = 0,
+                    QueriesCount = 0
+                };
+                TempData["ErrorMessage"] = "Some dashboard modules are syncing with the database. Showing overview.";
+                return View(fallbackModel);
+            }
         }
 
         [HttpGet]

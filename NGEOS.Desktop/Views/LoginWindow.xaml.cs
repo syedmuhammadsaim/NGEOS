@@ -1,3 +1,4 @@
+using System;
 using System.Windows;
 using NGEOS.Desktop.ViewModels;
 
@@ -7,7 +8,17 @@ namespace NGEOS.Desktop.Views
     {
         public LoginWindow()
         {
-            InitializeComponent();
+            App.Trace("LoginWindow: constructor entered");
+            try
+            {
+                InitializeComponent();
+                App.Trace("LoginWindow: InitializeComponent succeeded");
+            }
+            catch (Exception ex)
+            {
+                App.Trace($"LoginWindow: InitializeComponent CRASH: {ex}");
+                throw;
+            }
         }
 
         private void PasswordInput_PasswordChanged(object sender, RoutedEventArgs e)
