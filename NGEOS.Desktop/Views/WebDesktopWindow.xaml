@@ -1,0 +1,160 @@
+<Window x:Class="NGEOS.Desktop.Views.WebDesktopWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+        Title="NGEOS — Next-Generation NGO &amp; Welfare Platform"
+        Icon="../Resources/app.ico"
+        Height="900" Width="1440"
+        MinHeight="650" MinWidth="950"
+        WindowStartupLocation="CenterScreen"
+        WindowState="Maximized"
+        Background="#0B192C">
+
+    <Window.Resources>
+        <!-- Nav Button Style -->
+        <Style x:Key="NavButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="#E2E8F0" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Padding" Value="12,6" />
+            <Setter Property="Margin" Value="2,0" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bd" Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd" Property="Background" Value="#1E293B" />
+                                <Setter TargetName="bd" Property="BorderBrush" Value="#334155" />
+                                <Setter Property="Foreground" Value="#FD5631" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="bd" Property="Background" Value="#0F172A" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Accent Nav Button Style -->
+        <Style x:Key="AccentNavButtonStyle" TargetType="Button" BasedOn="{StaticResource NavButtonStyle}">
+            <Setter Property="Background" Value="#FD5631" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bd" Background="{TemplateBinding Background}"
+                                CornerRadius="6" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd" Property="Background" Value="#E04420" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="bd" Property="Background" Value="#C23616" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Utility Icon Button Style -->
+        <Style x:Key="UtilityButtonStyle" TargetType="Button" BasedOn="{StaticResource NavButtonStyle}">
+            <Setter Property="Padding" Value="8,5" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Foreground" Value="#94A3B8" />
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" x:Name="TopBarRow" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Sleek Modern Desktop App Header -->
+        <Border Grid.Row="0" x:Name="TopBarBorder" Background="#0B192C" BorderBrush="#1E293B" BorderThickness="0,0,0,1" Padding="12,6">
+            <DockPanel LastChildFill="False">
+                
+                <!-- Left: Branding & Status -->
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" DockPanel.Dock="Left">
+                    <TextBlock Text="🌟 NGEOS" FontSize="15" FontWeight="Bold" Foreground="#FD5631" VerticalAlignment="Center" Margin="0,0,6,0" />
+                    <TextBlock Text="Desktop" FontSize="12" FontWeight="SemiBold" Foreground="#94A3B8" VerticalAlignment="Center" Margin="0,0,14,0" />
+                    
+                    <Rectangle Width="1" Height="16" Fill="#334155" Margin="0,0,14,0" VerticalAlignment="Center" />
+
+                    <!-- Live Server Pulse Indicator -->
+                    <Ellipse x:Name="ServerStatusLed" Width="8" Height="8" Fill="#10B981" VerticalAlignment="Center" Margin="0,0,6,0" />
+                    <TextBlock x:Name="ServerStatusLabel" Text="Local Server Active (Port 5555)" FontSize="11" Foreground="#10B981" FontWeight="Medium" VerticalAlignment="Center" />
+                </StackPanel>
+
+                <!-- Right: Utility & Window Controls -->
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" DockPanel.Dock="Right">
+                    <Button x:Name="BtnBack" Style="{StaticResource UtilityButtonStyle}" Content="◀ Back" Click="BtnBack_Click" ToolTip="Go back (Alt+Left)" />
+                    <Button x:Name="BtnForward" Style="{StaticResource UtilityButtonStyle}" Content="▶ Next" Click="BtnForward_Click" ToolTip="Go forward (Alt+Right)" />
+                    <Button x:Name="BtnReload" Style="{StaticResource UtilityButtonStyle}" Content="🔄 Reload" Click="BtnReload_Click" ToolTip="Refresh page (F5)" />
+                    
+                    <Rectangle Width="1" Height="16" Fill="#334155" Margin="6,0" VerticalAlignment="Center" />
+                    
+                    <Button x:Name="BtnFullscreen" Style="{StaticResource UtilityButtonStyle}" Content="🗖 Fullscreen" Click="BtnFullscreen_Click" ToolTip="Toggle Fullscreen (F11)" />
+                    <Button x:Name="BtnHideBar" Style="{StaticResource UtilityButtonStyle}" Content="👁️ Hide Bar" Click="BtnHideBar_Click" ToolTip="Hide top bar for 100% full website view (Ctrl+T)" />
+                </StackPanel>
+
+                <!-- Center: Direct Feature Shortcuts -->
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" DockPanel.Dock="Left" Margin="20,0,0,0">
+                    <Button Content="🏠 Home" Style="{StaticResource NavButtonStyle}" Click="NavHome_Click" />
+                    <Button Content="🎗️ Welfare Causes" Style="{StaticResource NavButtonStyle}" Click="NavCauses_Click" />
+                    <Button Content="💳 Donate Now" Style="{StaticResource AccentNavButtonStyle}" Click="NavDonate_Click" />
+                    <Button Content="👑 Admin Center" Style="{StaticResource NavButtonStyle}" Click="NavAdmin_Click" />
+                    <Button Content="👤 User Portal" Style="{StaticResource NavButtonStyle}" Click="NavUser_Click" />
+                </StackPanel>
+
+            </DockPanel>
+        </Border>
+
+        <!-- Main Display: WebView2 + Smooth Loading Splash -->
+        <Grid Grid.Row="1">
+            <!-- Embedded Microsoft WebView2 rendering full website -->
+            <wv2:WebView2 x:Name="WebViewControl" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+
+            <!-- Branded Loading Overlay during initial server boot -->
+            <Border x:Name="LoadingOverlay" Background="#0B192C" Panel.ZIndex="99" Visibility="Visible">
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="500">
+                    
+                    <!-- Pulsing Glow Logo Container -->
+                    <Border Width="84" Height="84" CornerRadius="42" Background="#1E293B" BorderBrush="#FD5631" BorderThickness="2" HorizontalAlignment="Center" Margin="0,0,0,20">
+                        <TextBlock Text="🌟" FontSize="42" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+
+                    <TextBlock Text="NGEOS Desktop Platform" FontSize="26" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center" Margin="0,0,0,6" />
+                    <TextBlock Text="Next-Generation NGO &amp; Humanitarian Alliance" FontSize="14" Foreground="#94A3B8" HorizontalAlignment="Center" Margin="0,0,0,24" />
+
+                    <!-- Indeterminate Animated Loading Bar -->
+                    <ProgressBar x:Name="LoadingProgressBar" Width="340" Height="5" IsIndeterminate="True" 
+                                 Background="#1E293B" Foreground="#FD5631" BorderThickness="0" Margin="0,0,0,16" />
+
+                    <TextBlock x:Name="TxtStatus" Text="Starting secure local offline server on port 5555..." 
+                               FontSize="13" Foreground="#CBD5E1" HorizontalAlignment="Center" Margin="0,0,0,12" />
+
+                    <TextBlock Text="Connected to local MS SQL Database (NGEOSDb) • Full AI Assistant • 100% Offline" 
+                               FontSize="11" Foreground="#64748B" HorizontalAlignment="Center" />
+
+                    <Button x:Name="BtnManualRetry" Style="{StaticResource AccentNavButtonStyle}" 
+                            Content="Retry Connection" Visibility="Collapsed" HorizontalAlignment="Center" Margin="0,20,0,0" Click="BtnManualRetry_Click" />
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>

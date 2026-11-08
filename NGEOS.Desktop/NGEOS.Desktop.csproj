@@ -6,8 +6,16 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
-    <ApplicationTitle>NGEOS - NextGen NGO Management &amp; Donation Desktop</ApplicationTitle>
+    <ApplicationTitle>NGEOS — Next-Generation NGO &amp; Welfare Platform</ApplicationTitle>
+    <ApplicationIcon>Resources\app.ico</ApplicationIcon>
+    <AssemblyTitle>NGEOS Full Desktop Application</AssemblyTitle>
+    <Product>NGEOS</Product>
+    <Description>Full-Stack Desktop Application for NGEOS Humanitarian Platform</Description>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\app.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
@@ -15,6 +23,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.2" />
     <PackageReference Include="ClosedXML" Version="0.104.2" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.4314.35" />
   </ItemGroup>
 
 </Project>

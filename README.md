@@ -223,24 +223,26 @@ dotnet run
 
 ---
 
-## 💻 Desktop Application Mode (100% Offline)
+## 💻 Native Windows Desktop Application (100% Offline Full Website)
 
-NGEOS offers two flexible desktop modes:
+NGEOS is packaged as a **Full Native Windows Desktop Application** (`NGEOS.Desktop.exe`) powered by Microsoft Edge WebView2 and WPF:
 
-### 🌟 Mode 1: Full-Stack Standalone Offline Launcher (Exact Website as App)
-Run the full website interface with 100% of its animations, chatbot, and forms as a standalone Windows Desktop App:
-* Simply double-click **`NGEOS Full Desktop App.lnk`** on your desktop, OR run **`NGEOS-Desktop-Silent.vbs`**.
-* It starts the local offline server in the background and opens in **Native Windows App Mode** (Edge/Chromium standalone window without browser URL bars, tabs, or address bars).
-* Completely usable offline without internet!
+### 🌟 Features of NGEOS Desktop App
+* **100% Full Website Interface:** Experience the exact NGEOS platform — responsive hero sections, interactive cause cards, instant donation modal, floating AI Chatbot assistant, mobile-responsive Admin Center (`/Admin`), and personal Donor Dashboard (`/User/Dashboard`).
+* **Zero Browser Bloat:** Runs in a dedicated native Windows application window with custom NGEOS branding, icon, and title bar — **no browser address bars, no tabs, and no URL fields**.
+* **Self-Contained Offline Server:** Automatically starts the Kestrel backend on dedicated local port `5555` connected to your local MS SQL Database (`NGEOSDb`).
+* **Zero Process Leaks:** Automatically and cleanly terminates background services upon closing the application window.
+* **Persistent Session:** Cookies, sessions, and credentials persist across application restarts in an isolated `%LOCALAPPDATA%\NGEOS_Desktop_WebView2` profile.
+* **Smart Keyboard Shortcuts:**
+  * `F5` / `Ctrl+R` ➔ Reload page.
+  * `F11` ➔ Toggle Borderless Fullscreen.
+  * `Ctrl+T` ➔ Hide/Show Top Navigation Bar (for an immersive 100% full-screen view).
+  * `Alt+Left` / `Alt+Right` ➔ Go Back / Forward.
 
-### 🖥️ Mode 2: Dedicated WPF Desktop Management Suite
-For high-volume offline management, auditing, and ledger operations:
-* Path: `desktop_publish/NGEOS.Desktop.exe` (or extract `NGEOS-Desktop-v1.0.0.zip`).
-* **Features:**
-  * Embedded local **SQLite database (`ngeos_offline.db`)** that stores all causes, donations, queries, and users.
-  * **Excel (.xlsx) Export** & Official Printable Tax-Exempt Audit Reports.
-  * Offline cause creation and donation logging with automatic 2-way cloud sync when internet connects.
-  * Light / Dark Mode theme switcher.
+### 🚀 How to Launch
+1. **One-Click Desktop Shortcut:** Simply double-click **`NGEOS Full Desktop App.lnk`** on your Windows Desktop!
+2. **Direct Executable:** Open `desktop_publish/NGEOS.Desktop.exe` (or extract `NGEOS-Desktop-v1.0.0.zip`).
+3. **From Visual Studio:** Select `NGEOS.Desktop` as startup project and press **F5**!
 
 ---
 

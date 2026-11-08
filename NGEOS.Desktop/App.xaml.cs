@@ -84,9 +84,9 @@ namespace NGEOS.Desktop
                     Trace($"OnStartup: SQLite notice: {ex.Message}");
                 }
 
-                Trace("OnStartup: calling ShowLoginWindow...");
-                ShowLoginWindow();
-                Trace("OnStartup: ShowLoginWindow called successfully");
+                Trace("OnStartup: calling ShowWebDesktopWindow...");
+                ShowWebDesktopWindow();
+                Trace("OnStartup: ShowWebDesktopWindow called successfully");
             }
             catch (Exception ex)
             {
@@ -106,6 +106,29 @@ namespace NGEOS.Desktop
             services.AddSingleton<ISyncService, SyncService>();
             services.AddSingleton<IRealtimeService, RealtimeService>();
             services.AddSingleton<IReportService, ReportService>();
+        }
+
+        public void ShowWebDesktopWindow()
+        {
+            Trace("ShowWebDesktopWindow: entered");
+            var webWindow = new WebDesktopWindow();
+
+            webWindow.Closed += (s, e) =>
+            {
+                Trace("webWindow.Closed: calling Shutdown");
+                Shutdown();
+            };
+
+            var previousWindow = MainWindow;
+            MainWindow = webWindow;
+            Trace("ShowWebDesktopWindow: calling webWindow.Show()...");
+            webWindow.Show();
+            Trace("ShowWebDesktopWindow: webWindow.Show() returned");
+
+            if (previousWindow != null && previousWindow != webWindow)
+            {
+                previousWindow.Close();
+            }
         }
 
         public void ShowLoginWindow()
