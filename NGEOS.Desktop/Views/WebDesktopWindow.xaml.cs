@@ -182,25 +182,25 @@ namespace NGEOS.Desktop.Views
 
                 ProcessStartInfo psi;
 
-                if (exePath != null && workingDir != null)
-                {
-                    psi = new ProcessStartInfo
-                    {
-                        FileName = exePath,
-                        Arguments = $"--urls http://127.0.0.1:{DedicatedPort}",
-                        WorkingDirectory = workingDir,
-                        UseShellExecute = false,
-                        CreateNoWindow = true,
-                        WindowStyle = ProcessWindowStyle.Hidden
-                    };
-                }
-                else if (File.Exists(projectFile))
+                if (projectFile != null && File.Exists(projectFile) && projectDir != null)
                 {
                     psi = new ProcessStartInfo
                     {
                         FileName = "dotnet",
                         Arguments = $"run --no-build --urls http://127.0.0.1:{DedicatedPort}",
                         WorkingDirectory = projectDir,
+                        UseShellExecute = false,
+                        CreateNoWindow = true,
+                        WindowStyle = ProcessWindowStyle.Hidden
+                    };
+                }
+                else if (exePath != null && workingDir != null)
+                {
+                    psi = new ProcessStartInfo
+                    {
+                        FileName = exePath,
+                        Arguments = $"--urls http://127.0.0.1:{DedicatedPort}",
+                        WorkingDirectory = workingDir,
                         UseShellExecute = false,
                         CreateNoWindow = true,
                         WindowStyle = ProcessWindowStyle.Hidden
