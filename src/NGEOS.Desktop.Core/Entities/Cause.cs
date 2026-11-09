@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace NGEOS.Desktop.Core.Entities
 {
@@ -21,6 +22,7 @@ namespace NGEOS.Desktop.Core.Entities
         public int? ServerId { get; set; }
         public DateTime LastModifiedUtc { get; set; } = DateTime.UtcNow;
 
+        [NotMapped]
         public double ProgressPercentage 
         { 
             get => TargetAmount > 0 ? Math.Min(100.0, (double)(RaisedAmount / TargetAmount) * 100.0) : 0; 

@@ -48,6 +48,7 @@ namespace NGEOS.Desktop.Infrastructure.Database
             modelBuilder.Entity<Donation>().HasIndex(d => d.ReceiptNumber).IsUnique();
             modelBuilder.Entity<Donation>().HasIndex(d => d.DonationDate);
             modelBuilder.Entity<Cause>().HasIndex(c => c.Category);
+            modelBuilder.Entity<Cause>().Ignore(c => c.ProgressPercentage);
             modelBuilder.Entity<AuditLog>().HasIndex(a => a.Timestamp);
             modelBuilder.Entity<SyncQueueItem>().HasIndex(s => s.OperationId).IsUnique();
             modelBuilder.Entity<SyncQueueItem>().HasIndex(s => s.SyncStatus);

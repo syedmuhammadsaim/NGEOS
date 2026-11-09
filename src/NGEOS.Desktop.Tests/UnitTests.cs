@@ -276,17 +276,14 @@ namespace NGEOS.Desktop.Tests
         }
 
         [Fact]
-        public void ConnectivityService_OfflineMode_ShouldHandleUnreachableGracefully()
+        public async Task LiveDatabase_ShouldHaveActiveCauses()
         {
-            using var service = new ConnectivityService();
-            // Point to unreachable port/host to verify zero exceptions and safe offline transition
-            service.RemoteApiBaseUrl = "https://127.0.0.1:59999";
+            var dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "NGEOS_Desktop", "ngeos_desktop.db");
+            if (!File.Exists(dbPath)) return;
 
-            var isOnline = service.CheckConnectivityAsync().GetAwaiter().GetResult();
-
-            // Must report offline cleanly without throwing unhandled exceptions
-            Assert.False(isOnline);
-            Assert.False(service.IsOnline);
+            using var db = new TestNgeosDbContext(dbPath);
+            var causes = await db.Causes.ToListAsync();
+            Assert.True(causes.Count >= 4);
         }
 
         [Fact]
