@@ -205,6 +205,100 @@ namespace NGEOS.Desktop.Tests
         }
     }
 
+    public class HybridSyncTests : IDisposable
+    {
+        private readonly string _testDbPath;
+
+        public HybridSyncTests()
+        {
+            _testDbPath = Path.Combine(Path.GetTempPath(), $"ngeos_synctest_{Guid.NewGuid():N}.db");
+        }
+
+        [Fact]
+        public async Task SyncQueue_ShouldEnqueuePendingOperations()
+        {
+            using var context = new TestNgeosDbContext(_testDbPath);
+            await context.Database.EnsureCreatedAsync();
+
+            var item = new SyncQueueItem
+            {
+                OperationId = Guid.NewGuid().ToString("N"),
+                EntityType = "Donation",
+                ActionType = "Create",
+                EntityLocalId = "101",
+                JsonPayload = "{\"Amount\": 50000, \"DonorName\": \"Syed Saim\"}",
+                CreatedAtUtc = DateTime.UtcNow,
+                SyncStatus = "Pending"
+            };
+
+            await context.SyncQueue.AddAsync(item);
+            await context.SaveChangesAsync();
+
+            var pendingCount = await context.SyncQueue.CountAsync(s => s.SyncStatus == "Pending");
+            Assert.Equal(1, pendingCount);
+
+            var retrieved = await context.SyncQueue.FirstOrDefaultAsync(s => s.EntityLocalId == "101");
+            Assert.NotNull(retrieved);
+            Assert.Equal("Pending", retrieved.SyncStatus);
+        }
+
+        [Fact]
+        public async Task SyncQueue_StatusTransition_ShouldTrackSuccessfulSync()
+        {
+            using var context = new TestNgeosDbContext(_testDbPath);
+            await context.Database.EnsureCreatedAsync();
+
+            var item = new SyncQueueItem
+            {
+                OperationId = "OP-TEST-44",
+                EntityType = "Cause",
+                ActionType = "Create",
+                EntityLocalId = "202",
+                JsonPayload = "{\"Title\": \"Offline Cause\"}",
+                CreatedAtUtc = DateTime.UtcNow,
+                SyncStatus = "Pending"
+            };
+            await context.SyncQueue.AddAsync(item);
+            await context.SaveChangesAsync();
+
+            // Simulate sync success transition
+            item.SyncStatus = "Synced";
+            item.SyncedAtUtc = DateTime.UtcNow;
+            await context.SaveChangesAsync();
+
+            var pendingCount = await context.SyncQueue.CountAsync(s => s.SyncStatus == "Pending");
+            var syncedItem = await context.SyncQueue.FirstOrDefaultAsync(s => s.OperationId == "OP-TEST-44");
+
+            Assert.Equal(0, pendingCount);
+            Assert.NotNull(syncedItem);
+            Assert.Equal("Synced", syncedItem.SyncStatus);
+            Assert.NotNull(syncedItem.SyncedAtUtc);
+        }
+
+        [Fact]
+        public void ConnectivityService_OfflineMode_ShouldHandleUnreachableGracefully()
+        {
+            using var service = new ConnectivityService();
+            // Point to unreachable port/host to verify zero exceptions and safe offline transition
+            service.RemoteApiBaseUrl = "https://127.0.0.1:59999";
+
+            var isOnline = service.CheckConnectivityAsync().GetAwaiter().GetResult();
+
+            // Must report offline cleanly without throwing unhandled exceptions
+            Assert.False(isOnline);
+            Assert.False(service.IsOnline);
+        }
+
+        public void Dispose()
+        {
+            try
+            {
+                if (File.Exists(_testDbPath)) File.Delete(_testDbPath);
+            }
+            catch { }
+        }
+    }
+
     internal class TestNgeosDbContext : NgeosDbContext
     {
         private readonly string _dbPath;

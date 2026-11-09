@@ -124,15 +124,15 @@
                         <TextBlock Text="{Binding CurrentSectionTitle}" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center" />
                     </StackPanel>
 
-                    <!-- Controls: Offline Badge + Theme Toggle -->
+                    <!-- Controls: Offline/Online Hybrid Badge + Sync Button + Theme Toggle -->
                     <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                        <!-- Local Offline Status Indicator -->
-                        <Border Background="#052E16" BorderBrush="{DynamicResource SuccessBrush}" BorderThickness="1" CornerRadius="12" Padding="10,4" Margin="0,0,14,0" VerticalAlignment="Center">
-                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                <Ellipse Width="8" Height="8" Fill="{DynamicResource SuccessBrush}" Margin="0,0,6,0" />
-                                <TextBlock Text="Local Offline SQLite (WAL)" FontSize="11" Foreground="#86EFAC" FontWeight="SemiBold" />
-                            </StackPanel>
+                        <!-- Hybrid Connectivity Status Indicator -->
+                        <Border Background="#162238" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="12" Padding="12,5" Margin="0,0,10,0" VerticalAlignment="Center">
+                            <TextBlock Text="{Binding SyncStatusText}" FontSize="11" Foreground="#38BDF8" FontWeight="SemiBold" />
                         </Border>
+
+                        <!-- Synchronize Now Button -->
+                        <Button Content="{Binding SyncButtonLabel}" Command="{Binding SynchronizeNowCommand}" Style="{DynamicResource PrimaryButtonStyle}" Padding="12,5" FontSize="11" Margin="0,0,10,0" VerticalAlignment="Center" />
 
                         <!-- Theme Switcher -->
                         <Button Content="🌓 Theme" Command="{Binding ToggleThemeCommand}" Style="{DynamicResource OutlineButtonStyle}" Padding="10,5" FontSize="12" VerticalAlignment="Center" />

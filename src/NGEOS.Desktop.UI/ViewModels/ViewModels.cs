@@ -209,6 +209,7 @@ namespace NGEOS.Desktop.UI.ViewModels
         private readonly NgeosDbContext _context;
         private readonly IExcelExportService _excelService;
         private readonly IAuditService _auditService;
+        private readonly ISyncService _syncService;
 
         public ObservableCollection<Cause> Causes { get; } = new();
         public ObservableCollection<string> Categories { get; } = new() { "All Categories", "Education", "Water Relief", "Healthcare", "Livelihood", "Emergency" };
@@ -238,11 +239,12 @@ namespace NGEOS.Desktop.UI.ViewModels
         [ObservableProperty]
         private int _newBeneficiaries = 250;
 
-        public CausesViewModel(NgeosDbContext context, IExcelExportService excelService, IAuditService auditService)
+        public CausesViewModel(NgeosDbContext context, IExcelExportService excelService, IAuditService auditService, ISyncService syncService)
         {
             _context = context;
             _excelService = excelService;
             _auditService = auditService;
+            _syncService = syncService;
         }
 
         [RelayCommand]
@@ -314,6 +316,19 @@ namespace NGEOS.Desktop.UI.ViewModels
             await _context.SaveChangesAsync();
             await _auditService.LogAsync("CreateCause", "Cause", cause.Id.ToString(), $"Created new welfare cause: {cause.Title}.");
 
+            // Queue for hybrid synchronization
+            await _syncService.QueueOperationAsync("Cause", "Create", cause.Id.ToString(), new
+            {
+                Id = cause.Id,
+                Title = cause.Title,
+                ShortDescription = cause.Description,
+                FullDescription = cause.Description,
+                Category = cause.Category,
+                TargetAmount = cause.TargetAmount,
+                RaisedAmount = cause.RaisedAmount,
+                IsActive = true
+            });
+
             IsAddModalOpen = false;
             SuccessMessage = $"Cause '{cause.Title}' created successfully!";
             await LoadAsync();
@@ -376,6 +391,7 @@ namespace NGEOS.Desktop.UI.ViewModels
         private readonly IExcelExportService _excelService;
         private readonly IReportService _reportService;
         private readonly IAuditService _auditService;
+        private readonly ISyncService _syncService;
 
         public ObservableCollection<Donation> Donations { get; } = new();
 
@@ -403,12 +419,13 @@ namespace NGEOS.Desktop.UI.ViewModels
         [ObservableProperty]
         private string _newPaymentMethod = "Bank Transfer / Cash";
 
-        public DonationsViewModel(NgeosDbContext context, IExcelExportService excelService, IReportService reportService, IAuditService auditService)
+        public DonationsViewModel(NgeosDbContext context, IExcelExportService excelService, IReportService reportService, IAuditService auditService, ISyncService syncService)
         {
             _context = context;
             _excelService = excelService;
             _reportService = reportService;
             _auditService = auditService;
+            _syncService = syncService;
         }
 
         [RelayCommand]
@@ -489,6 +506,21 @@ namespace NGEOS.Desktop.UI.ViewModels
 
             await _context.SaveChangesAsync();
             await _auditService.LogAsync("CreateDonation", "Donation", d.Id.ToString(), $"Recorded donation of Rs. {d.Amount:N0} from {d.DonorName}.");
+
+            // Queue for hybrid synchronization
+            await _syncService.QueueOperationAsync("Donation", "Create", d.Id.ToString(), new
+            {
+                Id = d.Id,
+                TransactionId = d.TransactionId,
+                DonorName = d.DonorName,
+                DonorEmail = d.DonorEmail,
+                Amount = d.Amount,
+                Currency = "PKR",
+                PaymentGateway = d.PaymentMethod,
+                PaymentStatus = d.PaymentStatus,
+                CauseTitle = d.CauseTitle,
+                DonationDate = d.DonationDate
+            });
 
             IsAddModalOpen = false;
             SuccessMessage = $"Donation {txnId} recorded successfully!";
@@ -758,6 +790,8 @@ namespace NGEOS.Desktop.UI.ViewModels
     public partial class SettingsViewModel : ViewModelBase
     {
         private readonly NgeosDbContext _context;
+        private readonly IConnectivityService _connectivity;
+        private readonly ISyncService _syncService;
 
         [ObservableProperty]
         private string _databaseLocation = string.Empty;
@@ -766,12 +800,120 @@ namespace NGEOS.Desktop.UI.ViewModels
         private string _sqliteMode = "WAL (Write-Ahead Logging)";
 
         [ObservableProperty]
-        private string _appVersion = "v2.0.0 (Pure WPF Desktop Architecture)";
+        private string _appVersion = "v2.0.0 (Hybrid WPF Desktop Architecture)";
 
-        public SettingsViewModel(NgeosDbContext context)
+        [ObservableProperty]
+        private string _remoteServerUrl = "https://localhost:5001";
+
+        [ObservableProperty]
+        private bool _isOnline;
+
+        [ObservableProperty]
+        private int _pendingQueueCount;
+
+        [ObservableProperty]
+        private string _lastSyncTime = "Never";
+
+        [ObservableProperty]
+        private string _connectionStatusMessage = string.Empty;
+
+        public SettingsViewModel(NgeosDbContext context, IConnectivityService connectivity, ISyncService syncService)
         {
             _context = context;
+            _connectivity = connectivity;
+            _syncService = syncService;
+
             DatabaseLocation = NgeosDbContext.GetDatabasePath();
+            RemoteServerUrl = _connectivity.RemoteApiBaseUrl;
+            IsOnline = _connectivity.IsOnline;
+
+            _connectivity.ConnectivityChanged += isOnline =>
+            {
+                IsOnline = isOnline;
+                ConnectionStatusMessage = isOnline 
+                    ? "🟢 Remote Web API is online and responding." 
+                    : "⚪ Remote Web API is unreachable. System running in offline local SQLite mode.";
+            };
+
+            _syncService.SyncStateChanged += () =>
+            {
+                PendingQueueCount = _syncService.PendingCount;
+                if (_syncService.LastSyncTimeUtc.HasValue)
+                {
+                    LastSyncTime = _syncService.LastSyncTimeUtc.Value.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss");
+                }
+            };
+
+            _ = RefreshStatusAsync();
+        }
+
+        [RelayCommand]
+        public async Task RefreshStatusAsync()
+        {
+            IsOnline = await _connectivity.CheckConnectivityAsync();
+            PendingQueueCount = await _syncService.GetPendingCountAsync();
+            if (_syncService.LastSyncTimeUtc.HasValue)
+            {
+                LastSyncTime = _syncService.LastSyncTimeUtc.Value.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss");
+            }
+        }
+
+        [RelayCommand]
+        public async Task TestConnectionAsync()
+        {
+            IsBusy = true;
+            _connectivity.RemoteApiBaseUrl = RemoteServerUrl.Trim();
+            try
+            {
+                var ok = await _connectivity.CheckConnectivityAsync();
+                IsOnline = ok;
+                if (ok)
+                {
+                    ConnectionStatusMessage = "🟢 Remote Web API connected successfully! Multi-device cloud sync ready.";
+                    SuccessMessage = ConnectionStatusMessage;
+                    ErrorMessage = string.Empty;
+                }
+                else
+                {
+                    ConnectionStatusMessage = "⚪ Remote server is unreachable. Offline mode is active and local records are safe.";
+                    ErrorMessage = ConnectionStatusMessage;
+                    SuccessMessage = string.Empty;
+                }
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+
+        [RelayCommand]
+        public async Task SyncNowAsync()
+        {
+            IsBusy = true;
+            ClearMessages();
+            StatusMessage = "Synchronizing pending local changes with remote server...";
+            try
+            {
+                _connectivity.RemoteApiBaseUrl = RemoteServerUrl.Trim();
+                var result = await _syncService.SynchronizeNowAsync();
+                if (result.Success)
+                {
+                    SuccessMessage = result.Message;
+                }
+                else
+                {
+                    ErrorMessage = result.Message;
+                }
+                await RefreshStatusAsync();
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = $"Sync exception: {ex.Message}";
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
     }
 }

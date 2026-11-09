@@ -43,6 +43,10 @@ namespace NGEOS.Desktop.UI
                     services.AddSingleton<IExcelExportService, ClosedXmlExportService>();
                     services.AddSingleton<IReportService, QuestPdfReportService>();
 
+                    // Hybrid Connectivity & Two-Way Sync Engine
+                    services.AddSingleton<IConnectivityService, ConnectivityService>();
+                    services.AddSingleton<ISyncService, SyncService>();
+
                     // ViewModels
                     services.AddTransient<DashboardViewModel>();
                     services.AddTransient<CausesViewModel>();
@@ -63,6 +67,10 @@ namespace NGEOS.Desktop.UI
                 var hasher = scope.ServiceProvider.GetRequiredService<IPasswordHasher>();
                 await db.InitializeAndSeedAsync(hasher);
             }
+
+            // Start live network monitoring
+            var connectivity = _host.Services.GetRequiredService<IConnectivityService>();
+            connectivity.StartMonitoring(15);
 
             ShowLogin();
         }
@@ -88,6 +96,8 @@ namespace NGEOS.Desktop.UI
         private async void OnLoginSuccess(User user)
         {
             var authService = _host!.Services.GetRequiredService<IAuthService>();
+            var connectivity = _host.Services.GetRequiredService<IConnectivityService>();
+            var syncService = _host.Services.GetRequiredService<ISyncService>();
             var dashboardVm = _host.Services.GetRequiredService<DashboardViewModel>();
             var causesVm = _host.Services.GetRequiredService<CausesViewModel>();
             var donationsVm = _host.Services.GetRequiredService<DonationsViewModel>();
@@ -99,6 +109,8 @@ namespace NGEOS.Desktop.UI
             var mainVm = new MainViewModel(
                 authService,
                 _host.Services,
+                connectivity,
+                syncService,
                 dashboardVm,
                 causesVm,
                 donationsVm,
@@ -141,6 +153,9 @@ namespace NGEOS.Desktop.UI
         {
             if (_host != null)
             {
+                var connectivity = _host.Services.GetService<IConnectivityService>();
+                connectivity?.StopMonitoring();
+
                 await _host.StopAsync();
                 _host.Dispose();
             }

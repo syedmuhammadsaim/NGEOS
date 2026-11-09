@@ -13,6 +13,8 @@ namespace NGEOS.Desktop.UI.ViewModels
     {
         private readonly IAuthService _authService;
         private readonly IServiceProvider _serviceProvider;
+        private readonly IConnectivityService _connectivity;
+        private readonly ISyncService _syncService;
         private readonly Action _onLogoutRequested;
 
         [ObservableProperty]
@@ -27,6 +29,21 @@ namespace NGEOS.Desktop.UI.ViewModels
         [ObservableProperty]
         private bool _isDarkTheme = true;
 
+        [ObservableProperty]
+        private bool _isOnline;
+
+        [ObservableProperty]
+        private bool _isSyncing;
+
+        [ObservableProperty]
+        private int _pendingSyncCount;
+
+        [ObservableProperty]
+        private string _syncStatusText = "Checking Connectivity...";
+
+        [ObservableProperty]
+        private string _syncButtonLabel = "🔄 Sync Now";
+
         // ViewModels
         public DashboardViewModel DashboardVM { get; }
         public CausesViewModel CausesVM { get; }
@@ -39,6 +56,8 @@ namespace NGEOS.Desktop.UI.ViewModels
         public MainViewModel(
             IAuthService authService,
             IServiceProvider serviceProvider,
+            IConnectivityService connectivity,
+            ISyncService syncService,
             DashboardViewModel dashboardVM,
             CausesViewModel causesVM,
             DonationsViewModel donationsVM,
@@ -50,6 +69,8 @@ namespace NGEOS.Desktop.UI.ViewModels
         {
             _authService = authService;
             _serviceProvider = serviceProvider;
+            _connectivity = connectivity;
+            _syncService = syncService;
             DashboardVM = dashboardVM;
             CausesVM = causesVM;
             DonationsVM = donationsVM;
@@ -62,12 +83,75 @@ namespace NGEOS.Desktop.UI.ViewModels
             // Default view
             CurrentViewModel = DashboardVM;
             CurrentSectionTitle = "Executive Dashboard";
+
+            // Connectivity & Sync listeners
+            _connectivity.ConnectivityChanged += OnConnectivityChanged;
+            _syncService.SyncStateChanged += OnSyncStateChanged;
+
+            UpdateConnectivityStatus(_connectivity.IsOnline);
+            UpdateSyncState();
+        }
+
+        private void OnConnectivityChanged(bool online)
+        {
+            Application.Current?.Dispatcher?.Invoke(() =>
+            {
+                UpdateConnectivityStatus(online);
+            });
+        }
+
+        private void OnSyncStateChanged()
+        {
+            Application.Current?.Dispatcher?.Invoke(() =>
+            {
+                UpdateSyncState();
+            });
+        }
+
+        private void UpdateConnectivityStatus(bool online)
+        {
+            IsOnline = online;
+            SyncStatusText = online 
+                ? "🟢 ONLINE (Remote Cloud Connected)" 
+                : "⚪ OFFLINE (Local SQLite Safe Mode)";
+        }
+
+        private void UpdateSyncState()
+        {
+            IsSyncing = _syncService.IsSyncing;
+            PendingSyncCount = _syncService.PendingCount;
+            SyncButtonLabel = IsSyncing 
+                ? "Syncing..." 
+                : (PendingSyncCount > 0 ? $"🔄 Sync Now ({PendingSyncCount})" : "🔄 Sync Now");
         }
 
         public async Task InitializeUserAsync(User user)
         {
             CurrentUser = user;
             await DashboardVM.LoadAsync();
+            await _connectivity.CheckConnectivityAsync();
+            PendingSyncCount = await _syncService.GetPendingCountAsync();
+            UpdateSyncState();
+        }
+
+        [RelayCommand]
+        public async Task SynchronizeNowAsync()
+        {
+            if (IsSyncing) return;
+
+            var res = await _syncService.SynchronizeNowAsync();
+            if (res.Success)
+            {
+                MessageBox.Show(res.Message, "Hybrid Synchronization", MessageBoxButton.OK, MessageBoxImage.Information);
+                // Refresh active view
+                if (CurrentViewModel == DashboardVM) await DashboardVM.LoadAsync();
+                else if (CurrentViewModel == CausesVM) await CausesVM.LoadAsync();
+                else if (CurrentViewModel == DonationsVM) await DonationsVM.LoadAsync();
+            }
+            else
+            {
+                MessageBox.Show(res.Message, "Offline Status", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
         }
 
         [RelayCommand]
@@ -154,7 +238,7 @@ namespace NGEOS.Desktop.UI.ViewModels
                 // Clean Professional Light
                 res["AppBgBrush"] = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#F1F5F9"));
                 res["CardBgBrush"] = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
-                res["SidebarBgBrush"] = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#0F172A")); // Keep sleek dark sidebar or clean slate
+                res["SidebarBgBrush"] = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#0F172A"));
                 res["TopBarBgBrush"] = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
                 res["TextPrimaryBrush"] = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#0F172A"));
                 res["TextSecondaryBrush"] = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#64748B"));

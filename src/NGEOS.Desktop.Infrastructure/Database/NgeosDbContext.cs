@@ -16,6 +16,7 @@ namespace NGEOS.Desktop.Infrastructure.Database
         public DbSet<Query> Queries => Set<Query>();
         public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
         public DbSet<BackupRecord> BackupRecords => Set<BackupRecord>();
+        public DbSet<SyncQueueItem> SyncQueue => Set<SyncQueueItem>();
 
         public static string GetDatabasePath()
         {
@@ -48,6 +49,8 @@ namespace NGEOS.Desktop.Infrastructure.Database
             modelBuilder.Entity<Donation>().HasIndex(d => d.DonationDate);
             modelBuilder.Entity<Cause>().HasIndex(c => c.Category);
             modelBuilder.Entity<AuditLog>().HasIndex(a => a.Timestamp);
+            modelBuilder.Entity<SyncQueueItem>().HasIndex(s => s.OperationId).IsUnique();
+            modelBuilder.Entity<SyncQueueItem>().HasIndex(s => s.SyncStatus);
         }
 
         public async Task InitializeAndSeedAsync(IPasswordHasher passwordHasher)

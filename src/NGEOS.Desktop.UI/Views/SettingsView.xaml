@@ -3,13 +3,84 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:conv="clr-namespace:NGEOS.Desktop.UI.Converters"
              mc:Ignorable="d" 
-             d:DesignHeight="700" d:DesignWidth="1000">
+             d:DesignHeight="850" d:DesignWidth="1000">
+
+    <UserControl.Resources>
+        <conv:BoolToVisibilityConverter x:Key="BoolToVis" />
+    </UserControl.Resources>
 
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="24">
 
-            <!-- Card 1: System Info -->
+            <!-- Card 1: Hybrid Synchronization & Web API -->
+            <Border Style="{DynamicResource ModernCardStyle}" Margin="0,0,0,20">
+                <StackPanel>
+                    <TextBlock Text="Hybrid Cloud Synchronization &amp; ASP.NET Core Web API" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,8" />
+                    <TextBlock Text="Automatic two-way sync engine. When online, local changes synchronize with the remote SQL Server backend. When offline, all operations are preserved safely in local SQLite with a zero-loss pending queue." Foreground="{DynamicResource TextSecondaryBrush}" FontSize="12" Margin="0,0,0,16" TextWrapping="Wrap" />
+
+                    <!-- Feedback Banners -->
+                    <Border Background="#052E16" BorderBrush="{DynamicResource SuccessBrush}" BorderThickness="1" CornerRadius="6" Padding="12,6" Margin="0,0,0,10"
+                            Visibility="{Binding SuccessMessage, Converter={StaticResource BoolToVis}}">
+                        <TextBlock Text="{Binding SuccessMessage}" Foreground="#86EFAC" FontSize="12" FontWeight="SemiBold" />
+                    </Border>
+                    <Border Background="#3B0808" BorderBrush="{DynamicResource DangerBrush}" BorderThickness="1" CornerRadius="6" Padding="12,6" Margin="0,0,0,10"
+                            Visibility="{Binding ErrorMessage, Converter={StaticResource BoolToVis}}">
+                        <TextBlock Text="{Binding ErrorMessage}" Foreground="#FCA5A5" FontSize="12" />
+                    </Border>
+
+                    <!-- Remote Server URL -->
+                    <Grid Margin="0,4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="220" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Remote Web API Base URL:" Foreground="{DynamicResource TextSecondaryBrush}" FontWeight="SemiBold" VerticalAlignment="Center" />
+                        <TextBox Grid.Column="1" Text="{Binding RemoteServerUrl, UpdateSourceTrigger=PropertyChanged}" Style="{DynamicResource ModernTextBoxStyle}" Margin="0,0,10,0" />
+                        <Button Grid.Column="2" Content="Test Connection" Command="{Binding TestConnectionCommand}" Style="{DynamicResource OutlineButtonStyle}" Padding="14,6" />
+                    </Grid>
+
+                    <!-- Connection Status Banner -->
+                    <Grid Margin="0,8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="220" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Current Network Mode:" Foreground="{DynamicResource TextSecondaryBrush}" FontWeight="SemiBold" />
+                        <TextBlock Grid.Column="1" Text="{Binding ConnectionStatusMessage, FallbackValue='Detecting network connectivity...'}" Foreground="#38BDF8" FontWeight="SemiBold" />
+                    </Grid>
+
+                    <!-- Pending Queue Count -->
+                    <Grid Margin="0,6">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="220" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Pending Local Queue:" Foreground="{DynamicResource TextSecondaryBrush}" FontWeight="SemiBold" />
+                        <TextBlock Grid.Column="1" Text="{Binding PendingQueueCount, StringFormat={}{0} record(s) queued for synchronization}" Foreground="{DynamicResource AccentOrangeBrush}" FontWeight="Bold" />
+                    </Grid>
+
+                    <!-- Last Sync Timestamp -->
+                    <Grid Margin="0,6">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="220" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Last Synchronized:" Foreground="{DynamicResource TextSecondaryBrush}" FontWeight="SemiBold" />
+                        <TextBlock Grid.Column="1" Text="{Binding LastSyncTime}" Foreground="{DynamicResource TextPrimaryBrush}" />
+                    </Grid>
+
+                    <!-- Manual Sync Button -->
+                    <StackPanel Orientation="Horizontal" Margin="0,16,0,0">
+                        <Button Content="🔄 Synchronize Now" Command="{Binding SyncNowCommand}" Style="{DynamicResource PrimaryButtonStyle}" Height="38" Padding="18,0" Margin="0,0,12,0" />
+                        <Button Content="Refresh Status" Command="{Binding RefreshStatusCommand}" Style="{DynamicResource OutlineButtonStyle}" Height="38" Padding="14,0" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- Card 2: System Info -->
             <Border Style="{DynamicResource ModernCardStyle}" Margin="0,0,0,20">
                 <StackPanel>
                     <TextBlock Text="Local Storage &amp; Database Architecture" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,16" />
@@ -52,7 +123,7 @@
                 </StackPanel>
             </Border>
 
-            <!-- Card 2: Security & Encryption Specs -->
+            <!-- Card 3: Security & Encryption Specs -->
             <Border Style="{DynamicResource ModernCardStyle}" Margin="0,0,0,20">
                 <StackPanel>
                     <TextBlock Text="Cybersecurity &amp; Encryption Parameters" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,16" />
@@ -80,13 +151,13 @@
                             <ColumnDefinition Width="220" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" Text="Operating Environment:" Foreground="{DynamicResource TextSecondaryBrush}" FontWeight="SemiBold" />
-                        <TextBlock Grid.Column="1" Text="100% Offline Standalone Desktop (Zero cloud API, zero telemetry, zero web server)" Foreground="{DynamicResource SuccessBrush}" FontWeight="SemiBold" />
+                        <TextBlock Grid.Column="0" Text="Hybrid Connectivity:" Foreground="{DynamicResource TextSecondaryBrush}" FontWeight="SemiBold" />
+                        <TextBlock Grid.Column="1" Text="Auto-detects online/offline states. Preserves all data locally. Never closes on network disconnect." Foreground="{DynamicResource SuccessBrush}" FontWeight="SemiBold" />
                     </Grid>
                 </StackPanel>
             </Border>
 
-            <!-- Card 3: Theme Configuration -->
+            <!-- Card 4: Theme Configuration -->
             <Border Style="{DynamicResource ModernCardStyle}">
                 <StackPanel>
                     <TextBlock Text="Appearance &amp; User Interface" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,14" />

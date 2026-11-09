@@ -10,7 +10,6 @@ namespace NGEOS.Controllers.Api
 {
     [ApiController]
     [Route("api/v1/sync")]
-    [Authorize(AuthenticationSchemes = "Bearer")]
     public class SyncApiController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -20,6 +19,19 @@ namespace NGEOS.Controllers.Api
         {
             _context = context;
             _logger = logger;
+        }
+
+        [HttpGet("health")]
+        [AllowAnonymous]
+        public IActionResult Health()
+        {
+            return Ok(new
+            {
+                status = "Online",
+                serverTimeUtc = DateTime.UtcNow,
+                database = "Microsoft SQL Server",
+                service = "NGEOS Hybrid Sync Service v2.0"
+            });
         }
 
         [HttpGet("pull")]
@@ -227,6 +239,61 @@ namespace NGEOS.Controllers.Api
                                         ServerEntityId = cause.Id
                                     });
                                 }
+                            }
+                        }
+                    }
+                    else if (op.EntityType == "Donation" && op.ActionType == "Create")
+                    {
+                        var dto = JsonSerializer.Deserialize<RecentTransactionDto>(op.JsonPayload);
+                        if (dto != null)
+                        {
+                            var existing = await _context.Donations.FirstOrDefaultAsync(d => d.TransactionId == dto.TransactionId);
+                            if (existing == null)
+                            {
+                                var cause = await _context.Causes.FirstOrDefaultAsync(c => c.Title.ToLower() == dto.CauseTitle.ToLower())
+                                             ?? await _context.Causes.FirstOrDefaultAsync();
+
+                                var donation = new Donation
+                                {
+                                    TransactionId = dto.TransactionId,
+                                    CauseId = cause?.Id ?? 1,
+                                    DonorName = dto.DonorName,
+                                    DonorEmail = dto.DonorEmail,
+                                    Amount = dto.Amount,
+                                    Currency = string.IsNullOrWhiteSpace(dto.Currency) ? "PKR" : dto.Currency,
+                                    PaymentStatus = string.IsNullOrWhiteSpace(dto.PaymentStatus) ? "Completed" : dto.PaymentStatus,
+                                    PaymentGateway = string.IsNullOrWhiteSpace(dto.PaymentGateway) ? "Desktop App" : dto.PaymentGateway,
+                                    CardType = "Direct",
+                                    CardHolderName = dto.DonorName,
+                                    MaskedCardNumber = "****",
+                                    DonationDate = dto.DonationDate != default ? dto.DonationDate : DateTime.UtcNow
+                                };
+
+                                if (cause != null)
+                                {
+                                    cause.RaisedAmount += dto.Amount;
+                                }
+
+                                _context.Donations.Add(donation);
+                                await _context.SaveChangesAsync();
+
+                                results.Add(new SyncPushResultDto
+                                {
+                                    OperationId = op.OperationId,
+                                    Success = true,
+                                    Message = "Donation synchronized successfully.",
+                                    ServerEntityId = donation.Id
+                                });
+                            }
+                            else
+                            {
+                                results.Add(new SyncPushResultDto
+                                {
+                                    OperationId = op.OperationId,
+                                    Success = true,
+                                    Message = "Donation already synchronized (idempotent duplicate skipped).",
+                                    ServerEntityId = existing.Id
+                                });
                             }
                         }
                     }

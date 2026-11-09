@@ -16,6 +16,11 @@ namespace NGEOS.Desktop.Core.Entities
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }
 
+        // Hybrid Sync Tracking
+        public bool IsSynced { get; set; } = false;
+        public int? ServerId { get; set; }
+        public DateTime LastModifiedUtc { get; set; } = DateTime.UtcNow;
+
         public double ProgressPercentage => TargetAmount > 0 
             ? Math.Min(100.0, (double)(RaisedAmount / TargetAmount) * 100.0) 
             : 0;

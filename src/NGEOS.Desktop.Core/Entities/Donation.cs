@@ -17,5 +17,11 @@ namespace NGEOS.Desktop.Core.Entities
         public DateTime DonationDate { get; set; } = DateTime.UtcNow;
         public string ReceiptNumber { get; set; } = string.Empty;
         public string? Notes { get; set; }
+
+        // Hybrid Sync Tracking
+        public bool IsSynced { get; set; } = false;
+        public int? ServerId { get; set; }
+        public DateTime LastModifiedUtc { get; set; } = DateTime.UtcNow;
+        public string ClientGuid { get; set; } = Guid.NewGuid().ToString("N");
     }
 }

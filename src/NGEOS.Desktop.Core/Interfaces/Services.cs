@@ -49,4 +49,26 @@ namespace NGEOS.Desktop.Core.Interfaces
         Task LogAsync(string action, string entityName, string? entityId, string details);
         Task<IReadOnlyList<AuditLog>> GetRecentLogsAsync(int count = 100);
     }
+
+    public interface IConnectivityService
+    {
+        bool IsOnline { get; }
+        string RemoteApiBaseUrl { get; set; }
+        event Action<bool>? ConnectivityChanged;
+        Task<bool> CheckConnectivityAsync();
+        void StartMonitoring(int intervalSeconds = 15);
+        void StopMonitoring();
+    }
+
+    public interface ISyncService
+    {
+        bool IsSyncing { get; }
+        DateTime? LastSyncTimeUtc { get; }
+        int PendingCount { get; }
+        event Action? SyncStateChanged;
+
+        Task QueueOperationAsync(string entityType, string actionType, string entityLocalId, object payload);
+        Task<(bool Success, string Message, int SyncedCount)> SynchronizeNowAsync();
+        Task<int> GetPendingCountAsync();
+    }
 }
