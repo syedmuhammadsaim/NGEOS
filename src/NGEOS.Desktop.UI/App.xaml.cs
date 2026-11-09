@@ -27,6 +27,17 @@ namespace NGEOS.Desktop.UI
         {
             base.OnStartup(e);
 
+            DispatcherUnhandledException += (s, args) =>
+            {
+                MessageBox.Show($"Application Error: {args.Exception.Message}\n\n{args.Exception}", "NGEOS Desktop Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                args.Handled = true;
+            };
+
+            AppDomain.CurrentDomain.UnhandledException += (s, args) =>
+            {
+                MessageBox.Show($"Fatal Error: {args.ExceptionObject}", "NGEOS Fatal Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            };
+
             ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
             _host = Host.CreateDefaultBuilder()

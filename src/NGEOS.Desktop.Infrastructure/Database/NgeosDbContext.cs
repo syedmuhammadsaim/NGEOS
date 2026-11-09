@@ -65,6 +65,15 @@ namespace NGEOS.Desktop.Infrastructure.Database
             }
             catch { }
 
+            // Safe auto-migration for hybrid sync columns if database existed previously
+            try { await Database.ExecuteSqlRawAsync("ALTER TABLE Causes ADD COLUMN IsSynced INTEGER NOT NULL DEFAULT 0;"); } catch { }
+            try { await Database.ExecuteSqlRawAsync("ALTER TABLE Causes ADD COLUMN ServerId INTEGER NULL;"); } catch { }
+            try { await Database.ExecuteSqlRawAsync("ALTER TABLE Causes ADD COLUMN LastModifiedUtc TEXT NOT NULL DEFAULT '2026-01-01';"); } catch { }
+            try { await Database.ExecuteSqlRawAsync("ALTER TABLE Donations ADD COLUMN IsSynced INTEGER NOT NULL DEFAULT 0;"); } catch { }
+            try { await Database.ExecuteSqlRawAsync("ALTER TABLE Donations ADD COLUMN ServerId INTEGER NULL;"); } catch { }
+            try { await Database.ExecuteSqlRawAsync("ALTER TABLE Donations ADD COLUMN LastModifiedUtc TEXT NOT NULL DEFAULT '2026-01-01';"); } catch { }
+            try { await Database.ExecuteSqlRawAsync("ALTER TABLE Donations ADD COLUMN ClientGuid TEXT NULL;"); } catch { }
+
             // Seed Master Super Admin if missing
             if (!await Users.AnyAsync())
             {
