@@ -240,7 +240,7 @@ NGEOS is packaged as a **Full Native Windows Desktop Application** (`NGEOS.Deskt
   * `Alt+Left` / `Alt+Right` ➔ Go Back / Forward.
 
 ### 🚀 How to Launch
-1. **One-Click Desktop Shortcut:** Simply double-click **`NGEOS Full Desktop App.lnk`** on your Windows Desktop!
+1. **One-Click Desktop Shortcut:** Simply double-click **`NGEOS Desktop App.lnk`** on your Windows Desktop!
 2. **Direct Executable:** Open `desktop_publish/NGEOS.Desktop.exe` (or extract `NGEOS-Desktop-v1.0.0.zip`).
 3. **From Visual Studio:** Select `NGEOS.Desktop` as startup project and press **F5**!
 

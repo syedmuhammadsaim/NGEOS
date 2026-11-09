@@ -1,5 +1,5 @@
 @echo off
-title NGEOS Full Desktop Application
+title NGEOS Desktop App
 setlocal enabledelayedexpansion
 
 cd /d "%~dp0"
