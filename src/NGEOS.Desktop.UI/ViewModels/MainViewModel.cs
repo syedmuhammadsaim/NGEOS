@@ -1,4 +1,6 @@
 using System;
+using System.Diagnostics;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
@@ -24,7 +26,10 @@ namespace NGEOS.Desktop.UI.ViewModels
         private ViewModelBase? _currentViewModel;
 
         [ObservableProperty]
-        private string _currentSectionTitle = "Dashboard Overview";
+        private string _currentSectionTitle = "NGEOS Humanitarian Welfare Platform";
+
+        [ObservableProperty]
+        private bool _isAdminMode = false;
 
         [ObservableProperty]
         private bool _isDarkTheme = true;
@@ -44,7 +49,7 @@ namespace NGEOS.Desktop.UI.ViewModels
         [ObservableProperty]
         private string _syncButtonLabel = "🔄 Sync Now";
 
-        // ViewModels
+        // Admin ViewModels
         public DashboardViewModel DashboardVM { get; }
         public CausesViewModel CausesVM { get; }
         public DonationsViewModel DonationsVM { get; }
@@ -52,6 +57,14 @@ namespace NGEOS.Desktop.UI.ViewModels
         public BackupViewModel BackupVM { get; }
         public AuditLogsViewModel AuditLogsVM { get; }
         public SettingsViewModel SettingsVM { get; }
+
+        // Website Portal ViewModels
+        public HomePortalViewModel HomeVM { get; }
+        public PublicDonateViewModel PublicDonateVM { get; }
+        public ProgrammesViewModel ProgrammesVM { get; }
+        public ZakatCalculatorViewModel ZakatVM { get; }
+        public AboutViewModel AboutVM { get; }
+        public ContactViewModel ContactVM { get; }
 
         public MainViewModel(
             IAuthService authService,
@@ -65,6 +78,12 @@ namespace NGEOS.Desktop.UI.ViewModels
             BackupViewModel backupVM,
             AuditLogsViewModel auditLogsVM,
             SettingsViewModel settingsVM,
+            HomePortalViewModel homeVM,
+            PublicDonateViewModel publicDonateVM,
+            ProgrammesViewModel programmesVM,
+            ZakatCalculatorViewModel zakatVM,
+            AboutViewModel aboutVM,
+            ContactViewModel contactVM,
             Action onLogoutRequested)
         {
             _authService = authService;
@@ -78,11 +97,20 @@ namespace NGEOS.Desktop.UI.ViewModels
             BackupVM = backupVM;
             AuditLogsVM = auditLogsVM;
             SettingsVM = settingsVM;
+
+            HomeVM = homeVM;
+            PublicDonateVM = publicDonateVM;
+            ProgrammesVM = programmesVM;
+            ZakatVM = zakatVM;
+            AboutVM = aboutVM;
+            ContactVM = contactVM;
+
             _onLogoutRequested = onLogoutRequested;
 
-            // Default view
-            CurrentViewModel = DashboardVM;
-            CurrentSectionTitle = "Executive Dashboard";
+            // Default to Website Home Page!
+            IsAdminMode = false;
+            CurrentViewModel = HomeVM;
+            CurrentSectionTitle = "NGEOS Humanitarian Welfare Platform";
 
             // Connectivity & Sync listeners
             _connectivity.ConnectivityChanged += OnConnectivityChanged;
@@ -128,10 +156,44 @@ namespace NGEOS.Desktop.UI.ViewModels
         public async Task InitializeUserAsync(User user)
         {
             CurrentUser = user;
-            await DashboardVM.LoadAsync();
+            await HomeVM.LoadAsync();
             await _connectivity.CheckConnectivityAsync();
             PendingSyncCount = await _syncService.GetPendingCountAsync();
             UpdateSyncState();
+        }
+
+        public async Task HandlePortalNavigationAsync(string target, object? parameter)
+        {
+            switch (target)
+            {
+                case "Donate":
+                    await NavigateToDonateAsync(parameter as Cause);
+                    break;
+                case "DonateWithZakat":
+                    await NavigateToDonateAsync(null);
+                    if (parameter is decimal zakatAmt)
+                    {
+                        PublicDonateVM.Amount = zakatAmt;
+                        PublicDonateVM.CustomAmountText = zakatAmt.ToString("F0");
+                        PublicDonateVM.DonationType = "Zakat Fund";
+                    }
+                    break;
+                case "Causes":
+                    await NavigateToCausesAsync();
+                    break;
+                case "Programmes":
+                    await NavigateToProgrammesAsync();
+                    break;
+                case "Zakat":
+                    NavigateToZakat();
+                    break;
+                case "Contact":
+                    NavigateToContact();
+                    break;
+                default:
+                    await NavigateToHomeAsync();
+                    break;
+            }
         }
 
         [RelayCommand]
@@ -144,7 +206,8 @@ namespace NGEOS.Desktop.UI.ViewModels
             {
                 MessageBox.Show(res.Message, "Hybrid Synchronization", MessageBoxButton.OK, MessageBoxImage.Information);
                 // Refresh active view
-                if (CurrentViewModel == DashboardVM) await DashboardVM.LoadAsync();
+                if (CurrentViewModel == HomeVM) await HomeVM.LoadAsync();
+                else if (CurrentViewModel == DashboardVM) await DashboardVM.LoadAsync();
                 else if (CurrentViewModel == CausesVM) await CausesVM.LoadAsync();
                 else if (CurrentViewModel == DonationsVM) await DonationsVM.LoadAsync();
             }
@@ -154,10 +217,90 @@ namespace NGEOS.Desktop.UI.ViewModels
             }
         }
 
+        // ==========================================
+        // WEBSITE PORTAL NAVIGATION COMMANDS
+        // ==========================================
+        [RelayCommand]
+        public async Task NavigateToHomeAsync()
+        {
+            IsAdminMode = false;
+            CurrentSectionTitle = "NGEOS Humanitarian Welfare Platform - Home";
+            CurrentViewModel = HomeVM;
+            await HomeVM.LoadAsync();
+        }
+
+        [RelayCommand]
+        public async Task NavigateToDonateAsync(Cause? cause = null)
+        {
+            CurrentSectionTitle = "Make A Contribution - NGEOS Portal";
+            CurrentViewModel = PublicDonateVM;
+            await PublicDonateVM.LoadAsync(cause);
+        }
+
+        [RelayCommand]
+        public async Task NavigateToProgrammesAsync()
+        {
+            CurrentSectionTitle = "Humanitarian Programmes & Field Missions";
+            CurrentViewModel = ProgrammesVM;
+            await ProgrammesVM.LoadAsync();
+        }
+
+        [RelayCommand]
+        public void NavigateToZakat()
+        {
+            CurrentSectionTitle = "Interactive Zakat Calculator - 100% Shariah Audited";
+            CurrentViewModel = ZakatVM;
+        }
+
+        [RelayCommand]
+        public void NavigateToAbout()
+        {
+            CurrentSectionTitle = "About NGEOS Humanitarian Alliance";
+            CurrentViewModel = AboutVM;
+        }
+
+        [RelayCommand]
+        public void NavigateToContact()
+        {
+            CurrentSectionTitle = "24/7 Global Helpdesk & Humanitarian Inquiries";
+            CurrentViewModel = ContactVM;
+        }
+
+        [RelayCommand]
+        public void LaunchBrowserWebsite()
+        {
+            try
+            {
+                // Try launching browser to http://localhost:5125
+                Process.Start(new ProcessStartInfo("http://localhost:5125") { UseShellExecute = true });
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Could not open web browser: {ex.Message}", "Browser Launch", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
+
+        // ==========================================
+        // ADMIN MANAGEMENT PORTAL COMMANDS
+        // ==========================================
+        [RelayCommand]
+        public async Task SwitchToAdminPortalAsync()
+        {
+            IsAdminMode = true;
+            await NavigateToDashboardAsync();
+        }
+
+        [RelayCommand]
+        public async Task SwitchToWebsitePortalAsync()
+        {
+            IsAdminMode = false;
+            await NavigateToHomeAsync();
+        }
+
         [RelayCommand]
         public async Task NavigateToDashboardAsync()
         {
-            CurrentSectionTitle = "Executive Dashboard";
+            CurrentSectionTitle = "Executive Management Dashboard";
             CurrentViewModel = DashboardVM;
             await DashboardVM.LoadAsync();
         }

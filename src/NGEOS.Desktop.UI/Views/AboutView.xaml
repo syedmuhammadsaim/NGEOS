@@ -1,0 +1,90 @@
+<UserControl x:Class="NGEOS.Desktop.UI.Views.AboutView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="900" d:DesignWidth="1050">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="0,0,0,40">
+
+            <!-- Banner Header -->
+            <Border Background="#0B192C" CornerRadius="16" Margin="24,20,24,24" Padding="36,32" BorderBrush="#1E293B" BorderThickness="1">
+                <StackPanel>
+                    <Border Background="#1E293B" CornerRadius="12" Padding="12,4" HorizontalAlignment="Left" Margin="0,0,0,10">
+                        <TextBlock Text="🕊️ NEXT-GENERATION HUMANITARIAN CHARTER" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource AccentOrangeBrush}" />
+                    </Border>
+                    <TextBlock Text="About NGEOS Platform" FontSize="28" FontWeight="Bold" Foreground="White" Margin="0,0,0,8" />
+                    <TextBlock Text="A Unified Bridge Connecting Global Generosity with Genuine Verified Needs Worldwide."
+                               FontSize="14" Foreground="#94A3B8" MaxWidth="750" TextWrapping="Wrap" />
+                </StackPanel>
+            </Border>
+
+            <!-- Mission & Vision Cards -->
+            <Grid Margin="24,0,24,24">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0" Background="{DynamicResource CardBgBrush}" CornerRadius="14" Padding="28" Margin="0,0,12,0" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1">
+                    <StackPanel>
+                        <TextBlock Text="🎯 OUR MISSION" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource AccentOrangeBrush}" Margin="0,0,0,8" />
+                        <TextBlock Text="Empower Vulnerable Communities" FontSize="20" FontWeight="Bold" Foreground="White" Margin="0,0,0,12" />
+                        <TextBlock Text="To deliver rapid emergency relief, sustainable clean drinking water, high-impact medical treatments, and transformative education to underprivileged populations through accredited humanitarian partners."
+                                   FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap" LineHeight="22" />
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Column="1" Background="{DynamicResource CardBgBrush}" CornerRadius="14" Padding="28" Margin="12,0,0,0" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1">
+                    <StackPanel>
+                        <TextBlock Text="🔭 OUR VISION" FontSize="11" FontWeight="Bold" Foreground="#38BDF8" Margin="0,0,0,8" />
+                        <TextBlock Text="100% Transparent Philanthropy" FontSize="20" FontWeight="Bold" Foreground="White" Margin="0,0,0,12" />
+                        <TextBlock Text="A world where every charitable donation is mathematically auditable, tamper-proof, and directly accountable to the giver, bridging the trust deficit in global non-governmental operations."
+                                   FontSize="13" Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap" LineHeight="22" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <!-- 4 Pillars of Excellence -->
+            <Border Background="{DynamicResource CardBgBrush}" CornerRadius="16" Margin="24,0,24,0" Padding="32" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1">
+                <StackPanel>
+                    <TextBlock Text="PILLARS OF GOVERNANCE" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource AccentOrangeBrush}" Margin="0,0,0,6" />
+                    <TextBlock Text="Why Donors Trust NGEOS" FontSize="22" FontWeight="Bold" Foreground="White" Margin="0,0,0,24" />
+
+                    <UniformGrid Columns="2">
+                        <Border Background="#101A2E" CornerRadius="10" Padding="20" Margin="8" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1">
+                            <StackPanel>
+                                <TextBlock Text="✅ 100% Direct Allocation Guarantee" FontWeight="Bold" FontSize="15" Foreground="White" Margin="0,0,0,6" />
+                                <TextBlock Text="Every rupee/dollar donated goes directly to field purchase and supply distribution without administrative friction." FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap" LineHeight="18" />
+                            </StackPanel>
+                        </Border>
+
+                        <Border Background="#101A2E" CornerRadius="10" Padding="20" Margin="8" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1">
+                            <StackPanel>
+                                <TextBlock Text="🌙 Zero Admin Deduction on Zakat" FontWeight="Bold" FontSize="15" Foreground="#4ADE80" Margin="0,0,0,6" />
+                                <TextBlock Text="All Zakat funds are strictly ring-fenced and audited in accordance with classical Islamic Shariah standards." FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap" LineHeight="18" />
+                            </StackPanel>
+                        </Border>
+
+                        <Border Background="#101A2E" CornerRadius="10" Padding="20" Margin="8" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1">
+                            <StackPanel>
+                                <TextBlock Text="⚡ Offline-Resilient &amp; Multi-Device" FontWeight="Bold" FontSize="15" Foreground="#38BDF8" Margin="0,0,0,6" />
+                                <TextBlock Text="Built with standalone SQLite WAL storage, ensuring operational continuity in rural and disconnected disaster zones." FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap" LineHeight="18" />
+                            </StackPanel>
+                        </Border>
+
+                        <Border Background="#101A2E" CornerRadius="10" Padding="20" Margin="8" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1">
+                            <StackPanel>
+                                <TextBlock Text="🛡️ Cryptographic PDF Receipts" FontWeight="Bold" FontSize="15" Foreground="{DynamicResource AccentOrangeBrush}" Margin="0,0,0,6" />
+                                <TextBlock Text="Instant downloadable official receipts with unique hash signatures for tax exemption and donor audits." FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap" LineHeight="18" />
+                            </StackPanel>
+                        </Border>
+                    </UniformGrid>
+                </StackPanel>
+            </Border>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

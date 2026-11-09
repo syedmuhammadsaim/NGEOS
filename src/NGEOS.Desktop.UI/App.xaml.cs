@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using Microsoft.EntityFrameworkCore;
@@ -21,7 +22,7 @@ namespace NGEOS.Desktop.UI
     {
         private IHost? _host;
         private MainWindow? _mainWindow;
-        private LoginWindow? _loginWindow;
+        private MainViewModel? _mainVm;
 
         protected override async void OnStartup(StartupEventArgs e)
         {
@@ -38,7 +39,7 @@ namespace NGEOS.Desktop.UI
                 MessageBox.Show($"Fatal Error: {args.ExceptionObject}", "NGEOS Fatal Error", MessageBoxButton.OK, MessageBoxImage.Error);
             };
 
-            ShutdownMode = ShutdownMode.OnExplicitShutdown;
+            ShutdownMode = ShutdownMode.OnMainWindowClose;
 
             _host = Host.CreateDefaultBuilder()
                 .ConfigureServices((context, services) =>
@@ -58,7 +59,7 @@ namespace NGEOS.Desktop.UI
                     services.AddSingleton<IConnectivityService, ConnectivityService>();
                     services.AddSingleton<ISyncService, SyncService>();
 
-                    // ViewModels
+                    // Admin ViewModels
                     services.AddTransient<DashboardViewModel>();
                     services.AddTransient<CausesViewModel>();
                     services.AddTransient<DonationsViewModel>();
@@ -66,6 +67,47 @@ namespace NGEOS.Desktop.UI
                     services.AddTransient<BackupViewModel>();
                     services.AddTransient<AuditLogsViewModel>();
                     services.AddTransient<SettingsViewModel>();
+
+                    // Website Portal ViewModels
+                    services.AddTransient<HomePortalViewModel>(sp =>
+                    {
+                        var db = sp.GetRequiredService<NgeosDbContext>();
+                        return new HomePortalViewModel(db, async (target, param) =>
+                        {
+                            if (_mainVm != null)
+                            {
+                                await _mainVm.HandlePortalNavigationAsync(target, param);
+                            }
+                        });
+                    });
+
+                    services.AddTransient<PublicDonateViewModel>();
+
+                    services.AddTransient<ProgrammesViewModel>(sp =>
+                    {
+                        var db = sp.GetRequiredService<NgeosDbContext>();
+                        return new ProgrammesViewModel(db, async (target, param) =>
+                        {
+                            if (_mainVm != null)
+                            {
+                                await _mainVm.HandlePortalNavigationAsync("Donate", param);
+                            }
+                        });
+                    });
+
+                    services.AddTransient<ZakatCalculatorViewModel>(sp =>
+                    {
+                        return new ZakatCalculatorViewModel(async (target, param) =>
+                        {
+                            if (_mainVm != null)
+                            {
+                                await _mainVm.HandlePortalNavigationAsync(target, param);
+                            }
+                        });
+                    });
+
+                    services.AddTransient<AboutViewModel>();
+                    services.AddTransient<ContactViewModel>();
                 })
                 .Build();
 
@@ -83,31 +125,16 @@ namespace NGEOS.Desktop.UI
             var connectivity = _host.Services.GetRequiredService<IConnectivityService>();
             connectivity.StartMonitoring(15);
 
-            ShowLogin();
-        }
-
-        private void ShowLogin()
-        {
-            if (_mainWindow != null)
+            // Fetch default Admin user for session
+            User? defaultAdmin = null;
+            using (var scope = _host.Services.CreateScope())
             {
-                _mainWindow.Close();
-                _mainWindow = null;
+                var db = scope.ServiceProvider.GetRequiredService<NgeosDbContext>();
+                defaultAdmin = await db.Users.FirstOrDefaultAsync(u => u.Role == "Admin");
             }
 
-            var authService = _host!.Services.GetRequiredService<IAuthService>();
-            var loginVm = new LoginViewModel(authService, OnLoginSuccess);
-
-            _loginWindow = new LoginWindow
-            {
-                DataContext = loginVm
-            };
-            _loginWindow.Show();
-        }
-
-        private async void OnLoginSuccess(User user)
-        {
-            var authService = _host!.Services.GetRequiredService<IAuthService>();
-            var connectivity = _host.Services.GetRequiredService<IConnectivityService>();
+            // Create MainViewModel
+            var authService = _host.Services.GetRequiredService<IAuthService>();
             var syncService = _host.Services.GetRequiredService<ISyncService>();
             var dashboardVm = _host.Services.GetRequiredService<DashboardViewModel>();
             var causesVm = _host.Services.GetRequiredService<CausesViewModel>();
@@ -117,7 +144,14 @@ namespace NGEOS.Desktop.UI
             var auditVm = _host.Services.GetRequiredService<AuditLogsViewModel>();
             var settingsVm = _host.Services.GetRequiredService<SettingsViewModel>();
 
-            var mainVm = new MainViewModel(
+            var homeVm = _host.Services.GetRequiredService<HomePortalViewModel>();
+            var publicDonateVm = _host.Services.GetRequiredService<PublicDonateViewModel>();
+            var programmesVm = _host.Services.GetRequiredService<ProgrammesViewModel>();
+            var zakatVm = _host.Services.GetRequiredService<ZakatCalculatorViewModel>();
+            var aboutVm = _host.Services.GetRequiredService<AboutViewModel>();
+            var contactVm = _host.Services.GetRequiredService<ContactViewModel>();
+
+            _mainVm = new MainViewModel(
                 authService,
                 _host.Services,
                 connectivity,
@@ -129,44 +163,32 @@ namespace NGEOS.Desktop.UI
                 backupVm,
                 auditVm,
                 settingsVm,
-                OnLogoutRequested);
+                homeVm,
+                publicDonateVm,
+                programmesVm,
+                zakatVm,
+                aboutVm,
+                contactVm,
+                () => { });
 
-            await mainVm.InitializeUserAsync(user);
+            if (defaultAdmin != null)
+            {
+                await _mainVm.InitializeUserAsync(defaultAdmin);
+            }
 
             _mainWindow = new MainWindow
             {
-                DataContext = mainVm
+                DataContext = _mainVm
             };
 
-            _mainWindow.Closed += (s, args) =>
-            {
-                if (_loginWindow == null || !_loginWindow.IsVisible)
-                {
-                    Shutdown();
-                }
-            };
-
+            MainWindow = _mainWindow;
             _mainWindow.Show();
-
-            if (_loginWindow != null)
-            {
-                _loginWindow.Close();
-                _loginWindow = null;
-            }
-        }
-
-        private void OnLogoutRequested()
-        {
-            ShowLogin();
         }
 
         protected override async void OnExit(ExitEventArgs e)
         {
             if (_host != null)
             {
-                var connectivity = _host.Services.GetService<IConnectivityService>();
-                connectivity?.StopMonitoring();
-
                 await _host.StopAsync();
                 _host.Dispose();
             }

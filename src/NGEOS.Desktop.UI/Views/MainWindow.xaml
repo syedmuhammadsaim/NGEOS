@@ -6,14 +6,16 @@
         xmlns:vm="clr-namespace:NGEOS.Desktop.UI.ViewModels"
         xmlns:views="clr-namespace:NGEOS.Desktop.UI.Views"
         mc:Ignorable="d"
-        Title="NGEOS Desktop - Humanitarian Welfare Platform" 
-        Height="800" Width="1240"
-        MinHeight="650" MinWidth="950"
+        Title="NGEOS - Global Humanitarian Welfare Platform (Desktop Edition)" 
+        Height="850" Width="1280"
+        MinHeight="700" MinWidth="1024"
         WindowStartupLocation="CenterScreen"
+        WindowState="Maximized"
         Background="{DynamicResource AppBgBrush}">
 
     <Window.Resources>
-        <!-- DataTemplates routing ViewModels to their UserControl Views -->
+        <!-- DataTemplates routing ViewModels to their Views -->
+        <!-- Admin Views -->
         <DataTemplate DataType="{x:Type vm:DashboardViewModel}">
             <views:DashboardView />
         </DataTemplate>
@@ -35,113 +37,192 @@
         <DataTemplate DataType="{x:Type vm:SettingsViewModel}">
             <views:SettingsView />
         </DataTemplate>
+
+        <!-- Website Portal Views -->
+        <DataTemplate DataType="{x:Type vm:HomePortalViewModel}">
+            <views:HomePortalView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:PublicDonateViewModel}">
+            <views:PublicDonateView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:ProgrammesViewModel}">
+            <views:ProgrammesView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:ZakatCalculatorViewModel}">
+            <views:ZakatCalculatorView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:AboutViewModel}">
+            <views:AboutView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:ContactViewModel}">
+            <views:ContactView />
+        </DataTemplate>
     </Window.Resources>
 
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="250" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="64" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
-        <!-- ================= LEFT SIDEBAR ================= -->
-        <Border Grid.Column="0" Background="{DynamicResource SidebarBgBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,1,0">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
+        <!-- ================= TOP HEADER (NAVBAR) ================= -->
+        <Border Grid.Row="0" Background="{DynamicResource TopBarBgBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,0,1" Padding="20,0">
+            <Grid VerticalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
 
-                <!-- Brand Header -->
-                <Border Grid.Row="0" Padding="20,24,20,20" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,0,1">
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <Border Background="{DynamicResource AccentOrangeBrush}" Width="40" Height="40" CornerRadius="8" Margin="0,0,12,0">
-                            <TextBlock Text="N" Foreground="White" FontSize="22" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                        </Border>
-                        <StackPanel VerticalAlignment="Center">
-                            <TextBlock Text="NGEOS" FontSize="18" FontWeight="Bold" Foreground="White" />
-                            <TextBlock Text="Desktop Edition" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" />
-                        </StackPanel>
+                <!-- Brand Logo & Name -->
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,24,0">
+                    <Border Background="{DynamicResource AccentOrangeBrush}" Width="36" Height="36" CornerRadius="8" Margin="0,0,10,0">
+                        <TextBlock Text="N" Foreground="White" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="NGEOS" FontSize="18" FontWeight="Bold" Foreground="White" />
+                        <TextBlock Text="Humanitarian Platform" FontSize="10" Foreground="{DynamicResource TextSecondaryBrush}" />
                     </StackPanel>
-                </Border>
+                </StackPanel>
 
-                <!-- Navigation Menu -->
-                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="12,16,12,16">
-                    <StackPanel>
-                        <TextBlock Text="CORE MODULES" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource TextSecondaryBrush}" Margin="12,0,0,8" />
-                        <Button Content="📊  Dashboard" Command="{Binding NavigateToDashboardCommand}" Style="{DynamicResource SidebarNavButtonStyle}" />
-                        <Button Content="🤝  Causes &amp; Campaigns" Command="{Binding NavigateToCausesCommand}" Style="{DynamicResource SidebarNavButtonStyle}" />
-                        <Button Content="💰  Donations Ledger" Command="{Binding NavigateToDonationsCommand}" Style="{DynamicResource SidebarNavButtonStyle}" />
-                        <Button Content="📄  Reports &amp; Analytics" Command="{Binding NavigateToReportsCommand}" Style="{DynamicResource SidebarNavButtonStyle}" />
+                <!-- Center Navigation: Website Mode vs Admin Mode -->
+                <!-- 1. PUBLIC WEBSITE NAVBAR (When NOT in Admin Mode) -->
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center"
+                            Visibility="{Binding IsAdminMode, Converter={StaticResource InverseBoolToVis}}">
+                    <Button Content="🏠  Home" Command="{Binding NavigateToHomeCommand}" Style="{DynamicResource OutlineButtonStyle}" BorderThickness="0" Margin="0,0,6,0" Padding="10,6" FontSize="13" />
+                    <Button Content="🤝  Causes" Command="{Binding NavigateToCausesCommand}" Style="{DynamicResource OutlineButtonStyle}" BorderThickness="0" Margin="0,0,6,0" Padding="10,6" FontSize="13" />
+                    <Button Content="💖  Donate Now" Command="{Binding NavigateToDonateCommand}" Style="{DynamicResource OutlineButtonStyle}" BorderThickness="0" Foreground="{DynamicResource AccentOrangeBrush}" FontWeight="Bold" Margin="0,0,6,0" Padding="10,6" FontSize="13" />
+                    <Button Content="📚  Programmes" Command="{Binding NavigateToProgrammesCommand}" Style="{DynamicResource OutlineButtonStyle}" BorderThickness="0" Margin="0,0,6,0" Padding="10,6" FontSize="13" />
+                    <Button Content="🧮  Zakat Calculator" Command="{Binding NavigateToZakatCommand}" Style="{DynamicResource OutlineButtonStyle}" BorderThickness="0" Margin="0,0,6,0" Padding="10,6" FontSize="13" />
+                    <Button Content="ℹ️  About Us" Command="{Binding NavigateToAboutCommand}" Style="{DynamicResource OutlineButtonStyle}" BorderThickness="0" Margin="0,0,6,0" Padding="10,6" FontSize="13" />
+                    <Button Content="📩  Contact" Command="{Binding NavigateToContactCommand}" Style="{DynamicResource OutlineButtonStyle}" BorderThickness="0" Margin="0,0,6,0" Padding="10,6" FontSize="13" />
+                </StackPanel>
 
-                        <TextBlock Text="SYSTEM &amp; SECURITY" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource TextSecondaryBrush}" Margin="12,20,0,8" />
-                        <Button Content="💾  Database Backup" Command="{Binding NavigateToBackupCommand}" Style="{DynamicResource SidebarNavButtonStyle}" />
-                        <Button Content="🛡️  Audit Logs" Command="{Binding NavigateToAuditLogsCommand}" Style="{DynamicResource SidebarNavButtonStyle}" />
-                        <Button Content="⚙️  Settings" Command="{Binding NavigateToSettingsCommand}" Style="{DynamicResource SidebarNavButtonStyle}" />
-                    </StackPanel>
-                </ScrollViewer>
+                <!-- 2. ADMIN TITLE (When in Admin Mode) -->
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center"
+                            Visibility="{Binding IsAdminMode, Converter={StaticResource BoolToVis}}">
+                    <TextBlock Text="🛡️ EXECUTIVE MANAGEMENT &amp; GOVERNANCE PORTAL" FontWeight="Bold" FontSize="14" Foreground="{DynamicResource AccentOrangeBrush}" VerticalAlignment="Center" />
+                </StackPanel>
 
-                <!-- User Badge & Logout -->
-                <Border Grid.Row="2" Padding="16" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,1,0,0">
-                    <StackPanel>
-                        <Grid Margin="0,0,0,12">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <Border Grid.Column="0" Background="#1E293B" Width="36" Height="36" CornerRadius="18" Margin="0,0,10,0">
-                                <TextBlock Text="👤" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                            </Border>
-                            <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                <TextBlock Text="{Binding CurrentUser.FullName, FallbackValue='System Administrator'}" FontWeight="SemiBold" FontSize="12" Foreground="White" TextTrimming="CharacterEllipsis" />
-                                <TextBlock Text="{Binding CurrentUser.Role, FallbackValue='Admin'}" FontSize="11" Foreground="{DynamicResource AccentOrangeBrush}" />
-                            </StackPanel>
-                        </Grid>
+                <!-- Right Actions: Status Badge, Sync, Browser, Switch Portal -->
+                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
 
-                        <Button Content="Log Out" Command="{Binding LogoutCommand}" Style="{DynamicResource OutlineButtonStyle}" Height="32" FontSize="11" Foreground="#EF4444" BorderBrush="#7F1D1D" />
-                    </StackPanel>
-                </Border>
+                    <!-- Connectivity Badge -->
+                    <Border CornerRadius="16" Padding="10,4" Margin="0,0,10,0" VerticalAlignment="Center">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Setter Property="Background" Value="#064E3B" />
+                                <Setter Property="BorderBrush" Value="#10B981" />
+                                <Setter Property="BorderThickness" Value="1" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsOnline}" Value="False">
+                                        <Setter Property="Background" Value="#1E293B" />
+                                        <Setter Property="BorderBrush" Value="#475569" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                        <TextBlock Text="{Binding SyncStatusText}" FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Foreground" Value="#6EE7B7" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsOnline}" Value="False">
+                                            <Setter Property="Foreground" Value="#CBD5E1" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </Border>
+
+                    <!-- Sync Now Button -->
+                    <Button Content="{Binding SyncButtonLabel}" Command="{Binding SynchronizeNowCommand}" Style="{DynamicResource OutlineButtonStyle}" Height="34" Padding="10,0" Margin="0,0,10,0" FontSize="11" />
+
+                    <!-- Open In Web Browser Button -->
+                    <Button Content="🌐 Open in Browser" Command="{Binding LaunchBrowserWebsiteCommand}" ToolTip="Launch live ASP.NET Core website in your default web browser" Style="{DynamicResource OutlineButtonStyle}" Height="34" Padding="10,0" Margin="0,0,10,0" FontSize="11" />
+
+                    <!-- Portal Switcher Buttons -->
+                    <!-- In Website Mode -> Show "🛡️ Admin Portal" -->
+                    <Button Content="🛡️  Admin Portal" Command="{Binding SwitchToAdminPortalCommand}" Style="{DynamicResource PrimaryButtonStyle}" Height="34" Padding="14,0" FontSize="12" FontWeight="Bold"
+                            Visibility="{Binding IsAdminMode, Converter={StaticResource InverseBoolToVis}}" />
+
+                    <!-- In Admin Mode -> Show "🌐 Back to Website" -->
+                    <Button Content="🌐  Back to Website" Command="{Binding SwitchToWebsitePortalCommand}" Style="{DynamicResource SuccessButtonStyle}" Height="34" Padding="14,0" FontSize="12" FontWeight="Bold"
+                            Visibility="{Binding IsAdminMode, Converter={StaticResource BoolToVis}}" Margin="0,0,8,0" />
+
+                    <!-- Theme Toggle in Admin Mode -->
+                    <Button Content="🌓" Command="{Binding ToggleThemeCommand}" Style="{DynamicResource OutlineButtonStyle}" Width="34" Height="34" FontSize="14" ToolTip="Toggle Dark/Light Theme"
+                            Visibility="{Binding IsAdminMode, Converter={StaticResource BoolToVis}}" />
+                </StackPanel>
             </Grid>
         </Border>
 
-        <!-- ================= MAIN CONTENT AREA ================= -->
-        <Grid Grid.Column="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="64" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
+        <!-- ================= MAIN BODY AREA ================= -->
+        <!-- 1. WEBSITE MODE (Full-width responsive view) -->
+        <Border Grid.Row="1" Background="{DynamicResource AppBgBrush}"
+                Visibility="{Binding IsAdminMode, Converter={StaticResource InverseBoolToVis}}">
+            <ContentPresenter Content="{Binding CurrentViewModel}" />
+        </Border>
 
-            <!-- Top Header Bar -->
-            <Border Grid.Row="0" Background="{DynamicResource TopBarBgBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,0,1" Padding="24,0">
-                <Grid VerticalAlignment="Center">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
+        <!-- 2. ADMIN PORTAL MODE (Sidebar + Management View) -->
+        <Grid Grid.Row="1" Visibility="{Binding IsAdminMode, Converter={StaticResource BoolToVis}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="240" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
 
-                    <!-- Section Title -->
-                    <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
-                        <TextBlock Text="{Binding CurrentSectionTitle}" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" VerticalAlignment="Center" />
-                    </StackPanel>
+            <!-- Admin Sidebar -->
+            <Border Grid.Column="0" Background="{DynamicResource SidebarBgBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,1,0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
 
-                    <!-- Controls: Offline/Online Hybrid Badge + Sync Button + Theme Toggle -->
-                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                        <!-- Hybrid Connectivity Status Indicator -->
-                        <Border Background="#162238" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="12" Padding="12,5" Margin="0,0,10,0" VerticalAlignment="Center">
-                            <TextBlock Text="{Binding SyncStatusText}" FontSize="11" Foreground="#38BDF8" FontWeight="SemiBold" />
-                        </Border>
+                    <!-- Navigation Items -->
+                    <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" Margin="12,16">
+                        <StackPanel>
+                            <TextBlock Text="CORE MODULES" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource TextSecondaryBrush}" Margin="12,0,0,8" />
+                            <Button Content="📊  Dashboard" Command="{Binding NavigateToDashboardCommand}" Style="{DynamicResource SidebarNavButtonStyle}" />
+                            <Button Content="🤝  Causes &amp; Campaigns" Command="{Binding NavigateToCausesCommand}" Style="{DynamicResource SidebarNavButtonStyle}" />
+                            <Button Content="💰  Donations Ledger" Command="{Binding NavigateToDonationsCommand}" Style="{DynamicResource SidebarNavButtonStyle}" />
+                            <Button Content="📄  Reports &amp; Analytics" Command="{Binding NavigateToReportsCommand}" Style="{DynamicResource SidebarNavButtonStyle}" />
 
-                        <!-- Synchronize Now Button -->
-                        <Button Content="{Binding SyncButtonLabel}" Command="{Binding SynchronizeNowCommand}" Style="{DynamicResource PrimaryButtonStyle}" Padding="12,5" FontSize="11" Margin="0,0,10,0" VerticalAlignment="Center" />
+                            <TextBlock Text="SYSTEM &amp; SECURITY" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource TextSecondaryBrush}" Margin="12,20,0,8" />
+                            <Button Content="💾  Database Backup" Command="{Binding NavigateToBackupCommand}" Style="{DynamicResource SidebarNavButtonStyle}" />
+                            <Button Content="🛡️  Audit Logs" Command="{Binding NavigateToAuditLogsCommand}" Style="{DynamicResource SidebarNavButtonStyle}" />
+                            <Button Content="⚙️  Settings &amp; Sync" Command="{Binding NavigateToSettingsCommand}" Style="{DynamicResource SidebarNavButtonStyle}" />
+                        </StackPanel>
+                    </ScrollViewer>
 
-                        <!-- Theme Switcher -->
-                        <Button Content="🌓 Theme" Command="{Binding ToggleThemeCommand}" Style="{DynamicResource OutlineButtonStyle}" Padding="10,5" FontSize="12" VerticalAlignment="Center" />
-                    </StackPanel>
+                    <!-- Admin User Footer -->
+                    <Border Grid.Row="1" Padding="16" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,1,0,0">
+                        <StackPanel>
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Border Grid.Column="0" Background="#1E293B" Width="36" Height="36" CornerRadius="18" Margin="0,0,10,0">
+                                    <TextBlock Text="👤" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                </Border>
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <TextBlock Text="Super Administrator" FontWeight="SemiBold" FontSize="12" Foreground="White" TextTrimming="CharacterEllipsis" />
+                                    <TextBlock Text="admin@ngeos.org" FontSize="10" Foreground="{DynamicResource TextSecondaryBrush}" />
+                                </StackPanel>
+                            </Grid>
+                            <Button Content="🚪  Exit to Website" Command="{Binding SwitchToWebsitePortalCommand}" Style="{DynamicResource OutlineButtonStyle}" Height="30" FontSize="11" />
+                        </StackPanel>
+                    </Border>
                 </Grid>
             </Border>
 
-            <!-- Routed View Content -->
-            <ContentControl Grid.Row="1" Content="{Binding CurrentViewModel}" />
+            <!-- Admin Content Presenter -->
+            <Border Grid.Column="1" Background="{DynamicResource AppBgBrush}">
+                <ContentPresenter Content="{Binding CurrentViewModel}" />
+            </Border>
         </Grid>
+
     </Grid>
 </Window>
