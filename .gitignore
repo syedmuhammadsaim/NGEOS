@@ -49,6 +49,12 @@ publish/
 # Temporary receipts preview generated during test / simulation
 NGEOS/wwwroot/temp_receipts/
 
+# Desktop Application Build Artifacts
+**/bin/
+**/obj/
+desktop_app/
+Installer/Output/
+
 # WPF Desktop build & publish outputs
 desktop_publish/
 NGEOS.Desktop/bin/

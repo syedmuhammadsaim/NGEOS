@@ -1,0 +1,101 @@
+<UserControl x:Class="NGEOS.Desktop.UI.Views.SettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="700" d:DesignWidth="1000">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="24">
+
+            <!-- Card 1: System Info -->
+            <Border Style="{DynamicResource ModernCardStyle}" Margin="0,0,0,20">
+                <StackPanel>
+                    <TextBlock Text="Local Storage &amp; Database Architecture" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,16" />
+
+                    <Grid Margin="0,4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="220" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="SQLite Database Path:" Foreground="{DynamicResource TextSecondaryBrush}" FontWeight="SemiBold" />
+                        <TextBox Grid.Column="1" Text="{Binding DatabaseLocation}" Style="{DynamicResource ModernTextBoxStyle}" IsReadOnly="True" />
+                    </Grid>
+
+                    <Grid Margin="0,8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="220" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Storage Strategy:" Foreground="{DynamicResource TextSecondaryBrush}" FontWeight="SemiBold" />
+                        <TextBlock Grid.Column="1" Text="%LOCALAPPDATA%\NGEOS_Desktop\ (User-Isolated, Non-Temp, Upgradable)" Foreground="{DynamicResource TextPrimaryBrush}" FontWeight="Medium" />
+                    </Grid>
+
+                    <Grid Margin="0,8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="220" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="SQLite Journaling Mode:" Foreground="{DynamicResource TextSecondaryBrush}" FontWeight="SemiBold" />
+                        <TextBlock Grid.Column="1" Text="{Binding SqliteMode}" Foreground="{DynamicResource SuccessBrush}" FontWeight="Bold" />
+                    </Grid>
+
+                    <Grid Margin="0,8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="220" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Application Build:" Foreground="{DynamicResource TextSecondaryBrush}" FontWeight="SemiBold" />
+                        <TextBlock Grid.Column="1" Text="{Binding AppVersion}" Foreground="{DynamicResource AccentOrangeBrush}" FontWeight="Bold" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- Card 2: Security & Encryption Specs -->
+            <Border Style="{DynamicResource ModernCardStyle}" Margin="0,0,0,20">
+                <StackPanel>
+                    <TextBlock Text="Cybersecurity &amp; Encryption Parameters" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,16" />
+
+                    <Grid Margin="0,6">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="220" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Password Hashing:" Foreground="{DynamicResource TextSecondaryBrush}" FontWeight="SemiBold" />
+                        <TextBlock Grid.Column="1" Text="PBKDF2 with SHA-512, 100,000 Iterations &amp; Cryptographic 32-Byte Salt" Foreground="{DynamicResource TextPrimaryBrush}" />
+                    </Grid>
+
+                    <Grid Margin="0,6">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="220" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Account Lockout Policy:" Foreground="{DynamicResource TextSecondaryBrush}" FontWeight="SemiBold" />
+                        <TextBlock Grid.Column="1" Text="5 consecutive failed attempts trigger a 15-minute brute-force lockout window" Foreground="{DynamicResource TextPrimaryBrush}" />
+                    </Grid>
+
+                    <Grid Margin="0,6">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="220" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Operating Environment:" Foreground="{DynamicResource TextSecondaryBrush}" FontWeight="SemiBold" />
+                        <TextBlock Grid.Column="1" Text="100% Offline Standalone Desktop (Zero cloud API, zero telemetry, zero web server)" Foreground="{DynamicResource SuccessBrush}" FontWeight="SemiBold" />
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- Card 3: Theme Configuration -->
+            <Border Style="{DynamicResource ModernCardStyle}">
+                <StackPanel>
+                    <TextBlock Text="Appearance &amp; User Interface" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,14" />
+                    <TextBlock Text="Toggle between high-contrast Dark Slate Navy and Clean Professional Light themes. Dynamic resources adjust colors instantly without restarting the application." Foreground="{DynamicResource TextSecondaryBrush}" FontSize="12" Margin="0,0,0,16" TextWrapping="Wrap" />
+
+                    <Button Content="Switch Theme (Dark / Light)" Command="{Binding DataContext.ToggleThemeCommand, RelativeSource={RelativeSource AncestorType=Window}}" Style="{DynamicResource OutlineButtonStyle}" Width="220" HorizontalAlignment="Left" Height="38" />
+                </StackPanel>
+            </Border>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

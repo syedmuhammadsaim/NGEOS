@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/NGEOS.Desktop.Core/NGEOS.Desktop.Core.csproj" />
+    <Project Path="src/NGEOS.Desktop.Infrastructure/NGEOS.Desktop.Infrastructure.csproj" />
+    <Project Path="src/NGEOS.Desktop.Tests/NGEOS.Desktop.Tests.csproj" />
+    <Project Path="src/NGEOS.Desktop.UI/NGEOS.Desktop.UI.csproj" />
+  </Folder>
+</Solution>

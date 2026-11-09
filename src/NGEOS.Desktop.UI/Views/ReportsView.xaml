@@ -1,0 +1,82 @@
+<UserControl x:Class="NGEOS.Desktop.UI.Views.ReportsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:conv="clr-namespace:NGEOS.Desktop.UI.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="700" d:DesignWidth="1000">
+
+    <UserControl.Resources>
+        <conv:BoolToVisibilityConverter x:Key="BoolToVis" />
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="24">
+
+            <!-- Title & Explanations -->
+            <Border Style="{DynamicResource ModernCardStyle}" Margin="0,0,0,20">
+                <StackPanel>
+                    <TextBlock Text="Executive Reports &amp; Certified Analytics" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" />
+                    <TextBlock Text="Generate verified humanitarian audit documents, official tax receipts, and spreadsheet financial ledgers directly from your local SQLite database without cloud dependencies." Foreground="{DynamicResource TextSecondaryBrush}" FontSize="13" Margin="0,4,0,0" TextWrapping="Wrap" />
+                </StackPanel>
+            </Border>
+
+            <!-- Feedback Messages -->
+            <Border Background="#052E16" BorderBrush="{DynamicResource SuccessBrush}" BorderThickness="1" CornerRadius="6" Padding="14,10" Margin="0,0,0,16"
+                    Visibility="{Binding SuccessMessage, Converter={StaticResource BoolToVis}}">
+                <TextBlock Text="{Binding SuccessMessage}" Foreground="#86EFAC" FontSize="13" FontWeight="SemiBold" />
+            </Border>
+
+            <Border Background="#3B0808" BorderBrush="{DynamicResource DangerBrush}" BorderThickness="1" CornerRadius="6" Padding="14,10" Margin="0,0,0,16"
+                    Visibility="{Binding ErrorMessage, Converter={StaticResource BoolToVis}}">
+                <TextBlock Text="{Binding ErrorMessage}" Foreground="#FCA5A5" FontSize="13" />
+            </Border>
+
+            <!-- Cards Grid -->
+            <Grid Margin="0,0,0,20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- PDF Audit Report Card -->
+                <Border Grid.Column="0" Style="{DynamicResource ModernCardStyle}" Margin="0,0,10,0" Padding="24">
+                    <StackPanel>
+                        <Border Background="#1E293B" CornerRadius="8" Width="44" Height="44" HorizontalAlignment="Left" Margin="0,0,0,14">
+                            <TextBlock Text="PDF" Foreground="{DynamicResource AccentOrangeBrush}" FontWeight="Bold" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <TextBlock Text="Certified Executive Audit Report" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" />
+                        <TextBlock Text="Comprehensive PDF report rendered via QuestPDF engine. Includes total funds raised, donor counts, campaign allocation breakdown, and executive certification." Foreground="{DynamicResource TextSecondaryBrush}" FontSize="12" Margin="0,6,0,20" TextWrapping="Wrap" Height="50" />
+
+                        <Button Content="Generate Official Audit PDF" Command="{Binding GenerateAuditReportPdfCommand}" Style="{DynamicResource PrimaryButtonStyle}" Height="40" />
+                    </StackPanel>
+                </Border>
+
+                <!-- Excel Ledger Export Card -->
+                <Border Grid.Column="1" Style="{DynamicResource ModernCardStyle}" Margin="10,0,0,0" Padding="24">
+                    <StackPanel>
+                        <Border Background="#1E293B" CornerRadius="8" Width="44" Height="44" HorizontalAlignment="Left" Margin="0,0,0,14">
+                            <TextBlock Text="XLSX" Foreground="{DynamicResource SuccessBrush}" FontWeight="Bold" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <TextBlock Text="Complete Financial Excel Ledger" FontSize="16" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" />
+                        <TextBlock Text="Raw transactional records exported via ClosedXML. Features number formatting, formulas, transaction IDs, donor records, and payment method audit columns." Foreground="{DynamicResource TextSecondaryBrush}" FontSize="12" Margin="0,6,0,20" TextWrapping="Wrap" Height="50" />
+
+                        <Button Content="Export Excel Ledger (XLSX)" Command="{Binding ExportDonationsExcelCommand}" Style="{DynamicResource SuccessButtonStyle}" Height="40" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <!-- Specifications Card -->
+            <Border Style="{DynamicResource ModernCardStyle}">
+                <StackPanel>
+                    <TextBlock Text="Engine Specifications &amp; Compliance" FontSize="15" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,10" />
+                    <TextBlock Text="• QuestPDF Engine: Vector-precise native PDF layout generation, typography, and vector branding." Foreground="{DynamicResource TextSecondaryBrush}" FontSize="12" Margin="0,2" />
+                    <TextBlock Text="• ClosedXML Engine: OpenXML spreadsheet generation with automatic column width adjustments, totals row, and cell styling." Foreground="{DynamicResource TextSecondaryBrush}" FontSize="12" Margin="0,2" />
+                    <TextBlock Text="• 100% Offline Generation: All documents are synthesized locally in system memory; no external telemetry or cloud conversion services." Foreground="{DynamicResource TextSecondaryBrush}" FontSize="12" Margin="0,2" />
+                </StackPanel>
+            </Border>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

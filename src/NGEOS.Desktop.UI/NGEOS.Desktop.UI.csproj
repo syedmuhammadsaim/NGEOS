@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <RootNamespace>NGEOS.Desktop.UI</RootNamespace>
+    <ApplicationTitle>NGEOS Desktop Platform</ApplicationTitle>
+    <ApplicationIcon>Assets\app.ico</ApplicationIcon>
+    <AssemblyTitle>NGEOS Desktop Application</AssemblyTitle>
+    <Product>NGEOS</Product>
+    <Description>Pure Standalone Windows Desktop Software for NGEOS Humanitarian Alliance</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NGEOS.Desktop.Core\NGEOS.Desktop.Core.csproj" />
+    <ProjectReference Include="..\NGEOS.Desktop.Infrastructure\NGEOS.Desktop.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.14" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\app.ico" />
+  </ItemGroup>
+
+</Project>

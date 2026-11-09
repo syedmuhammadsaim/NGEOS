@@ -1,0 +1,34 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Static Accent Brand Colors -->
+    <Color x:Key="BrandOrange">#FD5631</Color>
+    <Color x:Key="BrandOrangeHover">#E04420</Color>
+    <Color x:Key="BrandNavy">#0B192C</Color>
+    <Color x:Key="BrandNavyDark">#070F1E</Color>
+    <Color x:Key="BrandSuccess">#16A34A</Color>
+    <Color x:Key="BrandWarning">#D97706</Color>
+    <Color x:Key="BrandDanger">#DC2626</Color>
+    <Color x:Key="BrandInfo">#0284C7</Color>
+
+    <SolidColorBrush x:Key="AccentOrangeBrush" Color="{StaticResource BrandOrange}" />
+    <SolidColorBrush x:Key="AccentHoverBrush" Color="{StaticResource BrandOrangeHover}" />
+    <SolidColorBrush x:Key="SuccessBrush" Color="{StaticResource BrandSuccess}" />
+    <SolidColorBrush x:Key="WarningBrush" Color="{StaticResource BrandWarning}" />
+    <SolidColorBrush x:Key="DangerBrush" Color="{StaticResource BrandDanger}" />
+    <SolidColorBrush x:Key="InfoBrush" Color="{StaticResource BrandInfo}" />
+
+    <!-- Default Theme Brushes (Dark Theme / High-Tech Modern Slate Navy) -->
+    <SolidColorBrush x:Key="AppBgBrush" Color="#0B132B" />
+    <SolidColorBrush x:Key="CardBgBrush" Color="#1C2541" />
+    <SolidColorBrush x:Key="SidebarBgBrush" Color="#0B192C" />
+    <SolidColorBrush x:Key="TopBarBgBrush" Color="#0D1B2A" />
+    <SolidColorBrush x:Key="TextPrimaryBrush" Color="#F8FAFC" />
+    <SolidColorBrush x:Key="TextSecondaryBrush" Color="#94A3B8" />
+    <SolidColorBrush x:Key="BorderBrush" Color="#334155" />
+    <SolidColorBrush x:Key="InputBgBrush" Color="#0F172A" />
+    <SolidColorBrush x:Key="DataGridHeaderBgBrush" Color="#0F172A" />
+    <SolidColorBrush x:Key="DataGridRowAlternateBrush" Color="#162238" />
+    <SolidColorBrush x:Key="DataGridRowHoverBrush" Color="#24344D" />
+
+</ResourceDictionary>

@@ -1,0 +1,99 @@
+<UserControl x:Class="NGEOS.Desktop.UI.Views.BackupView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:conv="clr-namespace:NGEOS.Desktop.UI.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="700" d:DesignWidth="1000">
+
+    <UserControl.Resources>
+        <conv:BoolToVisibilityConverter x:Key="BoolToVis" />
+        <conv:StatusToBrushConverter x:Key="StatusBrush" />
+    </UserControl.Resources>
+
+    <Grid Margin="24">
+        <Border Style="{DynamicResource ModernCardStyle}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <!-- Header & Trigger -->
+                <Grid Grid.Row="0" Margin="0,0,0,16">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="Local Database Backup &amp; Safe Restore" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" />
+                        <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                            <TextBlock Text="Backup Storage Directory: " Foreground="{DynamicResource TextSecondaryBrush}" FontSize="12" />
+                            <TextBlock Text="{Binding BackupFolderPath}" Foreground="#38BDF8" FontSize="12" FontWeight="SemiBold" />
+                        </StackPanel>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1" Orientation="Horizontal">
+                        <Button Content="Refresh List" Command="{Binding LoadCommand}" Style="{DynamicResource OutlineButtonStyle}" Margin="0,0,10,0" />
+                        <Button Content="+ Create Backup Snapshot Now" Command="{Binding CreateBackupCommand}" Style="{DynamicResource PrimaryButtonStyle}" />
+                    </StackPanel>
+                </Grid>
+
+                <!-- Feedback & Security Notice -->
+                <StackPanel Grid.Row="1">
+                    <Border Background="#052E16" BorderBrush="{DynamicResource SuccessBrush}" BorderThickness="1" CornerRadius="6" Padding="12,8" Margin="0,0,0,10"
+                            Visibility="{Binding SuccessMessage, Converter={StaticResource BoolToVis}}">
+                        <TextBlock Text="{Binding SuccessMessage}" Foreground="#86EFAC" FontSize="12" FontWeight="SemiBold" />
+                    </Border>
+
+                    <Border Background="#3B0808" BorderBrush="{DynamicResource DangerBrush}" BorderThickness="1" CornerRadius="6" Padding="12,8" Margin="0,0,0,10"
+                            Visibility="{Binding ErrorMessage, Converter={StaticResource BoolToVis}}">
+                        <TextBlock Text="{Binding ErrorMessage}" Foreground="#FCA5A5" FontSize="12" />
+                    </Border>
+
+                    <!-- Technical Safety Notice -->
+                    <Border Background="#162238" CornerRadius="6" Padding="12,10" Margin="0,0,0,16">
+                        <TextBlock Text="Safety Guarantee: Backups use SQLite 'VACUUM INTO' transactions ensuring full WAL (Write-Ahead-Log) consistency. Restores verify 16-byte magic headers ('SQLite format 3') and execute 'PRAGMA integrity_check' before swapping files, with an automatic safety snapshot taken prior to restore." Foreground="#94A3B8" FontSize="11" TextWrapping="Wrap" />
+                    </Border>
+                </StackPanel>
+
+                <!-- Backups History DataGrid -->
+                <DataGrid Grid.Row="2" ItemsSource="{Binding Backups}" Style="{DynamicResource ModernDataGridStyle}" AutoGenerateColumns="False" IsReadOnly="True">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Backup File Name" Binding="{Binding FileName}" Width="2*" />
+                        <DataGridTextColumn Header="Timestamp" Binding="{Binding CreatedAt, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" Width="160" />
+                        <DataGridTemplateColumn Header="Size" Width="110">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding FileSizeBytes, StringFormat={}{0:N0} Bytes}" VerticalAlignment="Center" Foreground="{DynamicResource TextSecondaryBrush}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Integrity Status" Width="130">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Border Background="#166534" CornerRadius="4" Padding="6,2" HorizontalAlignment="Center">
+                                        <TextBlock Text="Verified Valid" Foreground="White" FontSize="11" FontWeight="SemiBold" />
+                                    </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Actions" Width="170">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                        <Button Content="Restore" Command="{Binding DataContext.RestoreBackupCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}" Style="{DynamicResource PrimaryButtonStyle}" Padding="8,2" Margin="0,0,6,0" FontSize="11" />
+                                        <Button Content="Delete" Command="{Binding DataContext.DeleteBackupCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}" Style="{DynamicResource DangerButtonStyle}" Padding="8,2" FontSize="11" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

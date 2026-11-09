@@ -1,0 +1,127 @@
+<UserControl x:Class="NGEOS.Desktop.UI.Views.DonationsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:conv="clr-namespace:NGEOS.Desktop.UI.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="700" d:DesignWidth="1050">
+
+    <UserControl.Resources>
+        <conv:BoolToVisibilityConverter x:Key="BoolToVis" />
+        <conv:CurrencyFormatter x:Key="CurrencyFormat" />
+        <conv:StatusToBrushConverter x:Key="StatusBrush" />
+    </UserControl.Resources>
+
+    <Grid Margin="24">
+        <!-- Main Card -->
+        <Border Style="{DynamicResource ModernCardStyle}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <!-- Filters & Action Bar -->
+                <Grid Grid.Row="0" Margin="0,0,0,16">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                        <!-- Search Box -->
+                        <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Style="{DynamicResource ModernTextBoxStyle}" Width="250" Margin="0,0,10,0" ToolTip="Search by donor, transaction ID, or cause..." />
+                        <Button Content="Search" Command="{Binding LoadCommand}" Style="{DynamicResource OutlineButtonStyle}" Padding="12,6" Margin="0,0,14,0" />
+
+                        <!-- Status Filter -->
+                        <ComboBox SelectedValue="{Binding StatusFilter}" SelectedValuePath="Content" Width="140" Height="34" VerticalContentAlignment="Center" Background="{DynamicResource InputBgBrush}" Foreground="{DynamicResource TextPrimaryBrush}" BorderBrush="{DynamicResource BorderBrush}" Margin="0,0,10,0">
+                            <ComboBoxItem Content="All" IsSelected="True" />
+                            <ComboBoxItem Content="Completed" />
+                            <ComboBoxItem Content="Pending" />
+                            <ComboBoxItem Content="Refunded" />
+                        </ComboBox>
+                        <Button Content="Filter" Command="{Binding LoadCommand}" Style="{DynamicResource OutlineButtonStyle}" Padding="12,6" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1" Orientation="Horizontal">
+                        <Button Content="Export Excel Ledger" Command="{Binding ExportExcelCommand}" Style="{DynamicResource OutlineButtonStyle}" Margin="0,0,10,0" />
+                        <Button Content="+ Record New Donation" Command="{Binding OpenAddModalCommand}" Style="{DynamicResource PrimaryButtonStyle}" />
+                    </StackPanel>
+                </Grid>
+
+                <!-- Feedback Banners -->
+                <StackPanel Grid.Row="1">
+                    <Border Background="#052E16" BorderBrush="{DynamicResource SuccessBrush}" BorderThickness="1" CornerRadius="6" Padding="12,6" Margin="0,0,0,10"
+                            Visibility="{Binding SuccessMessage, Converter={StaticResource BoolToVis}}">
+                        <TextBlock Text="{Binding SuccessMessage}" Foreground="#86EFAC" FontSize="12" />
+                    </Border>
+                    <Border Background="#3B0808" BorderBrush="{DynamicResource DangerBrush}" BorderThickness="1" CornerRadius="6" Padding="12,6" Margin="0,0,0,10"
+                            Visibility="{Binding ErrorMessage, Converter={StaticResource BoolToVis}}">
+                        <TextBlock Text="{Binding ErrorMessage}" Foreground="#FCA5A5" FontSize="12" />
+                    </Border>
+                </StackPanel>
+
+                <!-- DataGrid -->
+                <DataGrid Grid.Row="2" ItemsSource="{Binding Donations}" Style="{DynamicResource ModernDataGridStyle}" AutoGenerateColumns="False" IsReadOnly="True">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Transaction ID" Binding="{Binding TransactionId}" Width="150" />
+                        <DataGridTextColumn Header="Receipt No." Binding="{Binding ReceiptNumber}" Width="120" />
+                        <DataGridTextColumn Header="Donor Name" Binding="{Binding DonorName}" Width="160" />
+                        <DataGridTextColumn Header="Email" Binding="{Binding DonorEmail}" Width="170" />
+                        <DataGridTextColumn Header="Cause / Campaign" Binding="{Binding CauseTitle}" Width="*" />
+                        <DataGridTextColumn Header="Amount" Binding="{Binding Amount, Converter={StaticResource CurrencyFormat}}" Width="130" />
+                        <DataGridTextColumn Header="Payment Method" Binding="{Binding PaymentMethod}" Width="140" />
+                        <DataGridTemplateColumn Header="Status" Width="100">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Border Background="{Binding PaymentStatus, Converter={StaticResource StatusBrush}}" CornerRadius="4" Padding="6,2" HorizontalAlignment="Center">
+                                        <TextBlock Text="{Binding PaymentStatus}" Foreground="White" FontSize="11" FontWeight="SemiBold" />
+                                    </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="Date" Binding="{Binding DonationDate, StringFormat={}{0:yyyy-MM-dd HH:mm}}" Width="130" />
+                        <DataGridTemplateColumn Header="Receipt" Width="120">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Content="PDF Receipt" Command="{Binding DataContext.PrintReceiptCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}" Style="{DynamicResource OutlineButtonStyle}" Padding="6,2" FontSize="11" Foreground="{DynamicResource AccentOrangeBrush}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Border>
+
+        <!-- RECORD DONATION MODAL -->
+        <Border Background="#B0000000" Visibility="{Binding IsAddModalOpen, Converter={StaticResource BoolToVis}}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Border Style="{DynamicResource ModernCardStyle}" Width="480" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="24">
+                <StackPanel>
+                    <TextBlock Text="Record Verified Donation Transaction" FontSize="18" FontWeight="Bold" Foreground="{DynamicResource TextPrimaryBrush}" Margin="0,0,0,16" />
+
+                    <TextBlock Text="Donor Full Name" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="12" Margin="0,0,0,4" />
+                    <TextBox Text="{Binding NewDonorName, UpdateSourceTrigger=PropertyChanged}" Style="{DynamicResource ModernTextBoxStyle}" Margin="0,0,0,12" />
+
+                    <TextBlock Text="Donor Email Address" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="12" Margin="0,0,0,4" />
+                    <TextBox Text="{Binding NewDonorEmail, UpdateSourceTrigger=PropertyChanged}" Style="{DynamicResource ModernTextBoxStyle}" Margin="0,0,0,12" />
+
+                    <TextBlock Text="Donation Amount (PKR)" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="12" Margin="0,0,0,4" />
+                    <TextBox Text="{Binding NewAmount, UpdateSourceTrigger=PropertyChanged}" Style="{DynamicResource ModernTextBoxStyle}" Margin="0,0,0,12" />
+
+                    <TextBlock Text="Designated Cause" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="12" Margin="0,0,0,4" />
+                    <TextBox Text="{Binding NewCauseTitle, UpdateSourceTrigger=PropertyChanged}" Style="{DynamicResource ModernTextBoxStyle}" Margin="0,0,0,12" />
+
+                    <TextBlock Text="Payment Method / Channel" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="12" Margin="0,0,0,4" />
+                    <TextBox Text="{Binding NewPaymentMethod, UpdateSourceTrigger=PropertyChanged}" Style="{DynamicResource ModernTextBoxStyle}" Margin="0,0,0,18" />
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Content="Cancel" Command="{Binding CloseAddModalCommand}" Style="{DynamicResource OutlineButtonStyle}" Margin="0,0,10,0" Width="90" />
+                        <Button Content="Save Transaction" Command="{Binding SaveDonationCommand}" Style="{DynamicResource SuccessButtonStyle}" Width="140" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </Border>
+    </Grid>
+</UserControl>
