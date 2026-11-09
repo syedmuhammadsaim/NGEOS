@@ -145,7 +145,7 @@
                                         <TextBlock Text="{Binding Description}" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap" MaxHeight="40" TextTrimming="CharacterEllipsis" Margin="0,0,0,16" />
 
                                         <!-- Progress Bar -->
-                                        <ProgressBar Value="{Binding ProgressPercentage}" Maximum="100" Height="8" Background="#1E293B" Foreground="{DynamicResource AccentOrangeBrush}" Margin="0,0,0,8" />
+                                        <ProgressBar Value="{Binding ProgressPercentage, Mode=OneWay}" Maximum="100" Height="8" Background="#1E293B" Foreground="{DynamicResource AccentOrangeBrush}" Margin="0,0,0,8" />
 
                                         <Grid Margin="0,0,0,16">
                                             <StackPanel Orientation="Horizontal">

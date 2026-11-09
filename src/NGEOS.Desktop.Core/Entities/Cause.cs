@@ -21,8 +21,10 @@ namespace NGEOS.Desktop.Core.Entities
         public int? ServerId { get; set; }
         public DateTime LastModifiedUtc { get; set; } = DateTime.UtcNow;
 
-        public double ProgressPercentage => TargetAmount > 0 
-            ? Math.Min(100.0, (double)(RaisedAmount / TargetAmount) * 100.0) 
-            : 0;
+        public double ProgressPercentage 
+        { 
+            get => TargetAmount > 0 ? Math.Min(100.0, (double)(RaisedAmount / TargetAmount) * 100.0) : 0; 
+            set { } 
+        }
     }
 }
