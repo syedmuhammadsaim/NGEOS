@@ -4,8 +4,12 @@
 
     <conv:BoolToVisibilityConverter x:Key="BoolToVis" />
     <conv:BoolToVisibilityConverter x:Key="InvertedBoolToVis" Invert="True" />
+    <conv:BoolToVisibilityConverter x:Key="InverseBoolToVis" Invert="True" />
+    <conv:StringToVisibilityConverter x:Key="StringToVis" />
+    <conv:StringToVisibilityConverter x:Key="InvertedStringToVis" Invert="True" />
     <conv:CurrencyFormatter x:Key="CurrencyFormat" />
     <conv:StatusToBrushConverter x:Key="StatusBrush" />
+    <conv:BoolToStringConverter x:Key="BoolToStr" />
 
     <!-- Card Style -->
     <Style x:Key="ModernCardStyle" TargetType="Border">

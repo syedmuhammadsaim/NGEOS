@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:NGEOS.Desktop.UI.ViewModels"
         xmlns:views="clr-namespace:NGEOS.Desktop.UI.Views"
+        xmlns:conv="clr-namespace:NGEOS.Desktop.UI.Converters"
         mc:Ignorable="d"
         Title="NGEOS - Global Humanitarian Welfare Platform (Desktop Edition)" 
         Height="850" Width="1280"
@@ -14,6 +15,11 @@
         Background="{DynamicResource AppBgBrush}">
 
     <Window.Resources>
+        <conv:BoolToVisibilityConverter x:Key="BoolToVis" />
+        <conv:BoolToVisibilityConverter x:Key="InvertedBoolToVis" Invert="True" />
+        <conv:BoolToVisibilityConverter x:Key="InverseBoolToVis" Invert="True" />
+        <conv:StringToVisibilityConverter x:Key="StringToVis" />
+
         <!-- DataTemplates routing ViewModels to their Views -->
         <!-- Admin Views -->
         <DataTemplate DataType="{x:Type vm:DashboardViewModel}">

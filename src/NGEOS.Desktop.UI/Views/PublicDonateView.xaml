@@ -3,8 +3,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:conv="clr-namespace:NGEOS.Desktop.UI.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="1100" d:DesignWidth="1000">
+
+    <UserControl.Resources>
+        <conv:BoolToVisibilityConverter x:Key="BoolToVis" />
+        <conv:StringToVisibilityConverter x:Key="StringToVis" />
+    </UserControl.Resources>
 
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
         <StackPanel Margin="0,0,0,40">
