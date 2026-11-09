@@ -74,7 +74,7 @@ namespace NGEOS.Desktop.Infrastructure.Database
             try { await Database.ExecuteSqlRawAsync("ALTER TABLE Donations ADD COLUMN LastModifiedUtc TEXT NOT NULL DEFAULT '2026-01-01';"); } catch { }
             try { await Database.ExecuteSqlRawAsync("ALTER TABLE Donations ADD COLUMN ClientGuid TEXT NULL;"); } catch { }
 
-            // Seed Master Super Admin if missing
+            // 1. Seed Master Super Admin if missing
             if (!await Users.AnyAsync())
             {
                 var (adminHash, adminSalt) = passwordHasher.HashPassword("Admin@12");
@@ -106,13 +106,16 @@ namespace NGEOS.Desktop.Infrastructure.Database
                 };
 
                 await Users.AddRangeAsync(admin, donor);
+                await SaveChangesAsync();
+            }
 
-                // Seed Realistic Causes
+            // 2. Seed Realistic Causes if missing
+            if (!await Causes.AnyAsync())
+            {
                 var causes = new[]
                 {
                     new Cause
                     {
-                        Id = 1,
                         Title = "Universal Education for Out-of-School Children",
                         Description = "Providing full schooling, uniforms, books, and digital literacy labs to 500+ underprivileged children.",
                         Category = "Education",
@@ -120,11 +123,11 @@ namespace NGEOS.Desktop.Infrastructure.Database
                         RaisedAmount = 520000m,
                         BeneficiariesCount = 520,
                         IsActive = true,
-                        IsFeatured = true
+                        IsFeatured = true,
+                        CreatedAt = DateTime.UtcNow
                     },
                     new Cause
                     {
-                        Id = 2,
                         Title = "Solar Water Purification Plants & Clean Wells",
                         Description = "Installing automated deep-solar water pumping stations across arid drought-affected communities.",
                         Category = "Water Relief",
@@ -132,11 +135,11 @@ namespace NGEOS.Desktop.Infrastructure.Database
                         RaisedAmount = 980000m,
                         BeneficiariesCount = 3400,
                         IsActive = true,
-                        IsFeatured = true
+                        IsFeatured = true,
+                        CreatedAt = DateTime.UtcNow
                     },
                     new Cause
                     {
-                        Id = 3,
                         Title = "Emergency Cardiac Care & Diagnostic Medicine",
                         Description = "Subsidizing life-saving treatments, dialysis, and emergency medications for impoverished patients.",
                         Category = "Healthcare",
@@ -144,29 +147,34 @@ namespace NGEOS.Desktop.Infrastructure.Database
                         RaisedAmount = 1145000m,
                         BeneficiariesCount = 850,
                         IsActive = true,
-                        IsFeatured = true
+                        IsFeatured = true,
+                        CreatedAt = DateTime.UtcNow
                     },
                     new Cause
                     {
-                        Id = 4,
                         Title = "Women Livelihood & Vocational Training Centers",
                         Description = "Micro-grants, sewing machines, and digital marketing training for female-led households.",
                         Category = "Livelihood",
                         TargetAmount = 500000m,
                         RaisedAmount = 390000m,
                         BeneficiariesCount = 280,
-                        IsActive = true
+                        IsActive = true,
+                        IsFeatured = true,
+                        CreatedAt = DateTime.UtcNow
                     }
                 };
 
                 await Causes.AddRangeAsync(causes);
+                await SaveChangesAsync();
+            }
 
-                // Seed Programmes
+            // 3. Seed Programmes if missing
+            if (!await Programmes.AnyAsync())
+            {
                 var programmes = new[]
                 {
                     new Programme
                     {
-                        Id = 1,
                         Title = "Youth Digital Literacy Bootcamp 2026",
                         Description = "Hands-on software skills, graphic design, and freelance mentorship for underprivileged youth.",
                         Category = "Education",
@@ -177,7 +185,6 @@ namespace NGEOS.Desktop.Infrastructure.Database
                     },
                     new Programme
                     {
-                        Id = 2,
                         Title = "Mobile Health Clinic & Diagnostic Camps",
                         Description = "Free medical checkups, eye tests, and essential pharmaceuticals in rural districts.",
                         Category = "Healthcare",
@@ -188,7 +195,6 @@ namespace NGEOS.Desktop.Infrastructure.Database
                     },
                     new Programme
                     {
-                        Id = 3,
                         Title = "Winter Warmth & Ration Relief Drive",
                         Description = "Distributing food packages, warm blankets, and thermal clothing to displaced families.",
                         Category = "Relief",
@@ -200,19 +206,25 @@ namespace NGEOS.Desktop.Infrastructure.Database
                 };
 
                 await Programmes.AddRangeAsync(programmes);
+                await SaveChangesAsync();
+            }
 
-                // Seed Donations
+            // 4. Seed Donations if missing
+            if (!await Donations.AnyAsync())
+            {
+                var firstCause = await Causes.FirstOrDefaultAsync();
+                int cId = firstCause?.Id ?? 1;
+
                 var donations = new[]
                 {
                     new Donation
                     {
-                        Id = 1,
                         TransactionId = "NGEOS-TXN-9001",
                         DonorName = "Fatima Tariq",
                         DonorEmail = "fatima.t@example.com",
                         DonorPhone = "03001234567",
                         Amount = 75000m,
-                        CauseId = 1,
+                        CauseId = cId,
                         CauseTitle = "Universal Education",
                         PaymentMethod = "Online Card / PayPak",
                         PaymentStatus = "Completed",
@@ -222,12 +234,11 @@ namespace NGEOS.Desktop.Infrastructure.Database
                     },
                     new Donation
                     {
-                        Id = 2,
                         TransactionId = "NGEOS-TXN-9002",
                         DonorName = "Zubair Ahmed",
                         DonorEmail = "zubair.a@example.com",
                         Amount = 150000m,
-                        CauseId = 2,
+                        CauseId = cId,
                         CauseTitle = "Solar Water Purification",
                         PaymentMethod = "JazzCash Mobile Account",
                         PaymentStatus = "Completed",
@@ -237,12 +248,11 @@ namespace NGEOS.Desktop.Infrastructure.Database
                     },
                     new Donation
                     {
-                        Id = 3,
                         TransactionId = "NGEOS-TXN-9003",
                         DonorName = "Ayesha Khan",
                         DonorEmail = "ayesha.k@example.com",
                         Amount = 50000m,
-                        CauseId = 3,
+                        CauseId = cId,
                         CauseTitle = "Emergency Cardiac Care",
                         PaymentMethod = "Easypaisa Wallet",
                         PaymentStatus = "Completed",
@@ -251,12 +261,11 @@ namespace NGEOS.Desktop.Infrastructure.Database
                     },
                     new Donation
                     {
-                        Id = 4,
                         TransactionId = "NGEOS-TXN-9004",
                         DonorName = "Bilal Siddiqui",
                         DonorEmail = "bilal.s@example.com",
                         Amount = 100000m,
-                        CauseId = 4,
+                        CauseId = cId,
                         CauseTitle = "Women Livelihood Centers",
                         PaymentMethod = "Bank Transfer",
                         PaymentStatus = "Completed",
@@ -267,13 +276,16 @@ namespace NGEOS.Desktop.Infrastructure.Database
                 };
 
                 await Donations.AddRangeAsync(donations);
+                await SaveChangesAsync();
+            }
 
-                // Seed Queries
+            // 5. Seed Queries if missing
+            if (!await Queries.AnyAsync())
+            {
                 var queries = new[]
                 {
                     new Query
                     {
-                        Id = 1,
                         FullName = "Hassan Raza",
                         Email = "hassan.r@example.com",
                         Subject = "Corporate matching gift partnership",
@@ -285,7 +297,6 @@ namespace NGEOS.Desktop.Infrastructure.Database
                     },
                     new Query
                     {
-                        Id = 2,
                         FullName = "Maryam Noor",
                         Email = "maryam.n@example.com",
                         Subject = "Volunteer application for Health Camps",
@@ -296,8 +307,12 @@ namespace NGEOS.Desktop.Infrastructure.Database
                 };
 
                 await Queries.AddRangeAsync(queries);
+                await SaveChangesAsync();
+            }
 
-                // Seed Initial AuditLog
+            // 6. Seed Initial AuditLog if missing
+            if (!await AuditLogs.AnyAsync())
+            {
                 await AuditLogs.AddAsync(new AuditLog
                 {
                     UserEmail = "SYSTEM",

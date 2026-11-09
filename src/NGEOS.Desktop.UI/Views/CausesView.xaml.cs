@@ -1,4 +1,5 @@
 using System.Windows.Controls;
+using NGEOS.Desktop.UI.ViewModels;
 
 namespace NGEOS.Desktop.UI.Views
 {
@@ -7,6 +8,13 @@ namespace NGEOS.Desktop.UI.Views
         public CausesView()
         {
             InitializeComponent();
+            Loaded += async (s, e) =>
+            {
+                if (DataContext is CausesViewModel vm)
+                {
+                    await vm.LoadAsync();
+                }
+            };
         }
     }
 }

@@ -289,6 +289,39 @@ namespace NGEOS.Desktop.Tests
             Assert.False(service.IsOnline);
         }
 
+        [Fact]
+        public async Task InitializeAndSeedAsync_ShouldSeedCausesAndProgrammesIndependently()
+        {
+            var seedDbPath = Path.Combine(Path.GetTempPath(), $"ngeos_seed_test_{Guid.NewGuid():N}.db");
+            try
+            {
+                using (var db = new TestNgeosDbContext(seedDbPath))
+                {
+                    var hasher = new Pbkdf2PasswordHasher();
+                    await db.InitializeAndSeedAsync(hasher);
+
+                    var causesCount = await db.Causes.CountAsync();
+                    var progsCount = await db.Programmes.CountAsync();
+                    var donorsCount = await db.Donations.CountAsync();
+                    var usersCount = await db.Users.CountAsync();
+
+                    Assert.True(causesCount >= 4, $"Expected at least 4 causes, but found {causesCount}");
+                    Assert.True(progsCount >= 3, $"Expected at least 3 programmes, but found {progsCount}");
+                    Assert.True(donorsCount >= 4, $"Expected at least 4 donations, but found {donorsCount}");
+                    Assert.True(usersCount >= 2, $"Expected at least 2 users, but found {usersCount}");
+                }
+            }
+            finally
+            {
+                try
+                {
+                    Microsoft.Data.Sqlite.SqliteConnection.ClearAllPools();
+                    if (File.Exists(seedDbPath)) File.Delete(seedDbPath);
+                }
+                catch { }
+            }
+        }
+
         public void Dispose()
         {
             try

@@ -145,9 +145,6 @@
                     <!-- Sync Now Button -->
                     <Button Content="{Binding SyncButtonLabel}" Command="{Binding SynchronizeNowCommand}" Style="{DynamicResource OutlineButtonStyle}" Height="34" Padding="10,0" Margin="0,0,10,0" FontSize="11" />
 
-                    <!-- Open In Web Browser Button -->
-                    <Button Content="🌐 Open in Browser" Command="{Binding LaunchBrowserWebsiteCommand}" ToolTip="Launch live ASP.NET Core website in your default web browser" Style="{DynamicResource OutlineButtonStyle}" Height="34" Padding="10,0" Margin="0,0,10,0" FontSize="11" />
-
                     <!-- Portal Switcher Buttons -->
                     <!-- In Website Mode -> Show "🛡️ Admin Portal" -->
                     <Button Content="🛡️  Admin Portal" Command="{Binding SwitchToAdminPortalCommand}" Style="{DynamicResource PrimaryButtonStyle}" Height="34" Padding="14,0" FontSize="12" FontWeight="Bold"
