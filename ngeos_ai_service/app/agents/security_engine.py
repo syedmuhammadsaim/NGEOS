@@ -6,6 +6,7 @@ from app.providers.orchestrator import orchestrator
 from app.providers.base import ChatMessage
 from app.prompts.security_prompts import SECURITY_CLASSIFIER_PROMPT
 from app.bridge.dotnet_client import dotnet_bridge
+from app.services.free_intelligence_services import free_geoip_service
 
 class AutonomousSecurityEngine:
     def __init__(self):
@@ -20,28 +21,36 @@ class AutonomousSecurityEngine:
         activity_payload: str
     ) -> Dict[str, Any]:
         """
-        Runs deterministic inspection followed by AI classification to score threat risk.
+        Runs deterministic inspection, free IP threat analysis, and AI classification to score threat risk.
         """
         start_time = time.perf_counter()
+
+        # Free IP Geolocation & Threat lookup
+        geo_info = await free_geoip_service.lookup_ip(ip_address or "")
+        is_proxy = geo_info.get("isProxy", False)
+        country = geo_info.get("country", "Unknown")
         
         # 1. Deterministic checks
         lower_payload = activity_payload.lower()
         deterministic_violation = False
         violation_category = "None"
-        reason = "Normal Activity"
+        reason = f"Normal Activity from {country}"
+
+        if is_proxy:
+            reason = f"Activity routed via anonymous proxy/hosting IP from {country}."
 
         # Explicit abuse or destructive SQL keywords
         if any(term in lower_payload for term in ["drop table", "xp_cmdshell", "or 1=1--", "script>alert("]):
             deterministic_violation = True
             violation_category = "Tampering"
-            reason = "Exploit or SQL Injection attempt detected in payload."
+            reason = f"Exploit or SQL Injection attempt detected from {country}."
         elif any(term in lower_payload for term in ["spam bot", "viagra", "free crypto", "telegram.me/"]):
             deterministic_violation = True
             violation_category = "Spam"
-            reason = "Automated promotional spam link identified."
+            reason = f"Automated promotional spam link identified from {country}."
 
-        risk_score = 0.9 if deterministic_violation else 0.1
-        severity = "Critical" if deterministic_violation else "Low"
+        risk_score = 0.9 if deterministic_violation else (0.4 if is_proxy else 0.1)
+        severity = "Critical" if deterministic_violation else ("Medium" if is_proxy else "Low")
 
         # If indeterminate, run AI evaluation
         if not deterministic_violation and len(activity_payload) > 10:

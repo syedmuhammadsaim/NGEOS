@@ -10,6 +10,7 @@ from app.prompts.admin_prompts import (
     CAMPAIGN_MONITORING_PROMPT
 )
 from app.bridge.dotnet_client import dotnet_bridge
+from app.services.free_intelligence_services import free_currency_service, free_disaster_service
 
 class AdminAgent:
     def __init__(self):
@@ -23,11 +24,17 @@ class AdminAgent:
         campaign_data = await dotnet_bridge.get_campaign_summary()
         health_data = await dotnet_bridge.get_system_health()
 
+        # 2. Fetch live free market currency rates and humanitarian disaster indicators
+        currency_rates = await free_currency_service.get_live_rates()
+        weather_alerts = await free_disaster_service.get_humanitarian_weather_alerts()
+
         # Combine verified operational context
         context_str = json.dumps({
             "donations": donation_data,
             "campaigns": campaign_data,
             "system_health": health_data,
+            "live_currency_exchange_pkr": currency_rates,
+            "humanitarian_weather_alerts": weather_alerts,
             "extra_context": context or {}
         }, default=str)
 

@@ -108,6 +108,24 @@ async def evaluate_security_activity(req: SecurityEvaluateRequest):
         logger.error("security_evaluate_endpoint_error", error=str(ex))
         raise HTTPException(status_code=500, detail=str(ex))
 
+@app.get("/api/v1/intelligence/free-rates")
+async def get_free_currency_rates():
+    """
+    100% Free real-time foreign currency exchange rates to PKR (No API key required).
+    """
+    from app.services.free_intelligence_services import free_currency_service
+    rates = await free_currency_service.get_live_rates()
+    return {"status": "Success", "base": "USD", "target": "PKR", "rates": rates}
+
+@app.get("/api/v1/intelligence/weather-alerts")
+async def get_humanitarian_weather_alerts():
+    """
+    100% Free emergency weather & flood alerts for humanitarian disaster readiness (Open-Meteo).
+    """
+    from app.services.free_intelligence_services import free_disaster_service
+    alerts = await free_disaster_service.get_humanitarian_weather_alerts()
+    return alerts
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("app.main:app", host=settings.host, port=settings.port, reload=True)

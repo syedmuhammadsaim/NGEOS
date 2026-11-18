@@ -6,6 +6,7 @@ from app.providers.base import ChatMessage
 from app.prompts.user_prompts import USER_AGENT_SYSTEM_PROMPT
 from app.security import sanitize_user_input
 from app.bridge.dotnet_client import dotnet_bridge
+from app.services.free_intelligence_services import free_currency_service
 
 class UserAgent:
     def __init__(self):
@@ -80,6 +81,9 @@ class UserAgent:
                 f"Supported Causes Count: {user_context.get('causesSupportedCount', 0)}\n"
                 f"Active Inquiries Count: {user_context.get('queriesCount', 0)}\n"
             )
+
+        rates = await free_currency_service.get_live_rates()
+        user_info_str += f"Live Currency Conversion to PKR: 1 USD = {rates.get('USD')} PKR, 1 GBP = {rates.get('GBP')} PKR, 1 EUR = {rates.get('EUR')} PKR, 1 AED = {rates.get('AED')} PKR, 1 SAR = {rates.get('SAR')} PKR.\n"
 
         system_instruction = (
             f"{USER_AGENT_SYSTEM_PROMPT}\n\n"
