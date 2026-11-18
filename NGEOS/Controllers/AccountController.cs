@@ -140,7 +140,7 @@ namespace NGEOS.Controllers
 
                 PasswordHash = PasswordHelper.HashPassword(model.Password),
 
-                Phone = model.Phone?.Trim(),
+                Phone = model.Phone.Trim(),
 
                 Address = model.Address?.Trim(),
 
@@ -166,25 +166,10 @@ namespace NGEOS.Controllers
 
             // Sign in the newly registered user
 
-            await SignInUserAsync(user, false);
+            // Set notification and redirect directly to Login page
+            TempData["SuccessMessage"] = "Registered successfully! Your account has been created. Please sign in to access your dashboard.";
 
-
-
-            TempData["SuccessMessage"] = $"Welcome to NGEOS, {user.FullName}! Your account has been created successfully.";
-
-
-
-            if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
-
-            {
-
-                return Redirect(model.ReturnUrl);
-
-            }
-
-
-
-            return RedirectToAction("Dashboard", "User");
+            return RedirectToAction("Login", "Account");
 
         }
 
@@ -328,7 +313,13 @@ namespace NGEOS.Controllers
 
 
 
-            if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
+            if (!string.IsNullOrEmpty(model.ReturnUrl) &&
+                Url.IsLocalUrl(model.ReturnUrl) &&
+                !model.ReturnUrl.Contains("Login", StringComparison.OrdinalIgnoreCase) &&
+                !model.ReturnUrl.Contains("Register", StringComparison.OrdinalIgnoreCase) &&
+                !model.ReturnUrl.TrimEnd('/').Equals("", StringComparison.OrdinalIgnoreCase) &&
+                !model.ReturnUrl.TrimEnd('/').Equals("/Home", StringComparison.OrdinalIgnoreCase) &&
+                !model.ReturnUrl.TrimEnd('/').Equals("/Home/Index", StringComparison.OrdinalIgnoreCase))
 
             {
 
@@ -1362,6 +1353,8 @@ namespace NGEOS.Controllers
 
         {
 
+            var role = string.Equals(user.Role, "Admin", StringComparison.OrdinalIgnoreCase) ? "Admin" : (user.Role ?? "User");
+
             var claims = new List<Claim>
 
             {
@@ -1372,7 +1365,9 @@ namespace NGEOS.Controllers
 
                 new Claim(ClaimTypes.Email, user.Email),
 
-                new Claim(ClaimTypes.Role, user.Role),
+                new Claim(ClaimTypes.Role, role),
+
+                new Claim("Role", role),
 
                 new Claim("Profession", user.Profession ?? ""),
 

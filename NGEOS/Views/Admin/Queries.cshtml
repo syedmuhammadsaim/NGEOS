@@ -12,7 +12,7 @@
     </div>
     @if (pendingCount > 0)
     {
-        <span class="badge bg-danger px-3 py-2 fs-6"><i class="bi bi-bell-fill me-1"></i> @pendingCount Pending Queries</span>
+        <span class="badge bg-danger px-3 py-2 fs-6">@pendingCount Pending Queries</span>
     }
 </div>
 
@@ -48,7 +48,7 @@
                         <td class="small" style="max-width: 220px;">
                             @if (!string.IsNullOrEmpty(q.AdminReply))
                             {
-                                <span class="text-success text-truncate d-block"><i class="bi bi-check2-all me-1"></i> @q.AdminReply</span>
+                                <span class="text-success text-truncate d-block">@q.AdminReply</span>
                             }
                             else
                             {
@@ -57,7 +57,7 @@
                         </td>
                         <td class="small text-muted">@q.CreatedAt.ToString("MMM dd, yyyy")</td>
                         <td>
-                            <span class="badge @(q.Status == "Replied" ? "bg-success" : "bg-warning text-dark")">@q.Status</span>
+                            <span class="badge @(q.Status == "Replied" ? "bg-success" : "bg-orange text-white")">@q.Status</span>
                         </td>
                         <td>
                             <div class="d-inline-flex gap-1">

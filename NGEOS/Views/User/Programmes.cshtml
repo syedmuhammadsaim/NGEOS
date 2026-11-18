@@ -5,7 +5,7 @@
 
 <div class="py-5 text-white position-relative" style="background: linear-gradient(135deg, rgba(11, 25, 44, 0.9), rgba(15, 23, 42, 0.82)), url('https://images.unsplash.com/photo-1593113598332-cd288d649433?w=1600') center/cover no-repeat;" data-aos="fade-down">
     <div class="container py-3 text-center">
-        <span class="hero-tag mb-2 d-inline-block"><i class="bi bi-calendar2-check-fill text-warning"></i> Community Engagement</span>
+        <span class="hero-tag mb-2 d-inline-block"><i class="bi bi-calendar2-check-fill text-orange"></i> Community Engagement</span>
         <h1 class="display-6 fw-bold text-white mb-1">My Registered Programmes</h1>
         <p class="text-white-50 mb-0 small mx-auto" style="max-width: 650px;">Tracking your volunteer participation and community initiative registrations.</p>
     </div>
@@ -14,6 +14,12 @@
 <div class="container section-padding">
     <!-- Quick Navigation Pills -->
     <div class="d-flex flex-wrap justify-content-center gap-2 mb-5" data-aos="fade-up">
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-controller="Admin" asp-action="Index" class="btn btn-navy text-white btn-sm rounded-pill px-4 shadow fw-bold border border-warning">
+                Admin Panel
+            </a>
+        }
         <a asp-action="Dashboard" class="btn btn-outline-navy btn-sm rounded-pill px-4 fw-semibold">Overview</a>
         <a asp-action="Donations" class="btn btn-outline-navy btn-sm rounded-pill px-4 fw-semibold">Donation History</a>
         <a asp-action="Programmes" class="btn btn-orange btn-sm rounded-pill px-4 shadow-sm fw-semibold">My Programmes</a>
@@ -55,7 +61,7 @@
                                 <td class="small text-muted">@(item.Programme?.Ngo?.Name ?? "NGEOS Foundation")</td>
                                 <td class="small text-muted">@(item.Programme?.StartDate.ToString("MMM dd, yyyy") ?? "-")</td>
                                 <td>
-                                    <span class="badge @(item.Status == "Approved" ? "bg-success" : "bg-warning text-dark")">@item.Status</span>
+                                    <span class="badge @(item.Status == "Approved" ? "bg-success" : "bg-orange text-dark")">@item.Status</span>
                                 </td>
                                 <td class="small text-muted">@item.SubmittedAt.ToString("MMM dd, yyyy")</td>
                             </tr>

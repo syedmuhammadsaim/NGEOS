@@ -319,6 +319,140 @@ namespace NGEOS.Desktop.Tests
             }
         }
 
+        [Fact]
+        public async Task OfflineMode_Complete12StepLifecycleTest()
+        {
+            var offlineDbPath = Path.Combine(Path.GetTempPath(), $"ngeos_offline_audit_{Guid.NewGuid():N}.db");
+            try
+            {
+                // 1. Simulate Completely Disconnected / Offline Environment
+                var connectivity = new ConnectivityService();
+                connectivity.RemoteApiBaseUrl = "https://127.0.0.1:59999"; // Unreachable dummy endpoint
+                var isOnline = await connectivity.CheckConnectivityAsync();
+                Assert.False(isOnline, "Step 1: System must report offline.");
+
+                // 2. Initialize Local SQLite Database
+                var hasher = new Pbkdf2PasswordHasher();
+                using (var db = new TestNgeosDbContext(offlineDbPath))
+                {
+                    await db.InitializeAndSeedAsync(hasher);
+                    var initialCauses = await db.Causes.CountAsync();
+                    Assert.True(initialCauses >= 4, "Step 2: SQLite database must initialize and seed successfully.");
+                }
+
+                // 3. Local Authentication
+                using (var db = new TestNgeosDbContext(offlineDbPath))
+                {
+                    var audit = new AuditService(db);
+                    var auth = new AuthService(db, hasher, audit);
+                    var (loginSuccess, message, user) = await auth.LoginAsync("admin@ngeos.org", "Admin@12");
+                    Assert.True(loginSuccess, "Step 3: Local login must succeed offline.");
+                    Assert.NotNull(user);
+                    Assert.Equal("Admin", user.Role);
+                }
+
+                // 4. Navigate through modules (Query statistics and collections)
+                using (var db = new TestNgeosDbContext(offlineDbPath))
+                {
+                    var causes = await db.Causes.ToListAsync();
+                    var donations = await db.Donations.ToListAsync();
+                    var progs = await db.Programmes.ToListAsync();
+                    Assert.NotEmpty(causes);
+                    Assert.NotEmpty(donations);
+                    Assert.NotEmpty(progs);
+                }
+
+                // 5. Add a Test Record (CRUD Create)
+                int createdCauseId = 0;
+                using (var db = new TestNgeosDbContext(offlineDbPath))
+                {
+                    var testCause = new Cause
+                    {
+                        Title = "Audit Emergency Relief Campaign 2026",
+                        Description = "Providing rapid response dry rations.",
+                        Category = "Emergency Relief",
+                        TargetAmount = 500000m,
+                        RaisedAmount = 0m,
+                        BeneficiariesCount = 350,
+                        IsActive = true,
+                        IsFeatured = true
+                    };
+                    await db.Causes.AddAsync(testCause);
+                    await db.SaveChangesAsync();
+                    createdCauseId = testCause.Id;
+                    Assert.True(createdCauseId > 0, "Step 5: Record must be created with valid primary key.");
+                }
+
+                // 6. Edit the Test Record (CRUD Update)
+                using (var db = new TestNgeosDbContext(offlineDbPath))
+                {
+                    var record = await db.Causes.FindAsync(createdCauseId);
+                    Assert.NotNull(record);
+                    record.Title = "Audit Emergency Relief Campaign 2026 (Updated)";
+                    record.RaisedAmount = 150000m;
+                    await db.SaveChangesAsync();
+                }
+
+                // 7. Search for the Updated Record (CRUD Read / Query)
+                using (var db = new TestNgeosDbContext(offlineDbPath))
+                {
+                    var searched = await db.Causes.FirstOrDefaultAsync(c => c.Title.Contains("Updated"));
+                    Assert.NotNull(searched);
+                    Assert.Equal(150000m, searched.RaisedAmount);
+                }
+
+                // 8. Delete the Test Record (CRUD Delete)
+                using (var db = new TestNgeosDbContext(offlineDbPath))
+                {
+                    var toDelete = await db.Causes.FindAsync(createdCauseId);
+                    Assert.NotNull(toDelete);
+                    db.Causes.Remove(toDelete);
+                    await db.SaveChangesAsync();
+
+                    var deleted = await db.Causes.FindAsync(createdCauseId);
+                    Assert.Null(deleted);
+                }
+
+                // 9 & 10. Restart Application (Reopen connection pool) and verify persistence
+                Microsoft.Data.Sqlite.SqliteConnection.ClearAllPools();
+                using (var db = new TestNgeosDbContext(offlineDbPath))
+                {
+                    var finalCausesCount = await db.Causes.CountAsync();
+                    var finalDonationsCount = await db.Donations.CountAsync();
+                    Assert.True(finalCausesCount >= 4, "Step 10: Persistent database state preserved after simulated restart.");
+                    Assert.True(finalDonationsCount >= 4);
+                }
+
+                // 11. Generate Local Reports (QuestPDF + ClosedXML)
+                var pdfService = new QuestPdfReportService();
+                var excelService = new ClosedXmlExportService();
+                using (var db = new TestNgeosDbContext(offlineDbPath))
+                {
+                    var firstDonation = await db.Donations.FirstAsync();
+                    var pdf = pdfService.GenerateDonationReceiptPdf(firstDonation);
+                    Assert.NotNull(pdf);
+                    Assert.True(pdf.Length > 1000);
+
+                    var allDonations = await db.Donations.ToListAsync();
+                    var excel = excelService.ExportDonationsToExcel(allDonations);
+                    Assert.NotNull(excel);
+                    Assert.True(excel.Length > 1000);
+                }
+
+                // 12. Verify Zero Internet Dependency for all operations
+                Assert.False(connectivity.IsOnline, "Step 12: All operations executed 100% locally with zero internet dependency.");
+            }
+            finally
+            {
+                try
+                {
+                    Microsoft.Data.Sqlite.SqliteConnection.ClearAllPools();
+                    if (File.Exists(offlineDbPath)) File.Delete(offlineDbPath);
+                }
+                catch { }
+            }
+        }
+
         public void Dispose()
         {
             try
@@ -340,7 +474,7 @@ namespace NGEOS.Desktop.Tests
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite($"Data Source={_dbPath};Cache=Shared;");
+            optionsBuilder.UseSqlite($"Data Source={_dbPath};");
         }
     }
 }

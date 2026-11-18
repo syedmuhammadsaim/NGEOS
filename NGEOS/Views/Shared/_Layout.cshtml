@@ -289,18 +289,21 @@
                             var userPic = User.FindFirst("ProfileImageUrl")?.Value;
                             @if (User.IsInRole("Admin"))
                             {
-                                <a asp-controller="Admin" asp-action="Index" class="btn btn-navy btn-sm px-3 rounded-pill d-inline-flex align-items-center justify-content-center gap-1 flex-grow-1"><i class="bi bi-speedometer2 me-1"></i> Admin</a>
+                                <a asp-controller="Admin" asp-action="Index" class="btn btn-navy text-white btn-sm px-3 rounded-pill d-inline-flex align-items-center justify-content-center gap-1 shadow-sm fw-bold">Admin Panel</a>
+                                <a asp-controller="User" asp-action="Profile" class="btn btn-outline-navy btn-sm px-3 rounded-pill d-inline-flex align-items-center justify-content-center gap-2" title="My Profile">
+                                    @if (!string.IsNullOrEmpty(userPic))
+                                    {
+                                        <img src="@userPic" alt="Avatar" class="rounded-circle" style="width: 20px; height: 20px; object-fit: cover;" />
+                                    }
+                                    <span>Profile</span>
+                                </a>
                             }
                             else
                             {
                                 <a asp-controller="User" asp-action="Dashboard" class="btn btn-outline-navy btn-sm px-3 rounded-pill d-inline-flex align-items-center justify-content-center gap-2 flex-grow-1">
                                     @if (!string.IsNullOrEmpty(userPic))
                                     {
-                                        <img src="@userPic" alt="Avatar" class="rounded-circle" style="width: 22px; height: 22px; object-fit: cover;" />
-                                    }
-                                    else
-                                    {
-                                        <i class="bi bi-person-circle"></i>
+                                        <img src="@userPic" alt="Avatar" class="rounded-circle" style="width: 20px; height: 20px; object-fit: cover;" />
                                     }
                                     <span>Dashboard</span>
                                 </a>
@@ -308,21 +311,16 @@
                             <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline m-0 p-0">
                                 @Html.AntiForgeryToken()
                                 <button type="submit" class="btn btn-sm btn-light border text-muted rounded-pill px-3 d-inline-flex align-items-center justify-content-center gap-1" title="Log out">
-                                    <i class="bi bi-box-arrow-right"></i><span class="d-inline d-xl-none ms-1">Logout</span>
+                                    <span>Logout</span>
                                 </button>
                             </form>
                         }
                         else
                         {
-                            <a asp-controller="Account" asp-action="Login" class="btn btn-outline-navy btn-sm px-3 rounded-pill d-inline-flex align-items-center justify-content-center flex-grow-1"><i class="bi bi-box-arrow-in-right me-1"></i> Login</a>
-                            <a asp-controller="Account" asp-action="Register" class="btn btn-navy btn-sm px-3 rounded-pill d-inline-flex align-items-center justify-content-center flex-grow-1"><i class="bi bi-person-plus me-1"></i> Register</a>
+                            <a asp-controller="Account" asp-action="Login" class="btn btn-outline-navy btn-sm px-3 rounded-pill d-inline-flex align-items-center justify-content-center flex-grow-1">Login</a>
+                            <a asp-controller="Account" asp-action="Register" class="btn btn-navy btn-sm px-3 rounded-pill d-inline-flex align-items-center justify-content-center flex-grow-1">Register</a>
                         }
                     </div>
-
-                    <!-- Desktop App Install Button -->
-                    <button type="button" id="btnInstallPwa" class="btn btn-warning btn-sm px-3 rounded-pill d-none align-items-center justify-content-center gap-1 shadow-sm fw-bold text-dark" title="Install NGEOS Desktop App">
-                        <i class="bi bi-display"></i> <span class="d-none d-xl-inline">App</span><span class="d-inline d-xl-none">Install Desktop App</span>
-                    </button>
 
                     <!-- DONATE WITH DROPDOWN (General Donation + Zakat Calculator) -->
                     <div class="dropdown d-inline-block" id="donateNavDropdown">
@@ -344,8 +342,8 @@
                             <li><hr class="dropdown-divider my-1"></li>
                             <li>
                                 <a class="dropdown-item p-2 rounded-3 d-flex align-items-center gap-3" asp-controller="Zakat" asp-action="Index">
-                                    <div class="rounded-circle d-flex align-items-center justify-content-center text-dark flex-shrink-0" style="width: 36px; height: 36px; background: #fef08a; font-size: 1.05rem;">
-                                        <i class="bi bi-moon-stars-fill text-warning-emphasis"></i>
+                                    <div class="rounded-circle d-flex align-items-center justify-content-center text-dark flex-shrink-0" style="width: 36px; height: 36px; background: #fff7ed; font-size: 1.05rem;">
+                                        <i class="bi bi-moon-stars-fill text-orange"></i>
                                     </div>
                                     <div>
                                         <strong class="d-block text-dark">Zakat Calculator</strong>
@@ -476,11 +474,11 @@
 
                     <h5>Contact Us</h5>
 
-                    <p class="text-white-50 small mb-2"><i class="bi bi-geo-alt-fill text-warning me-2"></i> 100 Edhi Street, Saddar, Karachi, Pakistan</p>
+                    <p class="text-white-50 small mb-2"><i class="bi bi-geo-alt-fill text-orange me-2"></i> 100 Edhi Street, Saddar, Karachi, Pakistan</p>
 
-                    <p class="text-white-50 small mb-2"><i class="bi bi-envelope-fill text-warning me-2"></i> <a href="mailto:ngeos@gmail.com" class="text-white-50 text-decoration-none">ngeos@gmail.com</a></p>
+                    <p class="text-white-50 small mb-2"><i class="bi bi-envelope-fill text-orange me-2"></i> <a href="mailto:ngeos@gmail.com" class="text-white-50 text-decoration-none">ngeos@gmail.com</a></p>
 
-                    <p class="text-white-50 small mb-3"><i class="bi bi-telephone-fill text-warning me-2"></i> +92 (300) 123-4567</p>
+                    <p class="text-white-50 small mb-3"><i class="bi bi-telephone-fill text-orange me-2"></i> +92 (300) 123-4567</p>
 
 
 
@@ -524,7 +522,7 @@
 
                         <div class="rounded-circle d-flex align-items-center justify-content-center text-white flex-shrink-0" style="width: 48px; height: 48px; background: rgba(242, 92, 5, 0.2); border: 1px solid rgba(242, 92, 5, 0.4);">
 
-                            <i class="bi bi-display fs-4 text-warning"></i>
+                            <i class="bi bi-display fs-4 text-orange"></i>
 
                         </div>
 
@@ -542,7 +540,7 @@
 
                 <div class="col-md-5 text-md-end">
 
-                    <button type="button" id="btnFooterDownloadDesktop" class="btn btn-warning rounded-pill px-4 py-2 fw-bold text-dark shadow-sm d-inline-flex align-items-center gap-2">
+                    <button type="button" id="btnFooterDownloadDesktop" class="btn btn-orange text-white rounded-pill px-4 py-2 fw-bold text-dark shadow-sm d-inline-flex align-items-center gap-2">
 
                         <i class="bi bi-download"></i> <span>Install Desktop Application</span>
 
@@ -726,7 +724,7 @@
 
                             <h5 class="modal-title fw-bold text-white mb-0" id="ngeosDesktopAppModalLabel">NGEOS Desktop App</h5>
 
-                            <small class="text-warning fw-semibold">Official Windows Application</small>
+                            <small class="text-orange fw-semibold">Official Windows Application</small>
 
                         </div>
 
@@ -780,7 +778,7 @@
 
                         </button>
 
-                        <button type="button" class="btn btn-warning px-4 py-2 rounded-pill text-dark fw-bold shadow-sm d-inline-flex align-items-center gap-2" id="btnModalInstallYes">
+                        <button type="button" class="btn btn-orange text-white px-4 py-2 rounded-pill text-dark fw-bold shadow-sm d-inline-flex align-items-center gap-2" id="btnModalInstallYes">
 
                             <i class="bi bi-display"></i> Yes, Install Desktop App
 
@@ -808,7 +806,29 @@
 
     }
 
-
+    <!-- Auto-dismiss TempData alerts after 1s -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            setTimeout(function () {
+                document.querySelectorAll('.alert.alert-dismissible.show').forEach(function (el) {
+                    el.classList.remove('show');
+                    setTimeout(function () {
+                        el.style.transition = 'all 0.35s ease';
+                        el.style.maxHeight = '0';
+                        el.style.marginBottom = '0';
+                        el.style.paddingTop = '0';
+                        el.style.paddingBottom = '0';
+                        el.style.overflow = 'hidden';
+                        setTimeout(function () { 
+                            if (el && el.parentNode) {
+                                el.parentNode.removeChild(el);
+                            }
+                        }, 360);
+                    }, 200);
+                });
+            }, 1000);
+        });
+    </script>
 
 </body>
 

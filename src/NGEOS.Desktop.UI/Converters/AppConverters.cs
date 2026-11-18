@@ -34,6 +34,22 @@ namespace NGEOS.Desktop.UI.Converters
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
     }
 
+    public class StringMatchToVisibilityConverter : IValueConverter
+    {
+        public bool Invert { get; set; }
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var strVal = value?.ToString() ?? string.Empty;
+            var paramVal = parameter?.ToString() ?? string.Empty;
+            bool matches = string.Equals(strVal, paramVal, StringComparison.OrdinalIgnoreCase);
+            if (Invert) matches = !matches;
+            return matches ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
+    }
+
     public class CurrencyFormatter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -87,6 +103,38 @@ namespace NGEOS.Desktop.UI.Converters
             if (value is bool b)
                 return b ? TrueText : FalseText;
             return FalseText;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
+    }
+
+    public class StringMatchToBrushConverter : IValueConverter
+    {
+        public Brush MatchBrush { get; set; } = new SolidColorBrush(Color.FromRgb(0xF2, 0x5C, 0x05));
+        public Brush DefaultBrush { get; set; } = new SolidColorBrush(Color.FromRgb(0x33, 0x41, 0x55));
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value == null || parameter == null) return DefaultBrush;
+            return value.ToString()!.Equals(parameter.ToString(), StringComparison.OrdinalIgnoreCase) 
+                ? MatchBrush 
+                : DefaultBrush;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
+    }
+
+    public class StringMatchToBackgroundConverter : IValueConverter
+    {
+        public Brush MatchBrush { get; set; } = new SolidColorBrush(Color.FromRgb(0x1E, 0x29, 0x3B));
+        public Brush DefaultBrush { get; set; } = new SolidColorBrush(Color.FromRgb(0x10, 0x1A, 0x2E));
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value == null || parameter == null) return DefaultBrush;
+            return value.ToString()!.Equals(parameter.ToString(), StringComparison.OrdinalIgnoreCase) 
+                ? MatchBrush 
+                : DefaultBrush;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();

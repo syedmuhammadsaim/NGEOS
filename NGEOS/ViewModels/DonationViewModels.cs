@@ -20,8 +20,8 @@ namespace NGEOS.ViewModels
         [Display(Name = "Donation Amount")]
         public decimal Amount { get; set; } = 1000;
 
-        [Required(ErrorMessage = "Please select a payment gateway.")]
-        [Display(Name = "Payment Gateway")]
+        [Required(ErrorMessage = "Please select a payment method.")]
+        [Display(Name = "Payment Method")]
         public string PaymentGateway { get; set; } = "Safepay"; // Safepay, JazzCash, Easypaisa, PayFast
 
         [Display(Name = "Currency")]
@@ -37,9 +37,10 @@ namespace NGEOS.ViewModels
         [Display(Name = "Email Address (for Receipt)")]
         public string DonorEmail { get; set; } = string.Empty;
 
-        [Phone]
-        [Display(Name = "Phone Number (Optional)")]
-        public string? DonorPhone { get; set; }
+        [Required(ErrorMessage = "Phone number is required for official receipt.")]
+        [Phone(ErrorMessage = "Please enter a valid phone number.")]
+        [Display(Name = "Contact / Mobile Phone")]
+        public string DonorPhone { get; set; } = string.Empty;
 
         // Optional legacy card fields (for compatibility)
         public string? CardType { get; set; } = "Online Gateway";

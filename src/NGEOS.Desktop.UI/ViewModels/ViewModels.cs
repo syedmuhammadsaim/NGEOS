@@ -831,8 +831,8 @@ namespace NGEOS.Desktop.UI.ViewModels
             {
                 IsOnline = isOnline;
                 ConnectionStatusMessage = isOnline 
-                    ? "🟢 Remote Web API is online and responding." 
-                    : "⚪ Remote Web API is unreachable. System running in offline local SQLite mode.";
+                    ? "Remote Web API is online and responding." 
+                    : "Remote Web API is unreachable. System running in offline local SQLite mode.";
             };
 
             _syncService.SyncStateChanged += () =>
@@ -869,13 +869,13 @@ namespace NGEOS.Desktop.UI.ViewModels
                 IsOnline = ok;
                 if (ok)
                 {
-                    ConnectionStatusMessage = "🟢 Remote Web API connected successfully! Multi-device cloud sync ready.";
+                    ConnectionStatusMessage = "Remote Web API connected successfully! Multi-device cloud sync ready.";
                     SuccessMessage = ConnectionStatusMessage;
                     ErrorMessage = string.Empty;
                 }
                 else
                 {
-                    ConnectionStatusMessage = "⚪ Remote server is unreachable. Offline mode is active and local records are safe.";
+                    ConnectionStatusMessage = "Remote server is unreachable. Offline mode is active and local records are safe.";
                     ErrorMessage = ConnectionStatusMessage;
                     SuccessMessage = string.Empty;
                 }

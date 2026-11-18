@@ -13,7 +13,7 @@
 </div>
 
 <div class="giveaid-card p-4 p-md-5">
-    <form asp-action="EditEvent" method="post">
+    <form asp-action="EditEvent" method="post" enctype="multipart/form-data">
         @Html.AntiForgeryToken()
         <input type="hidden" asp-for="Id" />
         <input type="hidden" asp-for="CreatedAt" />
@@ -45,9 +45,13 @@
             </div>
 
             <div class="col-12">
-                <label asp-for="ImageUrl" class="form-label"></label>
-                <input asp-for="ImageUrl" class="form-control" required />
-                <span asp-validation-for="ImageUrl" class="text-danger small"></span>
+                <label class="form-label fw-semibold">Event Banner Image (Upload from Computer)</label>
+                <input type="file" name="imageFile" class="form-control" accept="image/*" id="evImageFile" onchange="previewUpload(this, 'evImgPreview')" />
+                <div class="form-text text-muted">Choose a new banner image from your device/folder to replace current image.</div>
+                <input type="hidden" asp-for="ImageUrl" id="evHiddenUrl" />
+                <div id="evPreviewBox" class="mt-2 @(string.IsNullOrEmpty(Model?.ImageUrl) ? "d-none" : "")">
+                    <img id="evImgPreview" src="@Model?.ImageUrl" alt="Preview" class="rounded-3 border shadow-xs" style="max-height: 140px; object-fit: cover;" />
+                </div>
             </div>
 
             <div class="col-12">
@@ -71,7 +75,7 @@
 
             <div class="col-12 mt-4 pt-3 border-top">
                 <button type="submit" class="btn btn-orange btn-lg px-5 shadow">
-                    <i class="bi bi-check-lg me-1"></i> Update Event
+                    Update Event
                 </button>
             </div>
         </div>

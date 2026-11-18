@@ -5,10 +5,10 @@
 
 <div class="py-5 text-white position-relative" style="background: linear-gradient(135deg, rgba(11, 25, 44, 0.92), rgba(15, 23, 42, 0.88)), url('https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?w=1600') center/cover no-repeat;" data-aos="fade-down">
     <div class="container text-center py-3">
-        <span class="hero-tag mb-2" data-aos="fade-up"><i class="bi bi-shield-lock-fill text-warning me-1"></i> Secure Multi-Payment Gateway Portal</span>
+        <span class="hero-tag mb-2" data-aos="fade-up"><i class="bi bi-shield-lock-fill text-orange me-1"></i> Secure Payment Portal</span>
         <h1 class="display-5 fw-bold text-white mb-2" data-aos="fade-up" data-aos-delay="100">Give Hope. Transform A Life.</h1>
         <p class="text-white-50 mx-auto" style="max-width: 650px;" data-aos="fade-up" data-aos-delay="150">
-            Support certified welfare causes with 100% financial transparency. Choose from Pakistan's most trusted payment gateways with end-to-end cryptographic verification.
+            Support certified welfare causes with 100% financial transparency. Choose from Pakistan's most trusted payment methods with end-to-end cryptographic verification.
         </p>
     </div>
 </div>
@@ -24,7 +24,7 @@
                     <!-- Step 1: Select Cause & Amount -->
                     <div class="mb-5">
                         <h5 class="fw-bold text-dark border-bottom pb-2 mb-4 d-flex align-items-center gap-2">
-                            <span class="badge bg-warning text-dark rounded-circle" style="width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center;">1</span>
+                            <span class="badge bg-orange text-white rounded-circle" style="width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center;">1</span>
                             Select Your Cause &amp; Contribution Amount
                         </h5>
 
@@ -91,11 +91,11 @@
                         <!-- Preset Amount Buttons (in PKR) -->
                         <label class="form-label fw-bold">Select Donation Amount (PKR)</label>
                         <div class="d-flex flex-wrap gap-2 mb-3">
-                            <button type="button" class="btn btn-preset-amount @(Model.Amount == 500 ? "btn-warning active fw-bold" : "btn-outline-secondary") flex-grow-1" data-amount="500">Rs 500</button>
-                            <button type="button" class="btn btn-preset-amount @(Model.Amount == 1000 ? "btn-warning active fw-bold" : "btn-outline-secondary") flex-grow-1" data-amount="1000">Rs 1,000</button>
-                            <button type="button" class="btn btn-preset-amount @(Model.Amount == 2500 ? "btn-warning active fw-bold" : "btn-outline-secondary") flex-grow-1" data-amount="2500">Rs 2,500</button>
-                            <button type="button" class="btn btn-preset-amount @(Model.Amount == 5000 ? "btn-warning active fw-bold" : "btn-outline-secondary") flex-grow-1" data-amount="5000">Rs 5,000</button>
-                            <button type="button" class="btn btn-preset-amount @(Model.Amount == 10000 ? "btn-warning active fw-bold" : "btn-outline-secondary") flex-grow-1" data-amount="10000">Rs 10,000</button>
+                            <button type="button" class="btn btn-preset-amount @(Model.Amount == 500 ? "btn-orange active fw-bold" : "btn-outline-secondary") flex-grow-1" data-amount="500">Rs 500</button>
+                            <button type="button" class="btn btn-preset-amount @(Model.Amount == 1000 ? "btn-orange active fw-bold" : "btn-outline-secondary") flex-grow-1" data-amount="1000">Rs 1,000</button>
+                            <button type="button" class="btn btn-preset-amount @(Model.Amount == 2500 ? "btn-orange active fw-bold" : "btn-outline-secondary") flex-grow-1" data-amount="2500">Rs 2,500</button>
+                            <button type="button" class="btn btn-preset-amount @(Model.Amount == 5000 ? "btn-orange active fw-bold" : "btn-outline-secondary") flex-grow-1" data-amount="5000">Rs 5,000</button>
+                            <button type="button" class="btn btn-preset-amount @(Model.Amount == 10000 ? "btn-orange active fw-bold" : "btn-outline-secondary") flex-grow-1" data-amount="10000">Rs 10,000</button>
                         </div>
 
                         <div class="input-group input-group-lg">
@@ -110,7 +110,7 @@
                     <!-- Step 2: Donor Contact Info -->
                     <div class="mb-5">
                         <h5 class="fw-bold text-dark border-bottom pb-2 mb-4 d-flex align-items-center gap-2">
-                            <span class="badge bg-warning text-dark rounded-circle" style="width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center;">2</span>
+                            <span class="badge bg-orange text-white rounded-circle" style="width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center;">2</span>
                             Donor Information (for Official Tax Receipt)
                         </h5>
 
@@ -128,11 +128,10 @@
                             </div>
 
                             <div class="col-md-12">
-                                <label asp-for="DonorPhone" class="form-label fw-semibold">Contact / Mobile Phone</label>
+                                <label asp-for="DonorPhone" class="form-label fw-semibold">Contact / Mobile Phone <span class="text-danger">*</span></label>
                                 <div class="intl-phone-wrapper">
                                     <div class="input-group">
                                         <button class="btn btn-outline-secondary dropdown-toggle country-picker-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <span class="country-flag-icon">🇵🇰</span>
                                             <span class="country-dial-code">+92</span>
                                         </button>
                                         <ul class="dropdown-menu country-dropdown-menu shadow">
@@ -141,8 +140,8 @@
                                             </li>
                                             <div class="country-items-list"></div>
                                         </ul>
-                                        <input type="tel" class="form-control country-phone-input" placeholder="300 1234567" maxlength="10" data-rule="numbers-only" />
-                                        <input type="hidden" asp-for="DonorPhone" class="phone-actual-input" />
+                                        <input type="tel" class="form-control country-phone-input" placeholder="300 1234567" maxlength="10" data-rule="numbers-only" required />
+                                        <input type="hidden" asp-for="DonorPhone" class="phone-actual-input" required />
                                     </div>
                                     <div class="phone-meta-row mt-1">
                                         <span class="phone-helper-text small text-muted">Standard 10-digit mobile number for Pakistan (+92)</span>
@@ -153,17 +152,17 @@
                         </div>
                     </div>
 
-                    <!-- Step 3: Select Payment Gateway (Pakistani Gateways) -->
+                    <!-- Step 3: Payment Method (Pakistani Payment Options) -->
                     <div class="mb-5">
                         <h5 class="fw-bold text-dark border-bottom pb-2 mb-4 d-flex align-items-center gap-2">
-                            <span class="badge bg-warning text-dark rounded-circle" style="width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center;">3</span>
-                            Select Payment Gateway
+                            <span class="badge bg-orange text-white rounded-circle" style="width: 28px; height: 28px; display: inline-flex; align-items: center; justify-content: center;">3</span>
+                            Payment Method
                         </h5>
 
                         <div class="alert alert-light border small text-muted mb-4 d-flex align-items-center gap-2">
                             <i class="bi bi-shield-check text-success fs-4"></i>
                             <div>
-                                <strong>Direct Secure Gateway Redirect:</strong> Your contribution will be processed via the official, PCI-compliant gateway of your choice. NGEOS never stores your banking credentials or CVV.
+                                <strong>Direct Secure Payment:</strong> Your contribution will be processed via the official, PCI-compliant payment method of your choice. NGEOS never stores your banking credentials or CVV.
                             </div>
                         </div>
 
@@ -252,12 +251,12 @@
 
                             <!-- Gateway 4: PayFast -->
                             <div class="col-md-6">
-                                <div class="gateway-card p-3 rounded-4 border @(Model.PaymentGateway == "PayFast" ? "active-gateway border-primary bg-primary-subtle" : "border-light-subtle bg-white") shadow-xs cursor-pointer h-100 position-relative transition-all"
+                                <div class="gateway-card p-3 rounded-4 border @(Model.PaymentGateway == "PayFast" ? "active-gateway border-orange bg-orange-subtle" : "border-light-subtle bg-white") shadow-xs cursor-pointer h-100 position-relative transition-all"
                                      onclick="selectGateway('PayFast')">
                                     <div class="d-flex align-items-center justify-content-between mb-2">
                                         <div class="d-flex align-items-center gap-2">
                                             <div class="gateway-icon-box bg-white p-2 rounded-3 border shadow-xs">
-                                                <i class="bi bi-lightning-charge-fill text-warning fs-4"></i>
+                                                <i class="bi bi-bank2 text-primary fs-4"></i>
                                             </div>
                                             <div>
                                                 <h6 class="fw-bold mb-0 text-dark">PayFast Pakistan</h6>
@@ -276,6 +275,7 @@
                                     </div>
                                 </div>
                             </div>
+
                         </div>
 
                         <input type="hidden" asp-for="PaymentGateway" id="paymentGatewayInput" value="@(string.IsNullOrEmpty(Model.PaymentGateway) ? "Safepay" : Model.PaymentGateway)" />
@@ -289,8 +289,8 @@
                     </div>
 
                     <!-- Submit Button -->
-                    <button type="submit" class="btn btn-warning btn-lg w-100 py-3 shadow-lg fw-bold text-dark" id="btnSubmitDonation" style="font-size: 1.15rem; background-color: #f59e0b; border-color: #d97706;">
-                        <i class="bi bi-shield-lock-fill me-1"></i> Proceed to Secure Checkout with <span id="submitGatewayName">Safepay</span>
+                    <button type="submit" class="btn btn-orange btn-lg w-100 py-3 shadow-lg fw-bold text-white" id="btnSubmitDonation" style="font-size: 1.15rem; background-color: #f25c05; border-color: #d94e00;">
+                        <i class="bi bi-shield-lock-fill me-1"></i> Proceed to Secure Payment (<span id="submitGatewayName">Safepay</span>)
                     </button>
                     
                     <div class="text-center mt-3 small text-muted">
@@ -313,9 +313,9 @@
             box-shadow: 0 8px 16px rgba(0,0,0,0.06);
         }
         .gateway-card.active-gateway {
-            border-color: #0d6efd !important;
-            background-color: #eff6ff !important;
-            box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.25) !important;
+            border-color: #f25c05 !important;
+            background-color: #fff7ed !important;
+            box-shadow: 0 0 0 2px rgba(242, 92, 5, 0.25) !important;
         }
     </style>
 }
@@ -349,11 +349,11 @@
 
             var cards = document.querySelectorAll('.gateway-card');
             cards.forEach(function (card) {
-                card.classList.remove('active-gateway', 'border-primary', 'bg-primary-subtle');
+                card.classList.remove('active-gateway', 'border-orange', 'bg-orange-subtle');
                 card.classList.add('border-light-subtle', 'bg-white');
             });
 
-            event.currentTarget.classList.add('active-gateway', 'border-primary', 'bg-primary-subtle');
+            event.currentTarget.classList.add('active-gateway', 'border-orange', 'bg-orange-subtle');
             event.currentTarget.classList.remove('border-light-subtle', 'bg-white');
         }
 
@@ -361,10 +361,10 @@
         document.querySelectorAll('.btn-preset-amount').forEach(function (btn) {
             btn.addEventListener('click', function () {
                 document.querySelectorAll('.btn-preset-amount').forEach(function (b) {
-                    b.classList.remove('btn-warning', 'active', 'fw-bold');
+                    b.classList.remove('btn-orange', 'active', 'fw-bold');
                     b.classList.add('btn-outline-secondary');
                 });
-                this.classList.add('btn-warning', 'active', 'fw-bold');
+                this.classList.add('btn-orange', 'active', 'fw-bold');
                 this.classList.remove('btn-outline-secondary');
                 var amount = this.getAttribute('data-amount');
                 document.getElementById('donationAmountInput').value = amount;
@@ -378,10 +378,10 @@
                 var currentVal = this.value;
                 document.querySelectorAll('.btn-preset-amount').forEach(function (b) {
                     if (b.getAttribute('data-amount') === currentVal) {
-                        b.classList.add('btn-warning', 'active', 'fw-bold');
+                        b.classList.add('btn-orange', 'active', 'fw-bold');
                         b.classList.remove('btn-outline-secondary');
                     } else {
-                        b.classList.remove('btn-warning', 'active', 'fw-bold');
+                        b.classList.remove('btn-orange', 'active', 'fw-bold');
                         b.classList.add('btn-outline-secondary');
                     }
                 });

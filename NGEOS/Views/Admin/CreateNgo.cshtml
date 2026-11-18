@@ -13,7 +13,7 @@
 </div>
 
 <div class="giveaid-card p-4 p-md-5">
-    <form asp-action="CreateNgo" method="post">
+    <form asp-action="CreateNgo" method="post" enctype="multipart/form-data">
         @Html.AntiForgeryToken()
         <div asp-validation-summary="ModelOnly" class="alert alert-danger small mb-3"></div>
 
@@ -55,9 +55,13 @@
             </div>
 
             <div class="col-md-6">
-                <label asp-for="LogoUrl" class="form-label">Logo Image URL</label>
-                <input asp-for="LogoUrl" class="form-control" placeholder="https://images.unsplash.com/..." required />
-                <span asp-validation-for="LogoUrl" class="text-danger small"></span>
+                <label class="form-label fw-semibold">NGO Official Logo (Upload from Computer)</label>
+                <input type="file" name="logoFile" class="form-control" accept="image/*" id="ngoLogoFile" onchange="previewUpload(this, 'ngoLogoPreview')" />
+                <div class="form-text text-muted">Select NGO logo image from your device/folder (PNG, JPG, SVG).</div>
+                <input type="hidden" asp-for="LogoUrl" id="ngoHiddenUrl" />
+                <div id="ngoPreviewBox" class="mt-2 @(string.IsNullOrEmpty(Model?.LogoUrl) ? "d-none" : "")">
+                    <img id="ngoLogoPreview" src="@Model?.LogoUrl" alt="Logo Preview" class="rounded border p-1 bg-white shadow-xs" style="max-height: 80px; object-fit: contain;" />
+                </div>
             </div>
 
             <div class="col-md-6">
@@ -86,7 +90,7 @@
 
             <div class="col-12 mt-4 pt-3 border-top">
                 <button type="submit" class="btn btn-orange btn-lg px-5 shadow">
-                    <i class="bi bi-building-add me-1"></i> Register Partner NGO
+                    Register Partner NGO
                 </button>
             </div>
         </div>

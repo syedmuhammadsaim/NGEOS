@@ -13,7 +13,7 @@
 </div>
 
 <div class="giveaid-card p-4 p-md-5">
-    <form asp-action="CreatePartner" method="post">
+    <form asp-action="CreatePartner" method="post" enctype="multipart/form-data">
         @Html.AntiForgeryToken()
         <div asp-validation-summary="ModelOnly" class="alert alert-danger small mb-3"></div>
 
@@ -38,9 +38,13 @@
             </div>
 
             <div class="col-md-6">
-                <label asp-for="LogoUrl" class="form-label">Logo Image URL</label>
-                <input asp-for="LogoUrl" class="form-control" placeholder="https://images.unsplash.com/..." required />
-                <span asp-validation-for="LogoUrl" class="text-danger small"></span>
+                <label class="form-label fw-semibold">Partner Logo (Choose File)</label>
+                <input type="file" name="logoFile" class="form-control" accept="image/*" required onchange="previewUpload(this, 'partnerLogoPreview')" />
+                <input type="hidden" asp-for="LogoUrl" value="/images/defaults/partner.png" />
+                <div class="mt-2 text-muted small">Select an image file from your computer (PNG, JPG, SVG, WebP).</div>
+                <div class="mt-2 p-2 bg-light rounded border d-none">
+                    <img id="partnerLogoPreview" src="#" alt="Logo Preview" style="max-height: 80px; max-width: 150px; object-fit: contain;" class="rounded" />
+                </div>
             </div>
 
             <div class="col-md-6">
@@ -63,7 +67,7 @@
 
             <div class="col-12 mt-4 pt-3 border-top">
                 <button type="submit" class="btn btn-orange btn-lg px-5 shadow">
-                    <i class="bi bi-award me-1"></i> Save Partner
+                    Save Partner
                 </button>
             </div>
         </div>

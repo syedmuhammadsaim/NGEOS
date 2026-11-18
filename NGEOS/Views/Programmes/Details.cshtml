@@ -20,7 +20,7 @@
                     <div class="row g-3 mb-4 pb-3 border-bottom">
                         <div class="col-6 col-md-3">
                             <div class="p-3 bg-light rounded text-center">
-                                <i class="bi bi-calendar2-check text-warning fs-4 d-block mb-1"></i>
+                                <i class="bi bi-calendar2-check text-orange fs-4 d-block mb-1"></i>
                                 <span class="small text-muted d-block">Start Date</span>
                                 <strong class="text-dark small">@Model.StartDate.ToString("MMM dd, yyyy")</strong>
                             </div>
@@ -110,7 +110,7 @@
             <input type="hidden" name="ProgrammeId" value="@Model.Id" />
             <div class="modal-header bg-navy-dark text-white p-3 px-4" style="background-color: var(--navy-dark); border-bottom: 2px solid var(--primary-orange);">
                 <div>
-                    <span class="badge bg-warning text-dark px-2 py-1 mb-1 small fw-bold"><i class="bi bi-heart-pulse-fill me-1"></i> Volunteer / Participant Registration</span>
+                    <span class="badge bg-orange text-white px-2 py-1 mb-1 small fw-bold"><i class="bi bi-heart-pulse-fill me-1"></i> Volunteer / Participant Registration</span>
                     <h5 class="modal-title fw-bold text-white mb-0">Show Interest in Programme</h5>
                     <p class="small text-white-50 mb-0 mt-1">@Model.Title</p>
                 </div>
@@ -118,7 +118,7 @@
             </div>
             <div class="modal-body p-3 px-4">
                 <div class="alert alert-light border small text-muted mb-3 d-flex align-items-center gap-2">
-                    <i class="bi bi-info-circle-fill text-warning fs-5"></i>
+                    <i class="bi bi-info-circle-fill text-orange fs-5"></i>
                     <div>
                         Fill in your details to register as a volunteer, participant, or supporter for this initiative. Our programme team will get in touch with you.
                     </div>
@@ -140,7 +140,6 @@
                         <div class="intl-phone-wrapper">
                             <div class="input-group">
                                 <button class="btn btn-outline-secondary dropdown-toggle country-picker-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <span class="country-flag-icon">🇵🇰</span>
                                     <span class="country-dial-code">+92</span>
                                 </button>
                                 <ul class="dropdown-menu country-dropdown-menu shadow">

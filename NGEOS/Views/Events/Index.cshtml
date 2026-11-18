@@ -7,7 +7,7 @@
 
 <div class="py-5 text-white position-relative" style="background: linear-gradient(135deg, rgba(11, 25, 44, 0.9), rgba(15, 23, 42, 0.82)), url('https://images.unsplash.com/photo-1511578314322-379afb476865?w=1600') center/cover no-repeat;" data-aos="fade-down">
     <div class="container text-center py-4">
-        <span class="hero-tag mb-2" data-aos="fade-up"><i class="bi bi-calendar-event-fill text-warning"></i> Community Gatherings</span>
+        <span class="hero-tag mb-2" data-aos="fade-up"><i class="bi bi-calendar-event-fill text-orange"></i> Community Gatherings</span>
         <h1 class="display-4 fw-bold text-white mb-2" data-aos="fade-up" data-aos-delay="100">Charity Events & Galas</h1>
         <p class="text-white-50 mx-auto" style="max-width: 650px;" data-aos="fade-up" data-aos-delay="150">
             Join our charity galas, awareness marathons, health summits, and community fundraisers to celebrate and advance global welfare.
@@ -16,7 +16,7 @@
 </div>
 
 <div class="container section-padding">
-    <h3 class="fw-bold mb-4" data-aos="fade-up"><i class="bi bi-star-fill text-warning me-2"></i> Upcoming Charity Events</h3>
+    <h3 class="fw-bold mb-4" data-aos="fade-up"><i class="bi bi-star-fill text-orange me-2"></i> Upcoming Charity Events</h3>
     
     <div class="row g-4 mb-5">
         @foreach (var ev in Model)
@@ -25,7 +25,7 @@
                 <div class="giveaid-card">
                     <div class="card-img-wrapper">
                         <img src="@ev.ImageUrl" alt="@ev.Title">
-                        <span class="card-category-badge bg-warning text-dark"><i class="bi bi-calendar-check me-1"></i> @ev.EventDate.ToString("MMM dd, yyyy")</span>
+                        <span class="card-category-badge bg-orange text-white"><i class="bi bi-calendar-check me-1"></i> @ev.EventDate.ToString("MMM dd, yyyy")</span>
                     </div>
                     <div class="card-body-content">
                         <div class="d-flex align-items-center gap-2 text-muted small mb-2">
@@ -52,7 +52,7 @@
             We collaborate with universities, corporations, and community groups to host charity sports tournaments, musical evenings, and charity galas.
         </p>
         <a asp-controller="Home" asp-action="Contact" class="btn btn-light text-dark fw-bold px-4 py-2 rounded-pill">
-            <i class="bi bi-megaphone-fill text-warning me-1"></i> Propose an Event
+            <i class="bi bi-megaphone-fill text-orange me-1"></i> Propose an Event
         </a>
     </div>
 </div>

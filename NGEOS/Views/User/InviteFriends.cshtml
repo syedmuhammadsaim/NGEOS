@@ -5,7 +5,7 @@
 
 <div class="py-5 text-white position-relative" style="background: linear-gradient(135deg, rgba(11, 25, 44, 0.9), rgba(15, 23, 42, 0.82)), url('https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1600') center/cover no-repeat;" data-aos="fade-down">
     <div class="container text-center py-4">
-        <span class="hero-tag mb-2"><i class="bi bi-envelope-heart-fill text-warning"></i> Community Advocacy</span>
+        <span class="hero-tag mb-2"><i class="bi bi-envelope-heart-fill text-orange"></i> Community Advocacy</span>
         <h1 class="display-4 fw-bold text-white mb-2">Invite Friends To NGEOS</h1>
         <p class="text-white-50 mx-auto" style="max-width: 600px;">
             Inspire your friends, colleagues, and family members to discover and support verified humanitarian initiatives.
@@ -16,6 +16,12 @@
 <div class="container section-padding">
     <!-- Quick Navigation Pills -->
     <div class="d-flex flex-wrap justify-content-center gap-2 mb-5" data-aos="fade-up">
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-controller="Admin" asp-action="Index" class="btn btn-navy text-white btn-sm rounded-pill px-4 shadow fw-bold border border-warning">
+                Admin Panel
+            </a>
+        }
         <a asp-action="Dashboard" class="btn btn-outline-navy btn-sm rounded-pill px-4 fw-semibold">Overview</a>
         <a asp-action="Donations" class="btn btn-outline-navy btn-sm rounded-pill px-4 fw-semibold">Donation History</a>
         <a asp-action="Programmes" class="btn btn-outline-navy btn-sm rounded-pill px-4 fw-semibold">My Programmes</a>

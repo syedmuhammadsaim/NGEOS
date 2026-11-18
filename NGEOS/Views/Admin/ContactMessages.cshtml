@@ -28,7 +28,7 @@
             <tbody>
                 @foreach (var m in Model)
                 {
-                    <tr class="@(m.IsRead ? "" : "table-warning")">
+                    <tr class="@(m.IsRead ? "" : "table-light")">
                         <td>
                             <strong class="d-block text-dark small">@m.Name</strong>
                             <span class="text-muted" style="font-size: 0.75rem;"><a href="mailto:@m.Email">@m.Email</a></span>
@@ -41,7 +41,7 @@
                         <td class="small text-secondary" style="max-width: 320px;">@m.Message</td>
                         <td class="small text-muted">@m.CreatedAt.ToString("MMM dd, yyyy - hh:mm tt")</td>
                         <td>
-                            <span class="badge @(m.IsRead ? "bg-success-subtle text-success" : "bg-warning text-dark")">
+                            <span class="badge @(m.IsRead ? "bg-success-subtle text-success" : "bg-orange text-white")">
                                 @(m.IsRead ? "Read" : "Unread")
                             </span>
                         </td>

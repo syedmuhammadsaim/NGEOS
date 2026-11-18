@@ -43,7 +43,7 @@ namespace NGEOS.Services.Payments.Core
             // 2. Direct ServiceProvider fallback
             return cleanName.ToLowerInvariant() switch
             {
-                "safepay" => _serviceProvider.GetRequiredService<SafepayPaymentService>(),
+                "safepay" or "stripe" or "card" => _serviceProvider.GetRequiredService<SafepayPaymentService>(),
                 "jazzcash" => _serviceProvider.GetRequiredService<JazzCashPaymentService>(),
                 "easypaisa" => _serviceProvider.GetRequiredService<EasypaisaPaymentService>(),
                 "payfast" => _serviceProvider.GetRequiredService<PayFastPaymentService>(),

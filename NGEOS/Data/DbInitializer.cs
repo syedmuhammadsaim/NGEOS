@@ -30,6 +30,18 @@ namespace NGEOS.Data
                 context.SaveChanges();
             }
 
+            // Ensure all known admin emails always retain Admin role
+            var adminEmails = new[] { "admin@ngeos.org", "ngeos@gmail.com", "syedmuhammadsaim.contact@gmail.com", "syedmuhammadsaim.business@gmail.com", "syedmuhammadsaim.busniess@gmail.com", "admin@giveaid.org", "admin@cinevora.local" };
+            var adminsToEnsure = context.Users.Where(u => adminEmails.Contains(u.Email) && u.Role != "Admin").ToList();
+            if (adminsToEnsure.Any())
+            {
+                foreach (var a in adminsToEnsure)
+                {
+                    a.Role = "Admin";
+                }
+                context.SaveChanges();
+            }
+
             // 2. Seed Associated NGOs if none exist
             if (!context.NGOs.Any())
             {

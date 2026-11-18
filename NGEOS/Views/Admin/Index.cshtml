@@ -10,37 +10,37 @@
         <p class="text-muted small mb-0">Unified administration hub for campaigns, financial ledger, NGO alliances, and member management.</p>
     </div>
     <div class="d-flex flex-wrap gap-2">
-        <a asp-action="CreateCause" class="btn btn-orange btn-sm shadow-sm"><i class="bi bi-plus-circle me-1"></i> Add Cause</a>
-        <a asp-action="CreateProgramme" class="btn btn-navy btn-sm"><i class="bi bi-calendar-plus me-1"></i> Add Programme</a>
-        <a asp-action="CreateNgo" class="btn btn-outline-dark btn-sm"><i class="bi bi-building-add me-1"></i> Onboard NGO</a>
+        <a asp-action="CreateCause" class="btn btn-orange btn-sm shadow-sm">Add Cause</a>
+        <a asp-action="CreateProgramme" class="btn btn-navy btn-sm">Add Programme</a>
+        <a asp-action="CreateNgo" class="btn btn-outline-dark btn-sm">Onboard NGO</a>
     </div>
 </div>
 
 <!-- Quick Action Shortcuts Bar -->
 <div class="giveaid-card p-3 mb-4 bg-white border">
     <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
-        <span class="small fw-bold text-uppercase text-muted" style="letter-spacing: 0.5px; font-size: 0.75rem;">
-            <i class="bi bi-lightning-charge-fill text-warning me-1"></i> Quick Management:
+        <span class="small fw-semibold text-secondary text-uppercase" style="letter-spacing: 0.5px; font-size: 0.75rem;">
+            Quick Management
         </span>
         <div class="d-flex flex-wrap gap-2">
-            <a asp-action="Donations" class="btn btn-sm btn-light border py-1 px-3 small text-nowrap"><i class="bi bi-cash-stack text-success me-1"></i> Donations Ledger</a>
-            <a asp-action="Users" class="btn btn-sm btn-light border py-1 px-3 small text-nowrap"><i class="bi bi-people text-primary me-1"></i> Members Directory</a>
-            <a asp-action="Queries" class="btn btn-sm btn-light border py-1 px-3 small text-nowrap position-relative">
-                <i class="bi bi-chat-left-dots text-warning me-1"></i> Support Queries
+            <a asp-action="Donations" class="btn btn-sm btn-light border py-1 px-3 small text-nowrap text-dark">Donations Ledger</a>
+            <a asp-action="Users" class="btn btn-sm btn-light border py-1 px-3 small text-nowrap text-dark">Members Directory</a>
+            <a asp-action="Queries" class="btn btn-sm btn-light border py-1 px-3 small text-nowrap text-dark position-relative">
+                Support Queries
                 @if (Model.PendingQueriesCount > 0)
                 {
                     <span class="badge bg-danger rounded-pill ms-1">@Model.PendingQueriesCount</span>
                 }
             </a>
-            <a asp-action="ContactMessages" class="btn btn-sm btn-light border py-1 px-3 small text-nowrap position-relative">
-                <i class="bi bi-envelope text-info me-1"></i> Contact Messages
+            <a asp-action="ContactMessages" class="btn btn-sm btn-light border py-1 px-3 small text-nowrap text-dark position-relative">
+                Contact Messages
                 @if (Model.UnreadMessagesCount > 0)
                 {
                     <span class="badge bg-danger rounded-pill ms-1">@Model.UnreadMessagesCount</span>
                 }
             </a>
-            <a asp-action="Jobs" class="btn btn-sm btn-light border py-1 px-3 small text-nowrap"><i class="bi bi-briefcase text-secondary me-1"></i> Careers</a>
-            <a asp-action="AboutPages" class="btn btn-sm btn-light border py-1 px-3 small text-nowrap"><i class="bi bi-file-earmark-richtext text-danger me-1"></i> CMS Pages</a>
+            <a asp-action="Jobs" class="btn btn-sm btn-light border py-1 px-3 small text-nowrap text-dark">Careers</a>
+            <a asp-action="AboutPages" class="btn btn-sm btn-light border py-1 px-3 small text-nowrap text-dark">CMS Pages</a>
         </div>
     </div>
 </div>
@@ -51,11 +51,11 @@
         <div class="admin-kpi-card">
             <div>
                 <span class="text-muted small d-block mb-1">Total Funds Mobilized</span>
-                <h3 class="fw-bold text-success mb-0">Rs @Model.TotalDonationsAmount.ToString("N0")</h3>
-                <span class="badge bg-success-subtle text-success small mt-1">@Model.TotalDonationsCount Transactions</span>
+                <h3 class="fw-bold text-dark mb-0">Rs @Model.TotalDonationsAmount.ToString("N0")</h3>
+                <span class="badge bg-light text-secondary border small mt-1">@Model.TotalDonationsCount Transactions</span>
             </div>
-            <div class="kpi-icon-box bg-success-subtle text-success">
-                <i class="bi bi-currency-dollar"></i>
+            <div class="kpi-icon-box bg-light text-secondary border">
+                <i class="bi bi-wallet2"></i>
             </div>
         </div>
     </div>
@@ -64,11 +64,11 @@
         <div class="admin-kpi-card">
             <div>
                 <span class="text-muted small d-block mb-1">Registered Members</span>
-                <h3 class="fw-bold text-primary mb-0">@Model.TotalUsers</h3>
-                <span class="badge bg-primary-subtle text-primary small mt-1"><i class="bi bi-person-check me-1"></i> Verified Profiles</span>
+                <h3 class="fw-bold text-dark mb-0">@Model.TotalUsers</h3>
+                <span class="badge bg-light text-secondary border small mt-1">Verified Profiles</span>
             </div>
-            <div class="kpi-icon-box bg-primary-subtle text-primary">
-                <i class="bi bi-people-fill"></i>
+            <div class="kpi-icon-box bg-light text-secondary border">
+                <i class="bi bi-people"></i>
             </div>
         </div>
     </div>
@@ -77,11 +77,11 @@
         <div class="admin-kpi-card">
             <div>
                 <span class="text-muted small d-block mb-1">Active Causes & Alliances</span>
-                <h3 class="fw-bold text-warning mb-0">@Model.TotalCauses</h3>
-                <span class="badge bg-warning-subtle text-warning small mt-1">@Model.TotalNgos Partner NGOs</span>
+                <h3 class="fw-bold text-dark mb-0">@Model.TotalCauses</h3>
+                <span class="badge bg-light text-secondary border small mt-1">@Model.TotalNgos Partner NGOs</span>
             </div>
-            <div class="kpi-icon-box bg-warning-subtle text-warning">
-                <i class="bi bi-heart-pulse-fill"></i>
+            <div class="kpi-icon-box bg-light text-secondary border">
+                <i class="bi bi-heart"></i>
             </div>
         </div>
     </div>
@@ -90,13 +90,13 @@
         <div class="admin-kpi-card">
             <div>
                 <span class="text-muted small d-block mb-1">Support & Inquiries</span>
-                <h3 class="fw-bold text-danger mb-0">@(Model.PendingQueriesCount + Model.UnreadMessagesCount)</h3>
-                <span class="badge @(Model.PendingQueriesCount + Model.UnreadMessagesCount > 0 ? "bg-danger-subtle text-danger" : "bg-success-subtle text-success") small mt-1">
+                <h3 class="fw-bold text-dark mb-0">@(Model.PendingQueriesCount + Model.UnreadMessagesCount)</h3>
+                <span class="badge @(Model.PendingQueriesCount + Model.UnreadMessagesCount > 0 ? "bg-danger-subtle text-danger" : "bg-light text-secondary border") small mt-1">
                     @(Model.PendingQueriesCount) Queries • @(Model.UnreadMessagesCount) Messages
                 </span>
             </div>
-            <div class="kpi-icon-box bg-danger-subtle text-danger">
-                <i class="bi bi-headset"></i>
+            <div class="kpi-icon-box bg-light text-secondary border">
+                <i class="bi bi-chat-dots"></i>
             </div>
         </div>
     </div>
@@ -108,8 +108,8 @@
         <!-- Recent Donations Table -->
         <div class="giveaid-card p-4 mb-4">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="fw-bold mb-0"><i class="bi bi-cash-stack text-success me-2"></i> Recent Transactions</h5>
-                <a asp-action="Donations" class="small text-warning fw-bold">View Master Ledger</a>
+                <h5 class="fw-bold mb-0">Recent Transactions</h5>
+                <a asp-action="Donations" class="small text-orange fw-bold">View Master Ledger</a>
             </div>
 
             @if (Model.RecentDonations.Any())
@@ -150,8 +150,8 @@
         <!-- Recent Registered Members -->
         <div class="giveaid-card p-4">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="fw-bold mb-0"><i class="bi bi-person-lines-fill text-primary me-2"></i> Recently Registered Members</h5>
-                <a asp-action="Users" class="small text-warning fw-bold">View All Members</a>
+                <h5 class="fw-bold mb-0">Registered Members</h5>
+                <a asp-action="Users" class="small text-orange fw-bold">View All Members</a>
             </div>
 
             @if (Model.RecentUsers.Any())
@@ -196,13 +196,13 @@
         <div class="giveaid-card p-4 mb-4">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h5 class="fw-bold mb-0">
-                    <i class="bi bi-chat-left-dots-fill text-warning me-2"></i> Pending Queries
+                    Pending Queries
                     @if (Model.PendingQueriesCount > 0)
                     {
                         <span class="badge bg-danger rounded-pill ms-1" style="font-size: 0.7rem;">@Model.PendingQueriesCount</span>
                     }
                 </h5>
-                <a asp-action="Queries" class="small text-warning fw-bold">Manage Queries</a>
+                <a asp-action="Queries" class="small text-orange fw-bold">Manage Queries</a>
             </div>
 
             @if (Model.RecentQueries.Any())
@@ -213,12 +213,12 @@
                         <div class="list-group-item px-0 py-2">
                             <div class="d-flex justify-content-between align-items-center mb-1">
                                 <span class="fw-bold small text-dark">@q.Subject</span>
-                                <span class="badge @(q.Status == "Replied" ? "bg-success" : "bg-warning text-dark")" style="font-size: 0.7rem;">@q.Status</span>
+                                <span class="badge @(q.Status == "Replied" ? "bg-success" : "bg-orange text-white")" style="font-size: 0.7rem;">@q.Status</span>
                             </div>
                             <p class="text-muted small mb-1 text-truncate">@q.Message</p>
                             <div class="d-flex justify-content-between align-items-center small">
                                 <span class="text-muted" style="font-size: 0.75rem;">By: @q.FullName</span>
-                                <a asp-action="ReplyQuery" asp-route-id="@q.Id" class="text-warning fw-bold">Reply <i class="bi bi-arrow-right"></i></a>
+                                <a asp-action="ReplyQuery" asp-route-id="@q.Id" class="text-orange fw-bold">Reply <i class="bi bi-arrow-right"></i></a>
                             </div>
                         </div>
                     }
@@ -234,13 +234,13 @@
         <div class="giveaid-card p-4 mb-4">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h5 class="fw-bold mb-0">
-                    <i class="bi bi-envelope-fill text-info me-2"></i> Contact Inquiries
+                    Contact Inquiries
                     @if (Model.UnreadMessagesCount > 0)
                     {
                         <span class="badge bg-danger rounded-pill ms-1" style="font-size: 0.7rem;">@Model.UnreadMessagesCount Unread</span>
                     }
                 </h5>
-                <a asp-action="ContactMessages" class="small text-warning fw-bold">View Inquiries</a>
+                <a asp-action="ContactMessages" class="small text-orange fw-bold">View Inquiries</a>
             </div>
 
             @if (Model.RecentMessages != null && Model.RecentMessages.Any())
@@ -251,7 +251,7 @@
                         <div class="list-group-item px-0 py-2">
                             <div class="d-flex justify-content-between align-items-center mb-1">
                                 <strong class="small text-dark">@m.Name</strong>
-                                <span class="badge @(m.IsRead ? "bg-light text-muted border" : "bg-warning text-dark")" style="font-size: 0.7rem;">
+                                <span class="badge @(m.IsRead ? "bg-light text-muted border" : "bg-orange text-white")" style="font-size: 0.7rem;">
                                     @(m.IsRead ? "Read" : "Unread")
                                 </span>
                             </div>
@@ -274,8 +274,8 @@
         <!-- Recent Volunteers/Participants -->
         <div class="giveaid-card p-4">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="fw-bold mb-0"><i class="bi bi-person-raised-hand text-info me-2"></i> Programme Volunteers</h5>
-                <a asp-action="ProgrammeInterests" class="small text-warning fw-bold">View All</a>
+                <h5 class="fw-bold mb-0">Programme Volunteers</h5>
+                <a asp-action="ProgrammeInterests" class="small text-orange fw-bold">View All</a>
             </div>
 
             @if (Model.RecentProgrammeInterests.Any())
@@ -288,7 +288,7 @@
                                 <strong class="d-block small text-dark">@pi.FullName</strong>
                                 <span class="text-muted" style="font-size: 0.75rem;">@(pi.Programme?.Title ?? "Programme") (@pi.InterestType)</span>
                             </div>
-                            <span class="badge @(pi.Status == "Approved" ? "bg-success" : (pi.Status == "Contacted" ? "bg-info" : "bg-warning text-dark"))" style="font-size: 0.7rem;">@pi.Status</span>
+                            <span class="badge @(pi.Status == "Approved" ? "bg-success" : (pi.Status == "Contacted" ? "bg-info" : "bg-orange text-white"))" style="font-size: 0.7rem;">@pi.Status</span>
                         </div>
                     }
                 </div>

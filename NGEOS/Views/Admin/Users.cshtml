@@ -43,8 +43,8 @@
                                 }
                                 else
                                 {
-                                    <div class="brand-icon rounded-circle d-flex align-items-center justify-content-center" style="width: 38px; height: 38px; font-size: 1rem; background: var(--bg-subtle); color: var(--navy-dark);">
-                                        <i class="bi bi-person-fill"></i>
+                                    <div class="rounded-circle d-flex align-items-center justify-content-center bg-light text-secondary fw-bold border" style="width: 38px; height: 38px; font-size: 0.9rem;">
+                                        @(string.IsNullOrEmpty(u.FullName) ? "U" : u.FullName[0].ToString().ToUpper())
                                     </div>
                                 }
                                 <div>
@@ -54,19 +54,19 @@
                             </div>
                         </td>
                         <td>
-                            <span class="d-block small text-dark"><i class="bi bi-envelope me-1 text-muted"></i>@u.Email</span>
+                            <span class="d-block small text-dark">@u.Email</span>
                             @if (!string.IsNullOrEmpty(u.Phone))
                             {
-                                <span class="small text-muted d-block" style="font-size: 0.75rem;"><i class="bi bi-telephone me-1 text-muted"></i>@u.Phone</span>
+                                <span class="small text-muted d-block" style="font-size: 0.75rem;">@u.Phone</span>
                             }
                             @if (!string.IsNullOrEmpty(u.Address))
                             {
-                                <span class="small text-muted d-block text-truncate" style="max-width: 180px; font-size: 0.72rem;"><i class="bi bi-geo-alt me-1 text-muted"></i>@u.Address</span>
+                                <span class="small text-muted d-block text-truncate" style="max-width: 180px; font-size: 0.72rem;">@u.Address</span>
                             }
                         </td>
                         <td>
-                            <strong class="d-block small text-dark"><i class="bi bi-briefcase me-1 text-warning"></i>@(string.IsNullOrEmpty(u.Profession) ? "Community Member" : u.Profession)</strong>
-                            <span class="small text-muted" style="font-size: 0.75rem;"><i class="bi bi-building me-1 text-muted"></i>@(string.IsNullOrEmpty(u.Organization) ? "NGEOS Contributor" : u.Organization)</span>
+                            <strong class="d-block small text-dark">@(string.IsNullOrEmpty(u.Profession) ? "Community Member" : u.Profession)</strong>
+                            <span class="small text-muted" style="font-size: 0.75rem;">@(string.IsNullOrEmpty(u.Organization) ? "NGEOS Contributor" : u.Organization)</span>
                         </td>
                         <td>
                             <form asp-action="ChangeUserRole" asp-route-id="@u.Id" method="post" class="d-inline">
@@ -87,7 +87,7 @@
                         <td class="text-end">
                             <div class="d-inline-flex gap-1 align-items-center">
                                 <!-- Reset Password Modal Trigger -->
-                                <button type="button" class="btn btn-sm btn-outline-warning text-dark" data-bs-toggle="modal" data-bs-target="#resetPassModal-@u.Id" title="Reset User Password">
+                                <button type="button" class="btn btn-sm btn-outline-orange text-dark" data-bs-toggle="modal" data-bs-target="#resetPassModal-@u.Id" title="Reset User Password">
                                     <i class="bi bi-key-fill"></i>
                                 </button>
 
@@ -115,7 +115,7 @@
                                         <form asp-action="ResetUserPassword" asp-route-id="@u.Id" method="post">
                                             @Html.AntiForgeryToken()
                                             <div class="modal-header">
-                                                <h5 class="modal-title fw-bold"><i class="bi bi-key-fill text-warning me-2"></i>Reset Password: @u.FullName</h5>
+                                                <h5 class="modal-title fw-bold">Reset Password: @u.FullName</h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
@@ -148,7 +148,7 @@
             <form asp-action="CreateUser" method="post">
                 @Html.AntiForgeryToken()
                 <div class="modal-header">
-                    <h5 class="modal-title fw-bold"><i class="bi bi-person-plus-fill text-orange me-2"></i>Create New Account</h5>
+                    <h5 class="modal-title fw-bold">Create New Account</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body p-4">

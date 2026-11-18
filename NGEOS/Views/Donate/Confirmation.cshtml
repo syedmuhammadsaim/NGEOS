@@ -51,7 +51,7 @@
                 <!-- 3. Transaction Details Table -->
                 <div class="mb-3">
                     <div class="d-flex justify-content-between align-items-center mb-2">
-                        <span class="fw-bold text-uppercase small text-muted" style="font-size: 0.78rem;"><i class="bi bi-receipt me-1 text-warning"></i> Transaction Summary</span>
+                        <span class="fw-bold text-uppercase small text-muted" style="font-size: 0.78rem;"><i class="bi bi-receipt me-1 text-orange"></i> Transaction Summary</span>
                         <span class="badge bg-light text-muted border font-monospace" style="font-size: 0.75rem;">Status: Completed</span>
                     </div>
 
@@ -63,8 +63,8 @@
                                     <td class="py-2">
                                         @if (Model.DonationType == "Zakat")
                                         {
-                                            <span class="badge bg-warning-subtle text-dark border border-warning px-2 py-1 fw-bold" style="font-size: 0.8rem;">
-                                                <i class="bi bi-moon-stars-fill text-warning me-1"></i> Zakat Contribution (100% Policy)
+                                            <span class="badge bg-orange-subtle text-dark border border-orange px-2 py-1 fw-bold" style="font-size: 0.8rem;">
+                                                <i class="bi bi-moon-stars-fill text-orange me-1"></i> Zakat Contribution (100% Policy)
                                             </span>
                                         }
                                         else
@@ -96,7 +96,7 @@
                                     <td class="py-2 font-monospace text-secondary" style="font-size: 0.88rem;">@Model.DonorEmail</td>
                                 </tr>
                                 <tr>
-                                    <th class="bg-light text-muted small py-2">Payment Gateway</th>
+                                    <th class="bg-light text-muted small py-2">Payment Method</th>
                                     <td class="py-2 text-dark">
                                         <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-2 py-1 fw-bold me-1">
                                             @Model.PaymentGateway
@@ -299,7 +299,7 @@
                 color: #166534 !important;
             }
 
-            .bg-warning-subtle {
+            .bg-orange-subtle {
                 background-color: #fef9c3 !important;
                 color: #854d0e !important;
             }

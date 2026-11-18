@@ -13,7 +13,7 @@
             <Border Background="#0B192C" CornerRadius="16" Margin="24,20,24,24" Padding="36,30" BorderBrush="#1E293B" BorderThickness="1">
                 <StackPanel>
                     <Border Background="#1E293B" CornerRadius="12" Padding="12,4" HorizontalAlignment="Left" Margin="0,0,0,10">
-                        <TextBlock Text="🌙 100% SHARIAH-AUDITED PURIFICATION OF WEALTH" FontSize="11" FontWeight="Bold" Foreground="#4ADE80" />
+                        <TextBlock Text="100% SHARIAH-AUDITED PURIFICATION OF WEALTH" FontSize="11" FontWeight="Bold" Foreground="#4ADE80" />
                     </Border>
                     <TextBlock Text="NGEOS Interactive Zakat Calculator" FontSize="28" FontWeight="Bold" Foreground="White" Margin="0,0,0,8" />
                     <TextBlock Text="Easily calculate your exact annual 2.5% obligation according to established silver and gold Nisab standards. Zero administrative deductions from Zakat."
@@ -35,10 +35,10 @@
                         <TextBlock Text="Enter the current fair market value of all qualifying assets held for a full lunar year (Hawl)." FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" Margin="0,0,0,20" />
 
                         <!-- Cash & Bank -->
-                        <TextBlock Text="💵 Cash On Hand &amp; Vaults ($)" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="12" Margin="0,0,0,6" />
+                        <TextBlock Text="Cash On Hand &amp; Vaults ($)" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="12" Margin="0,0,0,6" />
                         <TextBox Text="{Binding CashOnHand, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:F0}'}" Style="{DynamicResource ModernTextBoxStyle}" Height="38" Margin="0,0,0,14" />
 
-                        <TextBlock Text="🏦 Bank Account Savings &amp; Deposits ($)" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="12" Margin="0,0,0,6" />
+                        <TextBlock Text="Bank Account Savings &amp; Deposits ($)" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="12" Margin="0,0,0,6" />
                         <TextBox Text="{Binding BankBalance, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:F0}'}" Style="{DynamicResource ModernTextBoxStyle}" Height="38" Margin="0,0,0,14" />
 
                         <!-- Gold & Silver -->
@@ -48,23 +48,23 @@
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0" Margin="0,0,8,0">
-                                <TextBlock Text="🥇 Gold &amp; Jewelry Value ($)" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="12" Margin="0,0,0,6" />
+                                <TextBlock Text="Gold &amp; Jewelry Value ($)" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="12" Margin="0,0,0,6" />
                                 <TextBox Text="{Binding GoldValue, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:F0}'}" Style="{DynamicResource ModernTextBoxStyle}" Height="38" />
                             </StackPanel>
                             <StackPanel Grid.Column="1" Margin="8,0,0,0">
-                                <TextBlock Text="🥈 Silver Value ($)" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="12" Margin="0,0,0,6" />
+                                <TextBlock Text="Silver Value ($)" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="12" Margin="0,0,0,6" />
                                 <TextBox Text="{Binding SilverValue, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:F0}'}" Style="{DynamicResource ModernTextBoxStyle}" Height="38" />
                             </StackPanel>
                         </Grid>
 
                         <!-- Business & Liabilities -->
-                        <TextBlock Text="📦 Trade Inventory &amp; Business Stock ($)" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="12" Margin="0,0,0,6" />
+                        <TextBlock Text="Trade Inventory &amp; Business Stock ($)" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="12" Margin="0,0,0,6" />
                         <TextBox Text="{Binding BusinessAssets, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:F0}'}" Style="{DynamicResource ModernTextBoxStyle}" Height="38" Margin="0,0,0,14" />
 
-                        <TextBlock Text="📉 Short-Term Debts &amp; Immediate Liabilities to Deduct ($)" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="12" Margin="0,0,0,6" />
+                        <TextBlock Text="Short-Term Debts &amp; Immediate Liabilities to Deduct ($)" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="12" Margin="0,0,0,6" />
                         <TextBox Text="{Binding DebtsLiabilities, UpdateSourceTrigger=PropertyChanged, StringFormat='{}{0:F0}'}" Style="{DynamicResource ModernTextBoxStyle}" Height="38" Margin="0,0,0,20" />
 
-                        <Button Content="🔄  Recalculate Summary" Command="{Binding RecalculateCommand}" Style="{DynamicResource OutlineButtonStyle}" Height="36" FontSize="12" />
+                        <Button Content="Recalculate Summary" Command="{Binding RecalculateCommand}" Style="{DynamicResource OutlineButtonStyle}" Height="36" FontSize="12" />
                     </StackPanel>
                 </Border>
 
@@ -104,7 +104,7 @@
                             </StackPanel>
                         </Border>
 
-                        <Button Content="💖  Pay This Zakat Now" Command="{Binding PayZakatNowCommand}" Style="{DynamicResource SuccessButtonStyle}" Height="46" FontSize="14" FontWeight="Bold" />
+                        <Button Content="Pay This Zakat Now" Command="{Binding PayZakatNowCommand}" Style="{DynamicResource SuccessButtonStyle}" Height="46" FontSize="14" FontWeight="Bold" />
                         <TextBlock Text="Transferred directly into vetted Zakat-eligible humanitarian causes." FontSize="11" Foreground="#94A3B8" HorizontalAlignment="Center" Margin="0,8,0,0" />
                     </StackPanel>
                 </Border>

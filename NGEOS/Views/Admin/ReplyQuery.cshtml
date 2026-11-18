@@ -16,14 +16,14 @@
     <!-- Original Query Card -->
     <div class="col-lg-5">
         <div class="giveaid-card p-4">
-            <h5 class="fw-bold mb-3"><i class="bi bi-person-lines-fill text-warning me-2"></i> Query Details</h5>
+            <h5 class="fw-bold mb-3">Query Details</h5>
             <div class="mb-3">
                 <label class="text-muted small d-block">Sender Name & Email:</label>
                 <strong class="text-dark">@Model.FullName</strong> (<a href="mailto:@Model.Email">@Model.Email</a>)
             </div>
             <div class="mb-3">
                 <label class="text-muted small d-block">Category & Subject:</label>
-                <span class="badge bg-warning text-dark mb-1">@Model.Category</span>
+                <span class="badge bg-orange text-white mb-1">@Model.Category</span>
                 <strong class="d-block text-dark">@Model.Subject</strong>
             </div>
             <div class="mb-3">
@@ -40,7 +40,7 @@
     <!-- Reply Form -->
     <div class="col-lg-7">
         <div class="giveaid-card p-4">
-            <h5 class="fw-bold mb-3"><i class="bi bi-reply-fill text-success me-2"></i> Official Response</h5>
+            <h5 class="fw-bold mb-3">Official Response</h5>
             <form asp-action="ReplyQuery" method="post">
                 @Html.AntiForgeryToken()
                 <input type="hidden" asp-for="QueryId" />

@@ -15,7 +15,7 @@
         <div class="row align-items-center">
             <div class="col-lg-8 col-xl-7" data-aos="fade-up" data-aos-duration="850">
                 <span class="hero-tag">
-                    <i class="bi bi-heart-pulse-fill text-warning"></i> Non-Governmental Organization Platform
+                    Non-Governmental Organization Platform
                 </span>
                 <h1 class="hero-title">
                     Together We Can <span>Make A Difference</span> In Every Life
@@ -87,7 +87,7 @@
             <div class="col-lg-6" data-aos="fade-right" data-aos-duration="850">
                 <div class="position-relative">
                     <img src="https://images.unsplash.com/photo-1542810634-71277d95dcbb?w=800&auto=format&fit=crop&q=80" alt="About NGEOS" class="rounded-4 shadow-lg w-100" style="height: 440px; object-fit: cover;">
-                    <div class="position-absolute bottom-0 end-0 bg-white p-4 rounded-4 shadow-lg m-3 d-none d-sm-block border-start border-4 border-warning" style="max-width: 250px;" data-aos="zoom-in" data-aos-delay="250">
+                    <div class="position-absolute bottom-0 end-0 bg-white p-4 rounded-4 shadow-lg m-3 d-none d-sm-block border-start border-4 border-orange" style="max-width: 250px;" data-aos="zoom-in" data-aos-delay="250">
                         <h4 class="fw-bold mb-1 text-dark">100%</h4>
                         <p class="small text-muted mb-0">Direct Humanitarian Allocation & Audited Transparency</p>
                     </div>
@@ -95,7 +95,7 @@
             </div>
 
             <div class="col-lg-6" data-aos="fade-left" data-aos-duration="850">
-                <span class="section-tag"><i class="bi bi-info-circle-fill me-1"></i> About NGEOS</span>
+                <span class="section-tag">About NGEOS</span>
                 <h2 class="section-title">A Unified Bridge Connecting Generosity with Genuine Needs</h2>
                 <p class="text-muted mb-4">
                     NGEOS (Non-Governmental Organization) is established with the generous contributions of major global corporate benefactors and philanthropic donors. We empower verified grassroots NGOs to raise essential funds and execute transformative welfare programs.
@@ -147,7 +147,7 @@
     <div class="container">
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end mb-5" data-aos="fade-up">
             <div>
-                <span class="section-tag"><i class="bi bi-heart-fill me-1"></i> Urgent Needs</span>
+                <span class="section-tag">Urgent Needs</span>
                 <h2 class="section-title mb-0">Causes That Need Your Help</h2>
             </div>
             <a asp-controller="Causes" asp-action="Index" class="btn btn-outline-navy mt-3 mt-md-0">
@@ -180,7 +180,7 @@
                                 <div class="progress-bar-orange" style="width: @(cause.PercentageRaised)%"></div>
                             </div>
                             <div class="d-flex justify-content-between align-items-center mb-3">
-                                <span class="badge bg-light text-dark border px-2 py-1"><i class="bi bi-pie-chart-fill text-warning me-1"></i> @cause.PercentageRaised% Funded</span>
+                                <span class="badge bg-light text-dark border px-2 py-1"><i class="bi bi-pie-chart-fill text-orange me-1"></i> @cause.PercentageRaised% Funded</span>
                                 <span class="small text-muted"><i class="bi bi-building me-1"></i> @(cause.Ngo?.Name ?? "NGEOS")</span>
                             </div>
 
@@ -211,7 +211,7 @@
                         <img src="@highlightCampaign.ImageUrl" alt="@highlightCampaign.Title" class="rounded-4 w-100 shadow" style="height: 380px; object-fit: cover;">
                     </div>
                     <div class="col-lg-6">
-                        <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold text-uppercase mb-3">
+                        <span class="badge bg-orange text-white px-3 py-2 rounded-pill fw-bold text-uppercase mb-3">
                             <i class="bi bi-star-fill me-1"></i> Featured Campaign Spotlight
                         </span>
                         <h2 class="fw-bold mb-3">@highlightCampaign.Title</h2>
@@ -248,7 +248,7 @@
     <div class="container">
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end mb-5" data-aos="fade-up">
             <div>
-                <span class="section-tag"><i class="bi bi-calendar2-event me-1"></i> Active Initiatives</span>
+                <span class="section-tag">Active Initiatives</span>
                 <h2 class="section-title mb-0">Upcoming NGO Programmes</h2>
             </div>
             <a asp-controller="Programmes" asp-action="Index" class="btn btn-outline-navy mt-3 mt-md-0">
@@ -268,7 +268,7 @@
                         </div>
                         <div class="card-body-content">
                             <div class="d-flex align-items-center gap-2 text-muted small mb-2">
-                                <span><i class="bi bi-calendar-event text-warning me-1"></i> @prog.StartDate.ToString("MMM dd, yyyy")</span>
+                                <span><i class="bi bi-calendar-event text-orange me-1"></i> @prog.StartDate.ToString("MMM dd, yyyy")</span>
                                 <span>•</span>
                                 <span><i class="bi bi-geo-alt text-danger me-1"></i> @prog.Location</span>
                             </div>
@@ -296,7 +296,7 @@
     <div class="container">
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end mb-5" data-aos="fade-up">
             <div>
-                <span class="section-tag"><i class="bi bi-building me-1"></i> Accredited Allies</span>
+                <span class="section-tag">Accredited Allies</span>
                 <h2 class="section-title mb-0">Our Partner NGOs</h2>
             </div>
             <a asp-controller="Ngos" asp-action="Index" class="btn btn-outline-navy mt-3 mt-md-0">
@@ -319,7 +319,7 @@
                         </div>
                         <p class="text-muted small mb-3 flex-grow-1">@ngo.ShortDescription</p>
                         <div class="d-flex justify-content-between align-items-center pt-3 border-top">
-                            <span class="small text-muted"><i class="bi bi-bullseye text-warning me-1"></i> @ngo.FocusArea</span>
+                            <span class="small text-muted"><i class="bi bi-bullseye text-orange me-1"></i> @ngo.FocusArea</span>
                             <a asp-controller="Ngos" asp-action="Details" asp-route-id="@ngo.Id" class="btn btn-outline-navy btn-sm">
                                 View Details
                             </a>
@@ -335,7 +335,7 @@
 <section class="section-padding bg-subtle border-top border-bottom">
     <div class="container text-center">
         <div data-aos="fade-up">
-            <span class="section-tag"><i class="bi bi-shield-check me-1"></i> Corporate Benefactors</span>
+            <span class="section-tag">Corporate Benefactors</span>
             <h2 class="section-title mb-2">Major Companies Supporting NGEOS</h2>
             <p class="section-subtitle mx-auto mb-5">
                 NGEOS has been established and continuously powered with the help of leading global corporations, CSR funds, and technological alliances.
@@ -361,7 +361,7 @@
     <div class="container">
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end mb-5" data-aos="fade-up">
             <div>
-                <span class="section-tag"><i class="bi bi-images me-1"></i> Visual Stories</span>
+                <span class="section-tag">Visual Stories</span>
                 <h2 class="section-title mb-0">Humanitarian Action in Photos</h2>
             </div>
             <a asp-controller="Gallery" asp-action="Index" class="btn btn-outline-navy mt-3 mt-md-0">
@@ -377,7 +377,7 @@
                     <div class="gallery-card" data-img-src="@item.ImageUrl" data-img-title="@item.Title" data-img-desc="@item.Description" data-img-cat="@item.Category">
                         <img src="@item.ImageUrl" alt="@item.Title">
                         <div class="gallery-overlay">
-                            <span class="badge bg-warning text-dark align-self-start mb-2">@item.Category</span>
+                            <span class="badge bg-orange text-white align-self-start mb-2">@item.Category</span>
                             <h6 class="fw-bold mb-1">@item.Title</h6>
                             <p class="small text-white-50 mb-0"><i class="bi bi-zoom-in me-1"></i> Click to preview</p>
                         </div>
@@ -393,7 +393,7 @@
     <div class="container py-4" data-aos="zoom-in" data-aos-duration="850">
         <div class="row justify-content-center">
             <div class="col-lg-8">
-                <span class="hero-tag mb-3"><i class="bi bi-star-fill text-warning"></i> Change A Life Today</span>
+                <span class="hero-tag mb-3">Change A Life Today</span>
                 <h2 class="display-5 fw-bold text-white mb-3">Your Small Contribution Can Change A Life Forever</h2>
                 <p class="lead text-white-50 mb-4">
                     Whether you donate $10 for child meals or volunteer your weekend in a rural medical camp, your empathy transforms communities.
@@ -419,7 +419,7 @@
                 <!-- Top Control Bar -->
                 <div class="lightbox-topbar d-flex justify-content-between align-items-center mb-2 px-1">
                     <div class="d-flex align-items-center gap-2">
-                        <span id="lightboxCategory" class="badge bg-warning text-dark px-3 py-1 rounded-pill fw-semibold">Photo</span>
+                        <span id="lightboxCategory" class="badge bg-orange text-white px-3 py-1 rounded-pill fw-semibold">Photo</span>
                         <span id="lightboxCounter" class="badge bg-dark border border-secondary text-white-50 px-2 py-1 rounded-pill small">1 / 1</span>
                     </div>
                     <button type="button" class="lightbox-close-btn" data-bs-dismiss="modal" aria-label="Close" title="Close Preview (Esc)">

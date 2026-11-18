@@ -19,7 +19,7 @@
             <Border Background="#0B192C" CornerRadius="16" Margin="24,20,24,24" Padding="36,32" BorderBrush="#1E293B" BorderThickness="1">
                 <StackPanel>
                     <Border Background="#1E293B" CornerRadius="12" Padding="12,4" HorizontalAlignment="Left" Margin="0,0,0,10">
-                        <TextBlock Text="📬 24/7 HUMANITARIAN HELPDESK &amp; DONOR SUPPORT" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource AccentOrangeBrush}" />
+                        <TextBlock Text="24/7 HUMANITARIAN HELPDESK &amp; DONOR SUPPORT" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource AccentOrangeBrush}" />
                     </Border>
                     <TextBlock Text="Get in Touch With NGEOS" FontSize="28" FontWeight="Bold" Foreground="White" Margin="0,0,0,8" />
                     <TextBlock Text="Have questions regarding campaigns, Zakat distribution, volunteer drives, or corporate sponsorships? Our team is available 24/7."
@@ -75,7 +75,7 @@
                         <TextBlock Text="Detailed Message" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="12" Margin="0,0,0,6" />
                         <TextBox Text="{Binding Message, UpdateSourceTrigger=PropertyChanged}" Style="{DynamicResource ModernTextBoxStyle}" Height="100" TextWrapping="Wrap" AcceptsReturn="True" Margin="0,0,0,20" />
 
-                        <Button Content="📨  Submit Inquiry / Query" Command="{Binding SubmitQueryCommand}" Style="{DynamicResource PrimaryButtonStyle}" Height="44" FontSize="14" FontWeight="Bold" />
+                        <Button Content="Submit Inquiry / Query" Command="{Binding SubmitQueryCommand}" Style="{DynamicResource PrimaryButtonStyle}" Height="44" FontSize="14" FontWeight="Bold" />
 
                         <TextBlock Text="{Binding StatusMessage}" Foreground="#38BDF8" FontSize="12" HorizontalAlignment="Center" Margin="0,10,0,0"
                                    Visibility="{Binding IsBusy, Converter={StaticResource BoolToVis}}" />
@@ -90,14 +90,14 @@
 
                         <Border Background="#101A2E" CornerRadius="10" Padding="16" Margin="0,0,0,12">
                             <StackPanel>
-                                <TextBlock Text="🏢 Head Office Address" FontWeight="Bold" FontSize="13" Foreground="White" Margin="0,0,0,4" />
+                                <TextBlock Text="Head Office Address" FontWeight="Bold" FontSize="13" Foreground="White" Margin="0,0,0,4" />
                                 <TextBlock Text="Humanitarian Welfare Complex, Main Clifton Boulevard, Karachi, Pakistan" FontSize="12" Foreground="{DynamicResource TextSecondaryBrush}" TextWrapping="Wrap" />
                             </StackPanel>
                         </Border>
 
                         <Border Background="#101A2E" CornerRadius="10" Padding="16" Margin="0,0,0,12">
                             <StackPanel>
-                                <TextBlock Text="📞 24/7 Crisis Helpline" FontWeight="Bold" FontSize="13" Foreground="#4ADE80" Margin="0,0,0,4" />
+                                <TextBlock Text="24/7 Crisis Helpline" FontWeight="Bold" FontSize="13" Foreground="#4ADE80" Margin="0,0,0,4" />
                                 <TextBlock Text="+92 21 111-NGEOS-1 (64367)" FontSize="13" Foreground="White" FontWeight="SemiBold" />
                                 <TextBlock Text="Available Monday - Sunday round the clock" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" />
                             </StackPanel>
@@ -105,7 +105,7 @@
 
                         <Border Background="#101A2E" CornerRadius="10" Padding="16">
                             <StackPanel>
-                                <TextBlock Text="✉️ Email Communications" FontWeight="Bold" FontSize="13" Foreground="#38BDF8" Margin="0,0,0,4" />
+                                <TextBlock Text="Email Communications" FontWeight="Bold" FontSize="13" Foreground="#38BDF8" Margin="0,0,0,4" />
                                 <TextBlock Text="support@ngeos.org | admin@ngeos.org" FontSize="12" Foreground="White" />
                                 <TextBlock Text="Response time typically within 2-4 hours" FontSize="11" Foreground="{DynamicResource TextSecondaryBrush}" />
                             </StackPanel>

@@ -10,6 +10,9 @@
     <UserControl.Resources>
         <conv:BoolToVisibilityConverter x:Key="BoolToVis" />
         <conv:StringToVisibilityConverter x:Key="StringToVis" />
+        <conv:StringMatchToBrushConverter x:Key="MatchToBrush" />
+        <conv:StringMatchToBackgroundConverter x:Key="MatchToBg" />
+        <conv:StringMatchToVisibilityConverter x:Key="MatchToVis" />
     </UserControl.Resources>
 
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
@@ -19,7 +22,7 @@
             <Border Background="#0B192C" CornerRadius="16" Margin="24,20,24,20" Padding="32,28" BorderBrush="#1E293B" BorderThickness="1">
                 <StackPanel HorizontalAlignment="Center">
                     <Border Background="#1E293B" CornerRadius="12" Padding="12,4" HorizontalAlignment="Center" Margin="0,0,0,10">
-                        <TextBlock Text="🛡️ 100% SECURE MULTI-PAYMENT CONTRIBUTION PORTAL" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource AccentOrangeBrush}" />
+                        <TextBlock Text="100% SECURE MULTI-PAYMENT CONTRIBUTION PORTAL" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource AccentOrangeBrush}" />
                     </Border>
                     <TextBlock Text="Give Hope. Transform A Life." FontSize="28" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center" Margin="0,0,0,8" />
                     <TextBlock Text="Support verified humanitarian causes with complete audited transparency. Offline-safe with instant tax-exempt PDF receipts."
@@ -39,7 +42,7 @@
                         <TextBlock Text="{Binding SuccessMessage}" Foreground="White" FontWeight="SemiBold" FontSize="14" TextWrapping="Wrap" />
                         <TextBlock Text="Official PDF Receipt has been generated in your Documents folder." Foreground="#A7F3D0" FontSize="12" Margin="0,4,0,0" />
                     </StackPanel>
-                    <Button Grid.Column="1" Content="📄  Open PDF Receipt" Command="{Binding OpenReceiptCommand}" Style="{DynamicResource SuccessButtonStyle}" Height="40" Padding="16,0" FontSize="13" VerticalAlignment="Center" Margin="16,0,0,0" />
+                    <Button Grid.Column="1" Content="Open PDF Receipt" Command="{Binding OpenReceiptCommand}" Style="{DynamicResource SuccessButtonStyle}" Height="40" Padding="16,0" FontSize="13" VerticalAlignment="Center" Margin="16,0,0,0" />
                 </Grid>
             </Border>
 
@@ -60,8 +63,8 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <Button Grid.Column="0" Content="❤️  General Sadaqah / Relief" Command="{Binding SelectDonationTypeCommand}" CommandParameter="General Sadaqah / Relief" Style="{DynamicResource OutlineButtonStyle}" Height="44" Margin="0,0,8,0" FontSize="13" />
-                        <Button Grid.Column="1" Content="🌙  Zakat Contribution (100% Shariah Audited)" Command="{Binding SelectDonationTypeCommand}" CommandParameter="Zakat Fund" Style="{DynamicResource SuccessButtonStyle}" Height="44" Margin="8,0,0,0" FontSize="13" />
+                        <Button Grid.Column="0" Content="General Sadaqah / Relief" Command="{Binding SelectDonationTypeCommand}" CommandParameter="General Sadaqah / Relief" Style="{DynamicResource OutlineButtonStyle}" Height="44" Margin="0,0,8,0" FontSize="13" />
+                        <Button Grid.Column="1" Content="Zakat Contribution (100% Shariah Audited)" Command="{Binding SelectDonationTypeCommand}" CommandParameter="Zakat Fund" Style="{DynamicResource SuccessButtonStyle}" Height="44" Margin="8,0,0,0" FontSize="13" />
                     </Grid>
 
                     <!-- Step 2: Target Humanitarian Campaign -->
@@ -120,17 +123,244 @@
                     </Grid>
 
                     <!-- Step 5: Payment Method -->
-                    <TextBlock Text="5. Payment Processing Method" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource AccentOrangeBrush}" Margin="0,8,0,8" />
-                    <Border Background="#101A2E" CornerRadius="8" Padding="16" Margin="0,0,0,28" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1">
-                        <StackPanel>
-                            <RadioButton Content="💳 Online Card Simulation (Instant Automated Clearance)" IsChecked="True" Foreground="White" FontSize="13" Margin="0,0,0,8" />
-                            <RadioButton Content="🏦 Direct Bank Wire / IBAN Transfer (Verified via Reconciliation)" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="13" Margin="0,0,0,8" />
-                            <RadioButton Content="💵 Cash / Field Office Collection" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="13" />
-                        </StackPanel>
+                    <TextBlock Text="5. Select Payment Method" FontSize="14" FontWeight="Bold" Foreground="{DynamicResource AccentOrangeBrush}" Margin="0,8,0,12" />
+                    
+                    <!-- 5 Real Payment Gateway Cards Grid -->
+                    <Grid Margin="0,0,0,16">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Gateway 1: Safepay -->
+                        <Border Grid.Row="0" Grid.Column="0" Margin="0,0,6,12" CornerRadius="12" BorderThickness="2"
+                                BorderBrush="{Binding SelectedGateway, Converter={StaticResource MatchToBrush}, ConverterParameter=Safepay}"
+                                Background="{Binding SelectedGateway, Converter={StaticResource MatchToBg}, ConverterParameter=Safepay}">
+                            <Button Command="{Binding SelectGatewayCommand}" CommandParameter="Safepay"
+                                    Background="Transparent" BorderThickness="0" Padding="14,12" Cursor="Hand" HorizontalContentAlignment="Stretch">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Grid Grid.Row="0" Margin="0,0,0,6">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <Border Grid.Column="0" Background="#1E293B" Width="36" Height="36" CornerRadius="8" Margin="0,0,10,0">
+                                            <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE8C7;" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                        </Border>
+                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                            <TextBlock Text="Safepay" Foreground="White" FontWeight="Bold" FontSize="14" />
+                                            <TextBlock Text="Hosted Multi-Card Checkout" Foreground="#94A3B8" FontSize="11" />
+                                        </StackPanel>
+                                        <Border Grid.Column="2" Background="#064E3B" CornerRadius="10" Padding="8,2" VerticalAlignment="Center"
+                                                Visibility="{Binding SelectedGateway, Converter={StaticResource MatchToVis}, ConverterParameter=Safepay}">
+                                            <TextBlock Text="✓ Active" Foreground="#6EE7B7" FontSize="10" FontWeight="Bold" />
+                                        </Border>
+                                    </Grid>
+                                    <TextBlock Grid.Row="1" Text="Visa, MasterCard &amp; PayPak cards with instant cryptographic verification."
+                                               Foreground="#94A3B8" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,8" />
+                                    <StackPanel Grid.Row="2" Orientation="Horizontal">
+                                        <Border Background="#1E293B" CornerRadius="4" Padding="6,2" Margin="0,0,4,0"><TextBlock Text="Visa" Foreground="#CBD5E1" FontSize="10" FontWeight="SemiBold" /></Border>
+                                        <Border Background="#1E293B" CornerRadius="4" Padding="6,2" Margin="0,0,4,0"><TextBlock Text="MasterCard" Foreground="#CBD5E1" FontSize="10" FontWeight="SemiBold" /></Border>
+                                        <Border Background="#1E293B" CornerRadius="4" Padding="6,2"><TextBlock Text="PayPak" Foreground="#CBD5E1" FontSize="10" FontWeight="SemiBold" /></Border>
+                                    </StackPanel>
+                                </Grid>
+                            </Button>
+                        </Border>
+
+                        <!-- Gateway 2: JazzCash -->
+                        <Border Grid.Row="0" Grid.Column="1" Margin="6,0,0,12" CornerRadius="12" BorderThickness="2"
+                                BorderBrush="{Binding SelectedGateway, Converter={StaticResource MatchToBrush}, ConverterParameter=JazzCash}"
+                                Background="{Binding SelectedGateway, Converter={StaticResource MatchToBg}, ConverterParameter=JazzCash}">
+                            <Button Command="{Binding SelectGatewayCommand}" CommandParameter="JazzCash"
+                                    Background="Transparent" BorderThickness="0" Padding="14,12" Cursor="Hand" HorizontalContentAlignment="Stretch">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Grid Grid.Row="0" Margin="0,0,0,6">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <Border Grid.Column="0" Background="#450A0A" Width="36" Height="36" CornerRadius="8" Margin="0,0,10,0">
+                                            <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE8EA;" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                        </Border>
+                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                            <TextBlock Text="JazzCash" Foreground="White" FontWeight="Bold" FontSize="14" />
+                                            <TextBlock Text="Mobile Account &amp; Voucher" Foreground="#94A3B8" FontSize="11" />
+                                        </StackPanel>
+                                        <Border Grid.Column="2" Background="#064E3B" CornerRadius="10" Padding="8,2" VerticalAlignment="Center"
+                                                Visibility="{Binding SelectedGateway, Converter={StaticResource MatchToVis}, ConverterParameter=JazzCash}">
+                                            <TextBlock Text="✓ Active" Foreground="#6EE7B7" FontSize="10" FontWeight="Bold" />
+                                        </Border>
+                                    </Grid>
+                                    <TextBlock Grid.Row="1" Text="Pay via JazzCash Mobile Account, QR Code, or Voucher at retailers nationwide."
+                                               Foreground="#94A3B8" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,8" />
+                                    <StackPanel Grid.Row="2" Orientation="Horizontal">
+                                        <Border Background="#1E293B" CornerRadius="4" Padding="6,2" Margin="0,0,4,0"><TextBlock Text="Mobile Account" Foreground="#CBD5E1" FontSize="10" FontWeight="SemiBold" /></Border>
+                                        <Border Background="#1E293B" CornerRadius="4" Padding="6,2" Margin="0,0,4,0"><TextBlock Text="Debit Card" Foreground="#CBD5E1" FontSize="10" FontWeight="SemiBold" /></Border>
+                                        <Border Background="#1E293B" CornerRadius="4" Padding="6,2"><TextBlock Text="OTC Voucher" Foreground="#CBD5E1" FontSize="10" FontWeight="SemiBold" /></Border>
+                                    </StackPanel>
+                                </Grid>
+                            </Button>
+                        </Border>
+
+                        <!-- Gateway 3: Easypaisa -->
+                        <Border Grid.Row="1" Grid.Column="0" Margin="0,0,6,12" CornerRadius="12" BorderThickness="2"
+                                BorderBrush="{Binding SelectedGateway, Converter={StaticResource MatchToBrush}, ConverterParameter=Easypaisa}"
+                                Background="{Binding SelectedGateway, Converter={StaticResource MatchToBg}, ConverterParameter=Easypaisa}">
+                            <Button Command="{Binding SelectGatewayCommand}" CommandParameter="Easypaisa"
+                                    Background="Transparent" BorderThickness="0" Padding="14,12" Cursor="Hand" HorizontalContentAlignment="Stretch">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Grid Grid.Row="0" Margin="0,0,0,6">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <Border Grid.Column="0" Background="#064E3B" Width="36" Height="36" CornerRadius="8" Margin="0,0,10,0">
+                                            <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xEA55;" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                        </Border>
+                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                            <TextBlock Text="Easypaisa" Foreground="White" FontWeight="Bold" FontSize="14" />
+                                            <TextBlock Text="Mobile Wallet &amp; Token (OTC)" Foreground="#94A3B8" FontSize="11" />
+                                        </StackPanel>
+                                        <Border Grid.Column="2" Background="#064E3B" CornerRadius="10" Padding="8,2" VerticalAlignment="Center"
+                                                Visibility="{Binding SelectedGateway, Converter={StaticResource MatchToVis}, ConverterParameter=Easypaisa}">
+                                            <TextBlock Text="✓ Active" Foreground="#6EE7B7" FontSize="10" FontWeight="Bold" />
+                                        </Border>
+                                    </Grid>
+                                    <TextBlock Grid.Row="1" Text="Instant Easypaisa mobile wallet authorization, Token code, or UnionPay card."
+                                               Foreground="#94A3B8" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,8" />
+                                    <StackPanel Grid.Row="2" Orientation="Horizontal">
+                                        <Border Background="#1E293B" CornerRadius="4" Padding="6,2" Margin="0,0,4,0"><TextBlock Text="Wallet" Foreground="#CBD5E1" FontSize="10" FontWeight="SemiBold" /></Border>
+                                        <Border Background="#1E293B" CornerRadius="4" Padding="6,2" Margin="0,0,4,0"><TextBlock Text="OTC Token" Foreground="#CBD5E1" FontSize="10" FontWeight="SemiBold" /></Border>
+                                        <Border Background="#1E293B" CornerRadius="4" Padding="6,2"><TextBlock Text="UnionPay" Foreground="#CBD5E1" FontSize="10" FontWeight="SemiBold" /></Border>
+                                    </StackPanel>
+                                </Grid>
+                            </Button>
+                        </Border>
+
+                        <!-- Gateway 4: PayFast (1Link) -->
+                        <Border Grid.Row="1" Grid.Column="1" Margin="6,0,0,12" CornerRadius="12" BorderThickness="2"
+                                BorderBrush="{Binding SelectedGateway, Converter={StaticResource MatchToBrush}, ConverterParameter=PayFast}"
+                                Background="{Binding SelectedGateway, Converter={StaticResource MatchToBg}, ConverterParameter=PayFast}">
+                            <Button Command="{Binding SelectGatewayCommand}" CommandParameter="PayFast"
+                                    Background="Transparent" BorderThickness="0" Padding="14,12" Cursor="Hand" HorizontalContentAlignment="Stretch">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Grid Grid.Row="0" Margin="0,0,0,6">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <Border Grid.Column="0" Background="#1E3A8A" Width="36" Height="36" CornerRadius="8" Margin="0,0,10,0">
+                                            <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE80F;" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                        </Border>
+                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                            <TextBlock Text="PayFast Pakistan" Foreground="White" FontWeight="Bold" FontSize="14" />
+                                            <TextBlock Text="1Link Interbank &amp; All Banks" Foreground="#94A3B8" FontSize="11" />
+                                        </StackPanel>
+                                        <Border Grid.Column="2" Background="#064E3B" CornerRadius="10" Padding="8,2" VerticalAlignment="Center"
+                                                Visibility="{Binding SelectedGateway, Converter={StaticResource MatchToVis}, ConverterParameter=PayFast}">
+                                            <TextBlock Text="✓ Active" Foreground="#6EE7B7" FontSize="10" FontWeight="Bold" />
+                                        </Border>
+                                    </Grid>
+                                    <TextBlock Grid.Row="1" Text="Official State Bank licensed gateway connecting all Pakistani commercial bank accounts."
+                                               Foreground="#94A3B8" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,8" />
+                                    <StackPanel Grid.Row="2" Orientation="Horizontal">
+                                        <Border Background="#1E293B" CornerRadius="4" Padding="6,2" Margin="0,0,4,0"><TextBlock Text="1Link" Foreground="#CBD5E1" FontSize="10" FontWeight="SemiBold" /></Border>
+                                        <Border Background="#1E293B" CornerRadius="4" Padding="6,2" Margin="0,0,4,0"><TextBlock Text="PayPak" Foreground="#CBD5E1" FontSize="10" FontWeight="SemiBold" /></Border>
+                                        <Border Background="#1E293B" CornerRadius="4" Padding="6,2"><TextBlock Text="All Banks" Foreground="#CBD5E1" FontSize="10" FontWeight="SemiBold" /></Border>
+                                    </StackPanel>
+                                </Grid>
+                            </Button>
+                        </Border>
+
+                        <!-- Gateway 5: Stripe (Global & Overseas Donors) -->
+                        <Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,12" CornerRadius="12" BorderThickness="2"
+                                BorderBrush="{Binding SelectedGateway, Converter={StaticResource MatchToBrush}, ConverterParameter=Stripe}"
+                                Background="{Binding SelectedGateway, Converter={StaticResource MatchToBg}, ConverterParameter=Stripe}">
+                            <Button Command="{Binding SelectGatewayCommand}" CommandParameter="Stripe"
+                                    Background="Transparent" BorderThickness="0" Padding="14,12" Cursor="Hand" HorizontalContentAlignment="Stretch">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Grid Grid.Row="0" Margin="0,0,0,6">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <Border Grid.Column="0" Background="#312E81" Width="36" Height="36" CornerRadius="8" Margin="0,0,10,0">
+                                            <TextBlock FontFamily="Segoe MDL2 Assets" Text="&#xE774;" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                        </Border>
+                                        <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                            <TextBlock Text="Stripe • Global &amp; Overseas Donors" Foreground="White" FontWeight="Bold" FontSize="14" />
+                                            <TextBlock Text="International USD • GBP • EUR &amp; Global Cards" Foreground="#94A3B8" FontSize="11" />
+                                        </StackPanel>
+                                        <Border Grid.Column="2" Background="#064E3B" CornerRadius="10" Padding="8,2" VerticalAlignment="Center"
+                                                Visibility="{Binding SelectedGateway, Converter={StaticResource MatchToVis}, ConverterParameter=Stripe}">
+                                            <TextBlock Text="✓ Active" Foreground="#6EE7B7" FontSize="10" FontWeight="Bold" />
+                                        </Border>
+                                    </Grid>
+                                    <TextBlock Grid.Row="1" Text="Seamless international contribution for overseas Pakistani diaspora and global benefactors worldwide."
+                                               Foreground="#94A3B8" FontSize="11" TextWrapping="Wrap" Margin="0,0,0,8" />
+                                    <StackPanel Grid.Row="2" Orientation="Horizontal">
+                                        <Border Background="#1E293B" CornerRadius="4" Padding="6,2" Margin="0,0,4,0"><TextBlock Text="Visa/MC" Foreground="#CBD5E1" FontSize="10" FontWeight="SemiBold" /></Border>
+                                        <Border Background="#1E293B" CornerRadius="4" Padding="6,2" Margin="0,0,4,0"><TextBlock Text="Amex" Foreground="#CBD5E1" FontSize="10" FontWeight="SemiBold" /></Border>
+                                        <Border Background="#1E293B" CornerRadius="4" Padding="6,2" Margin="0,0,4,0"><TextBlock Text="Apple Pay" Foreground="#CBD5E1" FontSize="10" FontWeight="SemiBold" /></Border>
+                                        <Border Background="#1E293B" CornerRadius="4" Padding="6,2"><TextBlock Text="Google Pay" Foreground="#CBD5E1" FontSize="10" FontWeight="SemiBold" /></Border>
+                                    </StackPanel>
+                                </Grid>
+                            </Button>
+                        </Border>
+                    </Grid>
+
+                    <!-- Selected Method Summary Banner -->
+                    <Border Background="#060D1A" CornerRadius="8" Padding="14,10" Margin="0,0,0,24" BorderBrush="#1E293B" BorderThickness="1">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" FontFamily="Segoe MDL2 Assets" Text="&#xE72E; " FontSize="13" VerticalAlignment="Center" />
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Text="Selected Method: " Foreground="#94A3B8" FontSize="12" />
+                                <TextBlock Text="{Binding PaymentMethod}" Foreground="#F25C05" FontWeight="Bold" FontSize="12" Margin="4,0,0,0" />
+                            </StackPanel>
+                        </Grid>
                     </Border>
 
                     <!-- Action Button -->
-                    <Button Content="💖  Confirm &amp; Process Donation" Command="{Binding ProcessDonationCommand}" Style="{DynamicResource PrimaryButtonStyle}" Height="48" FontSize="15" FontWeight="Bold" />
+                    <Button Content="Confirm &amp; Process Donation" Command="{Binding ProcessDonationCommand}" Style="{DynamicResource PrimaryButtonStyle}" Height="48" FontSize="15" FontWeight="Bold" />
 
                     <!-- Status Indicator -->
                     <TextBlock Text="{Binding StatusMessage}" Foreground="#38BDF8" FontSize="12" HorizontalAlignment="Center" Margin="0,12,0,0"

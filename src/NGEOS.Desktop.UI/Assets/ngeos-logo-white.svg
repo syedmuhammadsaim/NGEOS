@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 230 50" width="100%" height="100%">
+  <defs>
+    <linearGradient id="ftNGEOSGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff7a29"/>
+      <stop offset="50%" stop-color="#f25c05"/>
+      <stop offset="100%" stop-color="#d94800"/>
+    </linearGradient>
+    <linearGradient id="ftHeartGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#fff1e8"/>
+    </linearGradient>
+    <linearGradient id="ftGoldSpark" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fef08a"/>
+      <stop offset="100%" stop-color="#f59e0b"/>
+    </linearGradient>
+    <filter id="ftShadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000000" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+
+  <!-- Emblem Icon (x=3, y=3, w=44, h=44) -->
+  <g transform="translate(3, 3) scale(0.44)">
+    <rect x="4" y="4" width="92" height="92" rx="24" fill="url(#ftNGEOSGrad)" filter="url(#ftShadow)"/>
+    <rect x="5.5" y="5.5" width="89" height="89" rx="22.5" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-opacity="0.4"/>
+    <g fill="url(#ftGoldSpark)">
+      <circle cx="50" cy="18" r="3.2"/>
+      <circle cx="39" cy="21.5" r="2.2"/>
+      <circle cx="61" cy="21.5" r="2.2"/>
+    </g>
+    <path d="M 50 33 C 46 26, 36 24, 30 29.5 C 23.5 35.5, 24 45, 33 53.5 C 39.5 59.5, 47 64.5, 50 66 C 53 64.5, 60.5 59.5, 67 53.5 C 76 45, 76.5 35.5, 70 29.5 C 64 24, 54 26, 50 33 Z" fill="url(#ftHeartGrad)"/>
+    <path d="M 23 72 C 18 64, 18 53, 25 46.5 C 26.8 44.8, 29.8 45.5, 30.8 47.8 C 31.8 50.1, 30.8 52.8, 29 54.5 C 24.5 59, 25 65.5, 29 70 C 34.5 76, 42.5 77.5, 48 75.5 C 50 74.8, 52 76.2, 52.5 78.2 C 53 80.2, 51.6 82.2, 49.5 82.8 C 40 85.8, 29 82.5, 23 72 Z" fill="#ffffff" fill-opacity="0.95"/>
+    <path d="M 77 72 C 82 64, 82 53, 75 46.5 C 73.2 44.8, 70.2 45.5, 69.2 47.8 C 68.2 50.1, 69.2 52.8, 71 54.5 C 75.5 59, 75 65.5, 71 70 C 65.5 76, 57.5 77.5, 52 75.5 C 50 74.8, 48 76.2, 47.5 78.2 C 47 80.2, 48.4 82.2, 50.5 82.8 C 60 85.8, 71 82.5, 77 72 Z" fill="#ffffff" fill-opacity="0.95"/>
+    <path d="M 33 59 C 38 64.5, 43.5 68, 50 68.5 C 56.5 68, 62 64.5, 67 59 C 68.5 57.2, 71.2 57.2, 72.8 58.8 C 74.2 60.5, 74 63, 72.2 64.8 C 65.8 71.2, 58.5 74.5, 50 74.5 C 41.5 74.5, 34.2 71.2, 27.8 64.8 C 26 63, 25.8 60.5, 27.2 58.8 C 28.8 57.2, 31.5 57.2, 33 59 Z" fill="#ffffff" fill-opacity="0.92"/>
+  </g>
+
+  <!-- Typography: NGEOS (Dark Background) -->
+  <g font-family="'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">
+    <text x="56" y="29" font-size="24" font-weight="800" fill="#ffffff" letter-spacing="-0.5px">Give<tspan fill="#ff7a29">-AID</tspan></text>
+    <text x="57" y="42" font-family="'Plus Jakarta Sans', sans-serif" font-size="8.5" font-weight="700" fill="#94a3b8" letter-spacing="1.2px">CHARITY &amp; NGO PLATFORM</text>
+  </g>
+</svg>

@@ -13,7 +13,7 @@
 </div>
 
 <div class="giveaid-card p-4 p-md-5">
-    <form asp-action="EditNgo" method="post">
+    <form asp-action="EditNgo" method="post" enctype="multipart/form-data">
         @Html.AntiForgeryToken()
         <input type="hidden" asp-for="Id" />
         <input type="hidden" asp-for="CreatedAt" />
@@ -58,9 +58,23 @@
             </div>
 
             <div class="col-md-6">
-                <label asp-for="LogoUrl" class="form-label"></label>
-                <input asp-for="LogoUrl" class="form-control" required />
-                <span asp-validation-for="LogoUrl" class="text-danger small"></span>
+                <label class="form-label fw-semibold">NGO Logo (Choose File)</label>
+                <input type="file" name="logoFile" class="form-control" accept="image/*" onchange="previewUpload(this, 'ngoLogoPreview')" />
+                <input type="hidden" asp-for="LogoUrl" />
+                <div class="mt-2 text-muted small">Select an image from your computer to update the logo.</div>
+                @if (!string.IsNullOrEmpty(Model.LogoUrl))
+                {
+                    <div class="mt-2 p-2 bg-light rounded border d-inline-block">
+                        <span class="d-block small text-muted mb-1">Current / Preview:</span>
+                        <img id="ngoLogoPreview" src="@Model.LogoUrl" alt="NGO Logo" style="max-height: 80px; max-width: 150px; object-fit: contain;" class="rounded" />
+                    </div>
+                }
+                else
+                {
+                    <div class="mt-2 p-2 bg-light rounded border d-none">
+                        <img id="ngoLogoPreview" src="#" alt="Preview" style="max-height: 80px; max-width: 150px; object-fit: contain;" class="rounded" />
+                    </div>
+                }
             </div>
 
             <div class="col-md-6">
@@ -96,7 +110,7 @@
 
             <div class="col-12 mt-4 pt-3 border-top">
                 <button type="submit" class="btn btn-orange btn-lg px-5 shadow">
-                    <i class="bi bi-check-lg me-1"></i> Update NGO Information
+                    Update NGO Information
                 </button>
             </div>
         </div>

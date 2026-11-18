@@ -74,7 +74,7 @@
 
                     <!-- Manual Sync Button -->
                     <StackPanel Orientation="Horizontal" Margin="0,16,0,0">
-                        <Button Content="🔄 Synchronize Now" Command="{Binding SyncNowCommand}" Style="{DynamicResource PrimaryButtonStyle}" Height="38" Padding="18,0" Margin="0,0,12,0" />
+                        <Button Content="Synchronize Now" Command="{Binding SyncNowCommand}" Style="{DynamicResource PrimaryButtonStyle}" Height="38" Padding="18,0" Margin="0,0,12,0" />
                         <Button Content="Refresh Status" Command="{Binding RefreshStatusCommand}" Style="{DynamicResource OutlineButtonStyle}" Height="38" Padding="14,0" />
                     </StackPanel>
                 </StackPanel>

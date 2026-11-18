@@ -26,9 +26,10 @@ namespace NGEOS.ViewModels
         [Display(Name = "Confirm Password")]
         public string ConfirmPassword { get; set; } = string.Empty;
 
+        [Required(ErrorMessage = "Phone number is required.")]
         [Phone(ErrorMessage = "Please enter a valid phone number.")]
         [Display(Name = "Phone Number")]
-        public string? Phone { get; set; }
+        public string Phone { get; set; } = string.Empty;
 
         [Display(Name = "Residential / Mailing Address")]
         public string? Address { get; set; }

@@ -42,19 +42,19 @@
                                 <div>
                                     <strong class="d-block text-dark small">@prog.Title</strong>
                                     <span class="text-muted" style="font-size: 0.72rem;">
-                                        <i class="bi bi-building me-1"></i>@(prog.Ngo?.Name ?? "NGEOS Central") &bull; @prog.CreatedAt.ToString("MMM dd, yyyy")
+                                        @(prog.Ngo?.Name ?? "NGEOS Central") &bull; @prog.CreatedAt.ToString("MMM dd, yyyy")
                                     </span>
                                 </div>
                             </div>
                         </td>
                         <td><span class="badge bg-light text-dark border">@prog.Category</span></td>
                         <td>
-                            <strong class="d-block text-dark small"><i class="bi bi-calendar-event me-1 text-warning"></i> @prog.StartDate.ToString("MMM dd, yyyy")</strong>
-                            <span class="small text-muted"><i class="bi bi-geo-alt me-1 text-danger"></i> @prog.Location</span>
+                            <strong class="d-block text-dark small">@prog.StartDate.ToString("MMM dd, yyyy")</strong>
+                            <span class="small text-muted">@prog.Location</span>
                         </td>
                         <td>
                             <span class="badge bg-primary-subtle text-primary d-block mb-1">@prog.TargetBeneficiaries+ Goal</span>
-                            <a asp-action="ProgrammeInterests" class="badge bg-warning text-dark text-decoration-none d-block">
+                            <a asp-action="ProgrammeInterests" class="badge bg-orange text-white text-decoration-none d-block">
                                 @prog.Interests.Count Registered
                             </a>
                         </td>

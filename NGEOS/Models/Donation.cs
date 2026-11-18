@@ -50,7 +50,7 @@ namespace NGEOS.Models
         public string PaymentStatus { get; set; } = "Completed"; // "Completed", "Pending", "Failed"
 
         [MaxLength(50)]
-        public string PaymentGateway { get; set; } = "Credit Card"; // "Safepay", "JazzCash", "Easypaisa", "PayFast"
+        public string PaymentGateway { get; set; } = "Credit Card"; // "Safepay", "JazzCash", "Easypaisa", "PayFast", "Stripe"
 
         [MaxLength(10)]
         public string Currency { get; set; } = "PKR";

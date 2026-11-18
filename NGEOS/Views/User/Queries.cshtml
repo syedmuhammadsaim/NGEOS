@@ -5,7 +5,7 @@
 
 <div class="py-5 text-white position-relative" style="background: linear-gradient(135deg, rgba(11, 25, 44, 0.9), rgba(15, 23, 42, 0.82)), url('https://images.unsplash.com/photo-1450133064473-71024230f91b?w=1600') center/cover no-repeat;" data-aos="fade-down">
     <div class="container py-3 text-center">
-        <span class="hero-tag mb-2 d-inline-block"><i class="bi bi-chat-dots-fill text-warning"></i> Helpdesk Portal</span>
+        <span class="hero-tag mb-2 d-inline-block"><i class="bi bi-chat-dots-fill text-orange"></i> Helpdesk Portal</span>
         <h1 class="display-6 fw-bold text-white mb-1">My Support Queries</h1>
         <p class="text-white-50 mb-0 small mx-auto" style="max-width: 650px;">Track questions and view official responses from the NGEOS Support Team.</p>
     </div>
@@ -14,6 +14,12 @@
 <div class="container section-padding">
     <!-- Quick Navigation Pills -->
     <div class="d-flex flex-wrap justify-content-center gap-2 mb-5" data-aos="fade-up">
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-controller="Admin" asp-action="Index" class="btn btn-navy text-white btn-sm rounded-pill px-4 shadow fw-bold border border-warning">
+                Admin Panel
+            </a>
+        }
         <a asp-action="Dashboard" class="btn btn-outline-navy btn-sm rounded-pill px-4 fw-semibold">Overview</a>
         <a asp-action="Donations" class="btn btn-outline-navy btn-sm rounded-pill px-4 fw-semibold">Donation History</a>
         <a asp-action="Programmes" class="btn btn-outline-navy btn-sm rounded-pill px-4 fw-semibold">My Programmes</a>
@@ -40,7 +46,7 @@
                                 <span class="badge bg-light text-dark border small mb-1">@q.Category</span>
                                 <h5 class="fw-bold mb-0 text-dark">@q.Subject</h5>
                             </div>
-                            <span class="badge @(q.Status == "Replied" ? "bg-success" : "bg-warning text-dark")">@q.Status</span>
+                            <span class="badge @(q.Status == "Replied" ? "bg-success" : "bg-orange text-dark")">@q.Status</span>
                         </div>
                         <span class="text-muted small d-block mb-3"><i class="bi bi-clock me-1"></i> Submitted: @q.CreatedAt.ToString("MMM dd, yyyy - hh:mm tt")</span>
 
@@ -62,7 +68,7 @@
                         else
                         {
                             <div class="p-2 text-center text-muted small bg-light rounded">
-                                <i class="bi bi-hourglass-split me-1 text-warning"></i> Response in progress by administrator.
+                                <i class="bi bi-hourglass-split me-1 text-orange"></i> Response in progress by administrator.
                             </div>
                         }
                     </div>

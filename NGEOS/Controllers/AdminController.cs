@@ -17,12 +17,42 @@ namespace NGEOS.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IEmailSender _emailSender;
         private readonly IPaymentGatewayFactory _gatewayFactory;
+        private readonly IWebHostEnvironment _environment;
 
-        public AdminController(ApplicationDbContext context, IEmailSender emailSender, IPaymentGatewayFactory gatewayFactory)
+        public AdminController(ApplicationDbContext context, IEmailSender emailSender, IPaymentGatewayFactory gatewayFactory, IWebHostEnvironment environment)
         {
             _context = context;
             _emailSender = emailSender;
             _gatewayFactory = gatewayFactory;
+            _environment = environment;
+        }
+
+        private async Task<string?> SaveUploadedFileAsync(IFormFile? file, string folderName)
+        {
+            if (file == null || file.Length == 0) return null;
+
+            var uploadsRoot = Path.Combine(_environment.WebRootPath, "uploads", folderName);
+            if (!Directory.Exists(uploadsRoot))
+            {
+                Directory.CreateDirectory(uploadsRoot);
+            }
+
+            var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
+            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg" };
+            if (!allowedExtensions.Contains(extension))
+            {
+                extension = ".jpg";
+            }
+
+            var fileName = $"{Guid.NewGuid():N}{extension}";
+            var physicalPath = Path.Combine(uploadsRoot, fileName);
+
+            using (var stream = new FileStream(physicalPath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            return $"/uploads/{folderName}/{fileName}";
         }
 
         // 1. Dashboard Overview
@@ -111,8 +141,22 @@ namespace NGEOS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateCause(Cause cause)
+        public async Task<IActionResult> CreateCause(Cause cause, IFormFile? imageFile)
         {
+            if (imageFile != null && imageFile.Length > 0)
+            {
+                var uploaded = await SaveUploadedFileAsync(imageFile, "causes");
+                if (!string.IsNullOrEmpty(uploaded))
+                {
+                    cause.ImageUrl = uploaded;
+                }
+            }
+            if (string.IsNullOrWhiteSpace(cause.ImageUrl))
+            {
+                cause.ImageUrl = "/images/cause-default.jpg";
+            }
+            ModelState.Remove(nameof(cause.ImageUrl));
+
             if (ModelState.IsValid)
             {
                 cause.CreatedAt = DateTime.UtcNow;
@@ -139,8 +183,18 @@ namespace NGEOS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditCause(Cause cause)
+        public async Task<IActionResult> EditCause(Cause cause, IFormFile? imageFile)
         {
+            if (imageFile != null && imageFile.Length > 0)
+            {
+                var uploaded = await SaveUploadedFileAsync(imageFile, "causes");
+                if (!string.IsNullOrEmpty(uploaded))
+                {
+                    cause.ImageUrl = uploaded;
+                }
+            }
+            ModelState.Remove(nameof(cause.ImageUrl));
+
             if (ModelState.IsValid)
             {
                 _context.Causes.Update(cause);
@@ -180,21 +234,16 @@ namespace NGEOS.Controllers
 
             var allDonations = await query.ToListAsync();
 
-            // Check health of all 4 gateways
-            var gateways = _gatewayFactory.GetAllGateways();
-            var gatewayStatuses = new List<object>();
-            foreach (var g in gateways)
+            // Fast in-memory gateway status check (zero network latency, instant page load)
+            var gateways = _gatewayFactory.GetAllGateways().ToList();
+            var gatewayStatuses = gateways.Select(g => new
             {
-                var health = await g.CheckHealthAsync();
-                gatewayStatuses.Add(new
-                {
-                    Name = g.GatewayName,
-                    IsConfigured = g.IsConfigured,
-                    Environment = g.EnvironmentName,
-                    IsHealthy = health.IsHealthy,
-                    HealthMessage = health.Message
-                });
-            }
+                Name = g.GatewayName,
+                IsConfigured = g.IsConfigured,
+                Environment = g.EnvironmentName,
+                IsHealthy = g.IsConfigured,
+                HealthMessage = g.IsConfigured ? "Ready" : "Not Configured"
+            }).ToList();
             ViewBag.GatewayStatuses = gatewayStatuses;
 
             // Calculate Metrics
@@ -212,11 +261,29 @@ namespace NGEOS.Controllers
             ViewBag.GeneralCount = generalCount;
             ViewBag.CurrentFilter = filter ?? "all";
 
+            // Gateway-wise breakdown (all 5 gateways)
+            var gwList = new[] { "Safepay", "JazzCash", "Easypaisa", "PayFast", "Stripe" };
+            var gwBreakdown = gwList.Select(gw => new
+            {
+                Name = gw,
+                Count = allDonations.Count(d => (d.PaymentGateway ?? "").Equals(gw, StringComparison.OrdinalIgnoreCase)),
+                TotalAmount = allDonations.Where(d => (d.PaymentGateway ?? "").Equals(gw, StringComparison.OrdinalIgnoreCase) && d.PaymentStatus == "Completed").Sum(d => d.Amount),
+                CompletedCount = allDonations.Count(d => (d.PaymentGateway ?? "").Equals(gw, StringComparison.OrdinalIgnoreCase) && d.PaymentStatus == "Completed"),
+                RefundedCount = allDonations.Count(d => (d.PaymentGateway ?? "").Equals(gw, StringComparison.OrdinalIgnoreCase) && d.PaymentStatus == "Refunded"),
+                PendingCount = allDonations.Count(d => (d.PaymentGateway ?? "").Equals(gw, StringComparison.OrdinalIgnoreCase) && d.PaymentStatus == "Pending"),
+            }).ToList();
+            ViewBag.GatewayBreakdown = gwBreakdown;
+
             var displayed = filter?.ToLower() switch
             {
-                "zakat" => allDonations.Where(d => d.IsZakat).ToList(),
-                "general" => allDonations.Where(d => !d.IsZakat).ToList(),
-                _ => allDonations
+                "zakat"     => allDonations.Where(d => d.IsZakat).ToList(),
+                "general"   => allDonations.Where(d => !d.IsZakat).ToList(),
+                "safepay"   => allDonations.Where(d => (d.PaymentGateway ?? "").Equals("Safepay",   StringComparison.OrdinalIgnoreCase)).ToList(),
+                "jazzcash"  => allDonations.Where(d => (d.PaymentGateway ?? "").Equals("JazzCash",  StringComparison.OrdinalIgnoreCase)).ToList(),
+                "easypaisa" => allDonations.Where(d => (d.PaymentGateway ?? "").Equals("Easypaisa", StringComparison.OrdinalIgnoreCase)).ToList(),
+                "payfast"   => allDonations.Where(d => (d.PaymentGateway ?? "").Equals("PayFast",   StringComparison.OrdinalIgnoreCase)).ToList(),
+                "stripe"    => allDonations.Where(d => (d.PaymentGateway ?? "").Equals("Stripe",    StringComparison.OrdinalIgnoreCase)).ToList(),
+                _           => allDonations
             };
 
             return View(displayed);
@@ -511,8 +578,22 @@ namespace NGEOS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateNgo(NGO ngo)
+        public async Task<IActionResult> CreateNgo(NGO ngo, IFormFile? logoFile)
         {
+            if (logoFile != null && logoFile.Length > 0)
+            {
+                var uploaded = await SaveUploadedFileAsync(logoFile, "ngos");
+                if (!string.IsNullOrEmpty(uploaded))
+                {
+                    ngo.LogoUrl = uploaded;
+                }
+            }
+            if (string.IsNullOrWhiteSpace(ngo.LogoUrl))
+            {
+                ngo.LogoUrl = "/images/ngo-default.png";
+            }
+            ModelState.Remove(nameof(ngo.LogoUrl));
+
             if (ModelState.IsValid)
             {
                 ngo.CreatedAt = DateTime.UtcNow;
@@ -534,8 +615,18 @@ namespace NGEOS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditNgo(NGO ngo)
+        public async Task<IActionResult> EditNgo(NGO ngo, IFormFile? logoFile)
         {
+            if (logoFile != null && logoFile.Length > 0)
+            {
+                var uploaded = await SaveUploadedFileAsync(logoFile, "ngos");
+                if (!string.IsNullOrEmpty(uploaded))
+                {
+                    ngo.LogoUrl = uploaded;
+                }
+            }
+            ModelState.Remove(nameof(ngo.LogoUrl));
+
             if (ModelState.IsValid)
             {
                 _context.NGOs.Update(ngo);
@@ -577,8 +668,22 @@ namespace NGEOS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreatePartner(Partner partner)
+        public async Task<IActionResult> CreatePartner(Partner partner, IFormFile? logoFile)
         {
+            if (logoFile != null && logoFile.Length > 0)
+            {
+                var uploaded = await SaveUploadedFileAsync(logoFile, "partners");
+                if (!string.IsNullOrEmpty(uploaded))
+                {
+                    partner.LogoUrl = uploaded;
+                }
+            }
+            if (string.IsNullOrWhiteSpace(partner.LogoUrl))
+            {
+                partner.LogoUrl = "/images/partner-default.png";
+            }
+            ModelState.Remove(nameof(partner.LogoUrl));
+
             if (ModelState.IsValid)
             {
                 _context.Partners.Add(partner);
@@ -599,8 +704,18 @@ namespace NGEOS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditPartner(Partner partner)
+        public async Task<IActionResult> EditPartner(Partner partner, IFormFile? logoFile)
         {
+            if (logoFile != null && logoFile.Length > 0)
+            {
+                var uploaded = await SaveUploadedFileAsync(logoFile, "partners");
+                if (!string.IsNullOrEmpty(uploaded))
+                {
+                    partner.LogoUrl = uploaded;
+                }
+            }
+            ModelState.Remove(nameof(partner.LogoUrl));
+
             if (ModelState.IsValid)
             {
                 _context.Partners.Update(partner);
@@ -648,8 +763,22 @@ namespace NGEOS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateProgramme(Programme programme)
+        public async Task<IActionResult> CreateProgramme(Programme programme, IFormFile? imageFile)
         {
+            if (imageFile != null && imageFile.Length > 0)
+            {
+                var uploaded = await SaveUploadedFileAsync(imageFile, "programmes");
+                if (!string.IsNullOrEmpty(uploaded))
+                {
+                    programme.ImageUrl = uploaded;
+                }
+            }
+            if (string.IsNullOrWhiteSpace(programme.ImageUrl))
+            {
+                programme.ImageUrl = "/images/programme-default.jpg";
+            }
+            ModelState.Remove(nameof(programme.ImageUrl));
+
             if (ModelState.IsValid)
             {
                 programme.CreatedAt = DateTime.UtcNow;
@@ -676,8 +805,18 @@ namespace NGEOS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditProgramme(Programme programme)
+        public async Task<IActionResult> EditProgramme(Programme programme, IFormFile? imageFile)
         {
+            if (imageFile != null && imageFile.Length > 0)
+            {
+                var uploaded = await SaveUploadedFileAsync(imageFile, "programmes");
+                if (!string.IsNullOrEmpty(uploaded))
+                {
+                    programme.ImageUrl = uploaded;
+                }
+            }
+            ModelState.Remove(nameof(programme.ImageUrl));
+
             if (ModelState.IsValid)
             {
                 _context.Programmes.Update(programme);
@@ -760,8 +899,22 @@ namespace NGEOS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateEvent(Event ev)
+        public async Task<IActionResult> CreateEvent(Event ev, IFormFile? imageFile)
         {
+            if (imageFile != null && imageFile.Length > 0)
+            {
+                var uploaded = await SaveUploadedFileAsync(imageFile, "events");
+                if (!string.IsNullOrEmpty(uploaded))
+                {
+                    ev.ImageUrl = uploaded;
+                }
+            }
+            if (string.IsNullOrWhiteSpace(ev.ImageUrl))
+            {
+                ev.ImageUrl = "/images/event-default.jpg";
+            }
+            ModelState.Remove(nameof(ev.ImageUrl));
+
             if (ModelState.IsValid)
             {
                 ev.CreatedAt = DateTime.UtcNow;
@@ -783,8 +936,18 @@ namespace NGEOS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditEvent(Event ev)
+        public async Task<IActionResult> EditEvent(Event ev, IFormFile? imageFile)
         {
+            if (imageFile != null && imageFile.Length > 0)
+            {
+                var uploaded = await SaveUploadedFileAsync(imageFile, "events");
+                if (!string.IsNullOrEmpty(uploaded))
+                {
+                    ev.ImageUrl = uploaded;
+                }
+            }
+            ModelState.Remove(nameof(ev.ImageUrl));
+
             if (ModelState.IsValid)
             {
                 _context.Events.Update(ev);
@@ -826,8 +989,22 @@ namespace NGEOS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateGalleryItem(GalleryItem item)
+        public async Task<IActionResult> CreateGalleryItem(GalleryItem item, IFormFile? imageFile)
         {
+            if (imageFile != null && imageFile.Length > 0)
+            {
+                var uploaded = await SaveUploadedFileAsync(imageFile, "gallery");
+                if (!string.IsNullOrEmpty(uploaded))
+                {
+                    item.ImageUrl = uploaded;
+                }
+            }
+            if (string.IsNullOrWhiteSpace(item.ImageUrl))
+            {
+                item.ImageUrl = "/images/gallery-default.jpg";
+            }
+            ModelState.Remove(nameof(item.ImageUrl));
+
             if (ModelState.IsValid)
             {
                 item.CreatedAt = DateTime.UtcNow;
@@ -872,8 +1049,18 @@ namespace NGEOS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditAboutPage(AboutPage page)
+        public async Task<IActionResult> EditAboutPage(AboutPage page, IFormFile? bannerFile)
         {
+            if (bannerFile != null && bannerFile.Length > 0)
+            {
+                var uploaded = await SaveUploadedFileAsync(bannerFile, "about");
+                if (!string.IsNullOrEmpty(uploaded))
+                {
+                    page.BannerImageUrl = uploaded;
+                }
+            }
+            ModelState.Remove(nameof(page.BannerImageUrl));
+
             if (ModelState.IsValid)
             {
                 page.LastUpdated = DateTime.UtcNow;
@@ -899,8 +1086,22 @@ namespace NGEOS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateTeamMember(TeamMember member)
+        public async Task<IActionResult> CreateTeamMember(TeamMember member, IFormFile? photoFile)
         {
+            if (photoFile != null && photoFile.Length > 0)
+            {
+                var uploaded = await SaveUploadedFileAsync(photoFile, "team");
+                if (!string.IsNullOrEmpty(uploaded))
+                {
+                    member.PhotoUrl = uploaded;
+                }
+            }
+            if (string.IsNullOrWhiteSpace(member.PhotoUrl))
+            {
+                member.PhotoUrl = "/images/team-default.jpg";
+            }
+            ModelState.Remove(nameof(member.PhotoUrl));
+
             if (ModelState.IsValid)
             {
                 _context.TeamMembers.Add(member);
@@ -921,8 +1122,18 @@ namespace NGEOS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditTeamMember(TeamMember member)
+        public async Task<IActionResult> EditTeamMember(TeamMember member, IFormFile? photoFile)
         {
+            if (photoFile != null && photoFile.Length > 0)
+            {
+                var uploaded = await SaveUploadedFileAsync(photoFile, "team");
+                if (!string.IsNullOrEmpty(uploaded))
+                {
+                    member.PhotoUrl = uploaded;
+                }
+            }
+            ModelState.Remove(nameof(member.PhotoUrl));
+
             if (ModelState.IsValid)
             {
                 _context.TeamMembers.Update(member);

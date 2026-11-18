@@ -173,7 +173,7 @@ namespace NGEOS.Controllers
 
             if (!initResult.IsSuccess)
             {
-                ModelState.AddModelError("", initResult.ErrorMessage ?? "Payment gateway initialization failed. Please choose another payment method or try again.");
+                ModelState.AddModelError("", initResult.ErrorMessage ?? "Payment processing failed. Please choose another payment method or try again.");
                 model.AvailableCauses = await _context.Causes.Where(c => c.IsActive).ToListAsync();
                 ViewBag.AvailableGateways = _gatewayFactory.GetAllGateways().Select(g => g.Capabilities).ToList();
                 return View("Index", model);
@@ -253,7 +253,7 @@ namespace NGEOS.Controllers
         {
             ViewBag.Status = status ?? "Failed";
             ViewBag.Reference = reference ?? "N/A";
-            ViewBag.Gateway = gateway ?? "Payment Gateway";
+            ViewBag.Gateway = gateway ?? "Payment Method";
             ViewBag.Message = message ?? "Your transaction could not be verified or was cancelled by the user.";
             return View();
         }

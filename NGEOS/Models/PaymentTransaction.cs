@@ -17,7 +17,7 @@ namespace NGEOS.Models
         public virtual Donation? Donation { get; set; }
 
         [Required, MaxLength(50)]
-        public string GatewayName { get; set; } = "Safepay"; // "Safepay", "JazzCash", "Easypaisa", "PayFast"
+        public string GatewayName { get; set; } = "Safepay"; // "Safepay", "JazzCash", "Easypaisa", "PayFast", "Stripe"
 
         [Required, MaxLength(100)]
         public string InternalReference { get; set; } = string.Empty; // e.g. "GA-TXN-202611-ABC123"

@@ -60,3 +60,8 @@ desktop_publish/
 NGEOS.Desktop/bin/
 NGEOS.Desktop/obj/
 NGEOS.Desktop/.vs/
+dist/
+*_wpftmp.csproj
+/NGEOS-Setup*.exe
+*.lnk
+NGEOS/wwwroot/downloads/*v1.0.0.exe

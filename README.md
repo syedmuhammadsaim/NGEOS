@@ -71,12 +71,15 @@ NGEOS features **one dedicated master administrator account** for full platform 
 
 | Attribute | Details |
 | :--- | :--- |
-| **Email Address** | `admin@ngeos.org` |
-| **Password** | `Admin@12` *(or `Admin@123`)* |
+| **Admin ID / Email** | `admin@ngeos.org` |
+| **Password** | `Admin@123` |
 | **Role & Permissions** | Super Administrator (Full Central Secretariat, Causes, Ledger, NGO Approval & CMS Control) |
 | **Admin Portal** | 🔗 **[`https://ngeos.runasp.net/Admin`](https://ngeos.runasp.net/Admin)** |
 
-> 💡 **Admin Login Tip:** Navigate to [`/Account/Login`](https://ngeos.runasp.net/Account/Login) and enter the Admin credentials above to access the Executive Control Center.
+> 💡 **Admin Login Credentials:**
+> - **ID / Email:** `admin@ngeos.org`
+> - **Password:** `Admin@123`
+> Navigate to [`/Account/Login`](https://ngeos.runasp.net/Account/Login) and enter the Admin credentials above to access the Executive Control Center.
 
 ---
 

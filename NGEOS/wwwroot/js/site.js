@@ -412,53 +412,53 @@ document.addEventListener('DOMContentLoaded', function () {
     // 12. International Country Phone Picker with Flag & Digit Restriction
     // ==========================================================================
     const COUNTRY_LIST = [
-        { name: "Pakistan", code: "+92", flag: "🇵🇰", digits: 10, placeholder: "300 1234567" },
-        { name: "Saudi Arabia", code: "+966", flag: "🇸🇦", digits: 9, placeholder: "50 123 4567" },
-        { name: "United Arab Emirates", code: "+971", flag: "🇦🇪", digits: 9, placeholder: "50 123 4567" },
-        { name: "United States", code: "+1", flag: "🇺🇸", digits: 10, placeholder: "202 555 0199" },
-        { name: "United Kingdom", code: "+44", flag: "🇬🇧", digits: 10, placeholder: "7911 123456" },
-        { name: "Canada", code: "+1", flag: "🇨🇦", digits: 10, placeholder: "416 555 0199" },
-        { name: "India", code: "+91", flag: "🇮🇳", digits: 10, placeholder: "98765 43210" },
-        { name: "Qatar", code: "+974", flag: "🇶🇦", digits: 8, placeholder: "3312 3456" },
-        { name: "Oman", code: "+968", flag: "🇴🇲", digits: 8, placeholder: "9123 4567" },
-        { name: "Kuwait", code: "+965", flag: "🇰🇼", digits: 8, placeholder: "5123 4567" },
-        { name: "Bahrain", code: "+973", flag: "🇧🇭", digits: 8, placeholder: "3912 3456" },
-        { name: "Turkey", code: "+90", flag: "🇹🇷", digits: 10, placeholder: "532 123 4567" },
-        { name: "Australia", code: "+61", flag: "🇦🇺", digits: 9, placeholder: "412 345 678" },
-        { name: "Germany", code: "+49", flag: "🇩🇪", digits: 10, placeholder: "151 23456789" },
-        { name: "Malaysia", code: "+60", flag: "🇲🇾", digits: 9, placeholder: "12 345 6789" },
-        { name: "Bangladesh", code: "+880", flag: "🇧🇩", digits: 10, placeholder: "1712 345678" },
-        { name: "Egypt", code: "+20", flag: "🇪🇬", digits: 10, placeholder: "10 1234 5678" },
-        { name: "South Africa", code: "+27", flag: "🇿🇦", digits: 9, placeholder: "71 234 5678" },
-        { name: "France", code: "+33", flag: "🇫🇷", digits: 9, placeholder: "6 12 34 56 78" },
-        { name: "Italy", code: "+39", flag: "🇮🇹", digits: 10, placeholder: "312 345 6789" },
-        { name: "Spain", code: "+34", flag: "🇪🇸", digits: 9, placeholder: "612 345 678" },
-        { name: "China", code: "+86", flag: "🇨🇳", digits: 11, placeholder: "138 0013 8000" },
-        { name: "Japan", code: "+81", flag: "🇯🇵", digits: 10, placeholder: "90 1234 5678" },
-        { name: "Singapore", code: "+65", flag: "🇸🇬", digits: 8, placeholder: "8123 4567" },
-        { name: "Indonesia", code: "+62", flag: "🇮🇩", digits: 10, placeholder: "812 3456 7890" },
-        { name: "New Zealand", code: "+64", flag: "🇳🇿", digits: 9, placeholder: "21 123 4567" },
-        { name: "Ireland", code: "+353", flag: "🇮🇪", digits: 9, placeholder: "83 123 4567" },
-        { name: "Netherlands", code: "+31", flag: "🇳🇱", digits: 9, placeholder: "6 12345678" },
-        { name: "Sweden", code: "+46", flag: "🇸🇪", digits: 9, placeholder: "70 123 4567" },
-        { name: "Switzerland", code: "+41", flag: "🇨🇭", digits: 9, placeholder: "78 123 4567" },
-        { name: "Norway", code: "+47", flag: "🇳🇴", digits: 8, placeholder: "412 34 567" },
-        { name: "Denmark", code: "+45", flag: "🇩🇰", digits: 8, placeholder: "20 12 34 56" },
-        { name: "Finland", code: "+358", flag: "🇫🇮", digits: 9, placeholder: "40 123 4567" },
-        { name: "Belgium", code: "+32", flag: "🇧🇪", digits: 9, placeholder: "470 12 34 56" },
-        { name: "Austria", code: "+43", flag: "🇦🇹", digits: 10, placeholder: "664 1234567" },
-        { name: "Poland", code: "+48", flag: "🇵🇱", digits: 9, placeholder: "512 345 678" },
-        { name: "Brazil", code: "+55", flag: "🇧🇷", digits: 11, placeholder: "11 91234 5678" },
-        { name: "Mexico", code: "+52", flag: "🇲🇽", digits: 10, placeholder: "55 1234 5678" },
-        { name: "Nigeria", code: "+234", flag: "🇳🇬", digits: 10, placeholder: "802 123 4567" },
-        { name: "Philippines", code: "+63", flag: "🇵🇭", digits: 10, placeholder: "917 123 4567" },
-        { name: "Sri Lanka", code: "+94", flag: "🇱🇰", digits: 9, placeholder: "71 234 5678" },
-        { name: "Nepal", code: "+977", flag: "🇳🇵", digits: 10, placeholder: "984 1234567" },
-        { name: "Afghanistan", code: "+93", flag: "🇦🇫", digits: 9, placeholder: "70 123 4567" },
-        { name: "Iran", code: "+98", flag: "🇮🇷", digits: 10, placeholder: "912 123 4567" },
-        { name: "Iraq", code: "+964", flag: "🇮🇶", digits: 10, placeholder: "770 123 4567" },
-        { name: "Jordan", code: "+962", flag: "🇯🇴", digits: 9, placeholder: "7 9012 3456" },
-        { name: "Lebanon", code: "+961", flag: "🇱🇧", digits: 8, placeholder: "70 123 456" }
+        { name: "Pakistan", code: "+92", iso: "PK", digits: 10, placeholder: "300 1234567" },
+        { name: "Saudi Arabia", code: "+966", iso: "SA", digits: 9, placeholder: "50 123 4567" },
+        { name: "United Arab Emirates", code: "+971", iso: "AE", digits: 9, placeholder: "50 123 4567" },
+        { name: "United States", code: "+1", iso: "US", digits: 10, placeholder: "202 555 0199" },
+        { name: "United Kingdom", code: "+44", iso: "GB", digits: 10, placeholder: "7911 123456" },
+        { name: "Canada", code: "+1", iso: "CA", digits: 10, placeholder: "416 555 0199" },
+        { name: "India", code: "+91", iso: "IN", digits: 10, placeholder: "98765 43210" },
+        { name: "Qatar", code: "+974", iso: "QA", digits: 8, placeholder: "3312 3456" },
+        { name: "Oman", code: "+968", iso: "OM", digits: 8, placeholder: "9123 4567" },
+        { name: "Kuwait", code: "+965", iso: "KW", digits: 8, placeholder: "5123 4567" },
+        { name: "Bahrain", code: "+973", iso: "BH", digits: 8, placeholder: "3912 3456" },
+        { name: "Turkey", code: "+90", iso: "TR", digits: 10, placeholder: "532 123 4567" },
+        { name: "Australia", code: "+61", iso: "AU", digits: 9, placeholder: "412 345 678" },
+        { name: "Germany", code: "+49", iso: "DE", digits: 10, placeholder: "151 23456789" },
+        { name: "Malaysia", code: "+60", iso: "MY", digits: 9, placeholder: "12 345 6789" },
+        { name: "Bangladesh", code: "+880", iso: "BD", digits: 10, placeholder: "1712 345678" },
+        { name: "Egypt", code: "+20", iso: "EG", digits: 10, placeholder: "10 1234 5678" },
+        { name: "South Africa", code: "+27", iso: "ZA", digits: 9, placeholder: "71 234 5678" },
+        { name: "France", code: "+33", iso: "FR", digits: 9, placeholder: "6 12 34 56 78" },
+        { name: "Italy", code: "+39", iso: "IT", digits: 10, placeholder: "312 345 6789" },
+        { name: "Spain", code: "+34", iso: "ES", digits: 9, placeholder: "612 345 678" },
+        { name: "China", code: "+86", iso: "CN", digits: 11, placeholder: "138 0013 8000" },
+        { name: "Japan", code: "+81", iso: "JP", digits: 10, placeholder: "90 1234 5678" },
+        { name: "Singapore", code: "+65", iso: "SG", digits: 8, placeholder: "8123 4567" },
+        { name: "Indonesia", code: "+62", iso: "ID", digits: 10, placeholder: "812 3456 7890" },
+        { name: "New Zealand", code: "+64", iso: "NZ", digits: 9, placeholder: "21 123 4567" },
+        { name: "Ireland", code: "+353", iso: "IE", digits: 9, placeholder: "83 123 4567" },
+        { name: "Netherlands", code: "+31", iso: "NL", digits: 9, placeholder: "6 12345678" },
+        { name: "Sweden", code: "+46", iso: "SE", digits: 9, placeholder: "70 123 4567" },
+        { name: "Switzerland", code: "+41", iso: "CH", digits: 9, placeholder: "78 123 4567" },
+        { name: "Norway", code: "+47", iso: "NO", digits: 8, placeholder: "412 34 567" },
+        { name: "Denmark", code: "+45", iso: "DK", digits: 8, placeholder: "20 12 34 56" },
+        { name: "Finland", code: "+358", iso: "FI", digits: 9, placeholder: "40 123 4567" },
+        { name: "Belgium", code: "+32", iso: "BE", digits: 9, placeholder: "470 12 34 56" },
+        { name: "Austria", code: "+43", iso: "AT", digits: 10, placeholder: "664 1234567" },
+        { name: "Poland", code: "+48", iso: "PL", digits: 9, placeholder: "512 345 678" },
+        { name: "Brazil", code: "+55", iso: "BR", digits: 11, placeholder: "11 91234 5678" },
+        { name: "Mexico", code: "+52", iso: "MX", digits: 10, placeholder: "55 1234 5678" },
+        { name: "Nigeria", code: "+234", iso: "NG", digits: 10, placeholder: "802 123 4567" },
+        { name: "Philippines", code: "+63", iso: "PH", digits: 10, placeholder: "917 123 4567" },
+        { name: "Sri Lanka", code: "+94", iso: "LK", digits: 9, placeholder: "71 234 5678" },
+        { name: "Nepal", code: "+977", iso: "NP", digits: 10, placeholder: "984 1234567" },
+        { name: "Afghanistan", code: "+93", iso: "AF", digits: 9, placeholder: "70 123 4567" },
+        { name: "Iran", code: "+98", iso: "IR", digits: 10, placeholder: "912 123 4567" },
+        { name: "Iraq", code: "+964", iso: "IQ", digits: 10, placeholder: "770 123 4567" },
+        { name: "Jordan", code: "+962", iso: "JO", digits: 9, placeholder: "7 9012 3456" },
+        { name: "Lebanon", code: "+961", iso: "LB", digits: 8, placeholder: "70 123 456" }
     ];
 
     function initIntlPhonePickers() {
@@ -485,7 +485,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 const filtered = COUNTRY_LIST.filter(c => 
                     c.name.toLowerCase().includes(query) ||
-                    c.code.includes(query)
+                    c.code.includes(query) ||
+                    (c.iso && c.iso.toLowerCase().includes(query))
                 );
 
                 if (filtered.length === 0) {
@@ -498,10 +499,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     li.className = 'country-item';
                     li.innerHTML = `
                         <div class="country-item-left">
-                            <span class="country-flag-icon">${c.flag}</span>
-                            <span class="country-name">${c.name}</span>
+                            <span class="country-name fw-medium">${c.name}</span>
                         </div>
-                        <span class="country-code-badge">${c.code}</span>
+                        <span class="country-code-badge fw-semibold">${c.code}</span>
                     `;
                     li.addEventListener('click', function (e) {
                         e.preventDefault();
@@ -528,7 +528,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
             function selectCountry(c) {
                 currentCountry = c;
-                btn.querySelector('.country-flag-icon').textContent = c.flag;
+                const flagEl = btn.querySelector('.country-flag-icon');
+                if (flagEl) {
+                    flagEl.remove();
+                }
                 btn.querySelector('.country-dial-code').textContent = c.code;
 
                 phoneInput.setAttribute('maxlength', c.digits);

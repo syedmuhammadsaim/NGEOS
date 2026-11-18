@@ -70,7 +70,7 @@
     <!-- Header -->
     <div class="receipt-header d-flex justify-content-between align-items-start">
         <div>
-            <h3 class="fw-bold mb-1 text-dark">NGEOS <span style="color: #f59e0b;">Foundation</span></h3>
+            <h3 class="fw-bold mb-1 text-dark">NGEOS <span style="color: #f25c05;">Foundation</span></h3>
             <p class="text-muted small mb-0">Next Generation NGO Management &amp; Humanitarian Platform</p>
             <p class="text-muted small mb-0">Official Registered Charity &bull; Tax Identification: NGO-PK-2024-8841</p>
         </div>
@@ -108,7 +108,7 @@
                 <td class="fw-bold">
                     @if (Model.DonationType == "Zakat")
                     {
-                        <span class="text-warning"><i class="bi bi-moon-stars-fill me-1"></i> Zakat Contribution (100% Policy)</span>
+                        <span class="text-orange"><i class="bi bi-moon-stars-fill me-1"></i> Zakat Contribution (100% Policy)</span>
                     }
                     else
                     {
@@ -125,7 +125,7 @@
                 <td>@Model.NgoName</td>
             </tr>
             <tr>
-                <th class="bg-light text-muted small">Payment Gateway</th>
+                <th class="bg-light text-muted small">Payment Method</th>
                 <td>
                     <strong>@Model.PaymentGateway</strong>
                     @if (!string.IsNullOrEmpty(Model.GatewayReference))

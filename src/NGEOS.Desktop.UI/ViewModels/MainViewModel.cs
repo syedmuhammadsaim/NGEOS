@@ -47,7 +47,7 @@ namespace NGEOS.Desktop.UI.ViewModels
         private string _syncStatusText = "Checking Connectivity...";
 
         [ObservableProperty]
-        private string _syncButtonLabel = "🔄 Sync Now";
+        private string _syncButtonLabel = "Sync Now";
 
         // Admin ViewModels
         public DashboardViewModel DashboardVM { get; }
@@ -58,10 +58,18 @@ namespace NGEOS.Desktop.UI.ViewModels
         public AuditLogsViewModel AuditLogsVM { get; }
         public SettingsViewModel SettingsVM { get; }
 
-        // Website Portal ViewModels
+        // Website Public & Citizen ViewModels
         public HomePortalViewModel HomeVM { get; }
+        public CausesCatalogViewModel CausesCatalogVM { get; }
+        public CauseDetailsViewModel CauseDetailsVM { get; }
         public PublicDonateViewModel PublicDonateVM { get; }
         public ProgrammesViewModel ProgrammesVM { get; }
+        public ProgrammeDetailsViewModel ProgrammeDetailsVM { get; }
+        public EventsViewModel EventsVM { get; }
+        public GalleryViewModel GalleryVM { get; }
+        public NgosDirectoryViewModel NgosDirectoryVM { get; }
+        public HelpCentreFaqViewModel HelpCentreFaqVM { get; }
+        public UserPortalViewModel UserPortalVM { get; }
         public ZakatCalculatorViewModel ZakatVM { get; }
         public AboutViewModel AboutVM { get; }
         public ContactViewModel ContactVM { get; }
@@ -79,8 +87,16 @@ namespace NGEOS.Desktop.UI.ViewModels
             AuditLogsViewModel auditLogsVM,
             SettingsViewModel settingsVM,
             HomePortalViewModel homeVM,
+            CausesCatalogViewModel causesCatalogVM,
+            CauseDetailsViewModel causeDetailsVM,
             PublicDonateViewModel publicDonateVM,
             ProgrammesViewModel programmesVM,
+            ProgrammeDetailsViewModel programmeDetailsVM,
+            EventsViewModel eventsVM,
+            GalleryViewModel galleryVM,
+            NgosDirectoryViewModel ngosDirectoryVM,
+            HelpCentreFaqViewModel helpCentreFaqVM,
+            UserPortalViewModel userPortalVM,
             ZakatCalculatorViewModel zakatVM,
             AboutViewModel aboutVM,
             ContactViewModel contactVM,
@@ -90,6 +106,7 @@ namespace NGEOS.Desktop.UI.ViewModels
             _serviceProvider = serviceProvider;
             _connectivity = connectivity;
             _syncService = syncService;
+
             DashboardVM = dashboardVM;
             CausesVM = causesVM;
             DonationsVM = donationsVM;
@@ -99,8 +116,16 @@ namespace NGEOS.Desktop.UI.ViewModels
             SettingsVM = settingsVM;
 
             HomeVM = homeVM;
+            CausesCatalogVM = causesCatalogVM;
+            CauseDetailsVM = causeDetailsVM;
             PublicDonateVM = publicDonateVM;
             ProgrammesVM = programmesVM;
+            ProgrammeDetailsVM = programmeDetailsVM;
+            EventsVM = eventsVM;
+            GalleryVM = galleryVM;
+            NgosDirectoryVM = ngosDirectoryVM;
+            HelpCentreFaqVM = helpCentreFaqVM;
+            UserPortalVM = userPortalVM;
             ZakatVM = zakatVM;
             AboutVM = aboutVM;
             ContactVM = contactVM;
@@ -140,8 +165,8 @@ namespace NGEOS.Desktop.UI.ViewModels
         {
             IsOnline = online;
             SyncStatusText = online 
-                ? "🟢 ONLINE (Remote Cloud Connected)" 
-                : "⚪ OFFLINE (Local SQLite Safe Mode)";
+                ? "ONLINE (Remote Cloud Connected)" 
+                : "OFFLINE (Local SQLite Safe Mode)";
         }
 
         private void UpdateSyncState()
@@ -150,7 +175,7 @@ namespace NGEOS.Desktop.UI.ViewModels
             PendingSyncCount = _syncService.PendingCount;
             SyncButtonLabel = IsSyncing 
                 ? "Syncing..." 
-                : (PendingSyncCount > 0 ? $"🔄 Sync Now ({PendingSyncCount})" : "🔄 Sync Now");
+                : (PendingSyncCount > 0 ? $"Sync Now ({PendingSyncCount})" : "Sync Now");
         }
 
         public async Task InitializeUserAsync(User user)
@@ -179,13 +204,43 @@ namespace NGEOS.Desktop.UI.ViewModels
                     }
                     break;
                 case "Causes":
-                    await NavigateToCausesAsync();
+                    await NavigateToCausesCatalogAsync();
+                    break;
+                case "CauseDetails":
+                    if (parameter is Cause cause)
+                    {
+                        await NavigateToCauseDetailsAsync(cause);
+                    }
                     break;
                 case "Programmes":
                     await NavigateToProgrammesAsync();
                     break;
+                case "ProgrammeDetails":
+                    if (parameter is Programme programme)
+                    {
+                        NavigateToProgrammeDetails(programme);
+                    }
+                    break;
+                case "Events":
+                    await NavigateToEventsAsync();
+                    break;
+                case "Gallery":
+                    await NavigateToGalleryAsync();
+                    break;
+                case "Ngos":
+                    await NavigateToNgosAsync();
+                    break;
+                case "HelpCentre":
+                    await NavigateToHelpCentreAsync();
+                    break;
+                case "UserPortal":
+                    await NavigateToUserPortalAsync();
+                    break;
                 case "Zakat":
                     NavigateToZakat();
+                    break;
+                case "About":
+                    await NavigateToAboutAsync();
                     break;
                 case "Contact":
                     NavigateToContact();
@@ -205,8 +260,8 @@ namespace NGEOS.Desktop.UI.ViewModels
             if (res.Success)
             {
                 MessageBox.Show(res.Message, "Hybrid Synchronization", MessageBoxButton.OK, MessageBoxImage.Information);
-                // Refresh active view
                 if (CurrentViewModel == HomeVM) await HomeVM.LoadAsync();
+                else if (CurrentViewModel == CausesCatalogVM) await CausesCatalogVM.LoadAsync();
                 else if (CurrentViewModel == DashboardVM) await DashboardVM.LoadAsync();
                 else if (CurrentViewModel == CausesVM) await CausesVM.LoadAsync();
                 else if (CurrentViewModel == DonationsVM) await DonationsVM.LoadAsync();
@@ -230,6 +285,24 @@ namespace NGEOS.Desktop.UI.ViewModels
         }
 
         [RelayCommand]
+        public async Task NavigateToCausesCatalogAsync()
+        {
+            IsAdminMode = false;
+            CurrentSectionTitle = "Humanitarian Causes & Appeals";
+            CurrentViewModel = CausesCatalogVM;
+            await CausesCatalogVM.LoadAsync();
+        }
+
+        [RelayCommand]
+        public async Task NavigateToCauseDetailsAsync(Cause cause)
+        {
+            IsAdminMode = false;
+            CurrentSectionTitle = $"Cause: {cause.Title}";
+            CurrentViewModel = CauseDetailsVM;
+            await CauseDetailsVM.LoadAsync(cause);
+        }
+
+        [RelayCommand]
         public async Task NavigateToDonateAsync(Cause? cause = null)
         {
             CurrentSectionTitle = "Make A Contribution - NGEOS Portal";
@@ -240,9 +313,65 @@ namespace NGEOS.Desktop.UI.ViewModels
         [RelayCommand]
         public async Task NavigateToProgrammesAsync()
         {
+            IsAdminMode = false;
             CurrentSectionTitle = "Humanitarian Programmes & Field Missions";
             CurrentViewModel = ProgrammesVM;
             await ProgrammesVM.LoadAsync();
+        }
+
+        [RelayCommand]
+        public void NavigateToProgrammeDetails(Programme programme)
+        {
+            IsAdminMode = false;
+            CurrentSectionTitle = $"Mission: {programme.Title}";
+            CurrentViewModel = ProgrammeDetailsVM;
+            ProgrammeDetailsVM.Load(programme);
+        }
+
+        [RelayCommand]
+        public async Task NavigateToEventsAsync()
+        {
+            IsAdminMode = false;
+            CurrentSectionTitle = "Humanitarian Events & Volunteer Drives";
+            CurrentViewModel = EventsVM;
+            await EventsVM.LoadAsync();
+        }
+
+        [RelayCommand]
+        public async Task NavigateToGalleryAsync()
+        {
+            IsAdminMode = false;
+            CurrentSectionTitle = "Field Impact Photo Gallery";
+            CurrentViewModel = GalleryVM;
+            await GalleryVM.LoadAsync();
+        }
+
+        [RelayCommand]
+        public async Task NavigateToNgosAsync()
+        {
+            IsAdminMode = false;
+            CurrentSectionTitle = "Accredited & Certified NGO Partners";
+            CurrentViewModel = NgosDirectoryVM;
+            await NgosDirectoryVM.LoadAsync();
+        }
+
+        [RelayCommand]
+        public async Task NavigateToHelpCentreAsync()
+        {
+            IsAdminMode = false;
+            CurrentSectionTitle = "Help Centre & Frequently Asked Questions";
+            CurrentViewModel = HelpCentreFaqVM;
+            await HelpCentreFaqVM.LoadAsync();
+        }
+
+        [RelayCommand]
+        public async Task NavigateToUserPortalAsync()
+        {
+            if (CurrentUser == null) return;
+            IsAdminMode = false;
+            CurrentSectionTitle = $"Citizen Donor Portal - {CurrentUser.FullName}";
+            CurrentViewModel = UserPortalVM;
+            await UserPortalVM.LoadAsync(CurrentUser);
         }
 
         [RelayCommand]
@@ -253,10 +382,11 @@ namespace NGEOS.Desktop.UI.ViewModels
         }
 
         [RelayCommand]
-        public void NavigateToAbout()
+        public async Task NavigateToAboutAsync()
         {
             CurrentSectionTitle = "About NGEOS Humanitarian Alliance";
             CurrentViewModel = AboutVM;
+            await AboutVM.LoadAsync();
         }
 
         [RelayCommand]
@@ -264,20 +394,6 @@ namespace NGEOS.Desktop.UI.ViewModels
         {
             CurrentSectionTitle = "24/7 Global Helpdesk & Humanitarian Inquiries";
             CurrentViewModel = ContactVM;
-        }
-
-        [RelayCommand]
-        public void LaunchBrowserWebsite()
-        {
-            try
-            {
-                // Try launching browser to http://localhost:5125
-                Process.Start(new ProcessStartInfo("http://localhost:5125") { UseShellExecute = true });
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Could not open web browser: {ex.Message}", "Browser Launch", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
         }
 
         // ==========================================
@@ -308,7 +424,7 @@ namespace NGEOS.Desktop.UI.ViewModels
         [RelayCommand]
         public async Task NavigateToCausesAsync()
         {
-            CurrentSectionTitle = "Humanitarian Causes & Campaigns";
+            CurrentSectionTitle = "Causes Management";
             CurrentViewModel = CausesVM;
             await CausesVM.LoadAsync();
         }
@@ -352,56 +468,10 @@ namespace NGEOS.Desktop.UI.ViewModels
         }
 
         [RelayCommand]
-        public void ToggleTheme()
-        {
-            IsDarkTheme = !IsDarkTheme;
-            ApplyTheme(IsDarkTheme);
-        }
-
-        private static void ApplyTheme(bool isDark)
-        {
-            var res = Application.Current.Resources;
-            if (isDark)
-            {
-                // Dark Slate Navy
-                res["AppBgBrush"] = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#0B132B"));
-                res["CardBgBrush"] = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#1C2541"));
-                res["SidebarBgBrush"] = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#0B192C"));
-                res["TopBarBgBrush"] = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#0D1B2A"));
-                res["TextPrimaryBrush"] = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#F8FAFC"));
-                res["TextSecondaryBrush"] = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#94A3B8"));
-                res["BorderBrush"] = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#334155"));
-                res["InputBgBrush"] = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#0F172A"));
-                res["DataGridHeaderBgBrush"] = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#0F172A"));
-                res["DataGridRowAlternateBrush"] = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#162238"));
-                res["DataGridRowHoverBrush"] = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#24344D"));
-            }
-            else
-            {
-                // Clean Professional Light
-                res["AppBgBrush"] = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#F1F5F9"));
-                res["CardBgBrush"] = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
-                res["SidebarBgBrush"] = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#0F172A"));
-                res["TopBarBgBrush"] = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFFF"));
-                res["TextPrimaryBrush"] = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#0F172A"));
-                res["TextSecondaryBrush"] = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#64748B"));
-                res["BorderBrush"] = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#CBD5E1"));
-                res["InputBgBrush"] = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#F8FAFC"));
-                res["DataGridHeaderBgBrush"] = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E2E8F0"));
-                res["DataGridRowAlternateBrush"] = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#F8FAFC"));
-                res["DataGridRowHoverBrush"] = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#EDF2F7"));
-            }
-        }
-
-        [RelayCommand]
         public void Logout()
         {
-            var res = MessageBox.Show("Are you sure you want to log out of NGEOS Desktop?", "Confirm Logout", MessageBoxButton.YesNo, MessageBoxImage.Question);
-            if (res == MessageBoxResult.Yes)
-            {
-                _authService.Logout();
-                _onLogoutRequested();
-            }
+            _authService.Logout();
+            _onLogoutRequested();
         }
     }
 }
