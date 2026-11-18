@@ -31,6 +31,17 @@ namespace NGEOS.Data
         public DbSet<FriendInvitation> FriendInvitations => Set<FriendInvitation>();
         public DbSet<PaymentTransaction> PaymentTransactions => Set<PaymentTransaction>();
 
+        // Autonomous AI Ecosystem Tables
+        public DbSet<AgentConfiguration> AgentConfigurations => Set<AgentConfiguration>();
+        public DbSet<AgentReport> AgentReports => Set<AgentReport>();
+        public DbSet<AgentSecurityEvent> AgentSecurityEvents => Set<AgentSecurityEvent>();
+        public DbSet<AgentUserRestriction> AgentUserRestrictions => Set<AgentUserRestriction>();
+        public DbSet<AgentAppeal> AgentAppeals => Set<AgentAppeal>();
+        public DbSet<AgentConversation> AgentConversations => Set<AgentConversation>();
+        public DbSet<AgentMessage> AgentMessages => Set<AgentMessage>();
+        public DbSet<AgentAutomationJob> AgentAutomationJobs => Set<AgentAutomationJob>();
+        public DbSet<AgentUsageStatistic> AgentUsageStatistics => Set<AgentUsageStatistic>();
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -139,6 +150,28 @@ namespace NGEOS.Data
 
             modelBuilder.Entity<PasswordResetToken>()
                 .HasIndex(t => t.ResetSessionToken);
+
+            // Autonomous Agent Indexes & Relationships
+            modelBuilder.Entity<AgentReport>()
+                .HasIndex(r => r.ReportCode)
+                .IsUnique();
+
+            modelBuilder.Entity<AgentReport>()
+                .HasIndex(r => r.Timestamp);
+
+            modelBuilder.Entity<AgentSecurityEvent>()
+                .HasIndex(s => s.EventCode)
+                .IsUnique();
+
+            modelBuilder.Entity<AgentSecurityEvent>()
+                .HasIndex(s => s.DetectedAt);
+
+            modelBuilder.Entity<AgentConversation>()
+                .HasIndex(c => c.SessionId);
+
+            modelBuilder.Entity<AgentAutomationJob>()
+                .HasIndex(j => j.ExecutionId)
+                .IsUnique();
         }
     }
 }

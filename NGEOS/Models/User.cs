@@ -46,5 +46,7 @@ namespace NGEOS.Models
         public virtual ICollection<ProgrammeInterest> ProgrammeInterests { get; set; } = new List<ProgrammeInterest>();
         public virtual ICollection<UserQuery> Queries { get; set; } = new List<UserQuery>();
         public virtual ICollection<FriendInvitation> SentInvitations { get; set; } = new List<FriendInvitation>();
+        public virtual ICollection<AgentUserRestriction> Restrictions { get; set; } = new List<AgentUserRestriction>();
+        public virtual ICollection<AgentAppeal> Appeals { get; set; } = new List<AgentAppeal>();
     }
 }

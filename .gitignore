@@ -44,6 +44,12 @@ publish/
 .env.local
 .env.production
 
+# Python cache & build files
+__pycache__/
+*.py[cod]
+*$py.class
+*.pytest_cache/
+
 
 
 # Temporary receipts preview generated during test / simulation

@@ -830,6 +830,89 @@
         });
     </script>
 
+    <!-- SignalR Client & Autonomous Security Warning / 3-Second Suspension Protocol -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"></script>
+    <div class="modal fade" id="ngeosSecurityWarningModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-warning shadow-lg text-center p-4">
+                <div class="text-warning mb-2"><i class="bi bi-exclamation-triangle-fill fs-1"></i></div>
+                <h5 class="fw-bold text-dark mb-2">SECURITY WARNING</h5>
+                <p class="text-muted small mb-3" id="secWarningBody">Your recent activity may violate NGEOS platform policies. Please stop this activity immediately.</p>
+                <button type="button" class="btn btn-warning px-4 fw-bold mx-auto" data-bs-dismiss="modal">I Understand</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="ngeosSecurityCountdownModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-danger shadow-lg text-center p-4">
+                <div class="text-danger mb-2"><i class="bi bi-shield-slash-fill fs-1"></i></div>
+                <h4 class="fw-bold text-danger mb-1">SECURITY ALERT</h4>
+                <p class="text-muted small mb-2">Your account has been flagged for a serious policy violation.</p>
+                <div class="my-3">
+                    <span class="display-3 fw-bold text-danger" id="secCountdownNumber">3</span>
+                </div>
+                <p class="text-dark small mb-0">Your account will be temporarily suspended.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            try {
+                const connection = new signalR.HubConnectionBuilder()
+                    .withUrl("/hubs/ngeos")
+                    .withAutomaticReconnect()
+                    .build();
+
+                @{
+                    var currentUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? "";
+                }
+                const currentUserId = "@currentUserId";
+
+                connection.start().then(() => {
+                    if (currentUserId) {
+                        connection.invoke("JoinUserGroup", currentUserId).catch(err => console.warn(err));
+                    }
+                }).catch(err => console.warn("SignalR connection error:", err));
+
+                connection.on("SecurityWarningAlert", function (data) {
+                    if (data && data.message) {
+                        const bodyEl = document.getElementById("secWarningBody");
+                        if (bodyEl) bodyEl.innerText = data.message;
+                    }
+                    const modalEl = document.getElementById("ngeosSecurityWarningModal");
+                    if (modalEl && typeof bootstrap !== "undefined") {
+                        const modal = new bootstrap.Modal(modalEl);
+                        modal.show();
+                    }
+                });
+
+                connection.on("SecurityCountdownAlert", function (data) {
+                    const modalEl = document.getElementById("ngeosSecurityCountdownModal");
+                    if (modalEl && typeof bootstrap !== "undefined") {
+                        const modal = new bootstrap.Modal(modalEl);
+                        modal.show();
+
+                        let count = 3;
+                        const numEl = document.getElementById("secCountdownNumber");
+                        const timer = setInterval(() => {
+                            count--;
+                            if (numEl) numEl.innerText = count;
+                            if (count <= 0) {
+                                clearInterval(timer);
+                                setTimeout(() => {
+                                    window.location.href = "/Account/Appeal";
+                                }, 800);
+                            }
+                        }, 1000);
+                    }
+                });
+            } catch (ex) {
+                console.warn("SignalR setup exception:", ex);
+            }
+        })();
+    </script>
 </body>
 
 </html>

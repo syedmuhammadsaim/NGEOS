@@ -1,0 +1,51 @@
+@{
+    ViewData["Title"] = "Account Reinstatement Appeal - NGEOS";
+}
+
+<div class="container section-padding">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="form-card shadow-lg p-4 p-md-5 bg-white rounded-4 border">
+                <div class="text-center mb-4">
+                    <div class="brand-icon mx-auto mb-3 bg-warning-subtle text-warning rounded-circle d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                        <i class="bi bi-shield-shaded fs-2"></i>
+                    </div>
+                    <h3 class="fw-bold text-dark">Submit Account Appeal</h3>
+                    <p class="text-muted small">If your account was temporarily restricted by our autonomous security engine or administrative policy, you may submit a review request.</p>
+                </div>
+
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show small mb-3" role="alert">
+                        @TempData["ErrorMessage"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+
+                <form asp-action="SubmitAppeal" method="post">
+                    @Html.AntiForgeryToken()
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold">Registered Email Address</label>
+                        <input type="email" name="email" class="form-control" placeholder="your.email@example.com" required />
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label small fw-semibold">Explanation / Grounds for Appeal</label>
+                        <textarea name="explanation" class="form-control" rows="5" placeholder="Explain the circumstances of your activity and why your account should be reinstated..." required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-orange w-100 py-2 fw-semibold shadow-sm">
+                        <i class="bi bi-send me-1"></i> Submit Appeal for Review
+                    </button>
+
+                    <div class="text-center mt-3">
+                        <a asp-action="Login" class="small text-muted text-decoration-none">
+                            <i class="bi bi-arrow-left me-1"></i> Back to Login
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

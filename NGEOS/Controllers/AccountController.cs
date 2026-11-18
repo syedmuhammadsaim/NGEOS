@@ -297,9 +297,11 @@ namespace NGEOS.Controllers
 
             {
 
-                TempData["ErrorMessage"] = "Your account has been deactivated / blocked by administration. Please contact NGEOS support.";
+                TempData["ErrorMessage"] = "Your account has been deactivated / blocked by administration. Please contact NGEOS support or submit an appeal using the form below.";
 
-                ModelState.AddModelError(string.Empty, "Your account has been deactivated / blocked by administration. Please contact NGEOS support.");
+                ModelState.AddModelError(string.Empty, "Your account has been deactivated / blocked by administration. You may submit an appeal for review.");
+
+                ViewBag.ShowAppealLink = true;
 
                 return View(model);
 
@@ -1403,6 +1405,52 @@ namespace NGEOS.Controllers
 
                 authProperties);
 
+        }
+
+        [HttpGet]
+        public IActionResult Appeal()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SubmitAppeal(string email, string explanation)
+        {
+            if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(explanation))
+            {
+                TempData["ErrorMessage"] = "Both email and explanation are required to submit an appeal.";
+                return View("Appeal");
+            }
+
+            var cleanEmail = email.Trim().ToLower();
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == cleanEmail);
+            if (user == null)
+            {
+                TempData["ErrorMessage"] = "No registered account found with the specified email address.";
+                return View("Appeal");
+            }
+
+            var restriction = await _context.AgentUserRestrictions
+                .Where(r => r.UserId == user.Id && r.IsActive)
+                .OrderByDescending(r => r.RestrictedAt)
+                .FirstOrDefaultAsync();
+
+            var appeal = new AgentAppeal
+            {
+                UserId = user.Id,
+                RestrictionId = restriction?.Id ?? 0,
+                Explanation = explanation.Trim(),
+                ContactEmail = user.Email,
+                SubmittedAt = DateTime.UtcNow,
+                Status = "Pending"
+            };
+
+            _context.AgentAppeals.Add(appeal);
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "Your appeal has been successfully registered. The NGEOS Governance Committee will review your request.";
+            return RedirectToAction(nameof(Login));
         }
 
     }

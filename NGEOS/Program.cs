@@ -232,6 +232,11 @@ builder.Services.AddScoped<INgeosKnowledgeService, NgeosKnowledgeService>();
 
 builder.Services.AddScoped<IAiChatbotService, AiFallbackService>();
 
+builder.Services.AddHttpClient<IAutonomousAgentService, AutonomousAgentService>(client =>
+{
+    client.Timeout = TimeSpan.FromSeconds(15);
+});
+
 // Configure Multi-Payment Options from .env / App Configuration
 builder.Services.Configure<PaymentOptions>(options =>
 {

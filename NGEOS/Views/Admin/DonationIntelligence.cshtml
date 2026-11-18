@@ -1,0 +1,155 @@
+@{
+    ViewData["Title"] = "Donation Intelligence - NGEOS";
+    Layout = "_AdminLayout";
+}
+
+<div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4">
+    <div>
+        <h3 class="fw-bold text-dark mb-1 d-flex align-items-center gap-2">
+            <i class="bi bi-graph-up-arrow text-orange"></i> Autonomous Donation Intelligence
+        </h3>
+        <p class="text-muted small mb-0">Real-time financial summaries, gateway distributions, and donor mobilization intelligence.</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a asp-action="Donations" class="btn btn-outline-navy btn-sm px-3 shadow-sm">
+            <i class="bi bi-wallet2 me-1"></i> Master Ledger
+        </a>
+    </div>
+</div>
+
+<!-- Key Financial KPI Cards -->
+<div class="row g-3 mb-4">
+    <div class="col-sm-6 col-xl-3">
+        <div class="card p-3 border-0 shadow-sm bg-white">
+            <span class="text-muted small">Total Mobilized Funds</span>
+            <h4 class="fw-bold text-success mt-1 mb-0">Rs @(((decimal)ViewBag.TotalFunds).ToString("N0"))</h4>
+            <span class="text-muted small mt-1">@ViewBag.SuccessCount Verified Transactions</span>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="card p-3 border-0 shadow-sm bg-white">
+            <span class="text-muted small">Today's Collections</span>
+            <h4 class="fw-bold text-primary mt-1 mb-0">Rs @(((decimal)ViewBag.TodayFunds).ToString("N0"))</h4>
+            <span class="text-muted small mt-1">24-hour cycle</span>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="card p-3 border-0 shadow-sm bg-white">
+            <span class="text-muted small">Current Week Mobilization</span>
+            <h4 class="fw-bold text-orange mt-1 mb-0">Rs @(((decimal)ViewBag.WeekFunds).ToString("N0"))</h4>
+            <span class="text-muted small mt-1">Weekly target progress</span>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="card p-3 border-0 shadow-sm bg-white">
+            <span class="text-muted small">Current Month Mobilization</span>
+            <h4 class="fw-bold text-info mt-1 mb-0">Rs @(((decimal)ViewBag.MonthFunds).ToString("N0"))</h4>
+            <span class="text-muted small mt-1">Monthly cycle total</span>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <!-- Top Performing Causes -->
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm p-4 bg-white h-100">
+            <h6 class="fw-bold mb-3 d-flex align-items-center gap-2">
+                <i class="bi bi-pie-chart-fill text-orange"></i> Top Contributing Causes
+            </h6>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light small">
+                        <tr>
+                            <th>Cause Name</th>
+                            <th>Donors</th>
+                            <th class="text-end">Total Raised</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (ViewBag.TopCauses != null)
+                        {
+                            foreach (var item in ViewBag.TopCauses)
+                            {
+                                <tr>
+                                    <td><strong class="small text-dark">@item.Name</strong></td>
+                                    <td><span class="badge bg-light text-muted border">@item.Count donations</span></td>
+                                    <td class="text-end fw-bold text-success">Rs @(((decimal)item.Total).ToString("N0"))</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gateway & Payment Method Distribution -->
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm p-4 bg-white h-100">
+            <h6 class="fw-bold mb-3 d-flex align-items-center gap-2">
+                <i class="bi bi-credit-card-2-front-fill text-primary"></i> Payment Channel Intelligence
+            </h6>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light small">
+                        <tr>
+                            <th>Gateway / Channel</th>
+                            <th>Volume</th>
+                            <th class="text-end">Processed Volume</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (ViewBag.Gateways != null)
+                        {
+                            foreach (var gw in ViewBag.Gateways)
+                            {
+                                <tr>
+                                    <td><strong class="small text-dark">@gw.Name</strong></td>
+                                    <td><span class="badge bg-light text-muted border">@gw.Count</span></td>
+                                    <td class="text-end fw-bold text-dark">Rs @(((decimal)gw.Total).ToString("N0"))</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Live Transactions -->
+<div class="card border-0 shadow-sm p-4 bg-white">
+    <h6 class="fw-bold mb-3 d-flex align-items-center gap-2">
+        <i class="bi bi-clock-history text-secondary"></i> Recent Verified Transactions
+    </h6>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light small">
+                <tr>
+                    <th>Txn ID</th>
+                    <th>Donor Name</th>
+                    <th>Cause</th>
+                    <th>Channel</th>
+                    <th>Date</th>
+                    <th class="text-end">Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (ViewBag.RecentDonations != null)
+                {
+                    foreach (var d in (IEnumerable<NGEOS.Models.Donation>)ViewBag.RecentDonations)
+                    {
+                        <tr>
+                            <td><code class="small text-dark">@d.TransactionId</code></td>
+                            <td><strong class="small text-dark">@d.DonorName</strong></td>
+                            <td><span class="small text-muted">@(d.Cause?.Title ?? "General Charity")</span></td>
+                            <td><span class="badge bg-light text-muted border">@d.PaymentGateway</span></td>
+                            <td class="small text-muted">@d.DonationDate.ToString("MMM dd, yyyy HH:mm")</td>
+                            <td class="text-end fw-bold text-success">Rs @d.Amount.ToString("N0")</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

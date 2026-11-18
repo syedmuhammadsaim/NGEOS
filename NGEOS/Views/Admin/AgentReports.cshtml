@@ -1,0 +1,151 @@
+@model IEnumerable<NGEOS.Models.AgentReport>
+@{
+    ViewData["Title"] = "Agent Audit Reports - NGEOS";
+    Layout = "_AdminLayout";
+    int currentPage = ViewBag.CurrentPage ?? 1;
+    int totalPages = ViewBag.TotalPages ?? 1;
+}
+
+<div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4">
+    <div>
+        <h3 class="fw-bold text-dark mb-1 d-flex align-items-center gap-2">
+            <i class="bi bi-file-earmark-check-fill text-orange"></i> Agent Audit Reports
+        </h3>
+        <p class="text-muted small mb-0">Tamper-resistant operational logs recording every action executed by the autonomous AI agents.</p>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+        <a asp-action="ExportAgentReportsCsv" class="btn btn-outline-success btn-sm px-3 shadow-sm">
+            <i class="bi bi-download me-1"></i> Export to CSV
+        </a>
+    </div>
+</div>
+
+<!-- Filters -->
+<div class="card border-0 shadow-sm p-3 bg-white mb-4">
+    <form method="get" class="row g-2 align-items-center">
+        <div class="col-md-4">
+            <input type="text" name="search" value="@ViewBag.Search" class="form-control form-control-sm" placeholder="Search action, description, or report code..." />
+        </div>
+        <div class="col-md-3">
+            <select name="agent" class="form-select form-select-sm">
+                <option value="">All Agents</option>
+                <option value="AdminAgent" selected="@(ViewBag.Agent == "AdminAgent")">Admin Agent</option>
+                <option value="UserAgent" selected="@(ViewBag.Agent == "UserAgent")">User Agent</option>
+                <option value="SecurityEngine" selected="@(ViewBag.Agent == "SecurityEngine")">Security Engine</option>
+                <option value="AutomationEngine" selected="@(ViewBag.Agent == "AutomationEngine")">Automation Engine</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <select name="riskLevel" class="form-select form-select-sm">
+                <option value="">All Risk Levels</option>
+                <option value="Low" selected="@(ViewBag.RiskLevel == "Low")">Low</option>
+                <option value="Medium" selected="@(ViewBag.RiskLevel == "Medium")">Medium</option>
+                <option value="High" selected="@(ViewBag.RiskLevel == "High")">High</option>
+                <option value="Critical" selected="@(ViewBag.RiskLevel == "Critical")">Critical</option>
+            </select>
+        </div>
+        <div class="col-md-2 d-flex gap-2">
+            <button type="submit" class="btn btn-orange btn-sm w-100"><i class="bi bi-funnel me-1"></i> Filter</button>
+            <a asp-action="AgentReports" class="btn btn-light btn-sm"><i class="bi bi-arrow-clockwise"></i></a>
+        </div>
+    </form>
+</div>
+
+<!-- Reports Table -->
+<div class="card border-0 shadow-sm bg-white overflow-hidden">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light small">
+                <tr>
+                    <th>Report Code</th>
+                    <th>Agent / Module</th>
+                    <th>Action</th>
+                    <th>Target User</th>
+                    <th>Risk</th>
+                    <th>Status</th>
+                    <th>Timestamp</th>
+                    <th>Hash</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var r in Model)
+                    {
+                        <tr>
+                            <td>
+                                <strong class="small text-dark font-monospace">@r.ReportCode</strong>
+                            </td>
+                            <td>
+                                <strong class="d-block small text-dark">@r.AgentName</strong>
+                                <span class="badge bg-light text-muted border" style="font-size: 0.7rem;">@r.ModuleName</span>
+                            </td>
+                            <td>
+                                <strong class="d-block small text-dark">@r.ActionName</strong>
+                                <span class="small text-muted d-block text-truncate" style="max-width: 260px;" title="@r.ActionDescription">@r.ActionDescription</span>
+                            </td>
+                            <td>
+                                @if (r.TargetUser != null)
+                                {
+                                    <span class="small text-dark">@r.TargetUser.FullName</span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted small">N/A</span>
+                                }
+                            </td>
+                            <td>
+                                <span class="badge @(r.RiskLevel == "Critical" ? "bg-danger" : r.RiskLevel == "High" ? "bg-warning text-dark" : r.RiskLevel == "Medium" ? "bg-info text-dark" : "bg-success")">
+                                    @r.RiskLevel
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge @(r.ActionStatus == "Success" ? "bg-success-subtle text-success" : "bg-danger-subtle text-danger") border">
+                                    @r.ActionStatus
+                                </span>
+                            </td>
+                            <td class="small text-muted text-nowrap">
+                                @r.Timestamp.ToString("MMM dd, yyyy HH:mm:ss")
+                            </td>
+                            <td>
+                                <span class="small text-muted font-monospace" title="@r.IntegrityHash" style="font-size: 0.65rem;">
+                                    @(string.IsNullOrEmpty(r.IntegrityHash) ? "Verified" : r.IntegrityHash[..8] + "...")
+                                </span>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="8" class="text-center py-5 text-muted">
+                            <i class="bi bi-journal-x fs-1 d-block mb-2 text-muted"></i>
+                            No agent reports found matching criteria.
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Pagination -->
+@if (totalPages > 1)
+{
+    <nav class="d-flex justify-content-center mt-4">
+        <ul class="pagination pagination-sm">
+            <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                <a class="page-link" asp-action="AgentReports" asp-route-page="@(currentPage - 1)" asp-route-search="@ViewBag.Search" asp-route-agent="@ViewBag.Agent" asp-route-riskLevel="@ViewBag.RiskLevel">Previous</a>
+            </li>
+            @for (int i = 1; i <= totalPages; i++)
+            {
+                <li class="page-item @(currentPage == i ? "active" : "")">
+                    <a class="page-link" asp-action="AgentReports" asp-route-page="@i" asp-route-search="@ViewBag.Search" asp-route-agent="@ViewBag.Agent" asp-route-riskLevel="@ViewBag.RiskLevel">@i</a>
+                </li>
+            }
+            <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                <a class="page-link" asp-action="AgentReports" asp-route-page="@(currentPage + 1)" asp-route-search="@ViewBag.Search" asp-route-agent="@ViewBag.Agent" asp-route-riskLevel="@ViewBag.RiskLevel">Next</a>
+            </li>
+        </ul>
+    </nav>
+}

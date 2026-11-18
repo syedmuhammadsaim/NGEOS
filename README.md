@@ -36,16 +36,38 @@
 
   <p align="center">
     <a href="#-live-production-website"><b>🌐 Live Site</b></a> •
+    <a href="#-autonomous-ai-ecosystem-dual-agents"><b>🤖 Autonomous AI Ecosystem</b></a> •
     <a href="#-system-authentication--credentials"><b>🔑 Authentication & Admin</b></a> •
     <a href="#%EF%B8%8F-api-keys--environment-variables-setup"><b>⚙️ API Keys Setup</b></a> •
     <a href="#-quick-start--installation"><b>🚀 Quick Start</b></a> •
     <a href="#%EF%B8%8F-database-setup-local-ssms--cloud"><b>🗄️ Database Setup</b></a> •
     <a href="#-desktop-application-mode-100-offline"><b>💻 Desktop Mode</b></a> •
-    <a href="#-ai-support-assistant"><b>🤖 AI Assistant</b></a> •
     <a href="#-author"><b>👨‍💻 Author</b></a>
   </p>
 
 </div>
+
+---
+
+## 🤖 Autonomous AI Ecosystem (Dual Agents)
+
+NGEOS features a complete, production-grade **Python-powered Autonomous AI Ecosystem** integrated directly with the ASP.NET Core platform:
+
+1. **👑 NGEOS Admin Agent:**
+   - **Donation Intelligence:** Real-time fund tracking (Today, Week, Month, Year), channel distributions (Safepay, JazzCash, Easypaisa, PayFast), and anomalous pattern detection.
+   - **Campaign Management:** Automated target monitoring, milestone alerts, and deadline tracking.
+   - **Tamper-Resistant Agent Reports:** Cryptographically hashed (`SHA256`) operational audit logs recorded in `AgentReports`.
+   - **Agent Control Center:** Centralized telemetry, primary provider selection (Groq vs Gemini), automation pause, and emergency kill-switch.
+
+2. **👤 NGEOS User Agent (Personal AI Assistant):**
+   - **Multilingual Support:** English, Urdu (اردو), and Roman Urdu.
+   - **Interactive Guidance:** Navigates causes, explains Zakat rules, and helps with donation processing.
+   - **Complete Isolation:** Strictly isolated to the authenticated user's scope without cross-tenant exposure.
+
+3. **🛡️ Advanced Security & Three-Second Suspension Countdown:**
+   - **Threat Detection:** Evaluates spam, bot activity, credential stuffing, and SQL injection payloads.
+   - **SignalR Live Warning:** Shows warnings for policy breaches.
+   - **3-Second Protocol:** Verified serious policy violations trigger an unclosable 3-second countdown modal, followed by automated temporary suspension, notification email, and direct redirect to the Human Appeal Portal (`/Account/Appeal`).
 
 ---
 

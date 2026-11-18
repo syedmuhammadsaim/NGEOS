@@ -1,0 +1,220 @@
+@model IEnumerable<NGEOS.Models.AgentSecurityEvent>
+@{
+    ViewData["Title"] = "Security Intelligence & Appeals - NGEOS";
+    Layout = "_AdminLayout";
+    var restrictions = ViewBag.Restrictions as IEnumerable<NGEOS.Models.AgentUserRestriction> ?? Enumerable.Empty<NGEOS.Models.AgentUserRestriction>();
+    var appeals = ViewBag.Appeals as IEnumerable<NGEOS.Models.AgentAppeal> ?? Enumerable.Empty<NGEOS.Models.AgentAppeal>();
+}
+
+<div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4">
+    <div>
+        <h3 class="fw-bold text-dark mb-1 d-flex align-items-center gap-2">
+            <i class="bi bi-shield-lock-fill text-danger"></i> Security Intelligence & Account Appeals
+        </h3>
+        <p class="text-muted small mb-0">Autonomous threat detection, policy violation logging, and human-in-the-loop appeal management.</p>
+    </div>
+</div>
+
+<!-- Pending Appeals Section (Human Review) -->
+<div class="card border-0 shadow-sm p-4 bg-white mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="fw-bold text-dark mb-0 d-flex align-items-center gap-2">
+            <i class="bi bi-person-exclamation text-warning"></i> User Account Appeals
+        </h5>
+        <span class="badge bg-warning text-dark">@appeals.Count(a => a.Status == "Pending") Pending Review</span>
+    </div>
+
+    @if (appeals.Any())
+    {
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light small">
+                    <tr>
+                        <th>User</th>
+                        <th>Violation Category</th>
+                        <th>User Explanation</th>
+                        <th>Submitted At</th>
+                        <th>Status</th>
+                        <th class="text-end">Administrative Decision</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var a in appeals)
+                    {
+                        <tr>
+                            <td>
+                                <strong class="small text-dark">@a.User?.FullName</strong>
+                                <span class="d-block small text-muted">@a.User?.Email</span>
+                            </td>
+                            <td>
+                                <span class="badge bg-danger-subtle text-danger border">@a.Restriction?.ViolationCategory</span>
+                            </td>
+                            <td>
+                                <span class="small text-dark d-block text-truncate" style="max-width: 300px;" title="@a.Explanation">
+                                    @a.Explanation
+                                </span>
+                            </td>
+                            <td class="small text-muted">@a.SubmittedAt.ToString("MMM dd, yyyy HH:mm")</td>
+                            <td>
+                                <span class="badge @(a.Status == "Approved" ? "bg-success" : a.Status == "Pending" ? "bg-warning text-dark" : "bg-danger")">
+                                    @a.Status
+                                </span>
+                            </td>
+                            <td class="text-end">
+                                @if (a.Status == "Pending")
+                                {
+                                    <div class="d-inline-flex gap-1">
+                                        <form asp-action="ReviewAppeal" method="post" class="d-inline">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="id" value="@a.Id" />
+                                            <input type="hidden" name="decision" value="Approve" />
+                                            <button type="submit" class="btn btn-sm btn-outline-success">
+                                                <i class="bi bi-check-circle me-1"></i> Approve & Restore
+                                            </button>
+                                        </form>
+                                        <form asp-action="ReviewAppeal" method="post" class="d-inline">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="id" value="@a.Id" />
+                                            <input type="hidden" name="decision" value="Reject" />
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                <i class="bi bi-x-circle me-1"></i> Reject
+                                            </button>
+                                        </form>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <span class="small text-muted">Decided by @a.ReviewedBy</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="text-center py-4 text-muted small">
+            <i class="bi bi-shield-check fs-2 d-block mb-1 text-success"></i>
+            No user appeals currently on file.
+        </div>
+    }
+</div>
+
+<!-- Active Account Restrictions & Suspensions -->
+<div class="card border-0 shadow-sm p-4 bg-white mb-4">
+    <h5 class="fw-bold text-dark mb-3 d-flex align-items-center gap-2">
+        <i class="bi bi-slash-circle-fill text-danger"></i> Verified Account Restrictions (3-Second Protocol)
+    </h5>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light small">
+                <tr>
+                    <th>User</th>
+                    <th>Violation Category</th>
+                    <th>Reason</th>
+                    <th>Restricted At</th>
+                    <th>Email Notice</th>
+                    <th>State</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (restrictions.Any())
+                {
+                    @foreach (var r in restrictions)
+                    {
+                        <tr>
+                            <td>
+                                <strong class="small text-dark">@r.User?.FullName</strong>
+                                <span class="d-block small text-muted">@r.User?.Email</span>
+                            </td>
+                            <td><span class="badge bg-danger">@r.ViolationCategory</span></td>
+                            <td><span class="small text-muted">@r.Reason</span></td>
+                            <td class="small text-muted">@r.RestrictedAt.ToString("MMM dd, yyyy HH:mm")</td>
+                            <td>
+                                <span class="badge @(r.SuspensionEmailSent ? "bg-success-subtle text-success" : "bg-warning-subtle text-warning") border">
+                                    @(r.SuspensionEmailSent ? "Dispatched" : "Pending")
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge @(r.IsActive ? "bg-danger" : "bg-secondary")">
+                                    @(r.IsActive ? "Suspended" : "Restored")
+                                </span>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6" class="text-center py-4 text-muted small">
+                            No active account suspensions at this time.
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Recent Security Incidents & Threat Events -->
+<div class="card border-0 shadow-sm p-4 bg-white">
+    <h5 class="fw-bold text-dark mb-3 d-flex align-items-center gap-2">
+        <i class="bi bi-activity text-orange"></i> Live Security Events & Detections
+    </h5>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light small">
+                <tr>
+                    <th>Event Code</th>
+                    <th>Category</th>
+                    <th>User / IP</th>
+                    <th>Details</th>
+                    <th>Risk Score</th>
+                    <th>Severity</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    @foreach (var e in Model)
+                    {
+                        <tr>
+                            <td><code class="small text-dark">@e.EventCode</code></td>
+                            <td><span class="badge bg-light text-dark border">@e.ViolationCategory</span></td>
+                            <td>
+                                <span class="small text-dark">@(e.User?.Email ?? e.UserEmail ?? "Anonymous")</span>
+                                @if (!string.IsNullOrEmpty(e.IpAddress))
+                                {
+                                    <span class="d-block small text-muted" style="font-size: 0.7rem;">IP: @e.IpAddress</span>
+                                }
+                            </td>
+                            <td><span class="small text-muted d-block text-truncate" style="max-width: 280px;" title="@e.DetectionDetails">@e.DetectionDetails</span></td>
+                            <td>
+                                <span class="fw-bold @(e.RiskScore >= 0.8 ? "text-danger" : e.RiskScore >= 0.5 ? "text-warning" : "text-success")">
+                                    @((e.RiskScore * 100).ToString("0"))%
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge @(e.Severity == "Critical" ? "bg-danger" : e.Severity == "High" ? "bg-warning text-dark" : "bg-info text-dark")">
+                                    @e.Severity
+                                </span>
+                            </td>
+                            <td class="small text-muted">@e.DetectedAt.ToString("MMM dd, yyyy HH:mm")</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="7" class="text-center py-4 text-muted small">
+                            No security incidents logged. Platform running smoothly.
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

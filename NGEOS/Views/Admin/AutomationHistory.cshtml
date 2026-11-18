@@ -1,0 +1,67 @@
+@model IEnumerable<NGEOS.Models.AgentAutomationJob>
+@{
+    ViewData["Title"] = "Autonomous Automation History - NGEOS";
+    Layout = "_AdminLayout";
+}
+
+<div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4">
+    <div>
+        <h3 class="fw-bold text-dark mb-1 d-flex align-items-center gap-2">
+            <i class="bi bi-clock-history text-orange"></i> Autonomous Automation History
+        </h3>
+        <p class="text-muted small mb-0">Traceable logs of routine scheduled background jobs, health pings, and automated financial audits.</p>
+    </div>
+    <div>
+        <a asp-action="AgentControl" class="btn btn-outline-navy btn-sm px-3 shadow-sm">
+            <i class="bi bi-cpu me-1"></i> Control Center
+        </a>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm p-4 bg-white">
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light small">
+                <tr>
+                    <th>Job Name</th>
+                    <th>Execution ID</th>
+                    <th>Started At</th>
+                    <th>Completed At</th>
+                    <th>Evaluated</th>
+                    <th>Actions Triggered</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    @foreach (var j in Model)
+                    {
+                        <tr>
+                            <td><strong class="small text-dark">@j.JobName</strong></td>
+                            <td><code class="small text-dark font-monospace">@j.ExecutionId[..8]...</code></td>
+                            <td class="small text-muted">@j.StartedAt.ToString("MMM dd, yyyy HH:mm:ss")</td>
+                            <td class="small text-muted">@(j.CompletedAt.HasValue ? j.CompletedAt.Value.ToString("MMM dd, yyyy HH:mm:ss") : "In Progress")</td>
+                            <td><span class="badge bg-light text-muted border">@j.RecordsEvaluated</span></td>
+                            <td><span class="badge bg-light text-dark border">@j.ActionsTriggered</span></td>
+                            <td>
+                                <span class="badge @(j.Status == "Completed" ? "bg-success" : j.Status == "Running" ? "bg-primary" : "bg-danger")">
+                                    @j.Status
+                                </span>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="7" class="text-center py-5 text-muted">
+                            <i class="bi bi-gear-wide-connected fs-1 d-block mb-2 text-muted"></i>
+                            No automation runs recorded yet.
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

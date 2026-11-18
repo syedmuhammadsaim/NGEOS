@@ -17,15 +17,18 @@ namespace NGEOS.Controllers
     public class ChatbotApiController : ControllerBase
     {
         private readonly IAiChatbotService _chatbotService;
+        private readonly IAutonomousAgentService _autonomousAgentService;
         private readonly AiChatbotOptions _options;
         private readonly ILogger<ChatbotApiController> _logger;
 
         public ChatbotApiController(
             IAiChatbotService chatbotService,
+            IAutonomousAgentService autonomousAgentService,
             IOptions<AiChatbotOptions> options,
             ILogger<ChatbotApiController> logger)
         {
             _chatbotService = chatbotService;
+            _autonomousAgentService = autonomousAgentService;
             _options = options.Value;
             _logger = logger;
         }
@@ -57,24 +60,70 @@ namespace NGEOS.Controllers
                 });
             }
 
-            // Determine user role context
+            int? userId = null;
+            string userName = "Guest / Donor";
             string userRole = "Guest / Donor";
+            string? userEmail = null;
+
             if (User?.Identity?.IsAuthenticated == true)
             {
+                var idClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (int.TryParse(idClaim, out int parsedId)) userId = parsedId;
+                userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
+
                 if (User.IsInRole("Admin"))
                 {
-                    userRole = "NGEOS Platform Administrator";
+                    userRole = "Admin";
+                    userName = "NGEOS Platform Administrator";
                 }
                 else
                 {
-                    var name = User.Identity.Name ?? "Registered Member";
-                    userRole = $"Registered Member ({name})";
+                    userName = User.Identity.Name ?? "Registered Member";
+                    userRole = "User";
                 }
             }
 
+            // Security evaluation pass (fire and forget / non-blocking)
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    var ip = HttpContext.Connection.RemoteIpAddress?.ToString();
+                    await _autonomousAgentService.EvaluateSecurityAsync(
+                        userId, 
+                        userEmail, 
+                        ip, 
+                        "ChatbotMessage", 
+                        request.Message, 
+                        CancellationToken.None
+                    );
+                }
+                catch { /* ignore background security check errors */ }
+            });
+
             try
             {
-                var result = await _chatbotService.ProcessMessageAsync(request, userRole, cancellationToken);
+                ChatbotResponseDto result;
+                if (userRole == "Admin")
+                {
+                    result = await _autonomousAgentService.QueryAdminAgentAsync(
+                        request.Message, 
+                        new { role = "Admin", timestamp = DateTime.UtcNow }, 
+                        cancellationToken
+                    );
+                }
+                else
+                {
+                    result = await _autonomousAgentService.QueryUserAgentAsync(
+                        userId,
+                        userName,
+                        request.Message,
+                        new { role = userRole },
+                        request.ConversationHistory,
+                        cancellationToken
+                    );
+                }
+
                 return Ok(result);
             }
             catch (Exception ex)

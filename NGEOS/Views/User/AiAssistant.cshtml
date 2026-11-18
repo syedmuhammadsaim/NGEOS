@@ -1,0 +1,171 @@
+@model NGEOS.Models.User
+@{
+    ViewData["Title"] = "Personal AI Assistant - NGEOS";
+}
+
+<div class="container section-padding">
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden bg-white">
+                <!-- Header -->
+                <div class="p-4 bg-navy text-white d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3" style="background: linear-gradient(135deg, #0B192C, #1E3E62);">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="rounded-circle bg-orange text-white d-flex align-items-center justify-content-center shadow-sm" style="width: 50px; height: 50px;">
+                            <i class="bi bi-robot fs-3"></i>
+                        </div>
+                        <div>
+                            <h4 class="fw-bold mb-0 text-white">NGEOS Personal AI Assistant</h4>
+                            <span class="text-white-50 small">Autonomous guidance &bull; English &bull; اردو &bull; Roman Urdu</span>
+                        </div>
+                    </div>
+                    <div>
+                        <a asp-action="Dashboard" class="btn btn-outline-light btn-sm rounded-pill px-3">
+                            <i class="bi bi-arrow-left me-1"></i> Dashboard
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Chat Body -->
+                <div class="p-4" style="background: #f8fafc; min-height: 420px; max-height: 550px; overflow-y: auto;" id="userAgentChatBody">
+                    <!-- Welcome bubble -->
+                    <div class="d-flex gap-3 mb-3">
+                        <div class="rounded-circle bg-orange text-white d-flex align-items-center justify-content-center flex-shrink-0" style="width: 38px; height: 38px;">
+                            <i class="bi bi-robot"></i>
+                        </div>
+                        <div class="p-3 rounded-4 bg-white shadow-sm border" style="max-width: 80%;">
+                            <p class="mb-1 text-dark small">
+                                <strong>Hello @Model.FullName!</strong> I am your personal NGEOS AI Assistant. I can help you discover active welfare causes, guide you through Zakat calculation, explain payment channels (Safepay, JazzCash, Easypaisa), or check your past donation history.
+                            </p>
+                            <p class="mb-0 text-muted small" style="font-size: 0.78rem;">
+                                <em>Aap mujh se Urdu ya Roman Urdu mein bhi baat kar saktay hain!</em>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Suggested Prompts -->
+                <div class="p-3 bg-white border-top border-bottom d-flex flex-wrap gap-2">
+                    <button class="btn btn-sm btn-outline-secondary rounded-pill suggested-prompt-btn">
+                        What are the most urgent causes?
+                    </button>
+                    <button class="btn btn-sm btn-outline-secondary rounded-pill suggested-prompt-btn">
+                        How can I calculate and pay Zakat?
+                    </button>
+                    <button class="btn btn-sm btn-outline-secondary rounded-pill suggested-prompt-btn">
+                        How do JazzCash and Easypaisa payments work?
+                    </button>
+                    <button class="btn btn-sm btn-outline-secondary rounded-pill suggested-prompt-btn">
+                        Mujhe education campaigns ke baare mein batao
+                    </button>
+                </div>
+
+                <!-- Chat Input Form -->
+                <div class="p-3 bg-white">
+                    <form id="userAgentChatForm" class="d-flex gap-2">
+                        <input type="text" id="userAgentInput" class="form-control" placeholder="Ask your personal AI assistant anything..." autocomplete="off" required />
+                        <button type="submit" class="btn btn-orange px-4 shadow-sm" id="userAgentSendBtn">
+                            <i class="bi bi-send-fill"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const chatBody = document.getElementById("userAgentChatBody");
+        const form = document.getElementById("userAgentChatForm");
+        const input = document.getElementById("userAgentInput");
+        const sendBtn = document.getElementById("userAgentSendBtn");
+
+        const history = [];
+
+        function appendMessage(sender, text, isAi = false) {
+            const wrapper = document.createElement("div");
+            wrapper.className = `d-flex gap-3 mb-3 ${isAi ? "" : "justify-content-end"}`;
+
+            const iconHtml = isAi 
+                ? `<div class="rounded-circle bg-orange text-white d-flex align-items-center justify-content-center flex-shrink-0" style="width: 38px; height: 38px;"><i class="bi bi-robot"></i></div>`
+                : "";
+
+            const contentHtml = `
+                <div class="p-3 rounded-4 shadow-sm ${isAi ? "bg-white border text-dark" : "bg-orange text-white"}" style="max-width: 80%;">
+                    <p class="mb-0 small" style="white-space: pre-wrap;">${escapeHtml(text)}</p>
+                </div>
+            `;
+
+            wrapper.innerHTML = isAi ? (iconHtml + contentHtml) : (contentHtml);
+            chatBody.appendChild(wrapper);
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+
+        function escapeHtml(string) {
+            const div = document.createElement('div');
+            div.innerText = string;
+            return div.innerHTML;
+        }
+
+        async function sendMessage(text) {
+            if (!text.trim()) return;
+
+            appendMessage("User", text, false);
+            input.value = "";
+            input.disabled = true;
+            sendBtn.disabled = true;
+
+            // Loading indicator
+            const loadingId = "ai-loading-indicator";
+            const loadingDiv = document.createElement("div");
+            loadingDiv.id = loadingId;
+            loadingDiv.className = "d-flex gap-3 mb-3";
+            loadingDiv.innerHTML = `
+                <div class="rounded-circle bg-orange text-white d-flex align-items-center justify-content-center flex-shrink-0" style="width: 38px; height: 38px;"><i class="bi bi-robot"></i></div>
+                <div class="p-3 rounded-4 bg-white border shadow-sm small text-muted">
+                    <span class="spinner-border spinner-border-sm text-orange me-2" role="status"></span> Assistant is thinking...
+                </div>
+            `;
+            chatBody.appendChild(loadingDiv);
+            chatBody.scrollTop = chatBody.scrollHeight;
+
+            try {
+                const res = await fetch("/api/chatbot/message", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ message: text, history: history })
+                });
+                const data = await res.json();
+                
+                const indicator = document.getElementById(loadingId);
+                if (indicator) indicator.remove();
+
+                const reply = data.reply || "I am unable to answer at this moment.";
+                appendMessage("Assistant", reply, true);
+                history.push({ role: "user", content: text });
+                history.push({ role: "assistant", content: reply });
+            } catch (err) {
+                const indicator = document.getElementById(loadingId);
+                if (indicator) indicator.remove();
+                appendMessage("Assistant", "Network communication error. Please try again.", true);
+            } finally {
+                input.disabled = false;
+                sendBtn.disabled = false;
+                input.focus();
+            }
+        }
+
+        form.addEventListener("submit", function (e) {
+            e.preventDefault();
+            sendMessage(input.value);
+        });
+
+        document.querySelectorAll(".suggested-prompt-btn").forEach(btn => {
+            btn.addEventListener("click", function () {
+                sendMessage(this.innerText.trim());
+            });
+        });
+    });
+</script>
+}

@@ -1,0 +1,229 @@
+@model NGEOS.Models.AgentConfiguration
+@{
+    ViewData["Title"] = "Agent Control Center - NGEOS";
+    Layout = "_AdminLayout";
+}
+
+<div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4">
+    <div>
+        <h3 class="fw-bold text-dark mb-1 d-flex align-items-center gap-2">
+            <i class="bi bi-cpu-fill text-orange"></i> Autonomous Agent Control Center
+        </h3>
+        <p class="text-muted small mb-0">High-level telemetry, autonomous provider failover, and operational switches for Dual AI Agents.</p>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+        <form asp-action="ToggleAgentConfig" method="post" class="d-inline">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="settingKey" value="KillSwitch" />
+            <button type="submit" class="btn @(Model.IsEmergencyKillSwitchActive ? "btn-danger" : "btn-outline-danger") btn-sm px-3 shadow-sm fw-bold">
+                <i class="bi bi-power me-1"></i> @(Model.IsEmergencyKillSwitchActive ? "Kill Switch Active (Disengage)" : "Emergency Kill Switch")
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- High-Level Telemetry Cards -->
+<div class="row g-3 mb-4">
+    <div class="col-sm-6 col-xl-3">
+        <div class="card p-3 border-0 shadow-sm bg-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <span class="text-muted small d-block">Admin Agent Status</span>
+                    <strong class="fs-5 @(Model.IsAdminAgentEnabled ? "text-success" : "text-danger")">
+                        @(Model.IsAdminAgentEnabled ? "Operational" : "Disabled")
+                    </strong>
+                </div>
+                <div class="rounded-circle p-2 @(Model.IsAdminAgentEnabled ? "bg-success-subtle text-success" : "bg-danger-subtle text-danger")">
+                    <i class="bi bi-shield-check fs-4"></i>
+                </div>
+            </div>
+            <div class="mt-2 text-muted" style="font-size: 0.75rem;">
+                Autonomous Operations & Donation Auditing
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-xl-3">
+        <div class="card p-3 border-0 shadow-sm bg-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <span class="text-muted small d-block">User Agent Status</span>
+                    <strong class="fs-5 @(Model.IsUserAgentEnabled ? "text-success" : "text-danger")">
+                        @(Model.IsUserAgentEnabled ? "Operational" : "Disabled")
+                    </strong>
+                </div>
+                <div class="rounded-circle p-2 @(Model.IsUserAgentEnabled ? "bg-primary-subtle text-primary" : "bg-danger-subtle text-danger")">
+                    <i class="bi bi-person-badge fs-4"></i>
+                </div>
+            </div>
+            <div class="mt-2 text-muted" style="font-size: 0.75rem;">
+                Multilingual Guidance & Donation Assistant
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-xl-3">
+        <div class="card p-3 border-0 shadow-sm bg-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <span class="text-muted small d-block">AI Provider Pair</span>
+                    <strong class="fs-5 text-dark">
+                        @Model.PrimaryProvider <span class="text-muted small">➔ @Model.FallbackProvider</span>
+                    </strong>
+                </div>
+                <div class="rounded-circle p-2 bg-warning-subtle text-warning">
+                    <i class="bi bi-diagram-3-fill fs-4"></i>
+                </div>
+            </div>
+            <div class="mt-2 text-muted" style="font-size: 0.75rem;">
+                Model: <code>@Model.GroqModel</code>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-xl-3">
+        <div class="card p-3 border-0 shadow-sm bg-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <span class="text-muted small d-block">Audit Reports & Security</span>
+                    <strong class="fs-5 text-dark">@ViewBag.TotalReportsCount Logs</strong>
+                </div>
+                <div class="rounded-circle p-2 bg-info-subtle text-info">
+                    <i class="bi bi-journal-text fs-4"></i>
+                </div>
+            </div>
+            <div class="mt-2 text-muted" style="font-size: 0.75rem;">
+                @ViewBag.TotalSecurityEventsCount Security Incidents Logged
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Agent Operational Controls -->
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm p-4 bg-white mb-4">
+            <h5 class="fw-bold mb-3 d-flex align-items-center gap-2">
+                <i class="bi bi-sliders text-orange"></i> Live Operational Switches
+            </h5>
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead class="table-light small">
+                        <tr>
+                            <th>Module / Agent</th>
+                            <th>Current State</th>
+                            <th>Description</th>
+                            <th class="text-end">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Admin Autonomous Agent</strong></td>
+                            <td>
+                                <span class="badge @(Model.IsAdminAgentEnabled ? "bg-success" : "bg-secondary")">
+                                    @(Model.IsAdminAgentEnabled ? "Active" : "Inactive")
+                                </span>
+                            </td>
+                            <td class="small text-muted">Handles executive summaries, ledger auditing, and routine monitoring.</td>
+                            <td class="text-end">
+                                <form asp-action="ToggleAgentConfig" method="post" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="settingKey" value="AdminAgent" />
+                                    <button type="submit" class="btn btn-sm @(Model.IsAdminAgentEnabled ? "btn-outline-danger" : "btn-outline-success")">
+                                        @(Model.IsAdminAgentEnabled ? "Disable" : "Enable")
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>User AI Assistant</strong></td>
+                            <td>
+                                <span class="badge @(Model.IsUserAgentEnabled ? "bg-success" : "bg-secondary")">
+                                    @(Model.IsUserAgentEnabled ? "Active" : "Inactive")
+                                </span>
+                            </td>
+                            <td class="small text-muted">Assists registered donors with causes, donation navigation, and queries.</td>
+                            <td class="text-end">
+                                <form asp-action="ToggleAgentConfig" method="post" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="settingKey" value="UserAgent" />
+                                    <button type="submit" class="btn btn-sm @(Model.IsUserAgentEnabled ? "btn-outline-danger" : "btn-outline-success")">
+                                        @(Model.IsUserAgentEnabled ? "Disable" : "Enable")
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Background Automation Engine</strong></td>
+                            <td>
+                                <span class="badge @(!Model.IsAutomationPaused ? "bg-success" : "bg-warning text-dark")">
+                                    @(!Model.IsAutomationPaused ? "Running" : "Paused")
+                                </span>
+                            </td>
+                            <td class="small text-muted">Runs scheduled donation tracking, health pings, and security reviews.</td>
+                            <td class="text-end">
+                                <form asp-action="ToggleAgentConfig" method="post" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="settingKey" value="PauseAutomation" />
+                                    <button type="submit" class="btn btn-sm @(!Model.IsAutomationPaused ? "btn-outline-warning" : "btn-outline-success")">
+                                        @(!Model.IsAutomationPaused ? "Pause" : "Resume")
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Primary Provider Switch</strong></td>
+                            <td>
+                                <span class="badge bg-dark">@Model.PrimaryProvider</span>
+                            </td>
+                            <td class="small text-muted">Toggle default provider between Groq (Fast Llama-3.3) and Google Gemini.</td>
+                            <td class="text-end">
+                                <form asp-action="ToggleAgentConfig" method="post" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="settingKey" value="SwitchProvider" />
+                                    <button type="submit" class="btn btn-sm btn-outline-dark">
+                                        <i class="bi bi-arrow-repeat me-1"></i> Switch to @(Model.PrimaryProvider == "Groq" ? "Gemini" : "Groq")
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm p-4 bg-white mb-4">
+            <h6 class="fw-bold mb-3 d-flex align-items-center gap-2">
+                <i class="bi bi-shield-lock-fill text-primary"></i> Multi-Agent Governance
+            </h6>
+            <p class="small text-muted">
+                The NGEOS Autonomous AI Ecosystem executes under strict permission boundaries. The AI Agent cannot perform arbitrary SQL executions, permanent account deletions, or direct currency transfers without explicit approval workflows.
+            </p>
+            <hr class="my-3"/>
+            <div class="d-flex flex-column gap-2 small">
+                <div class="d-flex justify-content-between">
+                    <span class="text-muted">Last Execution:</span>
+                    <strong>@Model.LastSuccessfulExecution.ToString("MMM dd, yyyy HH:mm") UTC</strong>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <span class="text-muted">Donation Interval:</span>
+                    <strong>@Model.DonationMonitoringIntervalMinutes minutes</strong>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <span class="text-muted">Security Interval:</span>
+                    <strong>@Model.SecurityScanIntervalMinutes minutes</strong>
+                </div>
+            </div>
+            <div class="mt-4">
+                <a asp-action="AgentReports" class="btn btn-orange btn-sm w-100 mb-2">
+                    <i class="bi bi-file-earmark-text me-1"></i> View Agent Audit Reports
+                </a>
+                <a asp-action="SecurityIntelligence" class="btn btn-outline-navy btn-sm w-100">
+                    <i class="bi bi-shield-shaded me-1"></i> Security Intelligence & Appeals
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

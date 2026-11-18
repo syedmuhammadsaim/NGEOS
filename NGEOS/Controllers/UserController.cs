@@ -354,5 +354,63 @@ namespace NGEOS.Controllers
                 CookieAuthenticationDefaults.AuthenticationScheme,
                 new ClaimsPrincipal(claimsIdentity));
         }
+
+        [HttpGet]
+        public async Task<IActionResult> AiAssistant()
+        {
+            var user = await GetCurrentUserAsync();
+            if (user == null) return RedirectToAction("Login", "Account");
+            return View(user);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Appeal()
+        {
+            var user = await GetCurrentUserAsync();
+            if (user == null) return RedirectToAction("Login", "Account");
+
+            var activeRestriction = await _context.AgentUserRestrictions
+                .Where(r => r.UserId == user.Id && r.IsActive)
+                .OrderByDescending(r => r.RestrictedAt)
+                .FirstOrDefaultAsync();
+
+            ViewBag.Restriction = activeRestriction;
+            return View(user);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SubmitAppeal(string explanation, string? contactEmail)
+        {
+            var user = await GetCurrentUserAsync();
+            if (user == null) return RedirectToAction("Login", "Account");
+
+            if (string.IsNullOrWhiteSpace(explanation))
+            {
+                TempData["ErrorMessage"] = "Please provide an explanation for your appeal.";
+                return RedirectToAction(nameof(Appeal));
+            }
+
+            var restriction = await _context.AgentUserRestrictions
+                .Where(r => r.UserId == user.Id && r.IsActive)
+                .OrderByDescending(r => r.RestrictedAt)
+                .FirstOrDefaultAsync();
+
+            var appeal = new AgentAppeal
+            {
+                UserId = user.Id,
+                RestrictionId = restriction?.Id ?? 0,
+                Explanation = explanation.Trim(),
+                ContactEmail = !string.IsNullOrWhiteSpace(contactEmail) ? contactEmail.Trim() : user.Email,
+                SubmittedAt = DateTime.UtcNow,
+                Status = "Pending"
+            };
+
+            _context.AgentAppeals.Add(appeal);
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "Your appeal has been securely submitted to the NGEOS Platform Governance Team for human review.";
+            return RedirectToAction(nameof(Dashboard));
+        }
     }
 }

@@ -837,6 +837,28 @@ namespace NGEOS.Data
                 context.FAQs.AddRange(faqs);
                 context.SaveChanges();
             }
+
+            // Seed Initial Agent Configuration if not exists
+            if (!context.AgentConfigurations.Any())
+            {
+                context.AgentConfigurations.Add(new AgentConfiguration
+                {
+                    IsAdminAgentEnabled = true,
+                    IsUserAgentEnabled = true,
+                    IsAutomationPaused = false,
+                    IsEmergencyKillSwitchActive = false,
+                    PrimaryProvider = "Groq",
+                    FallbackProvider = "Gemini",
+                    GroqModel = "llama-3.3-70b-versatile",
+                    GeminiModel = "gemini-2.0-flash",
+                    DonationMonitoringIntervalMinutes = 15,
+                    SecurityScanIntervalMinutes = 10,
+                    HealthCheckIntervalMinutes = 5,
+                    LastSuccessfulExecution = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
+                });
+                context.SaveChanges();
+            }
         }
     }
 }
