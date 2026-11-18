@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using NGEOS.Helpers;
 using NGEOS.Models;
 
@@ -838,27 +839,210 @@ namespace NGEOS.Data
                 context.SaveChanges();
             }
 
-            // Seed Initial Agent Configuration if not exists
-            if (!context.AgentConfigurations.Any())
+            // Ensure Agent Ecosystem tables exist idempotently
+            try
             {
-                context.AgentConfigurations.Add(new AgentConfiguration
-                {
-                    IsAdminAgentEnabled = true,
-                    IsUserAgentEnabled = true,
-                    IsAutomationPaused = false,
-                    IsEmergencyKillSwitchActive = false,
-                    PrimaryProvider = "Groq",
-                    FallbackProvider = "Gemini",
-                    GroqModel = "llama-3.3-70b-versatile",
-                    GeminiModel = "gemini-2.0-flash",
-                    DonationMonitoringIntervalMinutes = 15,
-                    SecurityScanIntervalMinutes = 10,
-                    HealthCheckIntervalMinutes = 5,
-                    LastSuccessfulExecution = DateTime.UtcNow,
-                    UpdatedAt = DateTime.UtcNow
-                });
-                context.SaveChanges();
+                EnsureAgentTablesCreated(context);
             }
+            catch
+            {
+                // Ignore if already created or managed
+            }
+
+            // Seed Initial Agent Configuration if not exists
+            try
+            {
+                if (!context.AgentConfigurations.Any())
+                {
+                    context.AgentConfigurations.Add(new AgentConfiguration
+                    {
+                        IsAdminAgentEnabled = true,
+                        IsUserAgentEnabled = true,
+                        IsAutomationPaused = false,
+                        IsEmergencyKillSwitchActive = false,
+                        PrimaryProvider = "Groq",
+                        FallbackProvider = "Gemini",
+                        GroqModel = "llama-3.3-70b-versatile",
+                        GeminiModel = "gemini-2.0-flash",
+                        DonationMonitoringIntervalMinutes = 15,
+                        SecurityScanIntervalMinutes = 10,
+                        HealthCheckIntervalMinutes = 5,
+                        LastSuccessfulExecution = DateTime.UtcNow,
+                        UpdatedAt = DateTime.UtcNow
+                    });
+                    context.SaveChanges();
+                }
+            }
+            catch
+            {
+                // Handled gracefully
+            }
+        }
+
+        private static void EnsureAgentTablesCreated(ApplicationDbContext context)
+        {
+            var ddl = @"
+IF OBJECT_ID(N'dbo.AgentConfigurations', N'U') IS NULL
+BEGIN
+    CREATE TABLE [dbo].[AgentConfigurations] (
+        [Id] INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+        [IsAdminAgentEnabled] BIT NOT NULL DEFAULT 1,
+        [IsUserAgentEnabled] BIT NOT NULL DEFAULT 1,
+        [IsAutomationPaused] BIT NOT NULL DEFAULT 0,
+        [IsEmergencyKillSwitchActive] BIT NOT NULL DEFAULT 0,
+        [PrimaryProvider] NVARCHAR(50) NOT NULL DEFAULT 'Groq',
+        [FallbackProvider] NVARCHAR(50) NOT NULL DEFAULT 'Gemini',
+        [GroqModel] NVARCHAR(100) NOT NULL DEFAULT 'llama-3.3-70b-versatile',
+        [GeminiModel] NVARCHAR(100) NOT NULL DEFAULT 'gemini-2.0-flash',
+        [DonationMonitoringIntervalMinutes] INT NOT NULL DEFAULT 15,
+        [SecurityScanIntervalMinutes] INT NOT NULL DEFAULT 10,
+        [HealthCheckIntervalMinutes] INT NOT NULL DEFAULT 5,
+        [LastSuccessfulExecution] DATETIME2 NULL,
+        [UpdatedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE()
+    );
+END;
+
+IF OBJECT_ID(N'dbo.AgentAutomationJobs', N'U') IS NULL
+BEGIN
+    CREATE TABLE [dbo].[AgentAutomationJobs] (
+        [Id] INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+        [JobName] NVARCHAR(150) NOT NULL,
+        [JobType] NVARCHAR(100) NOT NULL,
+        [Status] NVARCHAR(50) NOT NULL,
+        [StartedAt] DATETIME2 NOT NULL,
+        [CompletedAt] DATETIME2 NULL,
+        [ItemsProcessed] INT NOT NULL DEFAULT 0,
+        [ItemsFlagged] INT NOT NULL DEFAULT 0,
+        [Summary] NVARCHAR(MAX) NULL,
+        [ErrorMessage] NVARCHAR(MAX) NULL
+    );
+END;
+
+IF OBJECT_ID(N'dbo.AgentReports', N'U') IS NULL
+BEGIN
+    CREATE TABLE [dbo].[AgentReports] (
+        [Id] INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+        [ReportCode] NVARCHAR(64) NOT NULL,
+        [AgentName] NVARCHAR(100) NOT NULL,
+        [AgentType] NVARCHAR(50) NOT NULL,
+        [ModuleName] NVARCHAR(100) NOT NULL,
+        [ActionName] NVARCHAR(150) NOT NULL,
+        [ActionDescription] NVARCHAR(MAX) NOT NULL,
+        [RiskLevel] NVARCHAR(50) NOT NULL,
+        [TargetUserId] INT NULL,
+        [TargetUserEmail] NVARCHAR(256) NULL,
+        [TargetEntity] NVARCHAR(100) NULL,
+        [TargetEntityId] NVARCHAR(100) NULL,
+        [IpAddress] NVARCHAR(50) NULL,
+        [UserAgent] NVARCHAR(255) NULL,
+        [ActionStatus] NVARCHAR(50) NOT NULL,
+        [IntegrityHash] NVARCHAR(128) NOT NULL,
+        [Timestamp] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
+        CONSTRAINT [FK_AgentReports_Users_TargetUserId] FOREIGN KEY ([TargetUserId]) REFERENCES [Users] ([Id]) ON DELETE SET NULL
+    );
+END;
+
+IF OBJECT_ID(N'dbo.AgentSecurityEvents', N'U') IS NULL
+BEGIN
+    CREATE TABLE [dbo].[AgentSecurityEvents] (
+        [Id] INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+        [ThreatType] NVARCHAR(100) NOT NULL,
+        [ThreatLevel] NVARCHAR(50) NOT NULL,
+        [RiskScore] INT NOT NULL,
+        [Details] NVARCHAR(MAX) NOT NULL,
+        [DetectedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
+        [IpAddress] NVARCHAR(50) NULL,
+        [Country] NVARCHAR(100) NULL,
+        [IsProxyOrVpn] BIT NOT NULL DEFAULT 0,
+        [UserId] INT NULL,
+        [UserEmail] NVARCHAR(256) NULL,
+        [ActionTaken] NVARCHAR(100) NOT NULL,
+        [IsResolved] BIT NOT NULL DEFAULT 0,
+        CONSTRAINT [FK_AgentSecurityEvents_Users_UserId] FOREIGN KEY ([UserId]) REFERENCES [Users] ([Id]) ON DELETE SET NULL
+    );
+END;
+
+IF OBJECT_ID(N'dbo.AgentUserRestrictions', N'U') IS NULL
+BEGIN
+    CREATE TABLE [dbo].[AgentUserRestrictions] (
+        [Id] INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+        [UserId] INT NOT NULL,
+        [RestrictionType] NVARCHAR(100) NOT NULL,
+        [Reason] NVARCHAR(MAX) NOT NULL,
+        [RestrictedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
+        [ExpiresAt] DATETIME2 NULL,
+        [IsActive] BIT NOT NULL DEFAULT 1,
+        [RestoredAt] DATETIME2 NULL,
+        [RestoredBy] NVARCHAR(256) NULL,
+        [RestorationReason] NVARCHAR(MAX) NULL,
+        CONSTRAINT [FK_AgentUserRestrictions_Users_UserId] FOREIGN KEY ([UserId]) REFERENCES [Users] ([Id]) ON DELETE CASCADE
+    );
+END;
+
+IF OBJECT_ID(N'dbo.AgentAppeals', N'U') IS NULL
+BEGIN
+    CREATE TABLE [dbo].[AgentAppeals] (
+        [Id] INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+        [UserId] INT NOT NULL,
+        [RestrictionId] INT NULL,
+        [AppealReason] NVARCHAR(MAX) NOT NULL,
+        [SubmittedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
+        [Status] NVARCHAR(50) NOT NULL DEFAULT 'Pending',
+        [AdminNotes] NVARCHAR(MAX) NULL,
+        [ReviewedAt] DATETIME2 NULL,
+        [ReviewedBy] NVARCHAR(256) NULL,
+        CONSTRAINT [FK_AgentAppeals_Users_UserId] FOREIGN KEY ([UserId]) REFERENCES [Users] ([Id]) ON DELETE CASCADE,
+        CONSTRAINT [FK_AgentAppeals_AgentUserRestrictions_RestrictionId] FOREIGN KEY ([RestrictionId]) REFERENCES [AgentUserRestrictions] ([Id]) ON DELETE NO ACTION
+    );
+END;
+
+IF OBJECT_ID(N'dbo.AgentConversations', N'U') IS NULL
+BEGIN
+    CREATE TABLE [dbo].[AgentConversations] (
+        [Id] INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+        [UserId] INT NOT NULL,
+        [AgentType] NVARCHAR(50) NOT NULL,
+        [Title] NVARCHAR(200) NOT NULL,
+        [Language] NVARCHAR(50) NOT NULL DEFAULT 'en',
+        [StartedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
+        [LastMessageAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
+        CONSTRAINT [FK_AgentConversations_Users_UserId] FOREIGN KEY ([UserId]) REFERENCES [Users] ([Id]) ON DELETE CASCADE
+    );
+END;
+
+IF OBJECT_ID(N'dbo.AgentMessages', N'U') IS NULL
+BEGIN
+    CREATE TABLE [dbo].[AgentMessages] (
+        [Id] INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+        [ConversationId] INT NOT NULL,
+        [Sender] NVARCHAR(50) NOT NULL,
+        [Content] NVARCHAR(MAX) NOT NULL,
+        [DetectedLanguage] NVARCHAR(50) NULL,
+        [SentAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
+        CONSTRAINT [FK_AgentMessages_AgentConversations_ConversationId] FOREIGN KEY ([ConversationId]) REFERENCES [AgentConversations] ([Id]) ON DELETE CASCADE
+    );
+END;
+
+IF OBJECT_ID(N'dbo.AgentUsageStatistics', N'U') IS NULL
+BEGIN
+    CREATE TABLE [dbo].[AgentUsageStatistics] (
+        [Id] INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+        [Provider] NVARCHAR(50) NOT NULL,
+        [Model] NVARCHAR(100) NOT NULL,
+        [PromptTokens] INT NOT NULL DEFAULT 0,
+        [CompletionTokens] INT NOT NULL DEFAULT 0,
+        [TotalTokens] INT NOT NULL DEFAULT 0,
+        [LatencyMs] INT NOT NULL DEFAULT 0,
+        [AgentType] NVARCHAR(50) NOT NULL,
+        [Success] BIT NOT NULL DEFAULT 1,
+        [RecordedAt] DATETIME2 NOT NULL DEFAULT GETUTCDATE()
+    );
+END;
+" ;
+            using var command = context.Database.GetDbConnection().CreateCommand();
+            context.Database.OpenConnection();
+            command.CommandText = ddl;
+            command.ExecuteNonQuery();
         }
     }
 }

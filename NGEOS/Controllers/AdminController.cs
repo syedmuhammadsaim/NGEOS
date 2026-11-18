@@ -18,13 +18,15 @@ namespace NGEOS.Controllers
         private readonly IEmailSender _emailSender;
         private readonly IPaymentGatewayFactory _gatewayFactory;
         private readonly IWebHostEnvironment _environment;
+        private readonly ILogger<AdminController> _logger;
 
-        public AdminController(ApplicationDbContext context, IEmailSender emailSender, IPaymentGatewayFactory gatewayFactory, IWebHostEnvironment environment)
+        public AdminController(ApplicationDbContext context, IEmailSender emailSender, IPaymentGatewayFactory gatewayFactory, IWebHostEnvironment environment, ILogger<AdminController> logger)
         {
             _context = context;
             _emailSender = emailSender;
             _gatewayFactory = gatewayFactory;
             _environment = environment;
+            _logger = logger;
         }
 
         private async Task<string?> SaveUploadedFileAsync(IFormFile? file, string folderName)
@@ -1470,237 +1472,326 @@ namespace NGEOS.Controllers
 
         public async Task<IActionResult> AgentControl()
         {
-            var config = await _context.AgentConfigurations.FirstOrDefaultAsync();
-            if (config == null)
+            try
             {
-                config = new AgentConfiguration();
-                _context.AgentConfigurations.Add(config);
-                await _context.SaveChangesAsync();
+                var config = await _context.AgentConfigurations.FirstOrDefaultAsync();
+                if (config == null)
+                {
+                    config = new AgentConfiguration();
+                    _context.AgentConfigurations.Add(config);
+                    await _context.SaveChangesAsync();
+                }
+
+                ViewBag.TotalReportsCount = await _context.AgentReports.CountAsync();
+                ViewBag.TotalSecurityEventsCount = await _context.AgentSecurityEvents.CountAsync();
+                ViewBag.TotalAutomationsCount = await _context.AgentAutomationJobs.CountAsync();
+                ViewBag.ActiveRestrictionsCount = await _context.AgentUserRestrictions.CountAsync(r => r.IsActive);
+
+                return View(config);
             }
-
-            ViewBag.TotalReportsCount = await _context.AgentReports.CountAsync();
-            ViewBag.TotalSecurityEventsCount = await _context.AgentSecurityEvents.CountAsync();
-            ViewBag.TotalAutomationsCount = await _context.AgentAutomationJobs.CountAsync();
-            ViewBag.ActiveRestrictionsCount = await _context.AgentUserRestrictions.CountAsync(r => r.IsActive);
-
-            return View(config);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to load Agent Control Center.");
+                ViewBag.TotalReportsCount = 0;
+                ViewBag.TotalSecurityEventsCount = 0;
+                ViewBag.TotalAutomationsCount = 0;
+                ViewBag.ActiveRestrictionsCount = 0;
+                return View(new AgentConfiguration());
+            }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ToggleAgentConfig(string settingKey)
         {
-            var config = await _context.AgentConfigurations.FirstOrDefaultAsync();
-            if (config == null)
+            try
             {
-                config = new AgentConfiguration();
-                _context.AgentConfigurations.Add(config);
+                var config = await _context.AgentConfigurations.FirstOrDefaultAsync();
+                if (config == null)
+                {
+                    config = new AgentConfiguration();
+                    _context.AgentConfigurations.Add(config);
+                }
+
+                switch (settingKey)
+                {
+                    case "AdminAgent":
+                        config.IsAdminAgentEnabled = !config.IsAdminAgentEnabled;
+                        TempData["SuccessMessage"] = $"Admin Agent has been {(config.IsAdminAgentEnabled ? "enabled" : "disabled")}.";
+                        break;
+                    case "UserAgent":
+                        config.IsUserAgentEnabled = !config.IsUserAgentEnabled;
+                        TempData["SuccessMessage"] = $"User Agent has been {(config.IsUserAgentEnabled ? "enabled" : "disabled")}.";
+                        break;
+                    case "PauseAutomation":
+                        config.IsAutomationPaused = !config.IsAutomationPaused;
+                        TempData["SuccessMessage"] = $"Autonomous Background Automation has been {(config.IsAutomationPaused ? "paused" : "resumed")}.";
+                        break;
+                    case "KillSwitch":
+                        config.IsEmergencyKillSwitchActive = !config.IsEmergencyKillSwitchActive;
+                        TempData[config.IsEmergencyKillSwitchActive ? "ErrorMessage" : "SuccessMessage"] = 
+                            config.IsEmergencyKillSwitchActive 
+                                ? "EMERGENCY KILL SWITCH ENGAGED: All AI operations halted." 
+                                : "Emergency Kill Switch disengaged. Standard operations restored.";
+                        break;
+                    case "SwitchProvider":
+                        config.PrimaryProvider = config.PrimaryProvider == "Groq" ? "Gemini" : "Groq";
+                        config.FallbackProvider = config.PrimaryProvider == "Groq" ? "Gemini" : "Groq";
+                        TempData["SuccessMessage"] = $"Primary AI Provider switched to {config.PrimaryProvider}.";
+                        break;
+                }
+
+                config.UpdatedAt = DateTime.UtcNow;
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to toggle agent configuration.");
+                TempData["ErrorMessage"] = "Could not update agent configuration. Please verify database connection.";
             }
 
-            switch (settingKey)
-            {
-                case "AdminAgent":
-                    config.IsAdminAgentEnabled = !config.IsAdminAgentEnabled;
-                    TempData["SuccessMessage"] = $"Admin Agent has been {(config.IsAdminAgentEnabled ? "enabled" : "disabled")}.";
-                    break;
-                case "UserAgent":
-                    config.IsUserAgentEnabled = !config.IsUserAgentEnabled;
-                    TempData["SuccessMessage"] = $"User Agent has been {(config.IsUserAgentEnabled ? "enabled" : "disabled")}.";
-                    break;
-                case "PauseAutomation":
-                    config.IsAutomationPaused = !config.IsAutomationPaused;
-                    TempData["SuccessMessage"] = $"Autonomous Background Automation has been {(config.IsAutomationPaused ? "paused" : "resumed")}.";
-                    break;
-                case "KillSwitch":
-                    config.IsEmergencyKillSwitchActive = !config.IsEmergencyKillSwitchActive;
-                    TempData[config.IsEmergencyKillSwitchActive ? "ErrorMessage" : "SuccessMessage"] = 
-                        config.IsEmergencyKillSwitchActive 
-                            ? "EMERGENCY KILL SWITCH ENGAGED: All AI operations halted." 
-                            : "Emergency Kill Switch disengaged. Standard operations restored.";
-                    break;
-                case "SwitchProvider":
-                    config.PrimaryProvider = config.PrimaryProvider == "Groq" ? "Gemini" : "Groq";
-                    config.FallbackProvider = config.PrimaryProvider == "Groq" ? "Gemini" : "Groq";
-                    TempData["SuccessMessage"] = $"Primary AI Provider switched to {config.PrimaryProvider}.";
-                    break;
-            }
-
-            config.UpdatedAt = DateTime.UtcNow;
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(AgentControl));
         }
 
         public async Task<IActionResult> AgentReports(string? search, string? agent, string? riskLevel, int page = 1)
         {
-            int pageSize = 20;
-            var query = _context.AgentReports.Include(r => r.TargetUser).AsQueryable();
-
-            if (!string.IsNullOrWhiteSpace(search))
+            try
             {
-                query = query.Where(r => r.ActionDescription.Contains(search) || r.ActionName.Contains(search) || r.ReportCode.Contains(search));
-            }
+                int pageSize = 20;
+                var query = _context.AgentReports.Include(r => r.TargetUser).AsQueryable();
 
-            if (!string.IsNullOrWhiteSpace(agent))
+                if (!string.IsNullOrWhiteSpace(search))
+                {
+                    query = query.Where(r => r.ActionDescription.Contains(search) || r.ActionName.Contains(search) || r.ReportCode.Contains(search));
+                }
+
+                if (!string.IsNullOrWhiteSpace(agent))
+                {
+                    query = query.Where(r => r.AgentType == agent);
+                }
+
+                if (!string.IsNullOrWhiteSpace(riskLevel))
+                {
+                    query = query.Where(r => r.RiskLevel == riskLevel);
+                }
+
+                var totalItems = await query.CountAsync();
+                var reports = await query.OrderByDescending(r => r.Timestamp)
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToListAsync();
+
+                ViewBag.CurrentPage = page;
+                ViewBag.TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+                ViewBag.Search = search;
+                ViewBag.Agent = agent;
+                ViewBag.RiskLevel = riskLevel;
+
+                return View(reports);
+            }
+            catch (Exception ex)
             {
-                query = query.Where(r => r.AgentType == agent);
+                _logger.LogError(ex, "Failed to load AgentReports.");
+                ViewBag.CurrentPage = 1;
+                ViewBag.TotalPages = 1;
+                ViewBag.Search = search;
+                ViewBag.Agent = agent;
+                ViewBag.RiskLevel = riskLevel;
+                return View(new List<AgentReport>());
             }
-
-            if (!string.IsNullOrWhiteSpace(riskLevel))
-            {
-                query = query.Where(r => r.RiskLevel == riskLevel);
-            }
-
-            var totalItems = await query.CountAsync();
-            var reports = await query.OrderByDescending(r => r.Timestamp)
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
-
-            ViewBag.CurrentPage = page;
-            ViewBag.TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
-            ViewBag.Search = search;
-            ViewBag.Agent = agent;
-            ViewBag.RiskLevel = riskLevel;
-
-            return View(reports);
         }
 
         public async Task<IActionResult> ExportAgentReportsCsv()
         {
-            var reports = await _context.AgentReports.OrderByDescending(r => r.Timestamp).Take(500).ToListAsync();
-            var builder = new System.Text.StringBuilder();
-            builder.AppendLine("ReportCode,Timestamp,AgentName,ActionName,ModuleName,RiskLevel,ActionStatus,Description,IntegrityHash");
-
-            foreach (var r in reports)
+            try
             {
-                var cleanDesc = (r.ActionDescription ?? "").Replace("\"", "\"\"");
-                builder.AppendLine($"\"{r.ReportCode}\",\"{r.Timestamp:yyyy-MM-dd HH:mm:ss}\",\"{r.AgentName}\",\"{r.ActionName}\",\"{r.ModuleName}\",\"{r.RiskLevel}\",\"{r.ActionStatus}\",\"{cleanDesc}\",\"{r.IntegrityHash}\"");
-            }
+                var reports = await _context.AgentReports.OrderByDescending(r => r.Timestamp).Take(500).ToListAsync();
+                var builder = new System.Text.StringBuilder();
+                builder.AppendLine("ReportCode,Timestamp,AgentName,ActionName,ModuleName,RiskLevel,ActionStatus,Description,IntegrityHash");
 
-            return File(System.Text.Encoding.UTF8.GetBytes(builder.ToString()), "text/csv", $"NGEOS_Agent_Reports_{DateTime.UtcNow:yyyyMMdd}.csv");
+                foreach (var r in reports)
+                {
+                    var cleanDesc = (r.ActionDescription ?? "").Replace("\"", "\"\"");
+                    builder.AppendLine($"\"{r.ReportCode}\",\"{r.Timestamp:yyyy-MM-dd HH:mm:ss}\",\"{r.AgentName}\",\"{r.ActionName}\",\"{r.ModuleName}\",\"{r.RiskLevel}\",\"{r.ActionStatus}\",\"{cleanDesc}\",\"{r.IntegrityHash}\"");
+                }
+
+                return File(System.Text.Encoding.UTF8.GetBytes(builder.ToString()), "text/csv", $"NGEOS_Agent_Reports_{DateTime.UtcNow:yyyyMMdd}.csv");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to export agent reports CSV.");
+                return Content("Error generating CSV export.");
+            }
         }
 
         public async Task<IActionResult> DonationIntelligence()
         {
-            var donations = await _context.Donations.Include(d => d.Cause).AsNoTracking().ToListAsync();
-            var completed = donations.Where(d => d.PaymentStatus == "Completed").ToList();
+            try
+            {
+                var donations = await _context.Donations.Include(d => d.Cause).AsNoTracking().ToListAsync();
+                var completed = donations.Where(d => d.PaymentStatus == "Completed").ToList();
 
-            var now = DateTime.UtcNow;
-            var today = now.Date;
-            var startOfWeek = today.AddDays(-(int)today.DayOfWeek);
-            var startOfMonth = new DateTime(today.Year, today.Month, 1);
-            var startOfYear = new DateTime(today.Year, 1, 1);
+                var now = DateTime.UtcNow;
+                var today = now.Date;
+                var startOfWeek = today.AddDays(-(int)today.DayOfWeek);
+                var startOfMonth = new DateTime(today.Year, today.Month, 1);
+                var startOfYear = new DateTime(today.Year, 1, 1);
 
-            ViewBag.TotalFunds = completed.Sum(d => d.Amount);
-            ViewBag.TotalTransactions = donations.Count;
-            ViewBag.SuccessCount = completed.Count;
-            ViewBag.PendingCount = donations.Count(d => d.PaymentStatus == "Pending");
-            ViewBag.FailedCount = donations.Count(d => d.PaymentStatus == "Failed");
+                ViewBag.TotalFunds = completed.Sum(d => d.Amount);
+                ViewBag.TotalTransactions = donations.Count;
+                ViewBag.SuccessCount = completed.Count;
+                ViewBag.PendingCount = donations.Count(d => d.PaymentStatus == "Pending");
+                ViewBag.FailedCount = donations.Count(d => d.PaymentStatus == "Failed");
 
-            ViewBag.TodayFunds = completed.Where(d => d.DonationDate >= today).Sum(d => d.Amount);
-            ViewBag.WeekFunds = completed.Where(d => d.DonationDate >= startOfWeek).Sum(d => d.Amount);
-            ViewBag.MonthFunds = completed.Where(d => d.DonationDate >= startOfMonth).Sum(d => d.Amount);
-            ViewBag.YearFunds = completed.Where(d => d.DonationDate >= startOfYear).Sum(d => d.Amount);
+                ViewBag.TodayFunds = completed.Where(d => d.DonationDate >= today).Sum(d => d.Amount);
+                ViewBag.WeekFunds = completed.Where(d => d.DonationDate >= startOfWeek).Sum(d => d.Amount);
+                ViewBag.MonthFunds = completed.Where(d => d.DonationDate >= startOfMonth).Sum(d => d.Amount);
+                ViewBag.YearFunds = completed.Where(d => d.DonationDate >= startOfYear).Sum(d => d.Amount);
 
-            ViewBag.Gateways = completed
-                .GroupBy(d => string.IsNullOrWhiteSpace(d.PaymentGateway) ? "Direct / Other" : d.PaymentGateway)
-                .Select(g => new { Name = g.Key, Count = g.Count(), Total = g.Sum(x => x.Amount) })
-                .ToList();
+                ViewBag.Gateways = completed
+                    .GroupBy(d => string.IsNullOrWhiteSpace(d.PaymentGateway) ? "Direct / Other" : d.PaymentGateway)
+                    .Select(g => new { Name = g.Key, Count = g.Count(), Total = g.Sum(x => x.Amount) })
+                    .ToList();
 
-            ViewBag.TopCauses = completed
-                .GroupBy(d => d.Cause?.Title ?? "General Charity")
-                .Select(g => new { Name = g.Key, Total = g.Sum(x => x.Amount), Count = g.Count() })
-                .OrderByDescending(x => x.Total)
-                .Take(6)
-                .ToList();
+                ViewBag.TopCauses = completed
+                    .GroupBy(d => d.Cause?.Title ?? "General Charity")
+                    .Select(g => new { Name = g.Key, Total = g.Sum(x => x.Amount), Count = g.Count() })
+                    .OrderByDescending(x => x.Total)
+                    .Take(6)
+                    .ToList();
 
-            ViewBag.RecentDonations = completed.OrderByDescending(d => d.DonationDate).Take(10).ToList();
+                ViewBag.RecentDonations = completed.OrderByDescending(d => d.DonationDate).Take(10).ToList();
 
-            return View();
+                return View();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to load DonationIntelligence.");
+                ViewBag.TotalFunds = 0m;
+                ViewBag.TotalTransactions = 0;
+                ViewBag.SuccessCount = 0;
+                ViewBag.PendingCount = 0;
+                ViewBag.FailedCount = 0;
+                ViewBag.TodayFunds = 0m;
+                ViewBag.WeekFunds = 0m;
+                ViewBag.MonthFunds = 0m;
+                ViewBag.YearFunds = 0m;
+                ViewBag.Gateways = new List<object>();
+                ViewBag.TopCauses = new List<object>();
+                ViewBag.RecentDonations = new List<Donation>();
+                return View();
+            }
         }
 
         public async Task<IActionResult> SecurityIntelligence()
         {
-            var events = await _context.AgentSecurityEvents
-                .Include(s => s.User)
-                .OrderByDescending(s => s.DetectedAt)
-                .Take(50)
-                .ToListAsync();
+            try
+            {
+                var events = await _context.AgentSecurityEvents
+                    .Include(s => s.User)
+                    .OrderByDescending(s => s.DetectedAt)
+                    .Take(50)
+                    .ToListAsync();
 
-            var restrictions = await _context.AgentUserRestrictions
-                .Include(r => r.User)
-                .OrderByDescending(r => r.RestrictedAt)
-                .ToListAsync();
+                var restrictions = await _context.AgentUserRestrictions
+                    .Include(r => r.User)
+                    .OrderByDescending(r => r.RestrictedAt)
+                    .ToListAsync();
 
-            var appeals = await _context.AgentAppeals
-                .Include(a => a.User)
-                .Include(a => a.Restriction)
-                .OrderByDescending(a => a.SubmittedAt)
-                .ToListAsync();
+                var appeals = await _context.AgentAppeals
+                    .Include(a => a.User)
+                    .Include(a => a.Restriction)
+                    .OrderByDescending(a => a.SubmittedAt)
+                    .ToListAsync();
 
-            ViewBag.Restrictions = restrictions;
-            ViewBag.Appeals = appeals;
+                ViewBag.Restrictions = restrictions;
+                ViewBag.Appeals = appeals;
 
-            return View(events);
+                return View(events);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to load SecurityIntelligence.");
+                ViewBag.Restrictions = new List<AgentUserRestriction>();
+                ViewBag.Appeals = new List<AgentAppeal>();
+                return View(new List<AgentSecurityEvent>());
+            }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ReviewAppeal(int id, string decision, string? notes)
         {
-            var appeal = await _context.AgentAppeals
-                .Include(a => a.Restriction)
-                .Include(a => a.User)
-                .FirstOrDefaultAsync(a => a.Id == id);
-
-            if (appeal == null) return NotFound();
-
-            var adminEmail = User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value ?? "Admin";
-
-            if (decision == "Approve")
+            try
             {
-                appeal.Status = "Approved";
-                appeal.AdminNotes = notes;
-                appeal.ReviewedAt = DateTime.UtcNow;
-                appeal.ReviewedBy = adminEmail;
+                var appeal = await _context.AgentAppeals
+                    .Include(a => a.Restriction)
+                    .Include(a => a.User)
+                    .FirstOrDefaultAsync(a => a.Id == id);
 
-                if (appeal.Restriction != null)
+                if (appeal == null) return NotFound();
+
+                var adminEmail = User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value ?? "Admin";
+
+                if (decision == "Approve")
                 {
-                    appeal.Restriction.IsActive = false;
-                    appeal.Restriction.RestoredAt = DateTime.UtcNow;
-                    appeal.Restriction.RestoredBy = adminEmail;
-                    appeal.Restriction.RestorationReason = notes ?? "Appeal approved by administration.";
+                    appeal.Status = "Approved";
+                    appeal.AdminNotes = notes;
+                    appeal.ReviewedAt = DateTime.UtcNow;
+                    appeal.ReviewedBy = adminEmail;
+
+                    if (appeal.Restriction != null)
+                    {
+                        appeal.Restriction.IsActive = false;
+                        appeal.Restriction.RestoredAt = DateTime.UtcNow;
+                        appeal.Restriction.RestoredBy = adminEmail;
+                        appeal.Restriction.RestorationReason = notes ?? "Appeal approved by administration.";
+                    }
+
+                    if (appeal.User != null)
+                    {
+                        appeal.User.IsActive = true;
+                    }
+
+                    TempData["SuccessMessage"] = $"Appeal for user '{appeal.User?.FullName}' approved and account access restored.";
+                }
+                else
+                {
+                    appeal.Status = "Rejected";
+                    appeal.AdminNotes = notes;
+                    appeal.ReviewedAt = DateTime.UtcNow;
+                    appeal.ReviewedBy = adminEmail;
+
+                    TempData["ErrorMessage"] = $"Appeal for user '{appeal.User?.FullName}' rejected.";
                 }
 
-                if (appeal.User != null)
-                {
-                    appeal.User.IsActive = true;
-                }
-
-                TempData["SuccessMessage"] = $"Appeal for user '{appeal.User?.FullName}' approved and account access restored.";
+                await _context.SaveChangesAsync();
             }
-            else
+            catch (Exception ex)
             {
-                appeal.Status = "Rejected";
-                appeal.AdminNotes = notes;
-                appeal.ReviewedAt = DateTime.UtcNow;
-                appeal.ReviewedBy = adminEmail;
-
-                TempData["ErrorMessage"] = $"Appeal for user '{appeal.User?.FullName}' rejected.";
+                _logger.LogError(ex, "Failed to review appeal {AppealId}", id);
+                TempData["ErrorMessage"] = "Failed to process appeal review due to a database error.";
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(SecurityIntelligence));
         }
 
         public async Task<IActionResult> AutomationHistory()
         {
-            var jobs = await _context.AgentAutomationJobs
-                .OrderByDescending(j => j.StartedAt)
-                .Take(50)
-                .ToListAsync();
+            try
+            {
+                var jobs = await _context.AgentAutomationJobs
+                    .OrderByDescending(j => j.StartedAt)
+                    .Take(50)
+                    .ToListAsync();
 
-            return View(jobs);
+                return View(jobs);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to load AutomationHistory.");
+                return View(new List<AgentAutomationJob>());
+            }
         }
     }
 }
