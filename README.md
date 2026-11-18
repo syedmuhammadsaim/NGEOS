@@ -73,12 +73,18 @@ NGEOS features **one dedicated master administrator account** for full platform 
 | :--- | :--- |
 | **Admin ID / Email** | `admin@ngeos.org` |
 | **Password** | `Admin@123` |
-| **Role & Permissions** | Super Administrator (Full Central Secretariat, Causes, Ledger, NGO Approval & CMS Control) |
+| **Role & Permissions** | Permanent Super Administrator (Full Central Secretariat, Causes, Ledger, NGO Approval, CMS & Role Management) |
 | **Admin Portal** | 🔗 **[`https://ngeos.runasp.net/Admin`](https://ngeos.runasp.net/Admin)** |
 
-> 💡 **Admin Login Credentials:**
+> 💡 **Permanent Super Admin Credentials:**
 > - **ID / Email:** `admin@ngeos.org`
 > - **Password:** `Admin@123`
+>
+> 🛡️ **Role Governance & Security Rules:**
+> - **Permanent Super Admin (`admin@ngeos.org`):** Cannot be deleted, demoted to User, or blocked/deactivated by anyone.
+> - **Admin Promotion & Role Modification:** Strictly reserved for Super Admin (`admin@ngeos.org`). Standard admins cannot promote users to Admin or change user roles.
+> - **User Blocking & Deactivation:** Both Super Admin and Admins can block/deactivate users. Deactivated/blocked accounts are immediately prevented from logging in.
+>
 > Navigate to [`/Account/Login`](https://ngeos.runasp.net/Account/Login) and enter the Admin credentials above to access the Executive Control Center.
 
 ---

@@ -2,6 +2,9 @@
 @{
     ViewData["Title"] = "Registered Members Directory - Admin";
     Layout = "_AdminLayout";
+    var currentEmail = User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value
+                    ?? User.Identity?.Name ?? "";
+    var isCurrentSuperAdmin = currentEmail.Equals("admin@ngeos.org", StringComparison.OrdinalIgnoreCase);
 }
 
 <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4">
@@ -34,6 +37,7 @@
             <tbody>
                 @foreach (var u in Model)
                 {
+                    var isTargetSuperAdmin = u.Email.Equals("admin@ngeos.org", StringComparison.OrdinalIgnoreCase);
                     <tr>
                         <td>
                             <div class="d-flex align-items-center gap-2">
@@ -48,7 +52,15 @@
                                     </div>
                                 }
                                 <div>
-                                    <strong class="d-block text-dark small">@u.FullName</strong>
+                                    <div class="d-flex align-items-center gap-1">
+                                        <strong class="text-dark small">@u.FullName</strong>
+                                        @if (isTargetSuperAdmin)
+                                        {
+                                            <span class="badge bg-warning text-dark border border-warning" style="font-size: 0.65rem;" title="Permanent Super Administrator">
+                                                <i class="bi bi-shield-fill-check"></i> Super Admin
+                                            </span>
+                                        }
+                                    </div>
                                     <span class="text-muted" style="font-size: 0.72rem;">Joined: @u.CreatedAt.ToString("MMM dd, yyyy")</span>
                                 </div>
                             </div>
@@ -69,70 +81,100 @@
                             <span class="small text-muted" style="font-size: 0.75rem;">@(string.IsNullOrEmpty(u.Organization) ? "NGEOS Contributor" : u.Organization)</span>
                         </td>
                         <td>
-                            <form asp-action="ChangeUserRole" asp-route-id="@u.Id" method="post" class="d-inline">
-                                @Html.AntiForgeryToken()
-                                <select name="newRole" class="form-select form-select-sm fw-semibold @(u.Role == "Admin" ? "bg-dark text-white border-dark" : "bg-light text-dark")" style="width: 100px; font-size: 0.78rem;" onchange="this.form.submit()">
-                                    <option value="Admin" selected="@(u.Role == "Admin")">Admin</option>
-                                    <option value="User" selected="@(u.Role == "User")">User</option>
-                                </select>
-                            </form>
+                            @if (isTargetSuperAdmin)
+                            {
+                                <span class="badge bg-dark text-warning border border-warning px-2 py-1" style="font-size: 0.78rem;">
+                                    <i class="bi bi-shield-lock-fill me-1"></i> Super Admin
+                                </span>
+                            }
+                            else if (isCurrentSuperAdmin)
+                            {
+                                <form asp-action="ChangeUserRole" asp-route-id="@u.Id" method="post" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <select name="newRole" class="form-select form-select-sm fw-semibold @(u.Role == "Admin" ? "bg-dark text-white border-dark" : "bg-light text-dark")" style="width: 100px; font-size: 0.78rem;" onchange="this.form.submit()">
+                                        <option value="Admin" selected="@(u.Role == "Admin")">Admin</option>
+                                        <option value="User" selected="@(u.Role == "User")">User</option>
+                                    </select>
+                                </form>
+                            }
+                            else
+                            {
+                                <span class="badge @(u.Role == "Admin" ? "bg-dark text-white" : "bg-secondary text-white") px-2 py-1" style="font-size: 0.78rem;">
+                                    @(u.Role == "Admin" ? "Admin" : "User")
+                                </span>
+                            }
                         </td>
                         <td>
                             <span class="badge bg-light text-muted border small d-block mb-1">@u.Donations.Count Donations</span>
                             <span class="badge bg-light text-muted border small d-block">@u.ProgrammeInterests.Count Programmes</span>
                         </td>
                         <td>
-                            <span class="badge @(u.IsActive ? "bg-success" : "bg-danger")">@(u.IsActive ? "Active" : "Disabled")</span>
+                            <span class="badge @(u.IsActive ? "bg-success" : "bg-danger")">
+                                <i class="bi @(u.IsActive ? "bi-check-circle-fill" : "bi-slash-circle-fill") me-1"></i>
+                                @(u.IsActive ? "Active" : "Blocked")
+                            </span>
                         </td>
                         <td class="text-end">
                             <div class="d-inline-flex gap-1 align-items-center">
                                 <!-- Reset Password Modal Trigger -->
-                                <button type="button" class="btn btn-sm btn-outline-orange text-dark" data-bs-toggle="modal" data-bs-target="#resetPassModal-@u.Id" title="Reset User Password">
-                                    <i class="bi bi-key-fill"></i>
-                                </button>
-
-                                <!-- Toggle Active / Inactive -->
-                                <form asp-action="ToggleUserStatus" asp-route-id="@u.Id" method="post" class="d-inline">
-                                    @Html.AntiForgeryToken()
-                                    <button type="submit" class="btn btn-sm @(u.IsActive ? "btn-outline-secondary" : "btn-outline-success")" title="@(u.IsActive ? "Deactivate Account" : "Activate Account")">
-                                        <i class="bi @(u.IsActive ? "bi-slash-circle" : "bi-check2-circle")"></i>
+                                @if (!isTargetSuperAdmin || isCurrentSuperAdmin)
+                                {
+                                    <button type="button" class="btn btn-sm btn-outline-orange text-dark" data-bs-toggle="modal" data-bs-target="#resetPassModal-@u.Id" title="Reset User Password">
+                                        <i class="bi bi-key-fill"></i>
                                     </button>
-                                </form>
+                                }
+
+                                <!-- Toggle Active / Inactive (Block / Unblock) -->
+                                @if (!isTargetSuperAdmin && (isCurrentSuperAdmin || u.Role != "Admin"))
+                                {
+                                    <form asp-action="ToggleUserStatus" asp-route-id="@u.Id" method="post" class="d-inline">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-sm @(u.IsActive ? "btn-outline-danger" : "btn-outline-success")" title="@(u.IsActive ? "Block / Deactivate Account" : "Unblock / Activate Account")">
+                                            <i class="bi @(u.IsActive ? "bi-slash-circle" : "bi-check2-circle")"></i>
+                                        </button>
+                                    </form>
+                                }
 
                                 <!-- Delete User -->
-                                <form asp-action="DeleteUser" asp-route-id="@u.Id" method="post" onsubmit="return confirm('Are you sure you want to permanently delete user @u.FullName (@u.Email)?');" class="d-inline">
-                                    @Html.AntiForgeryToken()
-                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete User Account">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                </form>
+                                @if (!isTargetSuperAdmin && (isCurrentSuperAdmin || u.Role != "Admin"))
+                                {
+                                    <form asp-action="DeleteUser" asp-route-id="@u.Id" method="post" onsubmit="return confirm('Are you sure you want to permanently delete user @u.FullName (@u.Email)?');" class="d-inline">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete User Account">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                }
                             </div>
 
-                            <!-- Reset Password Modal -->
-                            <div class="modal fade text-start" id="resetPassModal-@u.Id" tabindex="-1" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content">
-                                        <form asp-action="ResetUserPassword" asp-route-id="@u.Id" method="post">
-                                            @Html.AntiForgeryToken()
-                                            <div class="modal-header">
-                                                <h5 class="modal-title fw-bold">Reset Password: @u.FullName</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <p class="small text-muted mb-3">Set a new password for account <strong>@u.Email</strong>. If left blank, default password <code>Ngeos@2026</code> will be assigned.</p>
-                                                <div class="mb-3">
-                                                    <label class="form-label small fw-semibold">New Password</label>
-                                                    <input type="text" name="newPassword" class="form-control" placeholder="Enter new password (or leave blank for Ngeos@2026)" />
+                            @if (!isTargetSuperAdmin || isCurrentSuperAdmin)
+                            {
+                                <!-- Reset Password Modal -->
+                                <div class="modal fade text-start" id="resetPassModal-@u.Id" tabindex="-1" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <form asp-action="ResetUserPassword" asp-route-id="@u.Id" method="post">
+                                                @Html.AntiForgeryToken()
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title fw-bold">Reset Password: @u.FullName</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-light btn-sm" data-bs-dismiss="modal">Cancel</button>
-                                                <button type="submit" class="btn btn-orange btn-sm"><i class="bi bi-check-lg me-1"></i> Update Password</button>
-                                            </div>
-                                        </form>
+                                                <div class="modal-body">
+                                                    <p class="small text-muted mb-3">Set a new password for account <strong>@u.Email</strong>. If left blank, default password <code>Ngeos@2026</code> will be assigned.</p>
+                                                    <div class="mb-3">
+                                                        <label class="form-label small fw-semibold">New Password</label>
+                                                        <input type="text" name="newPassword" class="form-control" placeholder="Enter new password (or leave blank for Ngeos@2026)" />
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-light btn-sm" data-bs-dismiss="modal">Cancel</button>
+                                                    <button type="submit" class="btn btn-orange btn-sm"><i class="bi bi-check-lg me-1"></i> Update Password</button>
+                                                </div>
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            }
                         </td>
                     </tr>
                 }
@@ -167,10 +209,22 @@
                         </div>
                         <div class="col-md-6">
                             <label class="form-label small fw-semibold">Account Role</label>
-                            <select name="Role" class="form-select" required>
-                                <option value="User">Standard Member (User)</option>
-                                <option value="Admin">Platform Administrator (Admin)</option>
-                            </select>
+                            @if (isCurrentSuperAdmin)
+                            {
+                                <select name="Role" class="form-select" required>
+                                    <option value="User">Standard Member (User)</option>
+                                    <option value="Admin">Platform Administrator (Admin)</option>
+                                </select>
+                            }
+                            else
+                            {
+                                <select name="Role" class="form-select bg-light" required>
+                                    <option value="User" selected>Standard Member (User)</option>
+                                </select>
+                                <span class="small text-muted d-block mt-1" style="font-size: 0.72rem;">
+                                    <i class="bi bi-shield-lock me-1"></i>Only Super Admin (admin@ngeos.org) can grant Admin privileges.
+                                </span>
+                            }
                         </div>
                         <div class="col-md-6">
                             <label class="form-label small fw-semibold">Mobile Phone (Optional)</label>

@@ -42,6 +42,15 @@ namespace NGEOS.Data
                 context.SaveChanges();
             }
 
+            // Permanent Super Admin guarantee (admin@ngeos.org must always remain Active and Admin)
+            var permanentSuperAdmin = context.Users.FirstOrDefault(u => u.Email == "admin@ngeos.org");
+            if (permanentSuperAdmin != null && (!permanentSuperAdmin.IsActive || permanentSuperAdmin.Role != "Admin"))
+            {
+                permanentSuperAdmin.IsActive = true;
+                permanentSuperAdmin.Role = "Admin";
+                context.SaveChanges();
+            }
+
             // 2. Seed Associated NGOs if none exist
             if (!context.NGOs.Any())
             {

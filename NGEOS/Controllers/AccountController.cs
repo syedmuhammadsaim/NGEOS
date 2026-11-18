@@ -297,7 +297,9 @@ namespace NGEOS.Controllers
 
             {
 
-                ModelState.AddModelError(string.Empty, "Your account has been deactivated. Please contact NGEOS support.");
+                TempData["ErrorMessage"] = "Your account has been deactivated / blocked by administration. Please contact NGEOS support.";
+
+                ModelState.AddModelError(string.Empty, "Your account has been deactivated / blocked by administration. Please contact NGEOS support.");
 
                 return View(model);
 

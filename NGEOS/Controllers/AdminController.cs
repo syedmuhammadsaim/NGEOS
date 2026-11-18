@@ -444,17 +444,40 @@ namespace NGEOS.Controllers
             return View(users);
         }
 
+        private const string SuperAdminEmail = "admin@ngeos.org";
+
+        private bool IsSuperAdmin()
+        {
+            var email = User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value
+                     ?? User.Identity?.Name ?? "";
+            return email.Equals(SuperAdminEmail, StringComparison.OrdinalIgnoreCase);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ToggleUserStatus(int id)
         {
             var user = await _context.Users.FindAsync(id);
-            if (user != null && user.Role != "Admin")
+            if (user == null) return NotFound();
+
+            // Super Admin can NEVER be deactivated
+            if (user.Email.Equals(SuperAdminEmail, StringComparison.OrdinalIgnoreCase))
             {
-                user.IsActive = !user.IsActive;
-                await _context.SaveChangesAsync();
-                TempData["SuccessMessage"] = $"User status updated to {(user.IsActive ? "Active" : "Inactive")}.";
+                TempData["ErrorMessage"] = "The Super Administrator (admin@ngeos.org) cannot be blocked or deactivated.";
+                return RedirectToAction(nameof(Users));
             }
+
+            // Regular admins cannot deactivate other admins
+            if (user.Role == "Admin" && !IsSuperAdmin())
+            {
+                TempData["ErrorMessage"] = "Only the Super Administrator has permission to deactivate Administrator accounts.";
+                return RedirectToAction(nameof(Users));
+            }
+
+            user.IsActive = !user.IsActive;
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = $"User '{user.FullName}' ({user.Email}) has been {(user.IsActive ? "activated / unblocked" : "deactivated / blocked")}.";
             return RedirectToAction(nameof(Users));
         }
 
@@ -462,8 +485,22 @@ namespace NGEOS.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ChangeUserRole(int id, string newRole)
         {
+            // Only Super Admin can change roles
+            if (!IsSuperAdmin())
+            {
+                TempData["ErrorMessage"] = "Access Denied: Only the Super Administrator (admin@ngeos.org) can promote users to Admin or change account roles.";
+                return RedirectToAction(nameof(Users));
+            }
+
             var user = await _context.Users.FindAsync(id);
             if (user == null) return NotFound();
+
+            // Permanent Super Admin cannot be demoted
+            if (user.Email.Equals(SuperAdminEmail, StringComparison.OrdinalIgnoreCase))
+            {
+                TempData["ErrorMessage"] = "The Super Administrator (admin@ngeos.org) role is permanent and cannot be modified.";
+                return RedirectToAction(nameof(Users));
+            }
 
             if (newRole != "Admin" && newRole != "User")
             {
@@ -494,6 +531,12 @@ namespace NGEOS.Controllers
             var user = await _context.Users.FindAsync(id);
             if (user == null) return NotFound();
 
+            if (user.Email.Equals(SuperAdminEmail, StringComparison.OrdinalIgnoreCase) && !IsSuperAdmin())
+            {
+                TempData["ErrorMessage"] = "Only the Super Administrator can reset their own credentials.";
+                return RedirectToAction(nameof(Users));
+            }
+
             var passToSet = string.IsNullOrWhiteSpace(newPassword) ? "Ngeos@2026" : newPassword.Trim();
             user.PasswordHash = PasswordHelper.HashPassword(passToSet);
             await _context.SaveChangesAsync();
@@ -519,6 +562,13 @@ namespace NGEOS.Controllers
                 return RedirectToAction(nameof(Users));
             }
 
+            // Only Super Admin can create Admin accounts
+            if (string.Equals(newUser.Role, "Admin", StringComparison.OrdinalIgnoreCase) && !IsSuperAdmin())
+            {
+                TempData["ErrorMessage"] = "Only the Super Administrator (admin@ngeos.org) can create new Administrator accounts.";
+                return RedirectToAction(nameof(Users));
+            }
+
             newUser.Email = cleanEmail;
             newUser.PasswordHash = PasswordHelper.HashPassword(password.Trim());
             newUser.CreatedAt = DateTime.UtcNow;
@@ -540,14 +590,16 @@ namespace NGEOS.Controllers
             var user = await _context.Users.FindAsync(id);
             if (user == null) return NotFound();
 
-            if (user.Role == "Admin")
+            if (user.Email.Equals(SuperAdminEmail, StringComparison.OrdinalIgnoreCase))
             {
-                var adminCount = await _context.Users.CountAsync(u => u.Role == "Admin");
-                if (adminCount <= 1)
-                {
-                    TempData["ErrorMessage"] = "Cannot delete the sole Administrator account.";
-                    return RedirectToAction(nameof(Users));
-                }
+                TempData["ErrorMessage"] = "The permanent Super Administrator (admin@ngeos.org) account cannot be deleted.";
+                return RedirectToAction(nameof(Users));
+            }
+
+            if (user.Role == "Admin" && !IsSuperAdmin())
+            {
+                TempData["ErrorMessage"] = "Only the Super Administrator has permission to delete Administrator accounts.";
+                return RedirectToAction(nameof(Users));
             }
 
             _context.Users.Remove(user);
