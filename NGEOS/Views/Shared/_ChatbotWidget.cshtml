@@ -13,7 +13,7 @@
             aria-controls="ngeos-chatbot-window"
             title="Chat with NGEOS AI Guide Assistant">
         <span class="trigger-icon-open"><i class="bi bi-robot"></i></span>
-        <span class="trigger-icon-close"><i class="bi bi-chevron-down"></i></span>
+        <span class="trigger-icon-close"><i class="bi bi-x-lg"></i></span>
         <span class="status-pulse-dot" title="AI Assistant Online"></span>
         <span class="trigger-label-pill d-none d-md-inline-flex">AI Guide</span>
     </button>
@@ -24,7 +24,7 @@
         <div class="ngeos-chat-header">
             <div class="d-flex align-items-center gap-2">
                 <div class="chat-avatar-wrapper position-relative">
-                    <div class="chat-avatar-icon d-flex align-items-center justify-content-center bg-orange text-white rounded-circle" style="width: 36px; height: 36px;">
+                    <div class="chat-avatar-icon d-flex align-items-center justify-content-center text-white rounded-circle" style="width: 36px; height: 36px; background: #f25c05;">
                         <i class="bi bi-robot fs-5"></i>
                     </div>
                     <span class="chat-online-badge" title="Live Database Grounded"></span>
@@ -64,7 +64,7 @@
                 <!-- Initial Welcome Message Card for Logged-In User -->
                 <div class="chat-msg chat-msg-bot">
                     <div class="msg-avatar">
-                        <div class="avatar-robot-icon d-flex align-items-center justify-content-center bg-orange text-white rounded-circle" style="width: 32px; height: 32px;">
+                        <div class="avatar-robot-icon d-flex align-items-center justify-content-center text-white rounded-circle" style="width: 32px; height: 32px; background: #f25c05;">
                             <i class="bi bi-robot small"></i>
                         </div>
                     </div>
@@ -156,9 +156,6 @@
                     </div>
                 </div>
             }
-            </div>
-
-            <!-- Dynamic Messages will append here -->
 
             <!-- Typing Indicator (Hidden by default) -->
             <div id="ngeos-chat-typing-indicator" class="chat-msg chat-msg-bot d-none" aria-hidden="true">
@@ -173,7 +170,7 @@
             </div>
         </div>
 
-        <!-- Chat Input Form -->
+        <!-- Chat Input Form (INSIDE THE WINDOW) -->
         <div class="ngeos-chat-footer">
             <form id="ngeos-chat-form" class="chat-input-form" onsubmit="return false;">
                 <div class="input-group">
