@@ -147,54 +147,105 @@ namespace NGEOS.Services.Ai.Orchestration
             return response;
         }
 
+        private bool IsUrduScript(string text)
+        {
+            if (string.IsNullOrEmpty(text)) return false;
+            foreach (char c in text)
+            {
+                if (c >= '\u0600' && c <= '\u06FF') return true;
+            }
+            return false;
+        }
+
+        private bool IsRomanUrdu(string text)
+        {
+            if (string.IsNullOrEmpty(text)) return false;
+            var keywords = new[] { "aap", "kya", "kaise", "kese", "hai", "hain", "mujhe", "mera", "meri", "hum", "batao", "shukriya", "madad", "chahiye", "karna", "paisa", "kitna", "kon", "kis", "kar", "apna", "apni", "hoga", "hogi", "bhi", "yeh", "woh", "sath" };
+            var words = text.ToLowerInvariant().Split(new[] { ' ', '?', '!', ',', '.', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var w in words)
+            {
+                if (Array.IndexOf(keywords, w) >= 0) return true;
+            }
+            return false;
+        }
+
         private string GenerateGroundedKnowledgeReply(string userMessage, string liveContext)
         {
             var msg = (userMessage ?? string.Empty).ToLowerInvariant().Trim();
+            bool isUrdu = IsUrduScript(userMessage ?? string.Empty);
+            bool isRoman = IsRomanUrdu(userMessage ?? string.Empty);
 
             // 1. Greetings
             if (msg == "hi" || msg == "hello" || msg == "hey" || msg.Contains("salam") || msg.Contains("assalam") || msg == "aoa")
             {
-                return "**Assalam-o-Alaikum! Welcome to NGEOS.**\n\nMain NGEOS ka AI Support Assistant hoon. Main aapki kis tarah madad kar sakta hoon?\n\n* **[Causes](/Causes):** Active charity aur welfare campaigns browse karein\n* **[Donate](/Donate):** Online donation ya Zakat ada karein\n* **[Zakat Calculator](/Zakat):** Apni Zakat ka shari'i hisab karein\n* **[Programmes](/Programmes):** Community aur volunteer drives mein hissa lein\n\nAap apna sawal yahan type kar sakte hain!";
+                if (isUrdu)
+                {
+                    return "**السلام علیکم! NGEOS میں خوش آمدید۔**\n\nمیں NGEOS کا تصدیق شدہ AI اسسٹنٹ ہوں۔ میں آپ کی کس طرح مدد کر سکتا ہوں؟\n\n* **[مہمات](/Causes):** فلاحی منصوبے دیکھیں\n* **[عطیہ](/Donate):** آن لائن عطیہ یا زکوٰۃ ادا کریں\n* **[زکوٰۃ کیلکولیٹر](/Zakat):** شرعی حساب لگائیں\n* **[پروگرامز](/Programmes):** فلاحی سرگرمیوں میں حصہ لیں";
+                }
+                if (isRoman)
+                {
+                    return "**Assalam-o-Alaikum! Welcome to NGEOS.**\n\nMain NGEOS ka verified AI Assistant hoon. Main aapki kis tarah madad kar sakta hoon?\n\n* **[Causes](/Causes):** Active charity aur welfare campaigns browse karein\n* **[Donate](/Donate):** Online donation ya Zakat ada karein\n* **[Zakat Calculator](/Zakat):** Apni Zakat ka shari'i hisab karein\n* **[Programmes](/Programmes):** Community aur volunteer drives mein hissa lein\n\nAap apna sawal yahan type kar sakte hain!";
+                }
+
+                return "**Assalam-o-Alaikum! Welcome to NGEOS.**\n\nI am your verified NGEOS AI Assistant. How may I assist you today?\n\n* **[Browse Causes](/Causes):** Explore verified active charity campaigns\n* **[Make a Donation](/Donate):** Instant online donation & Zakat\n* **[Smart Zakat Calculator](/Zakat):** Calculate your obligatory Zakat according to Shariah\n* **[Programmes](/Programmes):** Participate in community and volunteer initiatives\n\nFeel free to ask any question!";
             }
 
             // 2. Donation & Payments
             if (msg.Contains("donate") || msg.Contains("donation") || msg.Contains("pay") || msg.Contains("payment") || msg.Contains("card") || msg.Contains("paisa") || msg.Contains("kaise") || msg.Contains("kese"))
             {
-                return "**NGEOS par Donation dena intehayi aasan aur 100% secure hai:**\n\n1. **[Causes Page](/Causes)** par ja kar apni pasand ki cause select karein ya direct **[Donate Now](/Donate)** click karein.\n2. Apni donation amount enter karein (Zakat ya General).\n3. Payment method chunein (Debit/Credit Card, Safepay, JazzCash, Easypaisa).\n4. Payment mukammal hote hi aapko foran **Official Tax-Exempt PDF Receipt** mil jayegi jo aap download ya print kar sakte hain.\n\nKisi bhi madad ke liye aap hamare **[Help Centre](/HelpCentre)** par bhi rabta kar sakte hain.";
+                if (isUrdu)
+                {
+                    return "**NGEOS پر عطیہ دینا انتہائی آسان اور 100% محفوظ ہے:**\n\n1. **[مہمات کا صفحہ](/Causes)** وزٹ کر کے اپنی پسندیدہ مہم منتخب کریں یا براہ راست **[ابھی عطیہ دیں](/Donate)** پر کلک کریں۔\n2. رقم درج کریں (زکوٰۃ یا عام عطیہ)۔\n3. ادائیگی کا طریقہ منتخب کریں (کارڈ، سیف پے، جاز کیش، ایزی پیسہ)۔\n4. ادائیگی مکمل ہونے پر فوری **آفیشل ٹیکس فری رسید** حاصل کریں۔";
+                }
+                if (isRoman)
+                {
+                    return "**NGEOS par Donation dena intehayi aasan aur 100% secure hai:**\n\n1. **[Causes Page](/Causes)** par ja kar apni pasand ki cause select karein ya direct **[Donate Now](/Donate)** click karein.\n2. Apni donation amount enter karein (Zakat ya General).\n3. Payment method chunein (Debit/Credit Card, Safepay, JazzCash, Easypaisa).\n4. Payment mukammal hote hi aapko foran **Official Tax-Exempt PDF Receipt** mil jayegi jo aap download ya print kar sakte hain.\n\nKisi bhi madad ke liye aap hamare **[Help Centre](/HelpCentre)** par bhi rabta kar sakte hain.";
+                }
+
+                return "**Making a donation on NGEOS is simple, transparent, and 100% secure:**\n\n1. Visit the **[Causes Page](/Causes)** to select an initiative or click **[Donate Now](/Donate)** directly.\n2. Enter your donation amount (General Donation or Zakat).\n3. Choose your payment method (Debit/Credit Card, Safepay, JazzCash, Easypaisa).\n4. Upon completion, you will immediately receive an **Official Tax-Exempt PDF Receipt** available for download.\n\nFor any questions, visit our **[Help Centre](/HelpCentre)**.";
             }
 
             // 3. Causes & Campaigns
             if (msg.Contains("cause") || msg.Contains("campaign") || msg.Contains("education") || msg.Contains("water") || msg.Contains("health") || msg.Contains("medical") || msg.Contains("orphan") || msg.Contains("relief"))
             {
-                return "**NGEOS Active Welfare Causes:**\n\nHumari verified campaigns jinme aap hissa le sakte hain:\n* **Universal Education:** Underprivileged bachon ke liye school bags, books aur uniform support.\n* **Clean Drinking Water:** Sindh aur Balochistan mein solar water filtration plants aur handpumps.\n* **Emergency Medical Aid:** Zarooratmand mareezon ke liye free medicines aur diagnostic care.\n* **Women Empowerment:** Hunarmand aurat project ke tehat vocational training.\n\nTamam causes ki tafseelat aur progress dekhne ke liye **[Causes](/Causes)** page visit karein.";
+                if (isUrdu)
+                {
+                    return "**NGEOS کی فعال فلاحی مہمات:**\n\n* **تعلیم برائے سب:** مستحق بچوں کے لیے اسکول بیگز، یونیفارم اور کتب۔\n* **صاف پانی:** سندھ اور بلوچستان میں سولر واٹر پلانٹس اور ہینڈ پمپس۔\n* **ہنگامی طبی امداد:** نادار مریضوں کے لیے مفت ادویات اور علاج۔\n* **خواتین کی خود مختاری:** ووکیشنل ٹریننگ اور روزگار سپورٹ۔\n\nتفصیلات کے لیے **[Causes](/Causes)** کا صفحہ دیکھیں۔";
+                }
+                if (isRoman)
+                {
+                    return "**NGEOS Active Welfare Causes:**\n\nHumari verified campaigns jinme aap hissa le sakte hain:\n* **Universal Education:** Underprivileged bachon ke liye school bags, books aur uniform support.\n* **Clean Drinking Water:** Sindh aur Balochistan mein solar water filtration plants aur handpumps.\n* **Emergency Medical Aid:** Zarooratmand mareezon ke liye free medicines aur diagnostic care.\n* **Women Empowerment:** Hunarmand aurat project ke tehat vocational training.\n\nTamam causes ki tafseelat aur progress dekhne ke liye **[Causes](/Causes)** page visit karein.";
+                }
+
+                return "**NGEOS Active Welfare Causes:**\n\nOur verified causes actively supporting vulnerable communities:\n* **Universal Education:** School kits, books, and uniforms for underprivileged children.\n* **Clean Drinking Water:** Solar-powered water filtration plants and wells.\n* **Emergency Medical Aid:** Free diagnostic care, medicines, and medical relief camps.\n* **Women Empowerment:** Vocational skills training and micro-enterprise kits.\n\nExplore all causes and live progress on our **[Causes](/Causes)** page.";
             }
 
             // 4. Zakat
             if (msg.Contains("zakat") || msg.Contains("sadqah") || msg.Contains("fitrah") || msg.Contains("nisab"))
             {
-                return "**Smart Zakat Management on NGEOS:**\n\n* Hamare paas **[Smart Zakat Calculator](/Zakat)** mojood hai jo Gold, Silver, Cash aur Assets par automatically 2.5% Zakat compute karta hai.\n* NGEOS par sirf un certified causes ko Zakat di ja sakti hai jo Shariah-compliant aur verified Mustahiqeen tak pohanchti hain.\n* Har Zakat donation par verified tracking aur transparent report generate hoti hai.";
+                if (isUrdu)
+                {
+                    return "**NGEOS سمارٹ زکوٰۃ مینجمنٹ:**\n\n* ہمارا **[Smart Zakat Calculator](/Zakat)** سونا، چاندی، کیش اور اثاثوں پر 2.5% زکوٰۃ کا شرعی حساب لگاتا ہے۔\n* NGEOS پر زکوٰۃ صرف شرعی طور پر تصدیق شدہ مستحقین تک پہنچائی جاتی ہے۔\n* ہر زکوٰۃ پر شفاف آڈٹ رپورٹ فراہم کی جاتی ہے۔";
+                }
+                if (isRoman)
+                {
+                    return "**Smart Zakat Management on NGEOS:**\n\n* Hamare paas **[Smart Zakat Calculator](/Zakat)** mojood hai jo Gold, Silver, Cash aur Assets par automatically 2.5% Zakat compute karta hai.\n* NGEOS par sirf un certified causes ko Zakat di ja sakti hai jo Shariah-compliant aur verified Mustahiqeen tak pohanchti hain.\n* Har Zakat donation par verified tracking aur transparent report generate hoti hai.";
+                }
+
+                return "**Smart Zakat Management on NGEOS:**\n\n* Use our **[Smart Zakat Calculator](/Zakat)** to accurately compute 2.5% Zakat across Gold, Silver, Cash, and Assets.\n* NGEOS strictly channels Zakat donations to Shariah-verified eligible beneficiaries (Mustahiqeen).\n* Every contribution is backed by end-to-end transparent reporting and tracking.";
             }
 
-            // 5. Programmes & Events
-            if (msg.Contains("programme") || msg.Contains("program") || msg.Contains("event") || msg.Contains("marathon") || msg.Contains("camp"))
+            // 5. Default General Overview
+            if (isUrdu)
             {
-                return "**Community Programmes & Events:**\n\n* **Youth Digital Skills Bootcamp:** Naujawano ko free IT aur digital freelancing training.\n* **Mobile Health Clinics:** Door-daraaz ilaqon mein free medical checkups aur medicines.\n* **Winter Relief Drives:** Sardi mein ghareeb khandanoun ko blankets aur ration.\n\nExplore karein: **[Programmes](/Programmes)** aur **[Charity Events](/Events)**.";
+                return "**NGEOS پلیٹ فارم کا جائزہ:**\n\nNGEOS پاکستان کا معروف خیراتی اور فلاحی نیٹ ورک ہے جو شفاف انداز میں تصدیق شدہ فلاحی اداروں کو مخیر حضرات سے جوڑتا ہے۔\n\n* **[فعال مہمات](/Causes):** فلاحی منصوبے دیکھیں\n* **[عطیہ دیں](/Donate):** فوری اور محفوظ عطیہ\n* **[زکوٰۃ کیلکولیٹر](/Zakat):** آسان شرعی حساب\n* **[رابطہ](/Home/Contact):** سپورٹ ٹیم سے رابطہ کریں";
             }
-
-            // 6. Volunteers & Careers
-            if (msg.Contains("volunteer") || msg.Contains("job") || msg.Contains("career") || msg.Contains("hiring") || msg.Contains("join") || msg.Contains("work") || msg.Contains("apply"))
+            if (isRoman)
             {
-                return "**Join NGEOS as a Volunteer or Team Member:**\n\nHum hamesha passionate logon ko welcome karte hain jo humanity ki khidmat karna chahte hain!\n* Open volunteer positions dekhne aur online apply karne ke liye **[Career & Volunteers](/About/Career)** page visit karein.\n* Apni profile create kar ke hamare upcoming events mein ground volunteer ban sakte hain.";
+                return "**NGEOS Platform Overview:**\n\nNGEOS (Next Generation NGO Management & Donation Platform) Pakistan ka modern charity aur welfare platform hai jo verified NGOs aur donors ko ek jagah connect karta hai.\n\n* **[Active Causes](/Causes):** Welfare projects browse karein\n* **[Donate Now](/Donate):** Instant secure donation\n* **[Zakat Calculator](/Zakat):** Fast Zakat calculation\n* **[Contact Us](/Home/Contact):** Support team se rabta karein\n\nAap mazeed kisi specific topic ke bare mein sawal pooch sakte hain!";
             }
 
-            // 7. Contact / Office / Details
-            if (msg.Contains("contact") || msg.Contains("address") || msg.Contains("phone") || msg.Contains("email") || msg.Contains("office") || msg.Contains("location") || msg.Contains("kahan"))
-            {
-                return "**NGEOS Central Office & Contact Info:**\n\n* **Address:** 100 Edhi Street, Saddar, Karachi, Pakistan\n* **Phone:** +92 (300) 123-4567 | +92 21 3456 7890\n* **Email:** support@ngeos.org | ngeos@gmail.com\n* **Support Desk:** Agar aapka koi makhsoos sawal hai to **[Raise A Query](/Home/RaiseQuery)** par ticket create karein, hamari team foran jawab degi.";
-            }
-
-            // 8. General Platform Summary Fallback
-            return "**NGEOS Platform Overview:**\n\nNGEOS (Next Generation NGO Management & Donation Platform) Pakistan ka modern charity aur welfare platform hai jo verified NGOs aur donors ko ek jagah connect karta hai.\n\n* **[Active Causes](/Causes):** Welfare projects browse karein\n* **[Donate Now](/Donate):** Instant secure donation\n* **[Zakat Calculator](/Zakat):** Fast Zakat calculation\n* **[Contact Us](/Home/Contact):** Support team se rabta karein\n\nAap mazeed kisi specific topic (Donation, Zakat, Causes, Volunteering) ke bare mein sawal pooch sakte hain!";
+            return "**NGEOS Platform Overview:**\n\nNGEOS (Next Generation NGO Management & Donation Platform) is a premier philanthropic network connecting accredited charities, humanitarian campaigns, and benefactors worldwide.\n\n* **[Active Causes](/Causes):** Browse verified projects\n* **[Donate Now](/Donate):** Instant and secure donations\n* **[Zakat Calculator](/Zakat):** Calculate your obligatory Zakat\n* **[Contact Us](/Home/Contact):** Connect with our administration\n\nFeel free to ask any question in English, Roman Urdu, or Urdu!";
         }
 
         private string BuildSystemPrompt(string liveContext, string? userRole)
@@ -213,7 +264,7 @@ namespace NGEOS.Services.Ai.Orchestration
             sb.AppendLine("2. FINANCIAL ACCURACY: ONLY completed transactions count towards total raised funds. Pending, failed, or cancelled transactions are excluded. Do not guess, estimate, or fabricate any financial numbers or progress percentages.");
             sb.AppendLine("3. ANTI-HALLUCINATION: If a specific campaign, programme, or policy is not in the verified context, explicitly state that it is not currently recorded or published on NGEOS.");
             sb.AppendLine("4. PRIVACY PROTECTION: Never share or solicit private personal information such as donor email addresses, phone numbers, or credit card details.");
-            sb.AppendLine("5. MULTI-LANGUAGE FLUENCY: Respond naturally in the exact language used by the user. If the user writes in English, reply in English. If the user writes in Roman Urdu (e.g. 'Donation kaise karein?', 'Total kitna paisa aya hai?'), reply in polite, fluent Roman Urdu. If the user writes in Urdu script, reply in Urdu script.");
+            sb.AppendLine("5. STRICT LANGUAGE MIRRORING: You MUST detect the language of the user's message and reply in that EXACT same language:\n- If the user writes in English, you MUST reply 100% in English.\n- If the user writes in Roman Urdu (Urdu written in Latin letters, e.g. 'Donation kaise karein?', 'Total kitna paisa aya hai?'), you MUST reply 100% in natural, polite Roman Urdu.\n- If the user writes in Urdu script (e.g. 'عطیہ کیسے دیں؟'), you MUST reply 100% in Urdu script.\nNEVER answer in Roman Urdu if the user asked in English, and NEVER answer in English if the user asked in Roman Urdu or Urdu!");
             sb.AppendLine("6. FORMATTING: Use clean markdown with clear headings, bullet points, and bold text for readability. Avoid decorative emojis or cartoonish icons; maintain a clean, professional, executive presentation.");
             sb.AppendLine("7. ACTIONABLE GUIDANCE: Where relevant, tell users where to go on the website (e.g., browse Causes at /Causes, see Programmes at /Programmes, donate via the 'Donate Now' button, or explore career/volunteer roles at /About/Career).");
 
