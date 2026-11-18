@@ -201,7 +201,7 @@ namespace NGEOS.Controllers
 
                 }
 
-                return RedirectToAction("Dashboard", "User");
+                return RedirectToAction("Index", "Home");
 
             }
 
@@ -339,7 +339,7 @@ namespace NGEOS.Controllers
 
 
 
-            return RedirectToAction("Dashboard", "User");
+            return RedirectToAction("Index", "Home");
 
         }
 
@@ -565,7 +565,7 @@ namespace NGEOS.Controllers
 
                 }
 
-                return RedirectToAction("Dashboard", "User");
+                return RedirectToAction("Index", "Home");
 
             }
 
@@ -653,7 +653,7 @@ namespace NGEOS.Controllers
 
             }
 
-            return RedirectToAction("Dashboard", "User");
+            return RedirectToAction("Index", "Home");
 
         }
 
@@ -829,7 +829,7 @@ namespace NGEOS.Controllers
 
             }
 
-            return RedirectToAction("Dashboard", "User");
+            return RedirectToAction("Index", "Home");
 
         }
 
