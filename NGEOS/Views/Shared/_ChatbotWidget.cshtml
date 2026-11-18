@@ -11,11 +11,11 @@
             aria-label="Open NGEOS AI Assistant" 
             aria-expanded="false" 
             aria-controls="ngeos-chatbot-window"
-            title="Chat with NGEOS AI Assistant">
-        <span class="trigger-icon-open"><i class="bi bi-chat-heart-fill"></i></span>
+            title="Chat with NGEOS AI Guide Assistant">
+        <span class="trigger-icon-open"><i class="bi bi-robot"></i></span>
         <span class="trigger-icon-close"><i class="bi bi-chevron-down"></i></span>
         <span class="status-pulse-dot" title="AI Assistant Online"></span>
-        <span class="trigger-label-pill d-none d-md-inline-flex">AI Assistant</span>
+        <span class="trigger-label-pill d-none d-md-inline-flex">AI Guide</span>
     </button>
 
     <!-- Chatbot Main Window -->
@@ -24,14 +24,14 @@
         <div class="ngeos-chat-header">
             <div class="d-flex align-items-center gap-2">
                 <div class="chat-avatar-wrapper position-relative">
-                    <div class="chat-avatar-icon">
-                        <img src="~/images/ngeos-logo.svg" alt="NGEOS Logo" class="chat-avatar-img" asp-append-version="true" />
+                    <div class="chat-avatar-icon d-flex align-items-center justify-content-center bg-orange text-white rounded-circle" style="width: 36px; height: 36px;">
+                        <i class="bi bi-robot fs-5"></i>
                     </div>
                     <span class="chat-online-badge" title="Live Database Grounded"></span>
                 </div>
                 <div>
                     <h6 class="mb-0 fw-bold text-white d-flex align-items-center gap-2" id="chat-header-title">
-                        NGEOS AI Assistant
+                        @(User.Identity?.IsAuthenticated == true ? "NGEOS Personal AI Guide" : "NGEOS AI Assistant")
                     </h6>
                     <small class="text-white-50 d-flex align-items-center gap-1 font-monospace" style="font-size: 0.72rem;">
                         <span id="ngeos-chat-provider-badge" class="badge rounded-pill bg-light text-dark fw-medium px-2" style="font-size: 0.65rem;">Groq + Gemini</span>
@@ -59,50 +59,103 @@
 
         <!-- Chat Conversation Messages Body -->
         <div id="ngeos-chat-messages" class="ngeos-chat-body" tabindex="0" role="log" aria-live="polite">
-            <!-- Initial Welcome Message Card -->
-            <div class="chat-msg chat-msg-bot">
-                <div class="msg-avatar"><img src="~/images/ngeos-logo.svg" alt="NGEOS Logo" class="msg-avatar-img" asp-append-version="true" /></div>
-                <div class="msg-content">
-                    <div class="msg-bubble welcome-bubble">
-                        <p class="mb-1 fw-semibold text-dark">
-                            Assalam-o-Alaikum! Welcome to <strong>NGEOS (Give-AID)</strong>.
-                        </p>
-                        <p class="mb-2 text-secondary" style="font-size: 0.88rem;">
-                            Main NGEOS ka verified AI Assistant hoon. Aap mujh se active causes, verified donation funds, programmes, volunteer jobs, aur Zakat/Sadqah ke baray mein kisi bhi zaban mein pooch sakte hain:
-                        </p>
-                        <div class="lang-pills mb-2">
-                            <span class="badge bg-light text-dark border">English</span>
-                            <span class="badge bg-light text-dark border">Roman Urdu</span>
-                            <span class="badge bg-light text-dark border">اردو</span>
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <!-- Initial Welcome Message Card for Logged-In User -->
+                <div class="chat-msg chat-msg-bot">
+                    <div class="msg-avatar">
+                        <div class="avatar-robot-icon d-flex align-items-center justify-content-center bg-orange text-white rounded-circle" style="width: 32px; height: 32px;">
+                            <i class="bi bi-robot small"></i>
                         </div>
                     </div>
-                    <span class="msg-timestamp">Just now</span>
+                    <div class="msg-content">
+                        <div class="msg-bubble welcome-bubble">
+                            <p class="mb-1 fw-bold text-dark">
+                                Assalam-o-Alaikum, @(User.Identity.Name ?? "Valued Donor")! 👋
+                            </p>
+                            <p class="mb-2 text-secondary" style="font-size: 0.88rem;">
+                                Main aapka <strong>Personal NGEOS Guide Agent</strong> hoon. Main aapko dashboard use karne, donation history &amp; receipts check karne, active causes explore karne, aur kisi bhi query mein guide karne ke liye hazir hoon:
+                            </p>
+                            <div class="lang-pills mb-2">
+                                <span class="badge bg-light text-dark border">English</span>
+                                <span class="badge bg-light text-dark border">Roman Urdu</span>
+                                <span class="badge bg-light text-dark border">اردو</span>
+                            </div>
+                        </div>
+                        <span class="msg-timestamp">Just now</span>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Suggestion Chips Container -->
-            <div id="ngeos-chat-suggestions" class="chat-suggestions-area">
-                <div class="suggestions-label"><i class="bi bi-lightning-charge-fill me-1"></i> Quick questions:</div>
-                <div class="suggestions-chips">
-                    <button type="button" class="suggestion-chip" data-prompt="What active welfare causes are currently running?">
-                        <i class="bi bi-heart me-1"></i> Active Causes
-                    </button>
-                    <button type="button" class="suggestion-chip" data-prompt="How can I make a donation to NGEOS?">
-                        <i class="bi bi-credit-card me-1"></i> How to Donate?
-                    </button>
-                    <button type="button" class="suggestion-chip" data-prompt="What is the total verified donation amount raised so far?">
-                        <i class="bi bi-cash-stack me-1"></i> Total Funds Raised
-                    </button>
-                    <button type="button" class="suggestion-chip" data-prompt="What community programmes and events are organized?">
-                        <i class="bi bi-calendar-event me-1"></i> Programmes
-                    </button>
-                    <button type="button" class="suggestion-chip" data-prompt="Are there any volunteer or job opportunities available?">
-                        <i class="bi bi-people me-1"></i> Volunteer Jobs
-                    </button>
-                    <button type="button" class="suggestion-chip" data-prompt="How does NGEOS handle Zakat and Sadqah funds?">
-                        <i class="bi bi-shield-check me-1"></i> Zakat & Sadqah
-                    </button>
+                <!-- Suggestion Chips Container for User -->
+                <div id="ngeos-chat-suggestions" class="chat-suggestions-area">
+                    <div class="suggestions-label"><i class="bi bi-compass-fill text-orange me-1"></i> Quick Guide Options:</div>
+                    <div class="suggestions-chips">
+                        <button type="button" class="suggestion-chip" data-prompt="Guide me on how to use my dashboard and track my donations.">
+                            <i class="bi bi-speedometer2 me-1"></i> Dashboard Guide
+                        </button>
+                        <button type="button" class="suggestion-chip" data-prompt="How can I make a new verified donation to an urgent cause?">
+                            <i class="bi bi-credit-card me-1"></i> Make Donation
+                        </button>
+                        <button type="button" class="suggestion-chip" data-prompt="What urgent welfare causes need funding right now?">
+                            <i class="bi bi-heart me-1"></i> Active Causes
+                        </button>
+                        <button type="button" class="suggestion-chip" data-prompt="How do I view my donation history and download receipts?">
+                            <i class="bi bi-receipt me-1"></i> Receipts & History
+                        </button>
+                        <button type="button" class="suggestion-chip" data-prompt="How do I raise a support query or contact NGO admins?">
+                            <i class="bi bi-question-circle me-1"></i> Raise Query
+                        </button>
+                    </div>
                 </div>
+            }
+            else
+            {
+                <!-- Initial Welcome Message Card for Guests / Public -->
+                <div class="chat-msg chat-msg-bot">
+                    <div class="msg-avatar"><img src="~/images/ngeos-logo.svg" alt="NGEOS Logo" class="msg-avatar-img" asp-append-version="true" /></div>
+                    <div class="msg-content">
+                        <div class="msg-bubble welcome-bubble">
+                            <p class="mb-1 fw-semibold text-dark">
+                                Assalam-o-Alaikum! Welcome to <strong>NGEOS (Give-AID)</strong>.
+                            </p>
+                            <p class="mb-2 text-secondary" style="font-size: 0.88rem;">
+                                Main NGEOS ka verified AI Assistant hoon. Aap mujh se active causes, verified donation funds, programmes, volunteer jobs, aur Zakat/Sadqah ke baray mein kisi bhi zaban mein pooch sakte hain:
+                            </p>
+                            <div class="lang-pills mb-2">
+                                <span class="badge bg-light text-dark border">English</span>
+                                <span class="badge bg-light text-dark border">Roman Urdu</span>
+                                <span class="badge bg-light text-dark border">اردو</span>
+                            </div>
+                        </div>
+                        <span class="msg-timestamp">Just now</span>
+                    </div>
+                </div>
+
+                <!-- Suggestion Chips Container for Guests -->
+                <div id="ngeos-chat-suggestions" class="chat-suggestions-area">
+                    <div class="suggestions-label"><i class="bi bi-lightning-charge-fill me-1"></i> Quick questions:</div>
+                    <div class="suggestions-chips">
+                        <button type="button" class="suggestion-chip" data-prompt="What active welfare causes are currently running?">
+                            <i class="bi bi-heart me-1"></i> Active Causes
+                        </button>
+                        <button type="button" class="suggestion-chip" data-prompt="How can I make a donation to NGEOS?">
+                            <i class="bi bi-credit-card me-1"></i> How to Donate?
+                        </button>
+                        <button type="button" class="suggestion-chip" data-prompt="What is the total verified donation amount raised so far?">
+                            <i class="bi bi-cash-stack me-1"></i> Total Funds Raised
+                        </button>
+                        <button type="button" class="suggestion-chip" data-prompt="What community programmes and events are organized?">
+                            <i class="bi bi-calendar-event me-1"></i> Programmes
+                        </button>
+                        <button type="button" class="suggestion-chip" data-prompt="Are there any volunteer or job opportunities available?">
+                            <i class="bi bi-people me-1"></i> Volunteer Jobs
+                        </button>
+                        <button type="button" class="suggestion-chip" data-prompt="How does NGEOS handle Zakat and Sadqah funds?">
+                            <i class="bi bi-shield-check me-1"></i> Zakat & Sadqah
+                        </button>
+                    </div>
+                </div>
+            }
             </div>
 
             <!-- Dynamic Messages will append here -->

@@ -94,7 +94,7 @@
     </div>
 
     <!-- Quick Navigation Pills -->
-    <div class="d-flex flex-wrap justify-content-center gap-2 mb-5" data-aos="fade-up">
+    <div class="d-flex flex-wrap justify-content-center gap-2 mb-4" data-aos="fade-up">
         @if (User.IsInRole("Admin") || Model.User.Role == "Admin")
         {
             <a asp-controller="Admin" asp-action="Index" class="btn btn-navy text-white btn-sm rounded-pill px-4 shadow fw-bold border border-warning">
@@ -102,12 +102,32 @@
             </a>
         }
         <a asp-action="Dashboard" class="btn btn-orange btn-sm rounded-pill px-4 shadow-sm fw-semibold">Overview</a>
-        <a asp-action="AiAssistant" class="btn btn-outline-orange btn-sm rounded-pill px-4 fw-semibold"><i class="bi bi-robot me-1"></i> AI Assistant</a>
         <a asp-action="Donations" class="btn btn-outline-navy btn-sm rounded-pill px-4 fw-semibold">Donation History</a>
         <a asp-action="Programmes" class="btn btn-outline-navy btn-sm rounded-pill px-4 fw-semibold">My Programmes</a>
         <a asp-action="Queries" class="btn btn-outline-navy btn-sm rounded-pill px-4 fw-semibold">My Queries</a>
         <a asp-action="InviteFriends" class="btn btn-outline-navy btn-sm rounded-pill px-4 fw-semibold">Invite Friends</a>
         <a asp-action="Profile" class="btn btn-outline-navy btn-sm rounded-pill px-4 fw-semibold">Profile Settings</a>
+    </div>
+
+    <!-- Personal AI Guide Helper Banner -->
+    <div class="giveaid-card p-3 mb-5 rounded-4 shadow-sm border-0" style="background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%); border-left: 5px solid #f25c05 !important;" data-aos="fade-up">
+        <div class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-3">
+            <div class="d-flex align-items-center gap-3">
+                <div class="rounded-circle d-flex align-items-center justify-content-center text-white shadow-sm flex-shrink-0" style="width: 48px; height: 48px; background: linear-gradient(135deg, #f25c05 0%, #f37335 100%);">
+                    <i class="bi bi-robot fs-4"></i>
+                </div>
+                <div>
+                    <h6 class="fw-bold mb-0 text-dark d-flex align-items-center gap-2">
+                        NGEOS Personal AI Guide
+                        <span class="badge bg-success small px-2 py-0" style="font-size: 0.65rem;">Online</span>
+                    </h6>
+                    <small class="text-secondary">Aapka personal AI assistant ready hai — donations, receipts, ya causes mein guidance ke liye screen ke side par AI icon click karein.</small>
+                </div>
+            </div>
+            <button type="button" class="btn btn-orange btn-sm rounded-pill px-4 fw-semibold text-nowrap shadow-sm" onclick="document.getElementById('ngeos-chatbot-toggle-btn')?.click();">
+                <i class="bi bi-chat-dots-fill me-1"></i> Open AI Guide
+            </button>
+        </div>
     </div>
 
     <div class="row g-5">
