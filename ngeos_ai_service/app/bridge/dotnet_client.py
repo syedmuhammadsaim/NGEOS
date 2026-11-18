@@ -99,4 +99,70 @@ class DotNetBridgeClient:
             logger.error("dotnet_bridge_broadcast_exception", error=str(ex))
             return False
 
+    async def get_ecosystem_sections_summary(self) -> Dict[str, Any]:
+        url = f"{self.base_url}/api/agent/internal/sections/summary"
+        try:
+            async with httpx.AsyncClient(timeout=self.timeout) as client:
+                res = await client.get(url, headers=self.headers)
+                if res.status_code == 200:
+                    return res.json()
+                return {}
+        except Exception as ex:
+            logger.error("dotnet_bridge_sections_summary_exception", error=str(ex))
+            return {}
+
+    async def get_pending_queries(self) -> list:
+        url = f"{self.base_url}/api/agent/internal/support/queries/pending"
+        try:
+            async with httpx.AsyncClient(timeout=self.timeout) as client:
+                res = await client.get(url, headers=self.headers)
+                if res.status_code == 200:
+                    return res.json()
+                return []
+        except Exception as ex:
+            logger.error("dotnet_bridge_pending_queries_exception", error=str(ex))
+            return []
+
+    async def get_unread_contact_messages(self) -> list:
+        url = f"{self.base_url}/api/agent/internal/support/messages/unread"
+        try:
+            async with httpx.AsyncClient(timeout=self.timeout) as client:
+                res = await client.get(url, headers=self.headers)
+                if res.status_code == 200:
+                    return res.json()
+                return []
+        except Exception as ex:
+            logger.error("dotnet_bridge_unread_messages_exception", error=str(ex))
+            return []
+
+    async def get_pending_volunteers(self) -> list:
+        url = f"{self.base_url}/api/agent/internal/organization/volunteers/pending"
+        try:
+            async with httpx.AsyncClient(timeout=self.timeout) as client:
+                res = await client.get(url, headers=self.headers)
+                if res.status_code == 200:
+                    return res.json()
+                return []
+        except Exception as ex:
+            logger.error("dotnet_bridge_pending_volunteers_exception", error=str(ex))
+            return []
+
+    async def execute_permitted_action(self, action_name: str, module_name: str, target_id: Optional[int] = None, reason: str = "Automated AI Ecosystem Operation") -> Dict[str, Any]:
+        url = f"{self.base_url}/api/agent/internal/actions/execute"
+        payload = {
+            "actionName": action_name,
+            "moduleName": module_name,
+            "targetEntityId": target_id,
+            "reason": reason
+        }
+        try:
+            async with httpx.AsyncClient(timeout=self.timeout) as client:
+                res = await client.post(url, headers=self.headers, json=payload)
+                if res.status_code == 200:
+                    return res.json()
+                return {"success": False, "status": res.status_code}
+        except Exception as ex:
+            logger.error("dotnet_bridge_execute_action_exception", error=str(ex))
+            return {"success": False, "error": str(ex)}
+
 dotnet_bridge = DotNetBridgeClient()

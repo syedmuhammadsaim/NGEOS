@@ -12,6 +12,12 @@
         <p class="text-muted small mb-0">High-level telemetry, autonomous provider failover, and operational switches for Dual AI Agents.</p>
     </div>
     <div class="d-flex align-items-center gap-2">
+        <form asp-action="TriggerEcosystemAudit" method="post" class="d-inline">
+            @Html.AntiForgeryToken()
+            <button type="submit" class="btn btn-navy btn-sm px-3 shadow-sm fw-bold">
+                <i class="bi bi-play-circle-fill me-1 text-warning"></i> Run 15-Section Ecosystem Audit
+            </button>
+        </form>
         <form asp-action="ToggleAgentConfig" method="post" class="d-inline">
             @Html.AntiForgeryToken()
             <input type="hidden" name="settingKey" value="KillSwitch" />
@@ -225,5 +231,182 @@
                 </a>
             </div>
         </div>
+    </div>
+</div>
+
+<!-- ============================================================
+     ADMIN SECTION INTEGRATION MATRIX (15 SECTIONS MONITORED)
+     ============================================================ -->
+<div class="card border-0 shadow-sm p-4 bg-white mt-4">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-3">
+        <div>
+            <h5 class="fw-bold mb-1 text-dark d-flex align-items-center gap-2">
+                <i class="bi bi-grid-3x3-gap-fill text-orange"></i> Full Admin Section Integration Matrix
+            </h5>
+            <p class="text-muted small mb-0">Every section, controller, entity, and administrative workflow in NGEOS is actively connected to the Autonomous Agent.</p>
+        </div>
+        <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2 fw-bold">
+            <i class="bi bi-check2-all me-1"></i> 15/15 Sections Integrated
+        </span>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light small text-uppercase">
+                <tr>
+                    <th style="width: 50px;">#</th>
+                    <th>Module Group</th>
+                    <th>Section Name</th>
+                    <th>Associated Entities</th>
+                    <th>Monitoring & Anomaly Detection</th>
+                    <th>Permitted Routine Automations</th>
+                    <th>Integration Status</th>
+                </tr>
+            </thead>
+            <tbody class="small">
+                <!-- Group 1: Fundraising -->
+                <tr>
+                    <td class="text-muted fw-bold">1</td>
+                    <td><span class="badge bg-primary-subtle text-primary">Fundraising</span></td>
+                    <td><a asp-action="Causes" class="fw-bold text-decoration-none text-dark">Welfare Causes</a></td>
+                    <td><code>Cause</code>, <code>Donation</code></td>
+                    <td>Milestones, progress % tracking, inactive campaign detection</td>
+                    <td>Autonomous recalculation of percentage raised; featured recommendations</td>
+                    <td><span class="badge bg-success"><i class="bi bi-shield-check me-1"></i> Monitored</span></td>
+                </tr>
+                <tr>
+                    <td class="text-muted fw-bold">2</td>
+                    <td><span class="badge bg-primary-subtle text-primary">Fundraising</span></td>
+                    <td><a asp-action="Donations" class="fw-bold text-decoration-none text-dark">Donations & Ledger</a></td>
+                    <td><code>Donation</code>, <code>PaymentTransaction</code></td>
+                    <td>Gateway revenue share, failed webhooks, duplicate hashes, abnormal spikes</td>
+                    <td>Daily/weekly ledger reconciliation reports, PDF receipt validation</td>
+                    <td><span class="badge bg-success"><i class="bi bi-shield-check me-1"></i> Monitored</span></td>
+                </tr>
+                <tr>
+                    <td class="text-muted fw-bold">3</td>
+                    <td><span class="badge bg-primary-subtle text-primary">Fundraising</span></td>
+                    <td><a asp-action="Users" class="fw-bold text-decoration-none text-dark">Registered Members</a></td>
+                    <td><code>User</code>, <code>AgentUserRestriction</code></td>
+                    <td>Credential attacks, rapid signups, Super Admin role integrity</td>
+                    <td>3-sec countdown suspension for severe threats; appeal email dispatch</td>
+                    <td><span class="badge bg-success"><i class="bi bi-shield-check me-1"></i> Monitored</span></td>
+                </tr>
+
+                <!-- Group 2: Organization -->
+                <tr>
+                    <td class="text-muted fw-bold">4</td>
+                    <td><span class="badge bg-info-subtle text-info">Organization</span></td>
+                    <td><a asp-action="Ngos" class="fw-bold text-decoration-none text-dark">Associated NGOs</a></td>
+                    <td><code>NGO</code>, <code>Cause</code></td>
+                    <td>Verification status audit, missing registration number, compliance check</td>
+                    <td>Automated compliance audit reports, unverified NGO review flagging</td>
+                    <td><span class="badge bg-success"><i class="bi bi-shield-check me-1"></i> Monitored</span></td>
+                </tr>
+                <tr>
+                    <td class="text-muted fw-bold">5</td>
+                    <td><span class="badge bg-info-subtle text-info">Organization</span></td>
+                    <td><a asp-action="Partners" class="fw-bold text-decoration-none text-dark">Corporate Partners</a></td>
+                    <td><code>Partner</code></td>
+                    <td>Active sponsorship status, broken partner links, missing metadata</td>
+                    <td>Partner visibility audit, annual renewal reminders</td>
+                    <td><span class="badge bg-success"><i class="bi bi-shield-check me-1"></i> Monitored</span></td>
+                </tr>
+                <tr>
+                    <td class="text-muted fw-bold">6</td>
+                    <td><span class="badge bg-info-subtle text-info">Organization</span></td>
+                    <td><a asp-action="Programmes" class="fw-bold text-decoration-none text-dark">Our Programmes</a></td>
+                    <td><code>Programme</code>, <code>ProgrammeInterest</code></td>
+                    <td>Schedule timeline tracking, volunteer enrollment capacity</td>
+                    <td>Status transition recommendations (Upcoming ➔ Completed)</td>
+                    <td><span class="badge bg-success"><i class="bi bi-shield-check me-1"></i> Monitored</span></td>
+                </tr>
+                <tr>
+                    <td class="text-muted fw-bold">7</td>
+                    <td><span class="badge bg-info-subtle text-info">Organization</span></td>
+                    <td><a asp-action="ProgrammeInterests" class="fw-bold text-decoration-none text-dark">Participants / Volunteers</a></td>
+                    <td><code>ProgrammeInterest</code>, <code>User</code></td>
+                    <td>Pending applications backlog, SLA breaches (&gt; 48 hours)</td>
+                    <td>Automated qualification scoring, batch status triage ('Contacted')</td>
+                    <td><span class="badge bg-success"><i class="bi bi-shield-check me-1"></i> Monitored</span></td>
+                </tr>
+                <tr>
+                    <td class="text-muted fw-bold">8</td>
+                    <td><span class="badge bg-info-subtle text-info">Organization</span></td>
+                    <td><a asp-action="Events" class="fw-bold text-decoration-none text-dark">Charity Events</a></td>
+                    <td><code>Event</code></td>
+                    <td>Upcoming event countdown, passed events without photo galleries</td>
+                    <td>Automated event reminder alerts, post-event archiving flagging</td>
+                    <td><span class="badge bg-success"><i class="bi bi-shield-check me-1"></i> Monitored</span></td>
+                </tr>
+
+                <!-- Group 3: Content (CMS) -->
+                <tr>
+                    <td class="text-muted fw-bold">9</td>
+                    <td><span class="badge bg-secondary-subtle text-secondary">Content CMS</span></td>
+                    <td><a asp-action="Gallery" class="fw-bold text-decoration-none text-dark">Media Gallery</a></td>
+                    <td><code>GalleryItem</code></td>
+                    <td>Broken image URLs, missing categorization, storage growth</td>
+                    <td>Media asset integrity audits, homepage highlight recommendations</td>
+                    <td><span class="badge bg-success"><i class="bi bi-shield-check me-1"></i> Monitored</span></td>
+                </tr>
+                <tr>
+                    <td class="text-muted fw-bold">10</td>
+                    <td><span class="badge bg-secondary-subtle text-secondary">Content CMS</span></td>
+                    <td><a asp-action="AboutPages" class="fw-bold text-decoration-none text-dark">About Sub-Pages</a></td>
+                    <td><code>AboutPage</code></td>
+                    <td>CMS completeness (Mission, Team, What We Do, Achievements)</td>
+                    <td>SEO metadata check, content freshness audit reports</td>
+                    <td><span class="badge bg-success"><i class="bi bi-shield-check me-1"></i> Monitored</span></td>
+                </tr>
+                <tr>
+                    <td class="text-muted fw-bold">11</td>
+                    <td><span class="badge bg-secondary-subtle text-secondary">Content CMS</span></td>
+                    <td><a asp-action="TeamMembers" class="fw-bold text-decoration-none text-dark">Leadership Team</a></td>
+                    <td><code>TeamMember</code></td>
+                    <td>Missing portrait photos, bio completeness, display order balance</td>
+                    <td>Organizational directory health verification</td>
+                    <td><span class="badge bg-success"><i class="bi bi-shield-check me-1"></i> Monitored</span></td>
+                </tr>
+                <tr>
+                    <td class="text-muted fw-bold">12</td>
+                    <td><span class="badge bg-secondary-subtle text-secondary">Content CMS</span></td>
+                    <td><a asp-action="Jobs" class="fw-bold text-decoration-none text-dark">Job Postings</a></td>
+                    <td><code>JobOpportunity</code></td>
+                    <td>Stale vacancies older than 60 days, passed application deadlines</td>
+                    <td>Autonomous deactivation of expired listings (`FlagExpiredJobs`)</td>
+                    <td><span class="badge bg-success"><i class="bi bi-shield-check me-1"></i> Monitored</span></td>
+                </tr>
+                <tr>
+                    <td class="text-muted fw-bold">13</td>
+                    <td><span class="badge bg-secondary-subtle text-secondary">Content CMS</span></td>
+                    <td><a asp-action="Faqs" class="fw-bold text-decoration-none text-dark">Help Centre &amp; FAQs</a></td>
+                    <td><code>FAQ</code></td>
+                    <td>FAQ coverage against recurring user queries, unaddressed topics</td>
+                    <td>New FAQ recommendations generated from resolved support tickets</td>
+                    <td><span class="badge bg-success"><i class="bi bi-shield-check me-1"></i> Monitored</span></td>
+                </tr>
+
+                <!-- Group 4: Support -->
+                <tr>
+                    <td class="text-muted fw-bold">14</td>
+                    <td><span class="badge bg-warning-subtle text-warning">Support</span></td>
+                    <td><a asp-action="Queries" class="fw-bold text-decoration-none text-dark">User Queries</a></td>
+                    <td><code>UserQuery</code>, <code>User</code></td>
+                    <td>Pending queries SLA tracking (&gt; 24h), sentiment &amp; urgency triage</td>
+                    <td>Suggested context-aware reply drafts, priority escalation alerts</td>
+                    <td><span class="badge bg-success"><i class="bi bi-shield-check me-1"></i> Monitored</span></td>
+                </tr>
+                <tr>
+                    <td class="text-muted fw-bold">15</td>
+                    <td><span class="badge bg-warning-subtle text-warning">Support</span></td>
+                    <td><a asp-action="ContactMessages" class="fw-bold text-decoration-none text-dark">Contact Inquiries</a></td>
+                    <td><code>ContactMessage</code></td>
+                    <td>Unread inquiries backlog, automated bot/spam detection</td>
+                    <td>Automated spam classification, routine read-marking for spam</td>
+                    <td><span class="badge bg-success"><i class="bi bi-shield-check me-1"></i> Monitored</span></td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </div>

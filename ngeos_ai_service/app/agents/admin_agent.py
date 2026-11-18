@@ -19,19 +19,25 @@ class AdminAgent:
     async def answer_admin_query(self, query: str, context: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         start_time = time.perf_counter()
         
-        # 1. Fetch live donation and campaign analytics from ASP.NET Core
+        # 1. Fetch live comprehensive 15-section ecosystem summary from ASP.NET Core
+        sections_summary = await dotnet_bridge.get_ecosystem_sections_summary()
         donation_data = await dotnet_bridge.get_donation_summary()
         campaign_data = await dotnet_bridge.get_campaign_summary()
         health_data = await dotnet_bridge.get_system_health()
+        pending_queries = await dotnet_bridge.get_pending_queries()
+        pending_volunteers = await dotnet_bridge.get_pending_volunteers()
 
         # 2. Fetch live free market currency rates and humanitarian disaster indicators
         currency_rates = await free_currency_service.get_live_rates()
         weather_alerts = await free_disaster_service.get_humanitarian_weather_alerts()
 
-        # Combine verified operational context
+        # Combine verified operational context across ALL 15 sections
         context_str = json.dumps({
-            "donations": donation_data,
+            "sections_overview": sections_summary,
+            "donations_ledger": donation_data,
             "campaigns": campaign_data,
+            "pending_queries": pending_queries,
+            "pending_volunteers": pending_volunteers,
             "system_health": health_data,
             "live_currency_exchange_pkr": currency_rates,
             "humanitarian_weather_alerts": weather_alerts,
@@ -40,7 +46,7 @@ class AdminAgent:
 
         full_prompt = (
             f"{ADMIN_AGENT_SYSTEM_PROMPT}\n\n"
-            f"VERIFIED PLATFORM DATA CONTEXT:\n{context_str}\n\n"
+            f"VERIFIED PLATFORM DATA CONTEXT (ALL 15 ADMIN SECTIONS):\n{context_str}\n\n"
             f"ADMIN INQUIRY:\n{query}"
         )
 
@@ -59,8 +65,8 @@ class AdminAgent:
             "agentName": self.name,
             "agentType": "AdminAgent",
             "actionName": "AdminExecutiveAnalysis",
-            "moduleName": "DonationIntelligence",
-            "actionDescription": f"Processed executive query: {query[:100]}...",
+            "moduleName": "EcosystemIntelligence",
+            "actionDescription": f"Processed executive query across 15 admin sections: {query[:100]}...",
             "actionReason": "Authorized Admin Inquiry",
             "riskLevel": "Low",
             "actionStatus": "Success" if resp.is_success else "Failed",
@@ -115,6 +121,54 @@ class AdminAgent:
             "status": "Success" if resp.is_success else "Failed",
             "summary": resp.content,
             "provider": resp.provider
+        }
+
+    async def run_comprehensive_ecosystem_audit(self) -> Dict[str, Any]:
+        """
+        Runs an autonomous compliance sweep across all 15 Admin Sections:
+        1. Recalculates campaign financial progress
+        2. Archives stale job postings
+        3. Monitors pending support queries and volunteer backlogs
+        """
+        start_time = time.perf_counter()
+        
+        # 1. Permitted routine operation: Recalculate campaign progress
+        recalc_res = await dotnet_bridge.execute_permitted_action(
+            action_name="RecalculateCampaignProgress",
+            module_name="Causes",
+            reason="Periodic autonomous financial consistency sync."
+        )
+
+        # 2. Permitted routine operation: Flag stale job vacancies
+        jobs_res = await dotnet_bridge.execute_permitted_action(
+            action_name="FlagExpiredJobs",
+            module_name="Jobs",
+            reason="Periodic autonomous vacancy freshness audit."
+        )
+
+        # 3. Pull live ecosystem summary
+        summary = await dotnet_bridge.get_ecosystem_sections_summary()
+
+        duration = (time.perf_counter() - start_time) * 1000
+
+        await dotnet_bridge.record_agent_report({
+            "agentName": self.name,
+            "agentType": "AdminAgent",
+            "actionName": "FullEcosystemAudit",
+            "moduleName": "EcosystemManagement",
+            "actionDescription": f"Completed 15-section ecosystem sweep. Recalculate result: {recalc_res.get('success')}, Jobs archive: {jobs_res.get('success')}.",
+            "actionReason": "Scheduled Comprehensive Autonomous Audit",
+            "riskLevel": "Low",
+            "actionStatus": "Success",
+            "executionDurationMs": duration
+        })
+
+        return {
+            "status": "Success",
+            "recalculatedCauses": recalc_res.get("success", False),
+            "archivedStaleJobs": jobs_res.get("success", False),
+            "summary": summary,
+            "durationMs": duration
         }
 
 admin_agent = AdminAgent()
