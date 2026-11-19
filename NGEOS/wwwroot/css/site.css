@@ -1,4 +1,4 @@
-/* ==========================================================
+﻿/* ==========================================================
 
    NGEOS Charity & NGO Platform - Modern Design System
 
@@ -276,8 +276,7 @@ main[role="main"] {
 
    ========================================================== */
 
-.ngeos-topbar,
-.giveaid-topbar {
+.ngeos-topbar, {
 
     background: linear-gradient(135deg, #071527 0%, #0d223f 50%, #071527 100%);
 
@@ -503,8 +502,7 @@ main[role="main"] {
 
    ========================================================== */
 
-.ngeos-navbar,
-.giveaid-navbar {
+.ngeos-navbar, {
 
     background: #ffffff;
 
@@ -528,8 +526,7 @@ main[role="main"] {
 
 
 
-    .ngeos-navbar.scrolled,
-    .giveaid-navbar.scrolled {
+    .ngeos-navbar.scrolled, {
 
         background: rgba(255, 255, 255, 0.95) !important;
 
@@ -545,8 +542,7 @@ main[role="main"] {
 
     /* Navbar width adjustment */
 
-    .ngeos-navbar .container,
-    .giveaid-navbar .container {
+    .ngeos-navbar .container, {
 
         max-width: 1440px;
 
@@ -1100,8 +1096,7 @@ main[role="main"] {
 
    ========================================================== */
 
-.ngeos-hero,
-.giveaid-hero {
+.ngeos-hero, {
 
     position: relative;
 
@@ -1419,8 +1414,7 @@ main[role="main"] {
 
    ========================================================== */
 
-.ngeos-card,
-.giveaid-card {
+.ngeos-card, {
 
     background: #ffffff;
 
@@ -1444,8 +1438,7 @@ main[role="main"] {
 
 
 
-    .ngeos-card:hover,
-    .giveaid-card:hover {
+    .ngeos-card:hover, {
 
         transform: translateY(-3px);
 
@@ -1460,8 +1453,7 @@ main[role="main"] {
 /* Card tab hi poori height le jab wo column mein akela ho
 
    (Causes / NGOs list ke barabar-height cards) */
-
-.row > [class*="col"] > .giveaid-card:only-child {
+ {
 
     height: 100%;
 
@@ -1494,8 +1486,7 @@ main[role="main"] {
     }
 
 
-
-.giveaid-card:hover .card-img-wrapper img {
+:hover .card-img-wrapper img {
 
     transform: scale(1.06);
 
@@ -2447,8 +2438,7 @@ body:has(.gallery-lightbox-modal.show) .modal-backdrop.show {
 
    ========================================================== */
 
-.ngeos-footer,
-.giveaid-footer {
+.ngeos-footer, {
 
     background-color: var(--navy-dark);
 
@@ -2470,8 +2460,7 @@ body:has(.gallery-lightbox-modal.show) .modal-backdrop.show {
 
 
 
-    .ngeos-footer h5,
-    .giveaid-footer h5 {
+    .ngeos-footer h5, {
 
         color: #ffffff;
 
@@ -2489,8 +2478,7 @@ body:has(.gallery-lightbox-modal.show) .modal-backdrop.show {
 
 
 
-        .ngeos-footer h5::after,
-        .giveaid-footer h5::after {
+        .ngeos-footer h5::after, {
 
             content: '';
 
@@ -2576,8 +2564,7 @@ body:has(.gallery-lightbox-modal.show) .modal-backdrop.show {
 
 
 
-.ngeos-footer .social-icon-link,
-.giveaid-footer .social-icon-link {
+.ngeos-footer .social-icon-link, .social-icon-link {
 
     width: 34px;
 
@@ -2591,8 +2578,7 @@ body:has(.gallery-lightbox-modal.show) .modal-backdrop.show {
 
 
 
-    .ngeos-footer .social-icon-link:hover,
-    .giveaid-footer .social-icon-link:hover {
+    .ngeos-footer .social-icon-link:hover, {
 
         background: var(--primary-orange);
 
@@ -2698,8 +2684,7 @@ body:has(.gallery-lightbox-modal.show) .modal-backdrop.show {
 
 
 
-    .sticky-sidebar .ngeos-card,
-    .sticky-sidebar .giveaid-card {
+    .sticky-sidebar .ngeos-card, {
 
         height: auto;
 
@@ -2711,8 +2696,7 @@ body:has(.gallery-lightbox-modal.show) .modal-backdrop.show {
 
 
 
-        .sticky-sidebar .ngeos-card:hover,
-        .sticky-sidebar .giveaid-card:hover {
+        .sticky-sidebar .ngeos-card:hover, {
 
             transform: none; /* sticky card hover par uchhalna band */
 
@@ -2974,8 +2958,7 @@ body:has(.gallery-lightbox-modal.show) .modal-backdrop.show {
 
 @media (max-width: 1199.98px) {
 
-    .ngeos-navbar .navbar-collapse,
-    .giveaid-navbar .navbar-collapse {
+    .ngeos-navbar .navbar-collapse, {
 
         background: #ffffff;
 
@@ -3247,8 +3230,7 @@ body:has(.gallery-lightbox-modal.show) .modal-backdrop.show {
 
 
 
-        .sticky-sidebar .ngeos-card,
-        .sticky-sidebar .giveaid-card {
+        .sticky-sidebar .ngeos-card, {
 
             max-height: none;
 
@@ -3440,15 +3422,7 @@ body:not(.admin-body) main[role="main"] {
 
 }
 
-@keyframes giveaidPageEntrance {
 
-    0% {
-
-        opacity: 0.25;
-
-        transform: translateY(8px);
-
-    }
 
     100% {
 
@@ -4058,13 +4032,10 @@ body.admin-body .admin-side {
     footer,
 
     .ngeos-topbar,
-    .giveaid-topbar,
 
     .ngeos-navbar,
-    .giveaid-navbar,
 
     footer.ngeos-footer,
-    footer.giveaid-footer,
 
     #backToTopBtn,
 
@@ -4148,10 +4119,8 @@ body.modal-open {
 
 
 
-.ngeos-navbar,
-.giveaid-navbar,
-.ngeos-topbar,
-.giveaid-topbar {
+.ngeos-navbar,,
+.ngeos-topbar, {
 
     padding-right: 0 !important;
 
@@ -4282,7 +4251,6 @@ body.admin-body .admin-main {
 
 
 body.admin-body .admin-main .ngeos-card,
-body.admin-body .admin-main .giveaid-card,
 
 body.admin-body .admin-main .card {
 

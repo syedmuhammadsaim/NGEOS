@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // 1. Sticky Navbar Shadow Enhancement on Scroll
-    const navbar = document.querySelector('.ngeos-navbar, .giveaid-navbar');
+    const navbar = document.querySelector('.ngeos-navbar');
     window.addEventListener('scroll', function () {
         if (window.scrollY > 30) {
             navbar.classList.add('scrolled');
@@ -227,7 +227,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // PUBLIC SITE: Auto-decorate sections & cards with data-aos
         try {
             // 1. Hero / Header Banners
-            document.querySelectorAll('.ngeos-hero, .giveaid-hero, .about-hero, main > div:first-child[class*="py-"], .page-header').forEach(hero => {
+            document.querySelectorAll('.ngeos-hero, .about-hero, main > div:first-child[class*="py-"], .page-header').forEach(hero => {
                 if (!hero.hasAttribute('data-aos')) {
                     hero.setAttribute('data-aos', 'fade-down');
                 }
@@ -254,7 +254,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // 4. Cards in rows & grids (with gentle staggered delay)
             document.querySelectorAll('.row').forEach(row => {
-                const cards = row.querySelectorAll(':scope > div > .ngeos-card, :scope > div > .giveaid-card, :scope > div > .card, :scope > div > .action-card, :scope > div > .programme-card, :scope > div > .gallery-card, :scope > div > .team-card');
+                const cards = row.querySelectorAll(':scope > div > .ngeos-card, :scope > div > .card, :scope > div > .action-card, :scope > div > .programme-card, :scope > div > .gallery-card, :scope > div > .team-card');
                 cards.forEach((card, idx) => {
                     if (!card.hasAttribute('data-aos')) {
                         card.setAttribute('data-aos', 'fade-up');
@@ -273,7 +273,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
 
             // 6. About content or single main article cards
-            document.querySelectorAll('.about-content-card, .ngeos-card.p-4:not(.row *), .giveaid-card.p-4:not(.row *)').forEach(card => {
+            document.querySelectorAll('.about-content-card, .ngeos-card.p-4:not(.row *)').forEach(card => {
                 if (!card.hasAttribute('data-aos')) {
                     card.setAttribute('data-aos', 'fade-up');
                 }
@@ -851,8 +851,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Ensure English default and clean up any past language overrides
     try {
-        localStorage.removeItem('giveaid_site_lang');
-        localStorage.removeItem('giveaid_zakat_lang');
+        localStorage.removeItem('ngeos_site_lang');
+        localStorage.removeItem('ngeos_zakat_lang');
         document.documentElement.lang = 'en';
         document.documentElement.dir = 'ltr';
         document.body.classList.remove('global-urdu-mode');
