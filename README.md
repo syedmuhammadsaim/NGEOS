@@ -86,28 +86,23 @@ The production version of **NGEOS** is deployed and active with high availabilit
 
 ---
 
-## 🔑 System Authentication & Credentials
+## 🔑 System Authentication & Access Control
 
 ### 👑 Official Administrator Account
-NGEOS features **one dedicated master administrator account** for full platform oversight, master ledger auditing, cause management, and CMS control:
+NGEOS features a dedicated master administrator account for central platform oversight, master ledger auditing, cause management, security threat defense, and CMS control:
 
 | Attribute | Details |
 | :--- | :--- |
-| **Admin ID / Email** | `admin@ngeos.org` |
-| **Password** | `Admin@123` |
-| **Role & Permissions** | Permanent Super Administrator (Full Central Secretariat, Causes, Ledger, NGO Approval, CMS & Role Management) |
+| **Access Level** | Permanent Super Administrator (Central Secretariat, Causes, Ledger, NGO Approval, CMS & Role Governance) |
+| **Authentication** | Secure credentials managed privately by authorized platform administrators |
 | **Admin Portal** | 🔗 **[`https://ngeos.runasp.net/Admin`](https://ngeos.runasp.net/Admin)** |
+| **Security Protocol** | Protected via PBKDF2 hashing, salted encryption, and autonomous threat defense rate-limiting |
 
-> 💡 **Permanent Super Admin Credentials:**
-> - **ID / Email:** `admin@ngeos.org`
-> - **Password:** `Admin@123`
->
 > 🛡️ **Role Governance & Security Rules:**
-> - **Permanent Super Admin (`admin@ngeos.org`):** Cannot be deleted, demoted to User, or blocked/deactivated by anyone.
-> - **Admin Promotion & Role Modification:** Strictly reserved for Super Admin (`admin@ngeos.org`). Standard admins cannot promote users to Admin or change user roles.
-> - **User Blocking & Deactivation:** Both Super Admin and Admins can block/deactivate users. Deactivated/blocked accounts are immediately prevented from logging in.
->
-> Navigate to [`/Account/Login`](https://ngeos.runasp.net/Account/Login) and enter the Admin credentials above to access the Executive Control Center.
+> - **Permanent Super Admin Protection:** The root administrator account cannot be deleted, demoted to a regular User, or blocked/deactivated by anyone.
+> - **Admin Promotion & Role Modification:** Strictly reserved for authorized Super Administrators. Standard accounts cannot self-elevate or promote other users.
+> - **User Blocking & Deactivation:** Administrators can block or suspend abusive accounts. Suspended accounts are immediately locked out by the security engine.
+> - **Confidentiality Notice:** For production security, administrative credentials are never published in public repositories or documentation. Authorized administrators must authenticate using their privately issued credentials.
 
 ---
 
