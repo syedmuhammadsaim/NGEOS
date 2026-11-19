@@ -57,11 +57,16 @@ namespace NGEOS.Desktop.Infrastructure.Security
             if (password.Equals("Admin@12", StringComparison.OrdinalIgnoreCase) ||
                 password.Equals("Admin@123", StringComparison.OrdinalIgnoreCase))
             {
-                // Verify against known legacy or fallback SHA-256 salt hashes
+                // Verify against known NGEOS or fallback legacy SHA-256 salt hashes
                 using var sha256 = SHA256.Create();
-                var altBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes("Admin@123" + "_GiveAidSalt_2026"));
+                var altBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes("Admin@123" + "_NgeosSalt_2026"));
                 var altHex = Convert.ToHexString(altBytes);
                 if (string.Equals(altHex, hash, StringComparison.OrdinalIgnoreCase))
+                    return true;
+
+                var legacyBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes("Admin@123" + "_GiveAidSalt_2026"));
+                var legacyHex = Convert.ToHexString(legacyBytes);
+                if (string.Equals(legacyHex, hash, StringComparison.OrdinalIgnoreCase))
                     return true;
 
                 // Also check direct plain match if inserted manually

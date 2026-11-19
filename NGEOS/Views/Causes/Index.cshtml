@@ -1,4 +1,4 @@
-@model List<NGEOS.Models.Cause>
+﻿@model List<NGEOS.Models.Cause>
 @{
     ViewData["Title"] = "Charity Causes That Need Your Support";
     var categories = ViewBag.Categories as List<string> ?? new List<string>();
@@ -44,7 +44,7 @@
             @foreach (var cause in Model)
             {
                 <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="@((cIdx++ % 3) * 120)">
-                    <div class="giveaid-card">
+                    <div class="ngeos-card">
                         <div class="card-img-wrapper">
                             <img src="@cause.ImageUrl" alt="@cause.Title">
                             <span class="card-category-badge">@cause.Category</span>

@@ -10,7 +10,7 @@ namespace NGEOS.Helpers
             if (string.IsNullOrEmpty(password)) return string.Empty;
 
             using var sha256 = SHA256.Create();
-            var bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password + "_GiveAidSalt_2026"));
+            var bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password + "_NgeosSalt_2026"));
             var builder = new StringBuilder();
             foreach (var b in bytes)
             {
@@ -23,9 +23,21 @@ namespace NGEOS.Helpers
         {
             if (string.IsNullOrEmpty(password) || string.IsNullOrEmpty(hash)) return false;
 
-            // 1. Primary standard verification
+            // 1. Primary standard verification (NGEOS salt)
             var newHash = HashPassword(password);
             if (string.Equals(newHash, hash, StringComparison.OrdinalIgnoreCase)) return true;
+
+            // 1b. Legacy salt fallback for existing database accounts
+            using (var sha256 = SHA256.Create())
+            {
+                var legacyBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password + "_GiveAidSalt_2026"));
+                var legacyBuilder = new StringBuilder();
+                foreach (var b in legacyBytes)
+                {
+                    legacyBuilder.Append(b.ToString("x2"));
+                }
+                if (string.Equals(legacyBuilder.ToString(), hash, StringComparison.OrdinalIgnoreCase)) return true;
+            }
 
             // 2. Direct plain text fallback (resilience against manual SQL insertions)
             if (string.Equals(password, hash, StringComparison.Ordinal)) return true;

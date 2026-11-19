@@ -36,7 +36,7 @@ namespace NGEOS.Services.Ai.Grounding
 
                 sb.AppendLine("=== [NGEOS VERIFIED LIVE DATABASE CONTEXT] ===");
                 sb.AppendLine($"System Timestamp: {DateTime.UtcNow:yyyy-MM-dd HH:mm:ss} UTC");
-                sb.AppendLine("Platform: NGEOS (Next Generation NGO Management & Donation Platform / Give-AID)");
+                sb.AppendLine("Platform: NGEOS (Next Generation NGO Management & Donation Platform)");
                 sb.AppendLine("Headquarters: 100 Edhi Street, Saddar, Karachi, Pakistan | Phone: +92 21 3456 7890 | Email: support@ngeos.org");
 
                 // 1. Core Platform Verified Totals (Always included)

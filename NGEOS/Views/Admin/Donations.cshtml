@@ -1,4 +1,4 @@
-@model List<NGEOS.Models.Donation>
+﻿@model List<NGEOS.Models.Donation>
 @{
     ViewData["Title"] = "Master Donation Ledger - Admin";
     Layout = "_AdminLayout";
@@ -21,7 +21,7 @@
 </div>
 
 <!-- Multi-Payment Methods Health & Connectivity Banner -->
-<div class="giveaid-card p-3 border mb-4 bg-light">
+<div class="ngeos-card p-3 border mb-4 bg-light">
     <div class="d-flex justify-content-between align-items-center mb-2">
         <h6 class="fw-bold mb-0 text-dark">
             Payment Methods Hub Status
@@ -87,7 +87,7 @@
 <div class="row g-3 mb-4">
     <!-- Total Verified Funding -->
     <div class="col-sm-6 col-xl-3">
-        <div class="giveaid-card p-3 border">
+        <div class="ngeos-card p-3 border">
             <span class="text-muted small d-block mb-1">Total Verified Funding</span>
             <h4 class="fw-bold text-dark mb-0">Rs @totalAmount.ToString("N2")</h4>
             <small class="text-muted">Audited Ledger</small>
@@ -96,7 +96,7 @@
 
     <!-- Zakat Collected -->
     <div class="col-sm-6 col-xl-3">
-        <div class="giveaid-card p-3 border">
+        <div class="ngeos-card p-3 border">
             <div class="d-flex justify-content-between align-items-start">
                 <div>
                     <span class="text-dark small d-block mb-1 fw-semibold">Zakat Funds</span>
@@ -110,7 +110,7 @@
 
     <!-- General Donations -->
     <div class="col-sm-6 col-xl-3">
-        <div class="giveaid-card p-3 border">
+        <div class="ngeos-card p-3 border">
             <span class="text-muted small d-block mb-1">General Sadaqah &amp; Gifts</span>
             <h4 class="fw-bold text-dark mb-0">Rs @(((decimal)(ViewBag.TotalGeneralAmount ?? 0m)).ToString("N2"))</h4>
             <small class="text-muted">@ViewBag.GeneralCount General Donations</small>
@@ -119,7 +119,7 @@
 
     <!-- Automated Receipt Delivery -->
     <div class="col-sm-6 col-xl-3">
-        <div class="giveaid-card p-3 border">
+        <div class="ngeos-card p-3 border">
             <div class="d-flex justify-content-between align-items-start">
                 <div>
                     <span class="text-dark small d-block mb-1 fw-semibold">Receipt Emails Sent</span>
@@ -133,7 +133,7 @@
 </div>
 
 <!-- Gateway-wise Breakdown Table -->
-<div class="giveaid-card p-4 mb-4">
+<div class="ngeos-card p-4 mb-4">
     <h6 class="fw-bold mb-3 text-dark border-bottom pb-2">Payment Gateway Breakdown</h6>
     <div class="table-responsive">
         <table class="table table-sm table-hover align-middle mb-0">
@@ -193,7 +193,7 @@
 </div>
 
 <!-- Ledger Card with Filter Pills & Live Search -->
-<div class="giveaid-card p-4">
+<div class="ngeos-card p-4">
     <!-- Filter Navigation Tabs & Live Search -->
     <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3 border-bottom pb-3">
         <div class="btn-group btn-group-sm" role="group">

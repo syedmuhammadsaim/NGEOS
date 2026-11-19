@@ -1,4 +1,4 @@
-@model List<NGEOS.Models.Donation>
+﻿@model List<NGEOS.Models.Donation>
 @{
     ViewData["Title"] = "My Donation History - NGEOS";
 }
@@ -34,7 +34,7 @@
         <a asp-controller="Donate" asp-action="Index" class="btn btn-orange btn-sm rounded-pill px-4 shadow-sm"><i class="bi bi-heart-fill me-1"></i> Donate Again</a>
     </div>
 
-    <div class="giveaid-card p-4">
+    <div class="ngeos-card p-4">
         @if (Model.Any())
         {
             <div class="table-responsive">

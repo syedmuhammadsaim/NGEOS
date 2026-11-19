@@ -1,4 +1,4 @@
-@model List<NGEOS.Models.NGO>
+﻿@model List<NGEOS.Models.NGO>
 @{
     ViewData["Title"] = "Our Partner NGOs";
     var focusAreas = ViewBag.FocusAreas as List<string> ?? new List<string>();
@@ -32,7 +32,7 @@
         @foreach (var ngo in Model)
         {
             <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="@((nIdx++ % 3) * 120)">
-                <div class="giveaid-card p-4">
+                <div class="ngeos-card p-4">
                     <div class="d-flex align-items-center gap-3 mb-3">
                         <img src="@ngo.LogoUrl" alt="@ngo.Name" class="rounded-3 shadow-sm" style="width: 64px; height: 64px; object-fit: cover;">
                         <div>

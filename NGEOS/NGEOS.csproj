@@ -4,7 +4,7 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>giveaid-ngeos-user-secrets-2026</UserSecretsId>
+    <UserSecretsId>ngeos-user-secrets-2026</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

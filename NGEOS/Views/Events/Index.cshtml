@@ -1,4 +1,4 @@
-@model List<NGEOS.Models.Event>
+﻿@model List<NGEOS.Models.Event>
 @{
     ViewData["Title"] = "Charity Events, Galas & Walkathons";
     var pastEvents = ViewBag.PastEvents as List<NGEOS.Models.Event> ?? new List<NGEOS.Models.Event>();
@@ -22,7 +22,7 @@
         @foreach (var ev in Model)
         {
             <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="@((eIdx++ % 3) * 120)">
-                <div class="giveaid-card">
+                <div class="ngeos-card">
                     <div class="card-img-wrapper">
                         <img src="@ev.ImageUrl" alt="@ev.Title">
                         <span class="card-category-badge bg-orange text-white"><i class="bi bi-calendar-check me-1"></i> @ev.EventDate.ToString("MMM dd, yyyy")</span>

@@ -1,4 +1,4 @@
-@model NGEOS.Models.NGO
+﻿@model NGEOS.Models.NGO
 @{
     ViewData["Title"] = Model.Name + " - Partner NGO Profile";
 }
@@ -19,7 +19,7 @@
     <div class="row g-5">
         <!-- Main Content -->
         <div class="col-lg-8">
-            <div class="giveaid-card p-4 p-md-5 mb-5">
+            <div class="ngeos-card p-4 p-md-5 mb-5">
                 <h3 class="fw-bold mb-3">About @Model.Name</h3>
                 <p class="lead text-secondary mb-4">@Model.ShortDescription</p>
                 <div class="text-secondary lh-lg mb-4" style="font-size: 1.05rem;">
@@ -35,7 +35,7 @@
                     @foreach (var cause in Model.Causes)
                     {
                         <div class="col-md-6">
-                            <div class="giveaid-card">
+                            <div class="ngeos-card">
                                 <div class="card-img-wrapper" style="height: 180px;">
                                     <img src="@cause.ImageUrl" alt="@cause.Title">
                                     <span class="card-category-badge">@cause.Category</span>
@@ -67,7 +67,7 @@
                     @foreach (var prog in Model.Programmes)
                     {
                         <div class="col-md-6">
-                            <div class="giveaid-card">
+                            <div class="ngeos-card">
                                 <div class="card-img-wrapper" style="height: 180px;">
                                     <img src="@prog.ImageUrl" alt="@prog.Title">
                                     <span class="card-category-badge">@prog.Category</span>
@@ -88,7 +88,7 @@
 
         <!-- Sidebar Contact & Verification Info -->
         <div class="col-lg-4">
-            <div class="giveaid-card p-4 position-sticky" style="top: 90px;">
+            <div class="ngeos-card p-4 position-sticky" style="top: 90px;">
                 <h5 class="fw-bold mb-3">Accreditation Details</h5>
                 <ul class="list-unstyled text-muted small mb-4">
                     <li class="mb-2"><strong class="text-dark">Registration No:</strong> @Model.RegistrationNumber</li>

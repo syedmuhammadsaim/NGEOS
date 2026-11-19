@@ -251,7 +251,7 @@ namespace NGEOS.Services.Ai.Orchestration
         private string BuildSystemPrompt(string liveContext, string? userRole)
         {
             var sb = new StringBuilder();
-            sb.AppendLine("You are the official AI Assistant for NGEOS (Next Generation NGO Management & Donation Platform, also branded as Give-AID).");
+            sb.AppendLine("You are the official AI Assistant for NGEOS (Next Generation NGO Management & Donation Platform).");
             sb.AppendLine("Your mission is to provide accurate, helpful, and transparent guidance to donors, volunteers, NGO representatives, and visitors.");
 
             if (!string.IsNullOrWhiteSpace(userRole))

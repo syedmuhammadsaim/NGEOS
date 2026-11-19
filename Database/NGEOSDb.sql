@@ -1,4 +1,4 @@
--- ============================================================================
+﻿-- ============================================================================
 -- NGEOS - Official Complete SQL Server Database Script
 -- Generated: 2026-11-08 03:29:11
 -- Includes all 19 tables, indexes, foreign keys, and complete seed data
@@ -588,28 +588,28 @@ GO
 SET IDENTITY_INSERT [Users] ON;
 GO
 IF NOT EXISTS (SELECT 1 FROM [Users] WHERE [Id] = 1)
-    INSERT INTO [Users] ([Id], [FullName], [Email], [PasswordHash], [Phone], [Address], [Profession], [Organization], [Role], [ProfileImageUrl], [IsActive], [CreatedAt], [GoogleId]) VALUES (1, N'Give-AID Administrator', N'admin@giveaid.org', N'18749713f33bf217f1bc9b30fabb4f3454bcc736bd10ec6d02f872a1cd7034b6', N' +92 (300) 123-4567', N' 100 Edhi Street, Saddar, Karachi, Pakistan', N'NGO Managing Director', N'Give-AID Central Secretariat', N'User', N'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&auto=format&fit=crop&q=80', 1, N'2026-10-24 18:16:31.746', NULL);
+    INSERT INTO [Users] ([Id], [FullName], [Email], [PasswordHash], [Phone], [Address], [Profession], [Organization], [Role], [ProfileImageUrl], [IsActive], [CreatedAt], [GoogleId]) VALUES (1, N'NGEOS Administrator', N'admin@ngeos.org', N'18749713f33bf217f1bc9b30fabb4f3454bcc736bd10ec6d02f872a1cd7034b6', N' +92 (300) 123-4567', N' 100 Edhi Street, Saddar, Karachi, Pakistan', N'NGO Managing Director', N'NGEOS Central Secretariat', N'User', N'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&auto=format&fit=crop&q=80', 1, N'2026-10-24 18:16:31.746', NULL);
 GO
 IF NOT EXISTS (SELECT 1 FROM [Users] WHERE [Id] = 2)
     INSERT INTO [Users] ([Id], [FullName], [Email], [PasswordHash], [Phone], [Address], [Profession], [Organization], [Role], [ProfileImageUrl], [IsActive], [CreatedAt], [GoogleId]) VALUES (2, N'NGEOS Administrator', N'syedmuhammadsaim.contact@gmail.com', N'246aba5deef8b6e7c474ee2bc8491f08fcc8de12073b8d9f97249f805d056307', N'33378345632', N'karachi', N'Software', N'Atech', N'User', N'/uploads/profiles/user_2_87b39c008e214745b7b5d15cfe738379.jpg', 1, N'2026-10-24 19:08:38.023', N'103699666188542104980');
 GO
 IF NOT EXISTS (SELECT 1 FROM [Users] WHERE [Id] = 3)
-    INSERT INTO [Users] ([Id], [FullName], [Email], [PasswordHash], [Phone], [Address], [Profession], [Organization], [Role], [ProfileImageUrl], [IsActive], [CreatedAt], [GoogleId]) VALUES (3, N'SYED MUHAMMAD SAIM', N'syedmuhammadsaim.busniess@gmail.com', N'd6edcf55e855a4783116dc904e695e3f4a36ce26497fdb11d1279b28de4bb0c6', N'33378345632', N'azambasti, karachi', N'Software', N'GIVE-AID', N'User', NULL, 1, N'2026-10-25 09:34:32.638', NULL);
+    INSERT INTO [Users] ([Id], [FullName], [Email], [PasswordHash], [Phone], [Address], [Profession], [Organization], [Role], [ProfileImageUrl], [IsActive], [CreatedAt], [GoogleId]) VALUES (3, N'SYED MUHAMMAD SAIM', N'syedmuhammadsaim.busniess@gmail.com', N'd6edcf55e855a4783116dc904e695e3f4a36ce26497fdb11d1279b28de4bb0c6', N'33378345632', N'azambasti, karachi', N'Software', N'NGEOS', N'User', NULL, 1, N'2026-10-25 09:34:32.638', NULL);
 GO
 IF NOT EXISTS (SELECT 1 FROM [Users] WHERE [Id] = 4)
-    INSERT INTO [Users] ([Id], [FullName], [Email], [PasswordHash], [Phone], [Address], [Profession], [Organization], [Role], [ProfileImageUrl], [IsActive], [CreatedAt], [GoogleId]) VALUES (4, N'SYED MUHAMMAD SAIM', N'syedmuhammadsaim.business@gmail.com', N'73e055fb0b58ce5361e5e1671d2c7fda1985c5446c825a6e7788276f23a6b242', N'+92 1212121212', N'azambasti, karachi', N'Software', N'GIVE-AID', N'User', N'/uploads/profiles/user_4_bc485d8424954b0ea1f9553bc0e2f283.jpg', 1, N'2026-10-27 15:00:18.422', NULL);
+    INSERT INTO [Users] ([Id], [FullName], [Email], [PasswordHash], [Phone], [Address], [Profession], [Organization], [Role], [ProfileImageUrl], [IsActive], [CreatedAt], [GoogleId]) VALUES (4, N'SYED MUHAMMAD SAIM', N'syedmuhammadsaim.business@gmail.com', N'73e055fb0b58ce5361e5e1671d2c7fda1985c5446c825a6e7788276f23a6b242', N'+92 1212121212', N'azambasti, karachi', N'Software', N'NGEOS', N'User', N'/uploads/profiles/user_4_bc485d8424954b0ea1f9553bc0e2f283.jpg', 1, N'2026-10-27 15:00:18.422', NULL);
 GO
 IF NOT EXISTS (SELECT 1 FROM [Users] WHERE [Id] = 5)
     INSERT INTO [Users] ([Id], [FullName], [Email], [PasswordHash], [Phone], [Address], [Profession], [Organization], [Role], [ProfileImageUrl], [IsActive], [CreatedAt], [GoogleId]) VALUES (5, N'Abdullah Bukhari', N'abdull4h5599@gmail.com', N'5a3772de899d6a64f3323efd401459d407ece58eba82818b4d5fe2f4c253c407', NULL, NULL, N'Software', N'Atech', N'User', N'/uploads/profiles/user_5_a253aebd932447af8f577e156ac21d4d.jpg', 1, N'2026-10-27 18:45:54.247', N'103784599191402378377');
 GO
 IF NOT EXISTS (SELECT 1 FROM [Users] WHERE [Id] = 6)
-    INSERT INTO [Users] ([Id], [FullName], [Email], [PasswordHash], [Phone], [Address], [Profession], [Organization], [Role], [ProfileImageUrl], [IsActive], [CreatedAt], [GoogleId]) VALUES (6, N'SYED MUHAMMAD SAIM', N'admin@cinevora.local', N'2ac1b5e3749130ac4c751d888e374090ea7af1786d21716e0e9419b6f7dabce8', N'+923378034564', N'azambasti, karachi', N'Software', N'GIVE-AID', N'User', NULL, 1, N'2026-11-01 19:29:40.737', NULL);
+    INSERT INTO [Users] ([Id], [FullName], [Email], [PasswordHash], [Phone], [Address], [Profession], [Organization], [Role], [ProfileImageUrl], [IsActive], [CreatedAt], [GoogleId]) VALUES (6, N'SYED MUHAMMAD SAIM', N'admin@cinevora.local', N'2ac1b5e3749130ac4c751d888e374090ea7af1786d21716e0e9419b6f7dabce8', N'+923378034564', N'azambasti, karachi', N'Software', N'NGEOS', N'User', NULL, 1, N'2026-11-01 19:29:40.737', NULL);
 GO
 IF NOT EXISTS (SELECT 1 FROM [Users] WHERE [Id] = 7)
     INSERT INTO [Users] ([Id], [FullName], [Email], [PasswordHash], [Phone], [Address], [Profession], [Organization], [Role], [ProfileImageUrl], [IsActive], [CreatedAt], [GoogleId]) VALUES (7, N'NGEOS Administrator', N'ngeos@gmail.com', N'18749713f33bf217f1bc9b30fabb4f3454bcc736bd10ec6d02f872a1cd7034b6', NULL, NULL, NULL, NULL, N'Admin', NULL, 1, N'2026-11-03 06:45:26.370', NULL);
 GO
 IF NOT EXISTS (SELECT 1 FROM [Users] WHERE [Id] = 8)
-    INSERT INTO [Users] ([Id], [FullName], [Email], [PasswordHash], [Phone], [Address], [Profession], [Organization], [Role], [ProfileImageUrl], [IsActive], [CreatedAt], [GoogleId]) VALUES (8, N'saim', N'saim1@gmail.com', N'd6edcf55e855a4783116dc904e695e3f4a36ce26497fdb11d1279b28de4bb0c6', N'+92 2222222222', N'karachi', N'Software', N'GIVE-AID', N'User', NULL, 1, N'2026-11-05 15:28:39.921', NULL);
+    INSERT INTO [Users] ([Id], [FullName], [Email], [PasswordHash], [Phone], [Address], [Profession], [Organization], [Role], [ProfileImageUrl], [IsActive], [CreatedAt], [GoogleId]) VALUES (8, N'saim', N'saim1@gmail.com', N'd6edcf55e855a4783116dc904e695e3f4a36ce26497fdb11d1279b28de4bb0c6', N'+92 2222222222', N'karachi', N'Software', N'NGEOS', N'User', NULL, 1, N'2026-11-05 15:28:39.921', NULL);
 GO
 IF NOT EXISTS (SELECT 1 FROM [Users] WHERE [Id] = 9)
     INSERT INTO [Users] ([Id], [FullName], [Email], [PasswordHash], [Phone], [Address], [Profession], [Organization], [Role], [ProfileImageUrl], [IsActive], [CreatedAt], [GoogleId]) VALUES (9, N'NGEOS Administrator', N'admin@ngeos.org', N'18749713f33bf217f1bc9b30fabb4f3454bcc736bd10ec6d02f872a1cd7034b6', N'+92 300 1234567', NULL, N'System Director', N'NGEOS Global Alliance', N'Admin', NULL, 1, N'2026-11-07 15:26:42.320', NULL);
@@ -623,7 +623,7 @@ GO
 IF NOT EXISTS (SELECT 1 FROM [AboutPages] WHERE [Id] = 1)
     INSERT INTO [AboutPages] ([Id], [Slug], [Title], [Subtitle], [ContentHtml], [BannerImageUrl], [FeaturedImageUrl], [LastUpdated]) VALUES (1, N'what-we-do', N'What We Do', N'Transforming Vulnerable Communities Through Sustainable Humanitarian Aid', N'
                             <h3>Empowering Lives Across Every Sector of Need</h3>
-                            <p class=''lead''>Give-AID serves as a unified umbrella platform connecting verified non-governmental organizations with compassionate global citizens and corporate donors.</p>
+                            <p class=''lead''>NGEOS serves as a unified umbrella platform connecting verified non-governmental organizations with compassionate global citizens and corporate donors.</p>
                             <div class=''row g-4 my-4''>
                                 <div class=''col-md-6''>
                                     <div class=''p-3 bg-light rounded-3 border-start border-4 border-warning''>
@@ -650,7 +650,7 @@ IF NOT EXISTS (SELECT 1 FROM [AboutPages] WHERE [Id] = 1)
                                     </div>
                                 </div>
                             </div>
-                            <p>Through stringent due diligence, 100% transparency in fund allocation, and real-time transaction tracking, Give-AID ensures every single dollar reaches the individuals who need it most.</p>
+                            <p>Through stringent due diligence, 100% transparency in fund allocation, and real-time transaction tracking, NGEOS ensures every single dollar reaches the individuals who need it most.</p>
                         ', N'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=1200&auto=format&fit=crop&q=80', NULL, N'2026-10-24 18:16:36.766');
 GO
 IF NOT EXISTS (SELECT 1 FROM [AboutPages] WHERE [Id] = 2)
@@ -670,7 +670,7 @@ IF NOT EXISTS (SELECT 1 FROM [AboutPages] WHERE [Id] = 2)
 GO
 IF NOT EXISTS (SELECT 1 FROM [AboutPages] WHERE [Id] = 3)
     INSERT INTO [AboutPages] ([Id], [Slug], [Title], [Subtitle], [ContentHtml], [BannerImageUrl], [FeaturedImageUrl], [LastUpdated]) VALUES (3, N'our-team', N'Our Team', N'Passionate Humanitarians, Experienced Leaders, and Dedicated Field Directors', N'
-                            <h3>The People Behind Give-AID</h3>
+                            <h3>The People Behind NGEOS</h3>
                             <p class=''lead''>Our interdisciplinary team brings decades of combined experience across international relief, healthcare logistics, education management, and humanitarian governance.</p>
                             <p>We work tirelessly across our central secretariat and field partner hubs to ensure that all welfare programmes are executed with the highest operational excellence and ethical integrity.</p>
                         ', N'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200&auto=format&fit=crop&q=80', NULL, N'2026-10-24 18:16:36.767');
@@ -678,9 +678,9 @@ GO
 IF NOT EXISTS (SELECT 1 FROM [AboutPages] WHERE [Id] = 4)
     INSERT INTO [AboutPages] ([Id], [Slug], [Title], [Subtitle], [ContentHtml], [BannerImageUrl], [FeaturedImageUrl], [LastUpdated]) VALUES (4, N'career-with-us', N'Career With Us', N'Turn Your Passion for Social Justice into a Fulfilling Career', N'
                             <h3>Join Our Mission-Driven Organization</h3>
-                            <p class=''lead''>At Give-AID, we believe that the best work happens when passionate, skilled individuals come together to solve some of the world''s most pressing challenges.</p>
+                            <p class=''lead''>At NGEOS, we believe that the best work happens when passionate, skilled individuals come together to solve some of the world''s most pressing challenges.</p>
                             <p>We offer competitive compensation, comprehensive health benefits, flexible remote-friendly work environments, and the unbeatable satisfaction of seeing the direct human impact of your daily efforts.</p>
-                            <h4 class=''mt-4''>Why Work With Give-AID?</h4>
+                            <h4 class=''mt-4''>Why Work With NGEOS?</h4>
                             <div class=''row g-3 my-2''>
                                 <div class=''col-md-4''><div class=''p-3 bg-light rounded text-center''><h6>Impact-First Culture</h6><p class=''small text-muted mb-0''>Make a tangible difference in thousands of lives every day.</p></div></div>
                                 <div class=''col-md-4''><div class=''p-3 bg-light rounded text-center''><h6>Growth & Mentorship</h6><p class=''small text-muted mb-0''>Continuous professional development and leadership coaching.</p></div></div>
@@ -691,7 +691,7 @@ GO
 IF NOT EXISTS (SELECT 1 FROM [AboutPages] WHERE [Id] = 5)
     INSERT INTO [AboutPages] ([Id], [Slug], [Title], [Subtitle], [ContentHtml], [BannerImageUrl], [FeaturedImageUrl], [LastUpdated]) VALUES (5, N'our-achievements', N'Our Achievements', N'Milestones, Lives Impacted & Global Humanitarian Recognition', N'
                             <h3>A Decade of Transformational Humanitarian Impact</h3>
-                            <p class=''lead''>Since our inception, Give-AID has mobilized millions of dollars in philanthropic funding to change lives across 45 communities worldwide.</p>
+                            <p class=''lead''>Since our inception, NGEOS has mobilized millions of dollars in philanthropic funding to change lives across 45 communities worldwide.</p>
                             <div class=''row g-4 my-4 text-center''>
                                 <div class=''col-6 col-md-3''><div class=''p-4 bg-light rounded-3 shadow-sm''><h2 class=''text-warning fw-bold mb-1''>50K+</h2><p class=''text-muted small mb-0''>Lives Directly Uplifted</p></div></div>
                                 <div class=''col-6 col-md-3''><div class=''p-4 bg-light rounded-3 shadow-sm''><h2 class=''text-primary fw-bold mb-1''>$4.2M</h2><p class=''text-muted small mb-0''>Total Funds Mobilized</p></div></div>
@@ -703,24 +703,24 @@ IF NOT EXISTS (SELECT 1 FROM [AboutPages] WHERE [Id] = 5)
                                 <li><strong>2021:</strong> Launched the Rural Smart Classroom Initiative, equipping 50 schools with solar power.</li>
                                 <li><strong>2023:</strong> Awarded the International Humanitarian Excellence Citation for fast medical emergency deployments.</li>
                                 <li><strong>2025:</strong> Cross-funded over 120 custom prosthetic limbs for disabled youth in underserved regions.</li>
-                                <li><strong>2026:</strong> Expanded Give-AID unified digital donation portal with real-time NGO transparency.</li>
+                                <li><strong>2026:</strong> Expanded NGEOS unified digital donation portal with real-time NGO transparency.</li>
                             </ul>
                         ', N'https://images.unsplash.com/photo-1511578314322-379afb476865?w=1200&auto=format&fit=crop&q=80', NULL, N'2026-10-24 18:16:36.767');
 GO
 IF NOT EXISTS (SELECT 1 FROM [AboutPages] WHERE [Id] = 6)
     INSERT INTO [AboutPages] ([Id], [Slug], [Title], [Subtitle], [ContentHtml], [BannerImageUrl], [FeaturedImageUrl], [LastUpdated]) VALUES (6, N'our-supporters', N'Our Supporters', N'Honoring the Generous Corporate Donors, Philanthropic Foundations & Allies', N'
                             <h3>Standing Strong Together With Our Benefactors</h3>
-                            <p class=''lead''>Give-AID has been established and continuously powered by the generous contributions of major global corporations, philanthropic trusts, and visionary individual donors.</p>
+                            <p class=''lead''>NGEOS has been established and continuously powered by the generous contributions of major global corporations, philanthropic trusts, and visionary individual donors.</p>
                             <p>Their corporate social responsibility (CSR) investments fund operational infrastructure, technology tools, logistics fleets, and emergency match-funds, ensuring maximum impact for grassroots causes.</p>
                             <p>We extend our deepest gratitude to our corporate sponsors, institutional partners, and every individual donor who stands beside us in our mission to bring hope to humanity.</p>
                         ', N'https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=1200&auto=format&fit=crop&q=80', NULL, N'2026-10-24 18:16:36.767');
 GO
 IF NOT EXISTS (SELECT 1 FROM [AboutPages] WHERE [Id] = 7)
-    INSERT INTO [AboutPages] ([Id], [Slug], [Title], [Subtitle], [ContentHtml], [BannerImageUrl], [FeaturedImageUrl], [LastUpdated]) VALUES (7, N'read-about-us', N'Read About Give-AID', N'The Comprehensive Story of Give-AID''s Founding, Growth, and Future', N'
-                            <h3>The Story of Give-AID</h3>
-                            <p class=''lead''>Give-AID was founded with a single powerful realization: while millions of generous individuals want to help the underprivileged, they often lack a trusted, transparent, and unified bridge to verify and support genuine grassroots NGOs.</p>
-                            <p>Established as a centralized welfare ecosystem, Give-AID brings together accredited non-governmental organizations dedicated to children welfare, education literacy, emergency healthcare, disabled assistance, women empowerment, and senior citizen care.</p>
-                            <h4>How Give-AID Works</h4>
+    INSERT INTO [AboutPages] ([Id], [Slug], [Title], [Subtitle], [ContentHtml], [BannerImageUrl], [FeaturedImageUrl], [LastUpdated]) VALUES (7, N'read-about-us', N'Read About NGEOS', N'The Comprehensive Story of NGEOS''s Founding, Growth, and Future', N'
+                            <h3>The Story of NGEOS</h3>
+                            <p class=''lead''>NGEOS was founded with a single powerful realization: while millions of generous individuals want to help the underprivileged, they often lack a trusted, transparent, and unified bridge to verify and support genuine grassroots NGOs.</p>
+                            <p>Established as a centralized welfare ecosystem, NGEOS brings together accredited non-governmental organizations dedicated to children welfare, education literacy, emergency healthcare, disabled assistance, women empowerment, and senior citizen care.</p>
+                            <h4>How NGEOS Works</h4>
                             <ol>
                                 <li><strong>Rigorous NGO Accreditation:</strong> Only verified NGOs with proven track records, legal registrations, and financial integrity are onboarded.</li>
                                 <li><strong>Targeted Welfare Causes:</strong> Causes are categorized clearly so donors can directly fund what they care about most.</li>
@@ -797,7 +797,7 @@ IF NOT EXISTS (SELECT 1 FROM [Programmes] WHERE [Id] = 3)
     INSERT INTO [Programmes] ([Id], [Title], [NgoId], [Category], [ShortDescription], [FullDescription], [ImageUrl], [StartDate], [EndDate], [Location], [TargetBeneficiaries], [IsActive], [CreatedAt]) VALUES (3, N'Specially Challenged Children Art & Sports Festival', 4, N'Privileged children (Specially challenged)', N'A celebratory, inclusive festival featuring adaptive sports, sensory art workshops, and musical performances.', N'Celebrating the courage, creativity, and unique talents of children with special needs. The festival includes wheelchair races, adaptive painting competitions, sensory music therapy, and family counseling.', N'https://www.humanity-inclusion.org.uk/sn_uploads/fck/_DSC0061.jpg', N'2026-11-23 00:00:00.000', N'2026-11-25 00:00:00.000', N'Olympic City Sports Complex', 600, 1, N'2026-10-24 18:16:36.000');
 GO
 IF NOT EXISTS (SELECT 1 FROM [Programmes] WHERE [Id] = 4)
-    INSERT INTO [Programmes] ([Id], [Title], [NgoId], [Category], [ShortDescription], [FullDescription], [ImageUrl], [StartDate], [EndDate], [Location], [TargetBeneficiaries], [IsActive], [CreatedAt]) VALUES (4, N'Women Tech & Digital Leadership Accelerator', 5, N'Women Empowerment', N'8-week intensive workshop teaching digital marketing, freelancing, and small business financial management to 200 women.', N'Equipping ambitious women from low-income communities with high-demand digital skills, business branding techniques, and micro-loan matching to foster independent sustainable livelihoods.', N'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&auto=format&fit=crop&q=80', N'2026-12-03 18:16:36.381', N'2026-12-24 18:16:36.381', N'Give-AID Innovation Hub, Downtown', 200, 1, N'2026-10-24 18:16:36.381');
+    INSERT INTO [Programmes] ([Id], [Title], [NgoId], [Category], [ShortDescription], [FullDescription], [ImageUrl], [StartDate], [EndDate], [Location], [TargetBeneficiaries], [IsActive], [CreatedAt]) VALUES (4, N'Women Tech & Digital Leadership Accelerator', 5, N'Women Empowerment', N'8-week intensive workshop teaching digital marketing, freelancing, and small business financial management to 200 women.', N'Equipping ambitious women from low-income communities with high-demand digital skills, business branding techniques, and micro-loan matching to foster independent sustainable livelihoods.', N'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&auto=format&fit=crop&q=80', N'2026-12-03 18:16:36.381', N'2026-12-24 18:16:36.381', N'NGEOS Innovation Hub, Downtown', 200, 1, N'2026-10-24 18:16:36.381');
 GO
 SET IDENTITY_INSERT [Programmes] OFF;
 GO
@@ -806,10 +806,10 @@ GO
 SET IDENTITY_INSERT [Events] ON;
 GO
 IF NOT EXISTS (SELECT 1 FROM [Events] WHERE [Id] = 1)
-    INSERT INTO [Events] ([Id], [Title], [ShortDescription], [FullDescription], [EventDate], [Location], [ImageUrl], [Organizer], [IsUpcoming], [CreatedAt]) VALUES (1, N'Annual Give-AID Global Charity Gala & Awards 2026', N'Join international philanthropists, civic leaders, and NGO heroes for an inspiring evening of celebration and fundraising.', N'Our flagship annual gala brings together over 500 compassionate donors, corporate partners, and grassroots workers to celebrate humanitarian milestones and raise crucial funding for the coming year.', N'2026-12-08 18:16:36.544', N'Grand Ballroom, Marriott Marquis Hotel, NY', N'https://images.unsplash.com/photo-1511578314322-379afb476865?w=800&auto=format&fit=crop&q=80', N'Give-AID Central Secretariat', 1, N'2026-10-24 18:16:36.543');
+    INSERT INTO [Events] ([Id], [Title], [ShortDescription], [FullDescription], [EventDate], [Location], [ImageUrl], [Organizer], [IsUpcoming], [CreatedAt]) VALUES (1, N'Annual NGEOS Global Charity Gala & Awards 2026', N'Join international philanthropists, civic leaders, and NGO heroes for an inspiring evening of celebration and fundraising.', N'Our flagship annual gala brings together over 500 compassionate donors, corporate partners, and grassroots workers to celebrate humanitarian milestones and raise crucial funding for the coming year.', N'2026-12-08 18:16:36.544', N'Grand Ballroom, Marriott Marquis Hotel, NY', N'https://images.unsplash.com/photo-1511578314322-379afb476865?w=800&auto=format&fit=crop&q=80', N'NGEOS Central Secretariat', 1, N'2026-10-24 18:16:36.543');
 GO
 IF NOT EXISTS (SELECT 1 FROM [Events] WHERE [Id] = 2)
-    INSERT INTO [Events] ([Id], [Title], [ShortDescription], [FullDescription], [EventDate], [Location], [ImageUrl], [Organizer], [IsUpcoming], [CreatedAt]) VALUES (2, N'5K Charity Walk & Marathon for Children''s Education', N'Lace up your sneakers and run or walk to raise funds for school supplies and rural classrooms.', N'A family-friendly 5K run and community festival with live music, food stalls, and medals for all finishers. All registration fees go directly to our Education causes.', N'2026-11-18 18:16:36.545', N'Central City Waterfront Park', N'https://images.unsplash.com/photo-1530549387789-4c1017266635?w=800&auto=format&fit=crop&q=80', N'Bright Future Education Trust & Give-AID', 1, N'2026-10-24 18:16:36.545');
+    INSERT INTO [Events] ([Id], [Title], [ShortDescription], [FullDescription], [EventDate], [Location], [ImageUrl], [Organizer], [IsUpcoming], [CreatedAt]) VALUES (2, N'5K Charity Walk & Marathon for Children''s Education', N'Lace up your sneakers and run or walk to raise funds for school supplies and rural classrooms.', N'A family-friendly 5K run and community festival with live music, food stalls, and medals for all finishers. All registration fees go directly to our Education causes.', N'2026-11-18 18:16:36.545', N'Central City Waterfront Park', N'https://images.unsplash.com/photo-1530549387789-4c1017266635?w=800&auto=format&fit=crop&q=80', N'Bright Future Education Trust & NGEOS', 1, N'2026-10-24 18:16:36.545');
 GO
 IF NOT EXISTS (SELECT 1 FROM [Events] WHERE [Id] = 3)
     INSERT INTO [Events] ([Id], [Title], [ShortDescription], [FullDescription], [EventDate], [Location], [ImageUrl], [Organizer], [IsUpcoming], [CreatedAt]) VALUES (3, N'Healthcare for All: Community Health Expo & Blood Donation', N'Free wellness screenings, blood donation camp, CPR workshops, and pediatric consultations open to all.', N'Partnering with leading medical institutions to offer full health diagnostics, blood typing, voluntary blood donation drive, and child wellness nutrition consultations.', N'2026-11-08 18:16:36.545', N'Civic Plaza Pavilion', N'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?w=800&auto=format&fit=crop&q=80', N'Global Health Aid Initiative', 1, N'2026-10-24 18:16:36.545');
@@ -869,7 +869,7 @@ IF NOT EXISTS (SELECT 1 FROM [Partners] WHERE [Id] = 4)
     INSERT INTO [Partners] ([Id], [Name], [Category], [LogoUrl], [WebsiteUrl], [Description], [DisplayOrder], [IsActive]) VALUES (4, N'Vanguard Logistics Alliance', N'Community Ally', N'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=300&auto=format&fit=crop&q=80', N'https://vanguardlog.example.com', N'Providing free nationwide freight transport for emergency relief supplies and medical shipments.', 4, 1);
 GO
 IF NOT EXISTS (SELECT 1 FROM [Partners] WHERE [Id] = 5)
-    INSERT INTO [Partners] ([Id], [Name], [Category], [LogoUrl], [WebsiteUrl], [Description], [DisplayOrder], [IsActive]) VALUES (5, N'Nexus Media Group', N'Media & Outreach', N'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=300&auto=format&fit=crop&q=80', N'https://nexusmedia.example.com', N'Broadcasting public awareness campaigns and promoting Give-AID events pro-bono across national channels.', 5, 1);
+    INSERT INTO [Partners] ([Id], [Name], [Category], [LogoUrl], [WebsiteUrl], [Description], [DisplayOrder], [IsActive]) VALUES (5, N'Nexus Media Group', N'Media & Outreach', N'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=300&auto=format&fit=crop&q=80', N'https://nexusmedia.example.com', N'Broadcasting public awareness campaigns and promoting NGEOS events pro-bono across national channels.', 5, 1);
 GO
 IF NOT EXISTS (SELECT 1 FROM [Partners] WHERE [Id] = 6)
     INSERT INTO [Partners] ([Id], [Name], [Category], [LogoUrl], [WebsiteUrl], [Description], [DisplayOrder], [IsActive]) VALUES (6, N'EcoGreen Energy Systems', N'Sustainability Sponsor', N'https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?w=300&auto=format&fit=crop&q=80', N'https://ecogreen.example.com', N'Installing clean solar power systems in rural schools and senior citizen shelter facilities.', 6, 1);
@@ -881,16 +881,16 @@ GO
 SET IDENTITY_INSERT [TeamMembers] ON;
 GO
 IF NOT EXISTS (SELECT 1 FROM [TeamMembers] WHERE [Id] = 1)
-    INSERT INTO [TeamMembers] ([Id], [Name], [Role], [Bio], [PhotoUrl], [Email], [LinkedInUrl], [TwitterUrl], [DisplayOrder], [IsActive]) VALUES (1, N'Dr. Eleanor Vance', N'Executive Director & Founder', N'Former UN humanitarian advisor with over 18 years leading crisis relief and global child welfare initiatives.', N'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&auto=format&fit=crop&q=80', N'e.vance@giveaid.org', N'https://linkedin.com/in/eleanor-vance-giveaid', NULL, 1, 1);
+    INSERT INTO [TeamMembers] ([Id], [Name], [Role], [Bio], [PhotoUrl], [Email], [LinkedInUrl], [TwitterUrl], [DisplayOrder], [IsActive]) VALUES (1, N'Dr. Eleanor Vance', N'Executive Director & Founder', N'Former UN humanitarian advisor with over 18 years leading crisis relief and global child welfare initiatives.', N'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&auto=format&fit=crop&q=80', N'e.vance@ngeos.org', N'https://linkedin.com/in/eleanor-vance-ngeos', NULL, 1, 1);
 GO
 IF NOT EXISTS (SELECT 1 FROM [TeamMembers] WHERE [Id] = 2)
-    INSERT INTO [TeamMembers] ([Id], [Name], [Role], [Bio], [PhotoUrl], [Email], [LinkedInUrl], [TwitterUrl], [DisplayOrder], [IsActive]) VALUES (2, N'Marcus Sterling', N'Director of Field Operations & Logistics', N'Logistics expert specializing in disaster relief supply chains and mobile healthcare caravans across rural regions.', N'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&auto=format&fit=crop&q=80', N'm.sterling@giveaid.org', N'https://linkedin.com/in/marcus-sterling-giveaid', NULL, 2, 1);
+    INSERT INTO [TeamMembers] ([Id], [Name], [Role], [Bio], [PhotoUrl], [Email], [LinkedInUrl], [TwitterUrl], [DisplayOrder], [IsActive]) VALUES (2, N'Marcus Sterling', N'Director of Field Operations & Logistics', N'Logistics expert specializing in disaster relief supply chains and mobile healthcare caravans across rural regions.', N'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&auto=format&fit=crop&q=80', N'm.sterling@ngeos.org', N'https://linkedin.com/in/marcus-sterling-ngeos', NULL, 2, 1);
 GO
 IF NOT EXISTS (SELECT 1 FROM [TeamMembers] WHERE [Id] = 3)
-    INSERT INTO [TeamMembers] ([Id], [Name], [Role], [Bio], [PhotoUrl], [Email], [LinkedInUrl], [TwitterUrl], [DisplayOrder], [IsActive]) VALUES (3, N'Dr. Sophia Chen, MD', N'Chief Medical Officer', N'Pediatric surgeon and community health advocate leading our mobile clinics and free pediatric surgery drives.', N'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80', N's.chen@giveaid.org', N'https://linkedin.com/in/sophia-chen-giveaid', NULL, 3, 1);
+    INSERT INTO [TeamMembers] ([Id], [Name], [Role], [Bio], [PhotoUrl], [Email], [LinkedInUrl], [TwitterUrl], [DisplayOrder], [IsActive]) VALUES (3, N'Dr. Sophia Chen, MD', N'Chief Medical Officer', N'Pediatric surgeon and community health advocate leading our mobile clinics and free pediatric surgery drives.', N'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&auto=format&fit=crop&q=80', N's.chen@ngeos.org', N'https://linkedin.com/in/sophia-chen-ngeos', NULL, 3, 1);
 GO
 IF NOT EXISTS (SELECT 1 FROM [TeamMembers] WHERE [Id] = 4)
-    INSERT INTO [TeamMembers] ([Id], [Name], [Role], [Bio], [PhotoUrl], [Email], [LinkedInUrl], [TwitterUrl], [DisplayOrder], [IsActive]) VALUES (4, N'David Rodriguez', N'Head of NGO Partnerships & Compliance', N'Oversees due diligence, auditing, and quality assurance for all partner non-governmental organizations.', N'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&auto=format&fit=crop&q=80', N'd.rodriguez@giveaid.org', N'https://linkedin.com/in/david-rodriguez-giveaid', NULL, 4, 1);
+    INSERT INTO [TeamMembers] ([Id], [Name], [Role], [Bio], [PhotoUrl], [Email], [LinkedInUrl], [TwitterUrl], [DisplayOrder], [IsActive]) VALUES (4, N'David Rodriguez', N'Head of NGO Partnerships & Compliance', N'Oversees due diligence, auditing, and quality assurance for all partner non-governmental organizations.', N'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&auto=format&fit=crop&q=80', N'd.rodriguez@ngeos.org', N'https://linkedin.com/in/david-rodriguez-ngeos', NULL, 4, 1);
 GO
 SET IDENTITY_INSERT [TeamMembers] OFF;
 GO
@@ -899,13 +899,13 @@ GO
 SET IDENTITY_INSERT [FAQs] ON;
 GO
 IF NOT EXISTS (SELECT 1 FROM [FAQs] WHERE [Id] = 1)
-    INSERT INTO [FAQs] ([Id], [Question], [Answer], [Category], [DisplayOrder], [IsActive]) VALUES (1, N'How do I make a donation on Give-AID?', N'You can browse our active causes under the ''Donate'' or ''Causes'' menu, select any cause of your choice (e.g. Children Welfare, Education, Healthcare, Disabled Persons), enter your desired amount, fill in your details and dummy payment card information, and submit. You will immediately receive a transaction receipt.', N'Donations & Payment', 1, 1);
+    INSERT INTO [FAQs] ([Id], [Question], [Answer], [Category], [DisplayOrder], [IsActive]) VALUES (1, N'How do I make a donation on NGEOS?', N'You can browse our active causes under the ''Donate'' or ''Causes'' menu, select any cause of your choice (e.g. Children Welfare, Education, Healthcare, Disabled Persons), enter your desired amount, fill in your details and dummy payment card information, and submit. You will immediately receive a transaction receipt.', N'Donations & Payment', 1, 1);
 GO
 IF NOT EXISTS (SELECT 1 FROM [FAQs] WHERE [Id] = 2)
-    INSERT INTO [FAQs] ([Id], [Question], [Answer], [Category], [DisplayOrder], [IsActive]) VALUES (2, N'Is this a real payment gateway?', N'No, Give-AID operates with a secure dummy payment simulation designed for university and educational demonstrations. No real money or actual card credentials are processed or stored.', N'Donations & Payment', 2, 1);
+    INSERT INTO [FAQs] ([Id], [Question], [Answer], [Category], [DisplayOrder], [IsActive]) VALUES (2, N'Is this a real payment gateway?', N'No, NGEOS operates with a secure dummy payment simulation designed for university and educational demonstrations. No real money or actual card credentials are processed or stored.', N'Donations & Payment', 2, 1);
 GO
 IF NOT EXISTS (SELECT 1 FROM [FAQs] WHERE [Id] = 3)
-    INSERT INTO [FAQs] ([Id], [Question], [Answer], [Category], [DisplayOrder], [IsActive]) VALUES (3, N'How can an NGO partner with Give-AID?', N'NGOs can apply for partnership by reaching out via our Contact Us page or submitting a partnership query. Our compliance team verifies registration documents, past audit statements, and field credibility before onboarding.', N'NGO Partnership', 3, 1);
+    INSERT INTO [FAQs] ([Id], [Question], [Answer], [Category], [DisplayOrder], [IsActive]) VALUES (3, N'How can an NGO partner with NGEOS?', N'NGOs can apply for partnership by reaching out via our Contact Us page or submitting a partnership query. Our compliance team verifies registration documents, past audit statements, and field credibility before onboarding.', N'NGO Partnership', 3, 1);
 GO
 IF NOT EXISTS (SELECT 1 FROM [FAQs] WHERE [Id] = 4)
     INSERT INTO [FAQs] ([Id], [Question], [Answer], [Category], [DisplayOrder], [IsActive]) VALUES (4, N'How can I participate or volunteer in an upcoming programme?', N'Visit the ''Our Programmes'' section from the main navigation, select any programme (such as Education Drives, Healthcare Caravans, or Special Needs Festivals), and click ''Show Interest / Volunteer'' to submit your participation details.', N'Programmes & Volunteering', 4, 1);
@@ -1119,7 +1119,7 @@ GO
 SET IDENTITY_INSERT [FriendInvitations] ON;
 GO
 IF NOT EXISTS (SELECT 1 FROM [FriendInvitations] WHERE [Id] = 1)
-    INSERT INTO [FriendInvitations] ([Id], [UserId], [SenderName], [SenderEmail], [FriendEmail], [CauseId], [PersonalMessage], [SentAt]) VALUES (1, 2, N'SYED MUHAMMAD SAIM', N'syedmuhammadsaim.contact@gmail.com', N'abdull4h5599@gmail.com', NULL, N'Hey! I''ve been supporting Give-AID and wanted to invite you to join this wonderful mission to help people in need. Check out their impactful causes!', N'2026-10-28 16:43:32.948');
+    INSERT INTO [FriendInvitations] ([Id], [UserId], [SenderName], [SenderEmail], [FriendEmail], [CauseId], [PersonalMessage], [SentAt]) VALUES (1, 2, N'SYED MUHAMMAD SAIM', N'syedmuhammadsaim.contact@gmail.com', N'abdull4h5599@gmail.com', NULL, N'Hey! I''ve been supporting NGEOS and wanted to invite you to join this wonderful mission to help people in need. Check out their impactful causes!', N'2026-10-28 16:43:32.948');
 GO
 SET IDENTITY_INSERT [FriendInvitations] OFF;
 GO

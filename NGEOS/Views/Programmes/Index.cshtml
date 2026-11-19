@@ -1,4 +1,4 @@
-@model List<NGEOS.Models.Programme>
+﻿@model List<NGEOS.Models.Programme>
 @{
     ViewData["Title"] = "Our Programmes - Education, Healthcare & Child Welfare";
     var categories = ViewBag.Categories as List<string> ?? new List<string>();
@@ -34,7 +34,7 @@
             @foreach (var prog in Model)
             {
                 <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="@((pIdx++ % 3) * 120)">
-                    <div class="giveaid-card">
+                    <div class="ngeos-card">
                         <div class="card-img-wrapper">
                             <img src="@prog.ImageUrl" alt="@prog.Title">
                             <span class="card-category-badge">@prog.Category</span>

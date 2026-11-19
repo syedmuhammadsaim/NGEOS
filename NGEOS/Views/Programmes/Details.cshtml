@@ -1,4 +1,4 @@
-@model NGEOS.Models.Programme
+﻿@model NGEOS.Models.Programme
 @{
     ViewData["Title"] = Model.Title;
     var interestModel = ViewBag.InterestModel as NGEOS.ViewModels.ProgrammeInterestRequestViewModel ?? new NGEOS.ViewModels.ProgrammeInterestRequestViewModel { ProgrammeId = Model.Id };
@@ -13,7 +13,7 @@
 <div class="container section-padding">
     <div class="row g-5">
         <div class="col-lg-8" data-aos="fade-up">
-            <div class="giveaid-card p-0 overflow-hidden mb-5">
+            <div class="ngeos-card p-0 overflow-hidden mb-5">
                 <img src="@Model.ImageUrl" alt="@Model.Title" class="w-100" style="max-height: 460px; object-fit: cover;">
                 <div class="p-4 p-md-5">
                     <!-- Key Metadata Pills -->
@@ -71,7 +71,7 @@
 
         <!-- Sidebar -->
         <div class="col-lg-4" data-aos="fade-left" data-aos-delay="150">
-            <div class="giveaid-card p-4 mb-4 position-sticky" style="top: 90px;">
+            <div class="ngeos-card p-4 mb-4 position-sticky" style="top: 90px;">
                 <h4 class="fw-bold mb-3">Participation Information</h4>
                 <p class="text-muted small mb-4">
                     NGEOS coordinates volunteer teams and logistical resources for each registered NGO programme.

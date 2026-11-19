@@ -1,4 +1,4 @@
-@model NGEOS.Models.FAQ
+﻿@model NGEOS.Models.FAQ
 @{
     ViewData["Title"] = "Edit FAQ - Admin";
     Layout = "_AdminLayout";
@@ -12,7 +12,7 @@
     <a asp-action="Faqs" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left me-1"></i> Back to FAQs</a>
 </div>
 
-<div class="giveaid-card p-4 p-md-5">
+<div class="ngeos-card p-4 p-md-5">
     <form asp-action="EditFaq" method="post">
         @Html.AntiForgeryToken()
         <input type="hidden" asp-for="Id" />

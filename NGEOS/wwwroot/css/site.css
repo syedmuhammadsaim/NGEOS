@@ -276,6 +276,7 @@ main[role="main"] {
 
    ========================================================== */
 
+.ngeos-topbar,
 .giveaid-topbar {
 
     background: linear-gradient(135deg, #071527 0%, #0d223f 50%, #071527 100%);
@@ -502,6 +503,7 @@ main[role="main"] {
 
    ========================================================== */
 
+.ngeos-navbar,
 .giveaid-navbar {
 
     background: #ffffff;
@@ -526,6 +528,7 @@ main[role="main"] {
 
 
 
+    .ngeos-navbar.scrolled,
     .giveaid-navbar.scrolled {
 
         background: rgba(255, 255, 255, 0.95) !important;
@@ -540,8 +543,9 @@ main[role="main"] {
 
 
 
-    /* Navbar ko chauda karo taake sab links + DONATE ek line mein aayein */
+    /* Navbar width adjustment */
 
+    .ngeos-navbar .container,
     .giveaid-navbar .container {
 
         max-width: 1440px;
@@ -1096,6 +1100,7 @@ main[role="main"] {
 
    ========================================================== */
 
+.ngeos-hero,
 .giveaid-hero {
 
     position: relative;
@@ -1414,6 +1419,7 @@ main[role="main"] {
 
    ========================================================== */
 
+.ngeos-card,
 .giveaid-card {
 
     background: #ffffff;
@@ -1438,6 +1444,7 @@ main[role="main"] {
 
 
 
+    .ngeos-card:hover,
     .giveaid-card:hover {
 
         transform: translateY(-3px);
@@ -2048,9 +2055,9 @@ body:has(.gallery-lightbox-modal.show) .modal-backdrop.show {
 
 .lightbox-close-btn:hover {
 
-    background: var(--giveaid-orange, #f25c05);
+    background: var(--primary-orange, #f25c05);
 
-    border-color: var(--giveaid-orange, #f25c05);
+    border-color: var(--primary-orange, #f25c05);
 
     color: #ffffff;
 
@@ -2142,9 +2149,9 @@ body:has(.gallery-lightbox-modal.show) .modal-backdrop.show {
 
 .lightbox-nav-btn:hover {
 
-    background: var(--giveaid-orange, #f25c05);
+    background: var(--primary-orange, #f25c05);
 
-    border-color: var(--giveaid-orange, #f25c05);
+    border-color: var(--primary-orange, #f25c05);
 
     color: #ffffff;
 
@@ -2440,6 +2447,7 @@ body:has(.gallery-lightbox-modal.show) .modal-backdrop.show {
 
    ========================================================== */
 
+.ngeos-footer,
 .giveaid-footer {
 
     background-color: var(--navy-dark);
@@ -2462,6 +2470,7 @@ body:has(.gallery-lightbox-modal.show) .modal-backdrop.show {
 
 
 
+    .ngeos-footer h5,
     .giveaid-footer h5 {
 
         color: #ffffff;
@@ -2480,6 +2489,7 @@ body:has(.gallery-lightbox-modal.show) .modal-backdrop.show {
 
 
 
+        .ngeos-footer h5::after,
         .giveaid-footer h5::after {
 
             content: '';
@@ -2566,6 +2576,7 @@ body:has(.gallery-lightbox-modal.show) .modal-backdrop.show {
 
 
 
+.ngeos-footer .social-icon-link,
 .giveaid-footer .social-icon-link {
 
     width: 34px;
@@ -2580,6 +2591,7 @@ body:has(.gallery-lightbox-modal.show) .modal-backdrop.show {
 
 
 
+    .ngeos-footer .social-icon-link:hover,
     .giveaid-footer .social-icon-link:hover {
 
         background: var(--primary-orange);
@@ -2686,6 +2698,7 @@ body:has(.gallery-lightbox-modal.show) .modal-backdrop.show {
 
 
 
+    .sticky-sidebar .ngeos-card,
     .sticky-sidebar .giveaid-card {
 
         height: auto;
@@ -2698,6 +2711,7 @@ body:has(.gallery-lightbox-modal.show) .modal-backdrop.show {
 
 
 
+        .sticky-sidebar .ngeos-card:hover,
         .sticky-sidebar .giveaid-card:hover {
 
             transform: none; /* sticky card hover par uchhalna band */
@@ -2960,6 +2974,7 @@ body:has(.gallery-lightbox-modal.show) .modal-backdrop.show {
 
 @media (max-width: 1199.98px) {
 
+    .ngeos-navbar .navbar-collapse,
     .giveaid-navbar .navbar-collapse {
 
         background: #ffffff;
@@ -3232,6 +3247,7 @@ body:has(.gallery-lightbox-modal.show) .modal-backdrop.show {
 
 
 
+        .sticky-sidebar .ngeos-card,
         .sticky-sidebar .giveaid-card {
 
             max-height: none;
@@ -3398,11 +3414,31 @@ body:has(.gallery-lightbox-modal.show) .modal-backdrop.show {
 
 body:not(.admin-body) main[role="main"] {
 
-    animation: giveaidPageEntrance 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation: ngeosPageEntrance 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
 
 }
 
 
+
+@keyframes ngeosPageEntrance {
+
+    0% {
+
+        opacity: 0.25;
+
+        transform: translateY(8px);
+
+    }
+
+    100% {
+
+        opacity: 1;
+
+        transform: translateY(0);
+
+    }
+
+}
 
 @keyframes giveaidPageEntrance {
 
@@ -3421,6 +3457,8 @@ body:not(.admin-body) main[role="main"] {
         transform: translateY(0);
 
     }
+
+}
 
 }
 
@@ -4019,10 +4057,13 @@ body.admin-body .admin-side {
 
     footer,
 
+    .ngeos-topbar,
     .giveaid-topbar,
 
+    .ngeos-navbar,
     .giveaid-navbar,
 
+    footer.ngeos-footer,
     footer.giveaid-footer,
 
     #backToTopBtn,
@@ -4107,7 +4148,10 @@ body.modal-open {
 
 
 
-.giveaid-navbar, .giveaid-topbar {
+.ngeos-navbar,
+.giveaid-navbar,
+.ngeos-topbar,
+.giveaid-topbar {
 
     padding-right: 0 !important;
 
@@ -4237,6 +4281,7 @@ body.admin-body .admin-main {
 
 
 
+body.admin-body .admin-main .ngeos-card,
 body.admin-body .admin-main .giveaid-card,
 
 body.admin-body .admin-main .card {

@@ -1,4 +1,4 @@
-@model NGEOS.ViewModels.UserDashboardViewModel
+﻿@model NGEOS.ViewModels.UserDashboardViewModel
 @{
     ViewData["Title"] = "User Dashboard - " + Model.User.FullName;
 }
@@ -110,7 +110,7 @@
     </div>
 
     <!-- Personal AI Guide Helper Banner -->
-    <div class="giveaid-card p-3 mb-5 rounded-4 shadow-sm border-0" style="background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%); border-left: 5px solid #f25c05 !important;" data-aos="fade-up">
+    <div class="ngeos-card p-3 mb-5 rounded-4 shadow-sm border-0" style="background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%); border-left: 5px solid #f25c05 !important;" data-aos="fade-up">
         <div class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-3">
             <div class="d-flex align-items-center gap-3">
                 <div class="rounded-circle d-flex align-items-center justify-content-center text-white shadow-sm flex-shrink-0" style="width: 48px; height: 48px; background: linear-gradient(135deg, #f25c05 0%, #f37335 100%);">
@@ -133,7 +133,7 @@
     <div class="row g-5">
         <!-- Recent Donations -->
         <div class="col-lg-7">
-            <div class="giveaid-card p-4 mb-4">
+            <div class="ngeos-card p-4 mb-4">
                 <div class="text-center mb-4 pb-2 border-bottom">
                     <h5 class="fw-bold mb-1">Recent Donations</h5>
                     <a asp-action="Donations" class="small text-orange fw-bold text-decoration-none">View All Donations <i class="bi bi-arrow-right"></i></a>
@@ -190,7 +190,7 @@
             </div>
 
             <!-- Recent Programme Interests -->
-            <div class="giveaid-card p-4">
+            <div class="ngeos-card p-4">
                 <div class="text-center mb-4 pb-2 border-bottom">
                     <h5 class="fw-bold mb-1">Registered Programmes</h5>
                     <a asp-action="Programmes" class="small text-orange fw-bold text-decoration-none">View All Programmes <i class="bi bi-arrow-right"></i></a>
@@ -224,7 +224,7 @@
         <!-- Sidebar: Queries & Friend Invites -->
         <div class="col-lg-5">
             <!-- Raised Queries Widget -->
-            <div class="giveaid-card p-4 mb-4">
+            <div class="ngeos-card p-4 mb-4">
                 <div class="text-center mb-4 pb-2 border-bottom">
                     <h5 class="fw-bold mb-1">My Support Queries</h5>
                     <a asp-action="Queries" class="small text-orange fw-bold text-decoration-none">View All Queries <i class="bi bi-arrow-right"></i></a>
@@ -262,7 +262,7 @@
             </div>
 
             <!-- Invite Friends Card -->
-            <div class="giveaid-card p-4 text-center border-start border-4 border-orange">
+            <div class="ngeos-card p-4 text-center border-start border-4 border-orange">
                 <h5 class="fw-bold mb-1">Invite Friends to NGEOS</h5>
                 <p class="text-muted small mb-3">
                     Spread the word and inspire friends and colleagues to support life-changing charity causes.

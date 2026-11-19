@@ -1,4 +1,4 @@
-@model List<NGEOS.Models.FAQ>
+﻿@model List<NGEOS.Models.FAQ>
 @{
     ViewData["Title"] = "Help Centre & Frequently Asked Questions";
     var categories = ViewBag.Categories as List<string> ?? new List<string>();
@@ -7,7 +7,7 @@
 }
 
 <!-- Hero Section -->
-<div class="giveaid-hero py-5" style="min-height: 340px; padding-bottom: 60px !important; background: linear-gradient(135deg, rgba(11, 25, 44, 0.9), rgba(15, 23, 42, 0.82)), url('https://images.unsplash.com/photo-1450133064473-71024230f91b?w=1600') center/cover no-repeat !important;" data-aos="fade-down">
+<div class="ngeos-hero py-5" style="min-height: 340px; padding-bottom: 60px !important; background: linear-gradient(135deg, rgba(11, 25, 44, 0.9), rgba(15, 23, 42, 0.82)), url('https://images.unsplash.com/photo-1450133064473-71024230f91b?w=1600') center/cover no-repeat !important;" data-aos="fade-down">
     <div class="container text-center position-relative z-1">
         <span class="hero-tag mb-3" data-aos="fade-up"><i class="bi bi-question-diamond-fill"></i> Knowledge Base</span>
         <h1 class="display-5 fw-bold text-white mb-3" style="font-family: var(--font-heading);" data-aos="fade-up" data-aos-delay="100">NGEOS Help Centre & FAQs</h1>
@@ -35,7 +35,7 @@
             <div class="d-flex flex-column h-100">
                 
                 <!-- Categories Card -->
-                <div class="giveaid-card p-4 mb-4">
+                <div class="ngeos-card p-4 mb-4">
                     <h5 class="fw-bold mb-3" style="font-family: var(--font-heading); color: var(--navy-dark);">
                         <i class="bi bi-funnel text-orange me-2"></i> FAQ Categories
                     </h5>
@@ -55,7 +55,7 @@
                 </div>
 
                 <!-- Still Need Help Box (Pushed to Bottom) -->
-                <div class="giveaid-card p-4 text-center border-start border-4 border-orange mt-auto">
+                <div class="ngeos-card p-4 text-center border-start border-4 border-orange mt-auto">
                     <div class="action-card-icon icon-volunteer mx-auto mb-3">
                         <i class="bi bi-chat-square-text-fill"></i>
                     </div>

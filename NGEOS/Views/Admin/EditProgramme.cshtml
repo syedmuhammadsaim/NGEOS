@@ -1,4 +1,4 @@
-@model NGEOS.Models.Programme
+﻿@model NGEOS.Models.Programme
 @{
     ViewData["Title"] = "Edit Programme - Admin";
     Layout = "_AdminLayout";
@@ -14,7 +14,7 @@
     <a asp-action="Programmes" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left me-1"></i> Back to Programmes</a>
 </div>
 
-<div class="giveaid-card p-4 p-md-5">
+<div class="ngeos-card p-4 p-md-5">
     <form asp-action="EditProgramme" method="post" enctype="multipart/form-data">
         @Html.AntiForgeryToken()
         <input type="hidden" asp-for="Id" />

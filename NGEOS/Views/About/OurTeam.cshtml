@@ -1,4 +1,4 @@
-@model List<NGEOS.Models.TeamMember>
+﻿@model List<NGEOS.Models.TeamMember>
 @{
     var aboutPage = ViewBag.AboutPage as NGEOS.Models.AboutPage;
     ViewData["Title"] = "Our Team - NGEOS Leadership";
@@ -20,7 +20,7 @@
         @foreach (var member in Model)
         {
             <div class="col-md-6 col-lg-3" data-aos="zoom-in" data-aos-delay="@((tIdx++ % 4) * 90)">
-                <div class="giveaid-card text-center overflow-hidden">
+                <div class="ngeos-card text-center overflow-hidden">
                     <div class="card-img-wrapper" style="height: 260px;">
                         <img src="@member.PhotoUrl" alt="@member.Name">
                     </div>

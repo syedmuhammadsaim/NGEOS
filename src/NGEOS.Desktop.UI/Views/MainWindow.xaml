@@ -185,7 +185,7 @@
             <RowDefinition Height="*" />    <!-- Row 2: Main Body Area -->
         </Grid.RowDefinitions>
 
-        <!-- ================= ROW 0: TOP UTILITY BAR (Matches Website giveaid-topbar) ================= -->
+        <!-- ================= ROW 0: TOP UTILITY BAR (Matches Website ngeos-topbar) ================= -->
         <Border Grid.Row="0" Background="#060D1A" BorderBrush="#1E293B" BorderThickness="0,0,0,1" Height="34" Padding="14,0,0,0">
             <Grid>
                 <Grid.ColumnDefinitions>

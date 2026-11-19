@@ -1,4 +1,4 @@
-@model List<NGEOS.Models.Cause>
+﻿@model List<NGEOS.Models.Cause>
 @{
     ViewData["Title"] = "Home - Empowering Vulnerable Lives Worldwide";
     var highlightCampaign = ViewBag.HighlightCampaign as NGEOS.Models.Cause;
@@ -10,7 +10,7 @@
 }
 
 <!-- 3. HERO SECTION -->
-<section class="giveaid-hero">
+<section class="ngeos-hero">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-8 col-xl-7" data-aos="fade-up" data-aos-duration="850">
@@ -160,7 +160,7 @@
             @foreach (var cause in Model)
             {
                 <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="@((causeIdx++ % 3) * 120)">
-                    <div class="giveaid-card">
+                    <div class="ngeos-card">
                         <div class="card-img-wrapper">
                             <img src="@cause.ImageUrl" alt="@cause.Title">
                             <span class="card-category-badge">@cause.Category</span>
@@ -261,7 +261,7 @@
             @foreach (var prog in upcomingProgrammes)
             {
                 <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="@((progIdx++ % 3) * 120)">
-                    <div class="giveaid-card">
+                    <div class="ngeos-card">
                         <div class="card-img-wrapper">
                             <img src="@prog.ImageUrl" alt="@prog.Title">
                             <span class="card-category-badge">@prog.Category</span>
@@ -309,7 +309,7 @@
             @foreach (var ngo in partnerNgos)
             {
                 <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="@((ngoIdx++ % 3) * 120)">
-                    <div class="giveaid-card p-4">
+                    <div class="ngeos-card p-4">
                         <div class="d-flex align-items-center gap-3 mb-3">
                             <img src="@ngo.LogoUrl" alt="@ngo.Name" class="rounded-3 shadow-sm" style="width: 60px; height: 60px; object-fit: cover;">
                             <div>

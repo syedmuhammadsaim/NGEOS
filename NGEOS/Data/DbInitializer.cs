@@ -32,7 +32,7 @@ namespace NGEOS.Data
             }
 
             // Ensure all known admin emails always retain Admin role
-            var adminEmails = new[] { "admin@ngeos.org", "ngeos@gmail.com", "syedmuhammadsaim.contact@gmail.com", "syedmuhammadsaim.business@gmail.com", "syedmuhammadsaim.busniess@gmail.com", "admin@giveaid.org", "admin@cinevora.local" };
+            var adminEmails = new[] { "admin@ngeos.org", "ngeos@gmail.com", "syedmuhammadsaim.contact@gmail.com", "syedmuhammadsaim.business@gmail.com", "syedmuhammadsaim.busniess@gmail.com", "admin@cinevora.local" };
             var adminsToEnsure = context.Users.Where(u => adminEmails.Contains(u.Email) && u.Role != "Admin").ToList();
             if (adminsToEnsure.Any())
             {

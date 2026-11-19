@@ -1,4 +1,4 @@
-@model NGEOS.ViewModels.DonationReceiptViewModel
+﻿@model NGEOS.ViewModels.DonationReceiptViewModel
 @{
     ViewData["Title"] = "Donation Confirmation & Receipt - NGEOS";
 }
@@ -8,7 +8,7 @@
         <div class="col-lg-8 col-xl-7">
             
             <!-- Printable Receipt Card -->
-            <div class="giveaid-card p-4 p-md-4 shadow-lg border rounded-4 bg-white" id="printableReceipt">
+            <div class="ngeos-card p-4 p-md-4 shadow-lg border rounded-4 bg-white" id="printableReceipt">
                 
                 <!-- 1. Official Organization Brand Header (Always Visible & Beautiful in Print) -->
                 <div class="d-flex align-items-center justify-content-between pb-3 mb-3 border-bottom receipt-brand-header">
@@ -169,9 +169,9 @@
             header,
             nav,
             footer,
-            .giveaid-topbar,
-            .giveaid-navbar,
-            footer.giveaid-footer,
+            .ngeos-topbar,
+            .ngeos-navbar,
+            footer.ngeos-footer,
             #backToTopBtn,
             .d-print-none,
             .navbar,

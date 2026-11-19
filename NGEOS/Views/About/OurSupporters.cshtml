@@ -1,4 +1,4 @@
-@model List<NGEOS.Models.Partner>
+﻿@model List<NGEOS.Models.Partner>
 @{
     var aboutPage = ViewBag.AboutPage as NGEOS.Models.AboutPage;
     ViewData["Title"] = "Our Supporters & Corporate Allies";
@@ -20,7 +20,7 @@
         @foreach (var p in Model)
         {
             <div class="col-md-6 col-lg-4" data-aos="zoom-in" data-aos-delay="@((sIdx++ % 3) * 100)">
-                <div class="giveaid-card p-4 text-center">
+                <div class="ngeos-card p-4 text-center">
                     <div class="d-flex align-items-center justify-content-center p-3 mb-3 bg-light rounded-3" style="height: 120px;">
                         <img src="@p.LogoUrl" alt="@p.Name" style="max-height: 70px; max-width: 180px; object-fit: contain;">
                     </div>

@@ -1,4 +1,4 @@
-@model NGEOS.ViewModels.AdminDashboardViewModel
+﻿@model NGEOS.ViewModels.AdminDashboardViewModel
 @{
     ViewData["Title"] = "Admin Control Center";
     Layout = "_AdminLayout";
@@ -17,7 +17,7 @@
 </div>
 
 <!-- Quick Action Shortcuts Bar -->
-<div class="giveaid-card p-3 mb-4 bg-white border">
+<div class="ngeos-card p-3 mb-4 bg-white border">
     <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
         <span class="small fw-semibold text-secondary text-uppercase" style="letter-spacing: 0.5px; font-size: 0.75rem;">
             Quick Management
@@ -46,7 +46,7 @@
 </div>
 
 <!-- Autonomous AI Agent Banner -->
-<div class="giveaid-card p-3 mb-4 bg-white border rounded-3 shadow-sm" style="border-left: 5px solid #f25c05 !important;">
+<div class="ngeos-card p-3 mb-4 bg-white border rounded-3 shadow-sm" style="border-left: 5px solid #f25c05 !important;">
     <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
         <div class="d-flex align-items-center gap-3">
             <div class="rounded-circle d-flex align-items-center justify-content-center text-white flex-shrink-0" style="width: 48px; height: 48px; background: linear-gradient(135deg, #f25c05 0%, #ff8c42 100%);">
@@ -130,7 +130,7 @@
     <!-- Left Column: Transactions & Members -->
     <div class="col-12 col-xl-7">
         <!-- Recent Donations Table -->
-        <div class="giveaid-card p-4 mb-4">
+        <div class="ngeos-card p-4 mb-4">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h5 class="fw-bold mb-0">Recent Transactions</h5>
                 <a asp-action="Donations" class="small text-orange fw-bold">View Master Ledger</a>
@@ -172,7 +172,7 @@
         </div>
 
         <!-- Recent Registered Members -->
-        <div class="giveaid-card p-4">
+        <div class="ngeos-card p-4">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h5 class="fw-bold mb-0">Registered Members</h5>
                 <a asp-action="Users" class="small text-orange fw-bold">View All Members</a>
@@ -217,7 +217,7 @@
     <!-- Right Column: Support Queries, Contact Messages, Volunteer Applications -->
     <div class="col-12 col-xl-5">
         <!-- User Queries Widget -->
-        <div class="giveaid-card p-4 mb-4">
+        <div class="ngeos-card p-4 mb-4">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h5 class="fw-bold mb-0">
                     Pending Queries
@@ -255,7 +255,7 @@
         </div>
 
         <!-- Recent Contact Messages Widget -->
-        <div class="giveaid-card p-4 mb-4">
+        <div class="ngeos-card p-4 mb-4">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h5 class="fw-bold mb-0">
                     Contact Inquiries
@@ -296,7 +296,7 @@
         </div>
 
         <!-- Recent Volunteers/Participants -->
-        <div class="giveaid-card p-4">
+        <div class="ngeos-card p-4">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h5 class="fw-bold mb-0">Programme Volunteers</h5>
                 <a asp-action="ProgrammeInterests" class="small text-orange fw-bold">View All</a>
