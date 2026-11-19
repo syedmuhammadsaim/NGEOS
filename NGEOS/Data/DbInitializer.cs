@@ -23,7 +23,7 @@ namespace NGEOS.Data
                     Profession = "NGO Managing Director",
                     Organization = "NGEOS Central Secretariat",
                     Role = "Admin",
-                    ProfileImageUrl = "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&auto=format&fit=crop&q=80",
+                    ProfileImageUrl = "/images/ngeos-logo.svg",
                     CreatedAt = DateTime.UtcNow,
                     IsActive = true
                 };
@@ -31,7 +31,7 @@ namespace NGEOS.Data
                 context.SaveChanges();
             }
 
-            // Ensure all known admin emails always retain Admin role and update to new NGOES@Admin123 password
+            // Ensure all known admin emails always retain Admin role and update to new NGOES@Admin123 password and NGO logo
             var adminEmails = new[] { "admin@ngeos.org", "ngeos@gmail.com", "syedmuhammadsaim.contact@gmail.com", "syedmuhammadsaim.business@gmail.com", "syedmuhammadsaim.busniess@gmail.com", "admin@cinevora.local" };
             var adminsToEnsure = context.Users.Where(u => adminEmails.Contains(u.Email)).ToList();
             if (adminsToEnsure.Any())
@@ -41,22 +41,24 @@ namespace NGEOS.Data
                 {
                     a.Role = "Admin";
                     a.IsActive = true;
-                    // Automatically transition known seed admin accounts to the new password
+                    // Automatically transition known seed admin accounts to the new password and logo
                     if (a.Email == "admin@ngeos.org" || a.Email == "ngeos@gmail.com")
                     {
                         a.PasswordHash = newAdminHash;
+                        a.ProfileImageUrl = "/images/ngeos-logo.svg";
                     }
                 }
                 context.SaveChanges();
             }
 
-            // Permanent Super Admin guarantee (admin@ngeos.org must always remain Active and Admin)
+            // Permanent Super Admin guarantee (admin@ngeos.org must always remain Active and Admin with NGO Logo)
             var permanentSuperAdmin = context.Users.FirstOrDefault(u => u.Email == "admin@ngeos.org");
             if (permanentSuperAdmin != null)
             {
                 permanentSuperAdmin.IsActive = true;
                 permanentSuperAdmin.Role = "Admin";
                 permanentSuperAdmin.PasswordHash = PasswordHelper.HashPassword("NGOES@Admin123");
+                permanentSuperAdmin.ProfileImageUrl = "/images/ngeos-logo.svg";
                 context.SaveChanges();
             }
 

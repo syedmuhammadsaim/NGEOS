@@ -291,10 +291,7 @@
                             {
                                 <a asp-controller="Admin" asp-action="Index" class="btn btn-navy text-white btn-sm px-3 rounded-pill d-inline-flex align-items-center justify-content-center gap-1 shadow-sm fw-bold">Admin Panel</a>
                                 <a asp-controller="User" asp-action="Profile" class="btn btn-outline-navy btn-sm px-3 rounded-pill d-inline-flex align-items-center justify-content-center gap-2" title="My Profile">
-                                    @if (!string.IsNullOrEmpty(userPic))
-                                    {
-                                        <img src="@userPic" alt="Avatar" class="rounded-circle" style="width: 20px; height: 20px; object-fit: cover;" />
-                                    }
+                                    <img src="@(string.IsNullOrEmpty(userPic) ? "/images/ngeos-logo.svg" : userPic)" alt="Avatar" class="rounded-circle" style="width: 20px; height: 20px; object-fit: contain; background: #fff; padding: 1px;" />
                                     <span>Profile</span>
                                 </a>
                             }

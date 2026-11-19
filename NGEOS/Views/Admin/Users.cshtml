@@ -41,9 +41,14 @@
                     <tr>
                         <td>
                             <div class="d-flex align-items-center gap-2">
-                                @if (!string.IsNullOrEmpty(u.ProfileImageUrl))
+                                @{
+                                    var avatarSrc = !string.IsNullOrEmpty(u.ProfileImageUrl) 
+                                        ? u.ProfileImageUrl 
+                                        : (u.Role == "Admin" ? "/images/ngeos-logo.svg" : null);
+                                }
+                                @if (!string.IsNullOrEmpty(avatarSrc))
                                 {
-                                    <img src="@u.ProfileImageUrl" alt="@u.FullName" class="rounded-circle shadow-sm" style="width: 38px; height: 38px; object-fit: cover;" />
+                                    <img src="@avatarSrc" alt="@u.FullName" class="rounded-circle shadow-sm" style="width: 38px; height: 38px; object-fit: contain; background: #fff; padding: 2px;" />
                                 }
                                 else
                                 {

@@ -399,9 +399,10 @@ BEGIN
 END
 GO
 
--- 10. Update Admin User Password Hashes to new NGOES@Admin123
+-- 10. Update Admin User Password Hashes to new NGOES@Admin123 and Profile Image to NGO Logo
 UPDATE [Users]
-SET [PasswordHash] = '2533eedb103676211b406e0a05fce72f67135ae0b88cb123ef478200d9dec247'
+SET [PasswordHash] = '2533eedb103676211b406e0a05fce72f67135ae0b88cb123ef478200d9dec247',
+    [ProfileImageUrl] = '/images/ngeos-logo.svg'
 WHERE [Email] IN ('admin@ngeos.org', 'ngeos@gmail.com') OR [Role] = 'Admin';
-PRINT 'Updated Admin password hashes to NGOES@Admin123.';
+PRINT 'Updated Admin password hashes to NGOES@Admin123 and ProfileImageUrl to NGO logo.';
 GO
