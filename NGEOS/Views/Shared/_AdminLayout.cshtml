@@ -112,6 +112,13 @@
 
     <link rel="alternate icon" type="image/x-icon" href="~/favicon.ico" asp-append-version="true" />
 
+    <!-- Progressive Web App (PWA) & Desktop App Integration -->
+    <link rel="manifest" href="~/manifest.json" asp-append-version="true" />
+    <meta name="theme-color" content="#f25c05" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="NGEOS" />
+
     <style>
 
             :root {
@@ -1789,6 +1796,13 @@
                     bar.style.transition = 'opacity 0.3s ease';
                     setTimeout(function () { bar.classList.remove('active'); bar.style.opacity = '1'; }, 350);
                 }, 300);
+            }
+
+            // Service worker for PWA support across admin portal
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', function () {
+                    navigator.serviceWorker.register('/sw.js').catch(function () {});
+                });
             }
 
         });
