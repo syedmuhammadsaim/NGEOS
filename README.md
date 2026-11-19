@@ -35,13 +35,15 @@
   </p>
 
   <p align="center">
-    <a href="#-live-production-website"><b>🌐 Live Site</b></a> •
-    <a href="#-autonomous-ai-ecosystem-dual-agents"><b>🤖 Autonomous AI Ecosystem</b></a> •
+    <a href="#-live-production-website--cloud-deployment-architecture"><b>🌐 Live Site & Architecture</b></a> •
+    <a href="#-autonomous-ai-ecosystem-dual-agents"><b>🤖 AI Ecosystem</b></a> •
     <a href="#-system-authentication--credentials"><b>🔑 Authentication & Admin</b></a> •
     <a href="#%EF%B8%8F-api-keys--environment-variables-setup"><b>⚙️ API Keys Setup</b></a> •
     <a href="#-quick-start--installation"><b>🚀 Quick Start</b></a> •
     <a href="#%EF%B8%8F-database-setup-local-ssms--cloud"><b>🗄️ Database Setup</b></a> •
+    <a href="#-cloud-deployment-guide-monsteraspnet"><b>☁️ Cloud Deployment Guide</b></a> •
     <a href="#-desktop-application-mode-100-offline"><b>💻 Desktop Mode</b></a> •
+    <a href="#-complete-project-structure"><b>📂 Project Structure</b></a> •
     <a href="#-author"><b>👨‍💻 Author</b></a>
   </p>
 
@@ -71,18 +73,20 @@ NGEOS features a complete, production-grade **Python-powered Autonomous AI Ecosy
 
 ---
 
-## 🌐 Live Production Website
+## 🌐 Live Production Website & Cloud Deployment Architecture
 
-The production version of **NGEOS** is deployed and active with high availability, HTTPS Let's Encrypt SSL encryption, and integrated MS SQL database hosting:
+The production version of **NGEOS** is actively deployed, publicly accessible worldwide with high availability, enterprise DDoS protection, Let's Encrypt 256-bit SSL encryption, and high-performance MS SQL database hosting:
 
-| Attribute | Details |
-| :--- | :--- |
-| **Live URL** | 🔗 **[https://ngeos.runasp.net](https://ngeos.runasp.net)** |
-| **Cloud Host** | MonsterASP.NET Cloud Platform |
-| **SSL / HTTPS** | Let's Encrypt 256-bit SSL Certificate (Active & Forced HTTPS) |
-| **Authentication** | Google OAuth 2.0 + Email/Password + Firebase Phone SMS OTP |
-| **Database** | Remote Cloud MS SQL Database (`db77413`) |
-| **Status** | 🟢 **100% Operational & Live** |
+| Infrastructure Layer | Technology / Provider | Configuration / Status |
+| :--- | :--- | :--- |
+| **Live Production URL** | 🔗 **[https://ngeos.runasp.net](https://ngeos.runasp.net)** | 🟢 **100% Operational & Live** |
+| **Admin Control Portal** | 🔗 **[`https://ngeos.runasp.net/Admin`](https://ngeos.runasp.net/Admin)** | Role-gated executive interface |
+| **Cloud Hosting Platform** | [MonsterASP.NET Cloud Platform](https://www.monsterasp.net/) | Windows Server IIS 10.0 + ASP.NET Core In-Process Hosting |
+| **Application Runtime** | .NET 10 (C# 13, Entity Framework Core 10) | Release profile with Kestrel reverse-proxy optimization |
+| **Cloud Database Host** | Remote MS SQL Database Server (`db77413.databaseasp.net`) | Managed relational DB with connection pooling & TLS encryption |
+| **SSL / HTTPS Security** | Automated Let's Encrypt 256-bit TLS Certificate | Forced HTTPS redirection with HSTS headers |
+| **Authentication Engine** | Google OAuth 2.0 + PBKDF2 Hashed Passwords | Dual-mode cookies & JWT Bearer API security |
+| **Autonomous AI Service** | Python 3.12 / FastAPI AI Engine + .NET Grounding Engine | Dual Groq Llama 3.3 + Google Gemini 2.0 Flash |
 
 ---
 
@@ -212,9 +216,64 @@ PAYFAST_SECURED_KEY=your_secured_key
 
 ### ☁️ Option B: MonsterASP Cloud Database
 1. Log in to your MonsterASP Control Panel.
-2. Open **Database** ➔ click on your database ➔ open **Run T-SQL**.
+2. Open **Database** ➔ click on your database (`db77413`) ➔ open **Run T-SQL** / **Web Query**.
 3. Copy and paste the contents of [`Database/RUN_THIS_ON_MONSTERASP.sql`](Database/RUN_THIS_ON_MONSTERASP.sql).
 4. Click **Run / Execute** to apply all idempotent tables and schema patches safely.
+
+---
+
+## ☁️ Cloud Deployment Guide (MonsterASP.NET)
+
+This section documents **how NGEOS was deployed** and provides the complete procedure for deploying or updating production releases on the **MonsterASP.NET** cloud platform.
+
+### 🏗️ 1. Deployment Architecture
+* **Web Tier:** The core ASP.NET Core application (`NGEOS`) is compiled in Release mode and hosted within IIS 10.0 using the high-performance ASP.NET Core In-Process Hosting Module.
+* **Database Tier:** A dedicated Microsoft SQL Server instance (`db77413`) hosted on `db77413.databaseasp.net`. Schema migrations are fully idempotent and safe to re-run.
+* **Static Assets:** Cached and served with SHA-256 cache-busting fingerprints (`asp-append-version="true"`).
+* **Package Pipeline:** Compiled publish files are compressed into `NGEOS_Deploy_Fast.zip` (228 MB standalone deployment bundle) for direct control panel upload.
+
+### 📋 2. Step-by-Step Deployment Procedure
+
+#### Step A: Cloud Database Migration (T-SQL)
+Before deploying web application binaries, ensure the remote database has all the latest schema objects:
+1. Log in to the **[MonsterASP Control Panel](https://cp.monsterasp.net/)**.
+2. Navigate to **Databases** ➔ **MS SQL**.
+3. Select database `db77413` and open **Web Query** (or **Run T-SQL**).
+4. Copy the entire contents of [`Database/RUN_THIS_ON_MONSTERASP.sql`](Database/RUN_THIS_ON_MONSTERASP.sql) and paste it into the query editor.
+5. Click **Run / Execute**. This idempotent script automatically:
+   * Adds any missing payment transaction columns (`PaymentGateway`, `Currency`, `ProgrammeId`).
+   * Creates the `PaymentTransactions` table and foreign keys.
+   * Creates the Autonomous AI Agent ecosystem tables (`AgentReports`, `AgentConversations`, `AgentMessages`, `AgentUsageStatistics`).
+   * Updates admin default credentials to the secure PBKDF2 hash of `NGOES@Admin123` and binds the official NGO logo avatar.
+
+#### Step B: Compile & Publish the Web Application
+From the local project root, compile the production release:
+```powershell
+# 1. Clean and compile in Release mode
+dotnet publish NGEOS/NGEOS.csproj -c Release -o publish
+
+# 2. Package into a fast deployment zip archive
+Compress-Archive -Path 'publish\*' -DestinationPath 'NGEOS_Deploy_Fast.zip' -Force
+```
+
+#### Step C: Upload & Extract via MonsterASP File Manager
+1. In the MonsterASP Control Panel, go to **Web Sites** ➔ **`ngeos.runasp.net`**.
+2. Open **File Manager** and enter the **`site/wwwroot`** folder.
+3. Click the **Upload** button in the top navigation bar and select `NGEOS_Deploy_Fast.zip`.
+4. Once the upload finishes, right-click `NGEOS_Deploy_Fast.zip` and select **Extract (Unzip)** into `site/wwwroot` (choose *Overwrite All* for existing files).
+5. Delete `NGEOS_Deploy_Fast.zip` from `site/wwwroot` to conserve hosting quota.
+
+#### Step D: Environment Configuration & Application Restart
+1. Verify `appsettings.Production.json` has the correct production connection string:
+   ```json
+   "ConnectionStrings": {
+     "DefaultConnection": "Server=db77413.databaseasp.net;Database=db77413;User Id=db77413;Password=YOUR_PRODUCTION_DB_PASSWORD;Encrypt=False;MultipleActiveResultSets=True;TrustServerCertificate=True;"
+   }
+   ```
+2. In the MonsterASP Control Panel, click **Restart Web** to reload worker processes.
+3. Verify live endpoints:
+   * Public Portal: [https://ngeos.runasp.net](https://ngeos.runasp.net)
+   * Admin Executive Center: [https://ngeos.runasp.net/Admin](https://ngeos.runasp.net/Admin)
 
 ---
 
@@ -304,31 +363,80 @@ The Admin Center at `/Admin` is built with a touch-first architecture:
 
 ---
 
-## 📂 Project Structure
+## 📂 Complete Project Structure
 
 ```text
 NGEOS/
-├── Database/
-│   ├── NGEOSDb.sql                   # Full SQL Server master database schema
-│   └── RUN_THIS_ON_MONSTERASP.sql    # Idempotent cloud migration script
-├── NGEOS/                            # Core ASP.NET Core Full-Stack Application
-│   ├── Controllers/                  # MVC & API Controllers (Admin, Causes, Donate, Chatbot, etc.)
-│   ├── Data/                         # EF Core DbContext & Initializer
-│   ├── Hubs/                         # SignalR Realtime Hubs
-│   ├── Models/                       # Database Entities & Domain Models
-│   ├── Services/                     # AI Providers, Grounding, Payment Gateways, PDF Receipt Engine
-│   ├── Views/                        # Razor Views & Layouts
-│   └── wwwroot/                      # CSS, JavaScript, Images, Brand SVG Assets
-├── NGEOS.Desktop/                    # WPF .NET Desktop Application
-│   ├── Data/                         # Offline SQLite DbContext
-│   ├── Models/                       # Local Entities
-│   ├── Services/                     # Offline Sync, Realtime, Report Services
-│   ├── ViewModels/                   # MVVM ViewModels
-│   └── Views/                        # WPF XAML Views (Admin & User Dashboards, Ledger, Settings)
-├── desktop_publish/                  # Published ready-to-run desktop executable (NGEOS.Desktop.exe)
-├── NGEOS-Desktop-Launcher.bat        # Standalone Full-Stack Offline Desktop Launcher
-├── NGEOS-Desktop-Silent.vbs          # Silent background execution script
-└── README.md                         # Project documentation
+│
+├── 🌐 NGEOS/                                # Core ASP.NET Core 10 Web Application
+│   ├── Controllers/                        # MVC & Web API Controllers
+│   │   ├── AdminController.cs              # 15-module Executive Management Suite
+│   │   ├── CausesController.cs             # Campaign catalog, donations, milestone tracking
+│   │   ├── DonateController.cs             # Multi-gateway donation processing & tax receipts
+│   │   ├── AccountController.cs            # Auth, Google OAuth, Profile, Appeal Center
+│   │   ├── ChatbotApiController.cs         # AI Chatbot endpoint with role-based routing
+│   │   └── Api/                            # RESTful APIs (AgentBridge, Payment Callbacks)
+│   ├── Data/                               # Database Context & Seeding
+│   │   ├── ApplicationDbContext.cs         # EF Core relational database context
+│   │   └── DbInitializer.cs                # Idempotent database seeder & schema initialization
+│   ├── Hubs/                               # Real-Time SignalR Communication
+│   │   ├── SecurityHub.cs                  # 3-Second Account Suspension countdown alerts
+│   │   └── ThreatDefenseHub.cs             # Real-time administrative security telemetry
+│   ├── Migrations/                         # Entity Framework Core Code-First Migrations
+│   ├── Models/                             # Domain Entities (User, Cause, Donation, Report, etc.)
+│   ├── Services/                           # Business Logic & Infrastructure Providers
+│   │   ├── Ai/                             # Grounding, AI Providers (Groq & Gemini), Orchestrator
+│   │   ├── Email/                          # SMTP & Gmail Mail Service
+│   │   ├── Payments/                       # Safepay, JazzCash, Easypaisa, PayFast Gateways
+│   │   └── Pdf/                            # QuestPDF Tax-Exempt Receipt Generation Engine
+│   ├── Views/                              # Razor Views (Admin, User Dashboard, Public Portal)
+│   ├── wwwroot/                            # Static web assets (CSS, JS, SVGs, responsive logos)
+│   ├── appsettings.json                    # Local development configuration
+│   └── appsettings.Production.json         # MonsterASP cloud production configuration
+│
+├── 🖥️ src/                                  # Modular Clean Architecture Desktop Suite
+│   ├── NGEOS.Desktop.Core/                 # Domain layer: Entities, Repository Interfaces, Enums
+│   ├── NGEOS.Desktop.Infrastructure/       # Data layer: SQLite DbContext, Repositories, Security
+│   ├── NGEOS.Desktop.UI/                   # Presentation layer: WPF Views, MVVM ViewModels, Styles
+│   └── NGEOS.Desktop.Tests/                # Automated Unit & Integration Tests (13/13 passing)
+│
+├── 💻 NGEOS.Desktop/                        # Standalone WPF Desktop Client & Offline Engine
+│   ├── Data/                               # Offline SQLite Database Context
+│   ├── ViewModels/                         # MVVM ViewModels (Login, Admin, User, Reports)
+│   └── Views/                              # XAML Windows & UserControls
+│
+├── 🤖 ngeos_ai_service/                    # Autonomous Python AI Agent Ecosystem (FastAPI)
+│   ├── app/
+│   │   ├── agents/                         # AdminAgent, UserAgent, SecurityEngine
+│   │   ├── automation/                     # Background Scheduler & Cron Jobs
+│   │   ├── bridge/                         # ASP.NET Core HTTP Client Bridge
+│   │   ├── prompts/                        # Engineered prompts for Admin, User, and Security
+│   │   ├── providers/                      # Groq (Llama 3.3) & Gemini (2.0 Flash) Orchestrator
+│   │   ├── services/                       # Currency Exchange & Humanitarian Alert services
+│   │   ├── config.py                       # AI Service settings & environment variables
+│   │   └── main.py                         # FastAPI application entry point
+│   └── requirements.txt                    # Python dependencies
+│
+├── 🗄️ Database/                             # Master SQL Server Database & Cloud Migration Scripts
+│   ├── NGEOSDb.sql                         # Complete SQL Server schema with seed data
+│   ├── RUN_THIS_ON_MONSTERASP.sql          # Production idempotent cloud patch script
+│   ├── MonsterASP_Fix_Missing_Columns.sql  # Database patch for missing schema columns
+│   └── MonsterASP_Update_PaymentTransactions.sql # Payment table migration script
+│
+├── 📦 Installer/                            # Windows Application Installer
+│   ├── NGEOS_Setup.iss                     # Inno Setup 6 compilation script
+│   └── Output/                             # Generated Windows Setup executable
+│
+├── 🚀 Deployment & Distribution Bundles/
+│   ├── desktop_publish/                    # Standalone native desktop executable (NGEOS.Desktop.exe)
+│   ├── publish/                            # Pre-compiled ASP.NET Core Release build
+│   └── NGEOS_Deploy_Fast.zip               # Cloud deployment package for MonsterASP.NET
+│
+├── 📜 Launchers & Automation
+│   ├── NGEOS-Desktop-Launcher.bat          # Standalone offline desktop launcher
+│   └── NGEOS-Desktop-Silent.vbs            # Silent background execution script
+│
+└── 📄 README.md                             # Comprehensive project documentation
 ```
 
 ---
