@@ -1,4 +1,4 @@
-﻿/* ==========================================================
+/* ==========================================================
 
    NGEOS Charity & NGO Platform - Modern Design System
 
@@ -276,7 +276,7 @@ main[role="main"] {
 
    ========================================================== */
 
-.ngeos-topbar, {
+.ngeos-topbar {
 
     background: linear-gradient(135deg, #071527 0%, #0d223f 50%, #071527 100%);
 
@@ -502,7 +502,7 @@ main[role="main"] {
 
    ========================================================== */
 
-.ngeos-navbar, {
+.ngeos-navbar {
 
     background: #ffffff;
 
@@ -526,7 +526,7 @@ main[role="main"] {
 
 
 
-    .ngeos-navbar.scrolled, {
+    .ngeos-navbar.scrolled {
 
         background: rgba(255, 255, 255, 0.95) !important;
 
@@ -542,7 +542,7 @@ main[role="main"] {
 
     /* Navbar width adjustment */
 
-    .ngeos-navbar .container, {
+    .ngeos-navbar .container {
 
         max-width: 1440px;
 
@@ -1096,7 +1096,7 @@ main[role="main"] {
 
    ========================================================== */
 
-.ngeos-hero, {
+.ngeos-hero {
 
     position: relative;
 
@@ -1414,7 +1414,7 @@ main[role="main"] {
 
    ========================================================== */
 
-.ngeos-card, {
+.ngeos-card {
 
     background: #ffffff;
 
@@ -1432,13 +1432,13 @@ main[role="main"] {
 
     flex-direction: column;
 
-    height: auto; /* height:100% se card column se bahar nikal kar footer ke neeche chala jata tha */
+    height: auto;
 
 }
 
 
 
-    .ngeos-card:hover, {
+    .ngeos-card:hover {
 
         transform: translateY(-3px);
 
@@ -1450,10 +1450,9 @@ main[role="main"] {
 
 
 
-/* Card tab hi poori height le jab wo column mein akela ho
+/* Card tab hi poori height le jab wo column mein akela ho */
 
-   (Causes / NGOs list ke barabar-height cards) */
- {
+.row > [class*="col"] > .ngeos-card:only-child {
 
     height: 100%;
 
@@ -1486,7 +1485,8 @@ main[role="main"] {
     }
 
 
-:hover .card-img-wrapper img {
+
+.ngeos-card:hover .card-img-wrapper img {
 
     transform: scale(1.06);
 
@@ -2438,7 +2438,7 @@ body:has(.gallery-lightbox-modal.show) .modal-backdrop.show {
 
    ========================================================== */
 
-.ngeos-footer, {
+.ngeos-footer {
 
     background-color: var(--navy-dark);
 
@@ -2454,13 +2454,13 @@ body:has(.gallery-lightbox-modal.show) .modal-backdrop.show {
 
     position: relative;
 
-    z-index: 1030; /* navbar (1050) ke neeche, baqi sab cheezon ke upar */
+    z-index: 1030;
 
 }
 
 
 
-    .ngeos-footer h5, {
+    .ngeos-footer h5 {
 
         color: #ffffff;
 
@@ -2478,7 +2478,7 @@ body:has(.gallery-lightbox-modal.show) .modal-backdrop.show {
 
 
 
-        .ngeos-footer h5::after, {
+        .ngeos-footer h5::after {
 
             content: '';
 
@@ -2564,7 +2564,7 @@ body:has(.gallery-lightbox-modal.show) .modal-backdrop.show {
 
 
 
-.ngeos-footer .social-icon-link, .social-icon-link {
+.ngeos-footer .social-icon-link {
 
     width: 34px;
 
@@ -2578,7 +2578,7 @@ body:has(.gallery-lightbox-modal.show) .modal-backdrop.show {
 
 
 
-    .ngeos-footer .social-icon-link:hover, {
+    .ngeos-footer .social-icon-link:hover {
 
         background: var(--primary-orange);
 
@@ -2684,7 +2684,7 @@ body:has(.gallery-lightbox-modal.show) .modal-backdrop.show {
 
 
 
-    .sticky-sidebar .ngeos-card, {
+    .sticky-sidebar .ngeos-card {
 
         height: auto;
 
@@ -2696,7 +2696,7 @@ body:has(.gallery-lightbox-modal.show) .modal-backdrop.show {
 
 
 
-        .sticky-sidebar .ngeos-card:hover, {
+        .sticky-sidebar .ngeos-card:hover {
 
             transform: none; /* sticky card hover par uchhalna band */
 
@@ -2958,7 +2958,7 @@ body:has(.gallery-lightbox-modal.show) .modal-backdrop.show {
 
 @media (max-width: 1199.98px) {
 
-    .ngeos-navbar .navbar-collapse, {
+    .ngeos-navbar .navbar-collapse {
 
         background: #ffffff;
 
@@ -3230,7 +3230,7 @@ body:has(.gallery-lightbox-modal.show) .modal-backdrop.show {
 
 
 
-        .sticky-sidebar .ngeos-card, {
+        .sticky-sidebar .ngeos-card {
 
             max-height: none;
 
@@ -3423,18 +3423,6 @@ body:not(.admin-body) main[role="main"] {
 }
 
 
-
-    100% {
-
-        opacity: 1;
-
-        transform: translateY(0);
-
-    }
-
-}
-
-}
 
 
 
@@ -4119,8 +4107,8 @@ body.modal-open {
 
 
 
-.ngeos-navbar,,
-.ngeos-topbar, {
+.ngeos-navbar,
+.ngeos-topbar {
 
     padding-right: 0 !important;
 
@@ -4251,7 +4239,6 @@ body.admin-body .admin-main {
 
 
 body.admin-body .admin-main .ngeos-card,
-
 body.admin-body .admin-main .card {
 
     overflow: visible !important;
