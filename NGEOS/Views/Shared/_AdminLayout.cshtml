@@ -1115,59 +1115,47 @@
 
             }
 
-            /* Small Mobile Devices (320px – 480px) */
-
-            @@media (max-width: 480px) {
-
-                :root {
-
-                    --admin-topbar-h: 56px;
-
+            @@media (max-width: 576px) {
+                .admin-topbar .btn {
+                    padding: 4px 10px !important;
+                    font-size: 0.8rem !important;
+                    height: 32px !important;
+                    display: inline-flex !important;
+                    align-items: center !important;
+                    justify-content: center !important;
                 }
-
-                .admin-topbar {
-
-                    padding: 0 10px;
-
-                }
-
-                .admin-menu-btn {
-
-                    width: 36px;
-
-                    height: 36px;
-
-                    min-width: 36px;
-
-                    min-height: 36px;
-
-                    font-size: 1.15rem;
-
-                    margin-right: 6px;
-
-                }
-
                 .admin-topbar .navbar-brand {
-
-                    font-size: 1rem;
-
+                    font-size: 0.95rem !important;
                 }
+                .admin-topbar .brand-logo {
+                    width: 26px !important;
+                    height: 26px !important;
+                }
+            }
 
+            /* Small Mobile Devices (320px – 480px) */
+            @@media (max-width: 480px) {
+                :root {
+                    --admin-topbar-h: 56px;
+                }
+                .admin-topbar {
+                    padding: 0 10px;
+                }
+                .admin-menu-btn {
+                    width: 36px;
+                    height: 36px;
+                    min-width: 36px;
+                    min-height: 36px;
+                    font-size: 1.15rem;
+                    margin-right: 6px;
+                }
                 .admin-main {
-
                     padding: 10px 8px !important;
-
                 }
-
                 .admin-main .ngeos-card,
-            .admin-main .ngeos-card,
-
                 .admin-main .card {
-
                     padding: 14px 12px !important;
-
                     border-radius: 10px !important;
-
                 }
 
                 .admin-main .table th,
@@ -1265,7 +1253,8 @@
         </a>
 
         <div class="d-flex align-items-center gap-2 gap-sm-3 ms-auto">
-            <a asp-controller="Home" asp-action="Index" target="_blank" class="btn btn-outline-light btn-sm rounded-pill px-2 px-sm-3 d-inline-flex align-items-center" title="View Live Public Site">
+            <a asp-controller="Home" asp-action="Index" target="_blank" class="btn btn-outline-light btn-sm rounded-pill px-2 px-sm-3 d-inline-flex align-items-center gap-1" title="View Live Public Site">
+                <i class="bi bi-box-arrow-up-right"></i>
                 <span class="d-none d-sm-inline">Live Site</span>
             </a>
 
@@ -1276,6 +1265,7 @@
                         aria-expanded="false"
                         title="Account menu"
                         style="cursor: pointer;">
+                    <i class="bi bi-person-circle"></i>
                     <span class="d-none d-sm-inline fw-semibold">@(User.Identity?.Name ?? "Administrator")</span>
                 </button>
 

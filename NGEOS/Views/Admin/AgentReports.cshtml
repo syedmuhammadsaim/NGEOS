@@ -23,11 +23,14 @@
 <!-- Filters -->
 <div class="card border-0 shadow-sm p-3 bg-white mb-4">
     <form method="get" class="row g-2 align-items-center">
-        <div class="col-md-4">
-            <input type="text" name="search" value="@ViewBag.Search" class="form-control form-control-sm" placeholder="Search action, description, or report code..." />
+        <div class="col-12 col-md-4">
+            <div class="input-group input-group-sm">
+                <span class="input-group-text bg-light text-muted border-end-0"><i class="bi bi-search"></i></span>
+                <input type="text" name="search" value="@ViewBag.Search" class="form-control form-control-sm border-start-0" placeholder="Search action, description, or code..." />
+            </div>
         </div>
-        <div class="col-md-3">
-            <select name="agent" class="form-select form-select-sm">
+        <div class="col-6 col-md-3">
+            <select name="agent" class="form-select form-select-sm" onchange="this.form.submit()">
                 <option value="">All Agents</option>
                 <option value="AdminAgent" selected="@(ViewBag.Agent == "AdminAgent")">Admin Agent</option>
                 <option value="UserAgent" selected="@(ViewBag.Agent == "UserAgent")">User Agent</option>
@@ -35,8 +38,8 @@
                 <option value="AutomationEngine" selected="@(ViewBag.Agent == "AutomationEngine")">Automation Engine</option>
             </select>
         </div>
-        <div class="col-md-3">
-            <select name="riskLevel" class="form-select form-select-sm">
+        <div class="col-6 col-md-3">
+            <select name="riskLevel" class="form-select form-select-sm" onchange="this.form.submit()">
                 <option value="">All Risk Levels</option>
                 <option value="Low" selected="@(ViewBag.RiskLevel == "Low")">Low</option>
                 <option value="Medium" selected="@(ViewBag.RiskLevel == "Medium")">Medium</option>
@@ -44,9 +47,9 @@
                 <option value="Critical" selected="@(ViewBag.RiskLevel == "Critical")">Critical</option>
             </select>
         </div>
-        <div class="col-md-2 d-flex gap-2">
-            <button type="submit" class="btn btn-orange btn-sm w-100"><i class="bi bi-funnel me-1"></i> Filter</button>
-            <a asp-action="AgentReports" class="btn btn-light btn-sm"><i class="bi bi-arrow-clockwise"></i></a>
+        <div class="col-12 col-md-2 d-flex gap-2">
+            <button type="submit" class="btn btn-orange btn-sm w-100 fw-semibold"><i class="bi bi-funnel me-1"></i> Filter</button>
+            <a asp-action="AgentReports" class="btn btn-light border btn-sm" title="Reset Filters"><i class="bi bi-arrow-clockwise"></i></a>
         </div>
     </form>
 </div>
@@ -54,7 +57,7 @@
 <!-- Reports Table -->
 <div class="card border-0 shadow-sm bg-white overflow-hidden">
     <div class="table-responsive">
-        <table class="table table-hover align-middle mb-0">
+        <table class="table table-hover align-middle mb-0 text-nowrap">
             <thead class="table-light small">
                 <tr>
                     <th>Report Code</th>
