@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using NGEOS.Services.Ai.Dtos;
@@ -10,5 +11,6 @@ namespace NGEOS.Services.Ai.Orchestration
     public interface IAiChatbotService
     {
         Task<ChatbotResponseDto> ProcessMessageAsync(ChatbotRequestDto request, string? userRole = null, CancellationToken cancellationToken = default);
+        List<string> GetAdminDefaultSuggestionChips();
     }
 }

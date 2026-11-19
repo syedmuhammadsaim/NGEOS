@@ -30,47 +30,24 @@
             </div>
         </div>
 
-        <!-- Custom Responsive Agent Filter -->
         <div class="col-6 col-md-3">
-            <div class="dropdown w-100">
-                <button class="form-select form-select-sm text-start d-flex justify-content-between align-items-center w-100" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <span class="text-truncate">
-                        @if (ViewBag.Agent == "AdminAgent") { <text>Admin Agent</text> }
-                        else if (ViewBag.Agent == "UserAgent") { <text>User Agent</text> }
-                        else if (ViewBag.Agent == "SecurityEngine") { <text>Security Engine</text> }
-                        else if (ViewBag.Agent == "AutomationEngine") { <text>Automation Engine</text> }
-                        else { <text>All Agents</text> }
-                    </span>
-                </button>
-                <ul class="dropdown-menu shadow-sm border py-1 w-100" style="min-width: 140px; max-width: 100%;">
-                    <li><a class="dropdown-item py-2 px-3 small @(string.IsNullOrEmpty(ViewBag.Agent) ? "active fw-bold" : "")" href="javascript:void(0)" onclick="applyAgentReportFilter('agent', '')">All Agents</a></li>
-                    <li><a class="dropdown-item py-2 px-3 small @(ViewBag.Agent == "AdminAgent" ? "active fw-bold" : "")" href="javascript:void(0)" onclick="applyAgentReportFilter('agent', 'AdminAgent')">Admin Agent</a></li>
-                    <li><a class="dropdown-item py-2 px-3 small @(ViewBag.Agent == "UserAgent" ? "active fw-bold" : "")" href="javascript:void(0)" onclick="applyAgentReportFilter('agent', 'UserAgent')">User Agent</a></li>
-                    <li><a class="dropdown-item py-2 px-3 small @(ViewBag.Agent == "SecurityEngine" ? "active fw-bold" : "")" href="javascript:void(0)" onclick="applyAgentReportFilter('agent', 'SecurityEngine')">Security Engine</a></li>
-                    <li><a class="dropdown-item py-2 px-3 small @(ViewBag.Agent == "AutomationEngine" ? "active fw-bold" : "")" href="javascript:void(0)" onclick="applyAgentReportFilter('agent', 'AutomationEngine')">Automation Engine</a></li>
-                </ul>
-                <input type="hidden" name="agent" id="agentFilterInput" value="@ViewBag.Agent" />
-            </div>
+            <select name="agent" class="form-select form-select-sm w-100" onchange="this.form.submit()" aria-label="Filter by Agent">
+                <option value="">All Agents</option>
+                <option value="AdminAgent" selected="@(ViewBag.Agent == "AdminAgent")">Admin Agent</option>
+                <option value="UserAgent" selected="@(ViewBag.Agent == "UserAgent")">User Agent</option>
+                <option value="SecurityEngine" selected="@(ViewBag.Agent == "SecurityEngine")">Security Engine</option>
+                <option value="AutomationEngine" selected="@(ViewBag.Agent == "AutomationEngine")">Automation Engine</option>
+            </select>
         </div>
 
-        <!-- Custom Responsive Risk Level Filter -->
         <div class="col-6 col-md-3">
-            <div class="dropdown w-100">
-                <button class="form-select form-select-sm text-start d-flex justify-content-between align-items-center w-100" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <span class="text-truncate">
-                        @if (!string.IsNullOrEmpty(ViewBag.RiskLevel)) { <text>@ViewBag.RiskLevel</text> }
-                        else { <text>All Risk Levels</text> }
-                    </span>
-                </button>
-                <ul class="dropdown-menu dropdown-menu-end shadow-sm border py-1 w-100" style="min-width: 140px; max-width: 100%;">
-                    <li><a class="dropdown-item py-2 px-3 small @(string.IsNullOrEmpty(ViewBag.RiskLevel) ? "active fw-bold" : "")" href="javascript:void(0)" onclick="applyAgentReportFilter('riskLevel', '')">All Risk Levels</a></li>
-                    <li><a class="dropdown-item py-2 px-3 small @(ViewBag.RiskLevel == "Low" ? "active fw-bold" : "")" href="javascript:void(0)" onclick="applyAgentReportFilter('riskLevel', 'Low')">Low</a></li>
-                    <li><a class="dropdown-item py-2 px-3 small @(ViewBag.RiskLevel == "Medium" ? "active fw-bold" : "")" href="javascript:void(0)" onclick="applyAgentReportFilter('riskLevel', 'Medium')">Medium</a></li>
-                    <li><a class="dropdown-item py-2 px-3 small @(ViewBag.RiskLevel == "High" ? "active fw-bold" : "")" href="javascript:void(0)" onclick="applyAgentReportFilter('riskLevel', 'High')">High</a></li>
-                    <li><a class="dropdown-item py-2 px-3 small @(ViewBag.RiskLevel == "Critical" ? "active fw-bold" : "")" href="javascript:void(0)" onclick="applyAgentReportFilter('riskLevel', 'Critical')">Critical</a></li>
-                </ul>
-                <input type="hidden" name="riskLevel" id="riskLevelFilterInput" value="@ViewBag.RiskLevel" />
-            </div>
+            <select name="riskLevel" class="form-select form-select-sm w-100" onchange="this.form.submit()" aria-label="Filter by Risk Level">
+                <option value="">All Risk Levels</option>
+                <option value="Low" selected="@(ViewBag.RiskLevel == "Low")">Low</option>
+                <option value="Medium" selected="@(ViewBag.RiskLevel == "Medium")">Medium</option>
+                <option value="High" selected="@(ViewBag.RiskLevel == "High")">High</option>
+                <option value="Critical" selected="@(ViewBag.RiskLevel == "Critical")">Critical</option>
+            </select>
         </div>
 
         <div class="col-12 col-md-2 d-flex gap-2">
@@ -79,17 +56,6 @@
         </div>
     </form>
 </div>
-
-<script>
-    function applyAgentReportFilter(name, value) {
-        if (name === 'agent') {
-            document.getElementById('agentFilterInput').value = value;
-        } else if (name === 'riskLevel') {
-            document.getElementById('riskLevelFilterInput').value = value;
-        }
-        document.getElementById('agentReportsFilterForm').submit();
-    }
-</script>
 
 <!-- Reports Table -->
 <div class="card border-0 shadow-sm bg-white overflow-hidden">

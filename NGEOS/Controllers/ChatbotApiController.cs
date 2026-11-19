@@ -66,8 +66,9 @@ namespace NGEOS.Controllers
             string? userEmail = null;
 
             bool isAdmin = (request.IsAdmin == true) 
-                        || (User?.Identity?.IsAuthenticated == true && User.IsInRole("Admin"))
-                        || (Request.Headers["Referer"].ToString().Contains("/Admin", StringComparison.OrdinalIgnoreCase));
+                        || (User?.Identity?.IsAuthenticated == true && (User.IsInRole("Admin") || User.HasClaim(ClaimTypes.Role, "Admin") || User.HasClaim("Role", "Admin")))
+                        || (Request.Headers["Referer"].ToString().Contains("/Admin", StringComparison.OrdinalIgnoreCase))
+                        || (HttpContext.Request.Path.Value?.Contains("/Admin", StringComparison.OrdinalIgnoreCase) == true);
 
             if (isAdmin)
             {

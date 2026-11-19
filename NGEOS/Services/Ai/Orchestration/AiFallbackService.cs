@@ -173,17 +173,21 @@ namespace NGEOS.Services.Ai.Orchestration
             if (string.IsNullOrEmpty(text)) return false;
             var keywords = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
             {
-                "aap", "ap", "kya", "kyun", "kyu", "kab", "kahan", "kidhar", "kaise", "kese", 
-                "kesa", "kaisa", "hai", "hain", "ho", "hu", "hoon", "hyn", "bhai", "yaar", 
-                "suno", "sun", "bolo", "baat", "karo", "kro", "batao", "btao", "dikhao", 
-                "dekho", "chahiye", "krna", "karna", "paisa", "paise", "rupay", "kitna", 
-                "kitne", "kitni", "kon", "kaun", "kis", "kisko", "apna", "apni", "apne", 
-                "hoga", "hogi", "hoge", "bhi", "yeh", "ye", "woh", "wo", "sath", "admin", 
-                "panel", "data", "users", "log", "kam", "kaam", "theek", "thik", "shukriya", 
-                "madad", "help", "haal", "chal", "kuch", "sab", "si", "sahi", "acha", "achha", 
-                "shuru", "band", "khata", "hisab", "mujhe", "mera", "meri", "mere", "hum", 
-                "humari", "hamari", "humara", "hamara", "bhejo", "bhej", "dekhein", "dekhain",
-                "batayein", "bataiye", "keise", "horha", "chalrha", "bataen"
+                "aap", "ap", "kya", "kia", "kyun", "kyu", "q", "kab", "kahan", "kidhar", "kaise", "kese", 
+                "kesa", "kaisa", "kaisay", "kesay", "hai", "h", "hy", "hain", "hyn", "ho", "hu", "hoon", "hun", 
+                "tha", "thi", "the", "thay", "bhai", "yaar", "suno", "sun", "bolo", "bol", "baat", "bat", 
+                "karo", "kro", "karna", "krna", "karein", "kren", "krte", "karte", "batao", "btao", "batayein", 
+                "bataiye", "bataen", "dikhao", "dekho", "dekhein", "dekhain", "chahiye", "chahye", "paisa", 
+                "paise", "rupay", "rupee", "kitna", "kitne", "kitni", "kitnay", "kon", "kaun", "kn", "kis", 
+                "kisko", "kisi", "apna", "apni", "apne", "apnay", "hoga", "hogi", "hoge", "hogay", "bhi", 
+                "bi", "yeh", "ye", "woh", "wo", "sath", "admin", "panel", "data", "users", "log", "kam", 
+                "kaam", "theek", "thik", "shukriya", "madad", "help", "haal", "chal", "kuch", "sab", "si", 
+                "sahi", "acha", "achha", "shuru", "band", "khata", "hisab", "mujhe", "mjhe", "mera", "meri", 
+                "mere", "meray", "hum", "hm", "humari", "hamari", "humara", "hamara", "bhejo", "bhej", 
+                "horha", "chalrha", "kare", "sakta", "sakti", "sakte", "nahi", "nhi", "na", "mat", "lekin", 
+                "lkn", "magar", "or", "aur", "pe", "par", "pr", "se", "sy", "ko", "ka", "ki", "ke", "kay", 
+                "main", "mein", "mn", "me", "to", "tw", "toh", "sir", "sahab", "janab", "karo", "kro", 
+                "jawab", "reply", "bhai", "shuru"
             };
 
             var words = text.ToLowerInvariant().Split(new[] { ' ', '?', '!', ',', '.', '\n', '\r', ':', ';', '-', '_' }, StringSplitOptions.RemoveEmptyEntries);
@@ -204,18 +208,19 @@ namespace NGEOS.Services.Ai.Orchestration
             bool isUrdu = IsUrduScript(userMessage ?? string.Empty);
             bool isRoman = IsRomanUrdu(userMessage ?? string.Empty);
 
-            // 1. Casual Chit-Chat & Greetings in Roman Urdu / English
+            // 1. Casual Chit-Chat, Conversation & Greetings in Roman Urdu / English
             if (msg == "hi" || msg == "hello" || msg == "hey" || msg.Contains("salam") || msg.Contains("assalam") || msg == "aoa"
-                || msg.Contains("kya haal") || msg.Contains("kese ho") || msg.Contains("kaise ho") || msg.Contains("kaisa hai")
-                || msg.Contains("baat kro") || msg.Contains("baat karo") || msg.Contains("suno") || msg.Contains("kya chal rha") || msg.Contains("kya ho rha"))
+                || msg.Contains("kya haal") || msg.Contains("kese ho") || msg.Contains("kaise ho") || msg.Contains("kaisa hai") || msg.Contains("kesa hai")
+                || msg.Contains("baat") || msg.Contains("suno") || msg.Contains("kya chal") || msg.Contains("kya ho rha") || msg.Contains("reply") || msg.Contains("jawab")
+                || msg.Contains("theek") || msg.Contains("thik") || msg.Contains("kuch batao") || msg.Contains("kuch bolo") || msg.Contains("sun rhe ho"))
             {
                 if (isUrdu)
                 {
                     return "**السلام علیکم ایڈمنسٹریٹر صاحب! 🛡️**\n\nالحمدللہ میں بالکل ٹھیک ہوں اور NGEOS کا خودمختار ایڈمن AI انجن چوبیس گھنٹے فعال ہے۔ میں ایڈمن ڈیش بورڈ کے تمام 15 حصوں، لائیو فنانشل لیجر اور سیکیورٹی تھریٹس کی نگرانی کر رہا ہوں۔\n\nآپ ایڈمن پینل کے کس سیکشن کی رپورٹ یا ڈیٹا دیکھنا چاہتے ہیں؟\n\n* **[عطیات اور لیجر](/Admin/Donations):** مالیاتی ٹرانزیکشنز اور رسیدیں\n* **[مہمات منیجر](/Admin/Causes):** فعال مہمات اور فنڈز کا ہدف\n* **[صارفین ڈائریکٹری](/Admin/Users):** رجسٹرڈ ممبران اور کردار\n* **[سیکیورٹی انٹیلی جنس](/Admin/SecurityIntelligence):** تھریٹ ڈیفنس اور خودکار آڈٹ\n* **[ایجنٹ رپورٹس](/Admin/AgentReports):** خودکار AI لاگز";
                 }
-                if (isRoman)
+                if (isRoman || true) // Default to Roman Urdu for colloquial/chit-chat if not Urdu script
                 {
-                    return "**Assalam-o-Alaikum Administrator Sahab! 🛡️**\n\nAlhamdulillah, main bilkul theek hoon aur NGEOS Autonomous Admin AI Engine poori tarah active hai! Main Admin Dashboard ke tamaam 15 sections aur live financial ledger ko 24/7 monitor kar raha hoon.\n\nAap Admin Panel ke mutaliq kya report ya data dekhna chahte hain?\n\n* **[Donations & Ledger](/Admin/Donations):** Live financial collections & transaction records\n* **[Welfare Causes](/Admin/Causes):** Active campaigns aur funding target progress\n* **[Member Directory](/Admin/Users):** Registered users aur security roles\n* **[Security Intelligence](/Admin/SecurityIntelligence):** Threat defense aur automated audits\n* **[Agent Reports](/Admin/AgentReports):** Autonomous AI execution logs\n* **[Support Queries](/Admin/Queries):** Pending donor tickets\n\nAap Roman Urdu ya English mein jo sawal poochna chahein, type karein!";
+                    return "**Assalam-o-Alaikum Administrator Sahab! 🛡️**\n\nJee bilkul, main aap ke sath Roman Urdu mein baat kar raha hoon! NGEOS Autonomous Admin AI Engine 24/7 poori tarah active hai aur Admin Dashboard ke tamaam 15 sections aur live financial ledger ki monitoring kar raha hai.\n\nAap Admin Panel ke mutaliq kya report ya data dekhna chahte hain?\n\n* **[Donations & Ledger](/Admin/Donations):** Live financial collections & transaction records\n* **[Welfare Causes](/Admin/Causes):** Active campaigns aur funding target progress\n* **[Member Directory](/Admin/Users):** Registered users aur security roles\n* **[Security Intelligence](/Admin/SecurityIntelligence):** Threat defense aur automated audits\n* **[Agent Reports](/Admin/AgentReports):** Autonomous AI execution logs\n* **[Support Queries](/Admin/Queries):** Pending donor tickets\n\nAap Roman Urdu ya English mein jo sawal poochna chahein, type karein!";
                 }
 
                 return "**Assalam-o-Alaikum, Administrator! 🛡️**\n\nI am fully operational and actively monitoring all 15 NGEOS Admin Dashboard modules and live financial records.\n\nHow can I assist you with platform administration today?\n\n* **[Donations & Ledger](/Admin/Donations):** Master financial transaction records\n* **[Welfare Causes](/Admin/Causes):** Active campaigns and funding targets\n* **[Member Directory](/Admin/Users):** Registered users and security roles\n* **[Security Intelligence](/Admin/SecurityIntelligence):** Threat Defense and audit trails\n* **[Agent Audit Reports](/Admin/AgentReports):** Autonomous AI execution logs";
@@ -581,7 +586,7 @@ namespace NGEOS.Services.Ai.Orchestration
             return GetAdminDefaultSuggestionChips();
         }
 
-        private List<string> GetAdminDefaultSuggestionChips()
+        public List<string> GetAdminDefaultSuggestionChips()
         {
             return new List<string>
             {

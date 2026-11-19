@@ -148,7 +148,8 @@ namespace NGEOS.Services.Ai
                     {
                         IsSuccess = true,
                         Reply = reply,
-                        ProviderUsed = provider ?? "PythonAdminAgent"
+                        ProviderUsed = provider ?? "PythonAdminAgent",
+                        SuggestedActions = _fallbackService.GetAdminDefaultSuggestionChips()
                     };
                 }
             }
@@ -158,11 +159,13 @@ namespace NGEOS.Services.Ai
             }
 
             // Fallback response if Python service is offline
-            return await _fallbackService.ProcessMessageAsync(
+            var fallbackResult = await _fallbackService.ProcessMessageAsync(
                 new ChatbotRequestDto { Message = query, IsAdmin = true },
                 "Admin",
                 cancellationToken
             );
+            fallbackResult.SuggestedActions = _fallbackService.GetAdminDefaultSuggestionChips();
+            return fallbackResult;
         }
 
         public async Task<bool> EvaluateSecurityAsync(

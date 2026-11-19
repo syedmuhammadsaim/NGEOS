@@ -224,13 +224,44 @@
         messagesContainer.insertBefore(msgDiv, typingIndicator);
     }
 
+    const ADMIN_DEFAULT_SECTIONS = [
+        "Donations & Ledger",
+        "Welfare Causes",
+        "Member Directory",
+        "Security & Threats",
+        "Agent Audit Reports",
+        "Donation Intelligence",
+        "NGOs & Partners",
+        "Events & Programmes",
+        "Support Queries",
+        "CMS & Media"
+    ];
+
     function renderSuggestionChips(actions) {
         if (!suggestionsContainer) return;
         const chipsContainer = suggestionsContainer.querySelector(".suggestions-chips");
         if (!chipsContainer) return;
 
+        const isAdmin = checkIsAdmin();
+        const label = suggestionsContainer.querySelector(".suggestions-label");
+        if (label) {
+            if (isAdmin) {
+                label.innerHTML = '<i class="bi bi-grid-fill text-orange me-1"></i> Admin Panel Sections:';
+            } else {
+                label.innerHTML = '<i class="bi bi-compass-fill text-orange me-1"></i> Quick Guide Options:';
+            }
+        }
+
+        // If in admin mode, enforce strictly admin panel sections
+        let chipsToRender = actions;
+        if (isAdmin) {
+            if (!actions || actions.length === 0 || actions.some(a => a.includes("Donate") || a.includes("Zakat") || a.includes("Active Causes"))) {
+                chipsToRender = ADMIN_DEFAULT_SECTIONS;
+            }
+        }
+
         chipsContainer.innerHTML = "";
-        actions.forEach(action => {
+        (chipsToRender || []).forEach(action => {
             const btn = document.createElement("button");
             btn.type = "button";
             btn.className = "suggestion-chip";
