@@ -85,7 +85,10 @@ namespace NGEOS.Services.Ai
                 };
                 request.Content = JsonContent.Create(payload);
 
-                using var response = await _httpClient.SendAsync(request, cancellationToken);
+                using var timeoutCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+                timeoutCts.CancelAfter(TimeSpan.FromSeconds(2));
+
+                using var response = await _httpClient.SendAsync(request, timeoutCts.Token);
                 if (response.IsSuccessStatusCode)
                 {
                     var data = await response.Content.ReadFromJsonAsync<JsonElement>(cancellationToken: cancellationToken);
@@ -131,7 +134,10 @@ namespace NGEOS.Services.Ai
                 };
                 request.Content = JsonContent.Create(payload);
 
-                using var response = await _httpClient.SendAsync(request, cancellationToken);
+                using var timeoutCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+                timeoutCts.CancelAfter(TimeSpan.FromSeconds(2));
+
+                using var response = await _httpClient.SendAsync(request, timeoutCts.Token);
                 if (response.IsSuccessStatusCode)
                 {
                     var data = await response.Content.ReadFromJsonAsync<JsonElement>(cancellationToken: cancellationToken);
@@ -153,8 +159,8 @@ namespace NGEOS.Services.Ai
 
             // Fallback response if Python service is offline
             return await _fallbackService.ProcessMessageAsync(
-                new ChatbotRequestDto { Message = query },
-                "NGEOS Administrator",
+                new ChatbotRequestDto { Message = query, IsAdmin = true },
+                "Admin",
                 cancellationToken
             );
         }
@@ -183,7 +189,10 @@ namespace NGEOS.Services.Ai
                 };
                 request.Content = JsonContent.Create(data);
 
-                using var response = await _httpClient.SendAsync(request, cancellationToken);
+                using var timeoutCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+                timeoutCts.CancelAfter(TimeSpan.FromSeconds(2));
+
+                using var response = await _httpClient.SendAsync(request, timeoutCts.Token);
                 return response.IsSuccessStatusCode;
             }
             catch (Exception ex)

@@ -484,3 +484,26 @@
     object-fit: contain;
     display: block;
 }
+
+/* ============================================================
+   Admin Executive Mode Theming
+   ============================================================ */
+.ngeos-chatbot-trigger.admin-trigger {
+    background: linear-gradient(135deg, #0b192c 0%, #1e3e62 60%, #f25c05 100%) !important;
+    box-shadow: 0 10px 25px -5px rgba(11, 25, 44, 0.6), 0 0 0 1px rgba(242, 92, 5, 0.5) !important;
+}
+.ngeos-chatbot-trigger.admin-trigger:hover {
+    box-shadow: 0 14px 28px -5px rgba(11, 25, 44, 0.75), 0 0 0 2px rgba(242, 92, 5, 0.7) !important;
+}
+.ngeos-chat-header.admin-header {
+    background: linear-gradient(135deg, #0b192c 0%, #1e3e62 100%) !important;
+    border-bottom: 2px solid #f25c05 !important;
+}
+.admin-chat-mode .suggestion-chip {
+    border-color: rgba(242, 92, 5, 0.3) !important;
+}
+.admin-chat-mode .suggestion-chip:hover {
+    background-color: #fff6f0 !important;
+    border-color: #f25c05 !important;
+    color: #f25c05 !important;
+}

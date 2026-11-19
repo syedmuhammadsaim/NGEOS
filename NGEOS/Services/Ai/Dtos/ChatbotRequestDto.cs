@@ -14,6 +14,8 @@ namespace NGEOS.Services.Ai.Dtos
 
         public List<ChatMessageItem> ConversationHistory { get; set; } = new();
 
+        public bool? IsAdmin { get; set; }
+
         public string? SessionId { get; set; }
     }
 }

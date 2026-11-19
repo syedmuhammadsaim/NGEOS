@@ -1,41 +1,52 @@
+@{
+    var currentCtrl = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
+    var currentPath = Context.Request.Path.Value ?? "";
+    bool isAdminArea = currentCtrl.Equals("Admin", StringComparison.OrdinalIgnoreCase) 
+                       || currentPath.StartsWith("/Admin", StringComparison.OrdinalIgnoreCase)
+                       || (User.Identity?.IsAuthenticated == true && User.IsInRole("Admin"));
+    bool isUserAuth = User.Identity?.IsAuthenticated == true && !isAdminArea;
+}
 <!-- ============================================================
      NGEOS AI CHATBOT WIDGET
      Multi-Provider (Groq Llama 3.3 + Gemini Fallback)
-     Live SQL Server Database Grounded
+     Live SQL Server Database Grounded (Admin & User Separation)
      ============================================================ -->
-<div id="ngeos-chatbot-container" class="ngeos-chatbot-wrapper" aria-label="NGEOS AI Chatbot">
+<div id="ngeos-chatbot-container" 
+     class="ngeos-chatbot-wrapper @(isAdminArea ? "admin-chat-mode" : "")" 
+     data-is-admin="@(isAdminArea ? "true" : "false")" 
+     aria-label="NGEOS AI Chatbot">
     <!-- Floating Action Trigger Button -->
     <button id="ngeos-chatbot-toggle-btn" 
-            class="ngeos-chatbot-trigger shadow-lg" 
+            class="ngeos-chatbot-trigger shadow-lg @(isAdminArea ? "admin-trigger" : "")" 
             type="button" 
             aria-label="Open NGEOS AI Assistant" 
             aria-expanded="false" 
             aria-controls="ngeos-chatbot-window"
-            title="Chat with NGEOS AI Guide Assistant">
-        <span class="trigger-icon-open"><i class="bi bi-robot"></i></span>
+            title="@(isAdminArea ? "Chat with NGEOS Admin Executive AI" : "Chat with NGEOS AI Guide Assistant")">
+        <span class="trigger-icon-open"><i class="bi @(isAdminArea ? "bi-shield-check" : "bi-robot")"></i></span>
         <span class="trigger-icon-close"><i class="bi bi-x-lg"></i></span>
         <span class="status-pulse-dot" title="AI Assistant Online"></span>
-        <span class="trigger-label-pill d-none d-md-inline-flex">AI Guide</span>
+        <span class="trigger-label-pill d-none d-md-inline-flex">@(isAdminArea ? "Admin AI" : "AI Guide")</span>
     </button>
 
     <!-- Chatbot Main Window -->
     <div id="ngeos-chatbot-window" class="ngeos-chat-window shadow-2xl" role="dialog" aria-modal="true" aria-labelledby="chat-header-title">
         <!-- Header -->
-        <div class="ngeos-chat-header">
+        <div class="ngeos-chat-header @(isAdminArea ? "admin-header" : "")">
             <div class="d-flex align-items-center gap-2">
                 <div class="chat-avatar-wrapper position-relative">
-                    <div class="chat-avatar-icon d-flex align-items-center justify-content-center text-white rounded-circle" style="width: 36px; height: 36px; background: #f25c05;">
-                        <i class="bi bi-robot fs-5"></i>
+                    <div class="chat-avatar-icon d-flex align-items-center justify-content-center text-white rounded-circle" style="width: 36px; height: 36px; background: @(isAdminArea ? "#0b192c" : "#f25c05"); @(isAdminArea ? "border: 2px solid #f25c05;" : "")">
+                        <i class="bi @(isAdminArea ? "bi-shield-lock text-warning" : "bi-robot") fs-5"></i>
                     </div>
                     <span class="chat-online-badge" title="Live Database Grounded"></span>
                 </div>
                 <div>
                     <h6 class="mb-0 fw-bold text-white d-flex align-items-center gap-2" id="chat-header-title">
-                        @(User.Identity?.IsAuthenticated == true ? "NGEOS Personal AI Guide" : "NGEOS AI Assistant")
+                        @(isAdminArea ? "NGEOS Admin Executive AI" : (isUserAuth ? "NGEOS Personal AI Guide" : "NGEOS AI Assistant"))
                     </h6>
                     <small class="text-white-50 d-flex align-items-center gap-1 font-monospace" style="font-size: 0.72rem;">
                         <span id="ngeos-chat-provider-badge" class="badge rounded-pill bg-light text-dark fw-medium px-2" style="font-size: 0.65rem;">Groq + Gemini</span>
-                        <span>• Live Verified</span>
+                        <span>• @(isAdminArea ? "Admin Verified" : "Live Verified")</span>
                     </small>
                 </div>
             </div>
@@ -59,7 +70,71 @@
 
         <!-- Chat Conversation Messages Body -->
         <div id="ngeos-chat-messages" class="ngeos-chat-body" tabindex="0" role="log" aria-live="polite">
-            @if (User.Identity?.IsAuthenticated == true)
+            @if (isAdminArea)
+            {
+                <!-- Initial Welcome Message Card for Administrator -->
+                <div class="chat-msg chat-msg-bot">
+                    <div class="msg-avatar">
+                        <div class="avatar-robot-icon d-flex align-items-center justify-content-center text-white rounded-circle" style="width: 32px; height: 32px; background: #0b192c; border: 2px solid #f25c05;">
+                            <i class="bi bi-shield-check text-warning small"></i>
+                        </div>
+                    </div>
+                    <div class="msg-content">
+                        <div class="msg-bubble welcome-bubble" style="border-left: 3px solid #f25c05;">
+                            <p class="mb-1 fw-bold text-dark">
+                                Assalam-o-Alaikum, Administrator! 🛡️
+                            </p>
+                            <p class="mb-2 text-secondary" style="font-size: 0.88rem;">
+                                Main aapka <strong>NGEOS Autonomous Admin AI Agent</strong> hoon. Main Admin Dashboard ke tamaam 15 sections (Ledger, Causes, Members, Security Intelligence, Agent Reports, Support Desk, CMS) ki live reporting aur operations ke liye hazir hoon:
+                            </p>
+                            <div class="lang-pills mb-2">
+                                <span class="badge bg-light text-dark border">English</span>
+                                <span class="badge bg-light text-dark border">Roman Urdu</span>
+                                <span class="badge bg-light text-dark border">اردو</span>
+                            </div>
+                        </div>
+                        <span class="msg-timestamp">Just now</span>
+                    </div>
+                </div>
+
+                <!-- Suggestion Chips Container for Admin (STRICTLY ADMIN PANEL SECTIONS) -->
+                <div id="ngeos-chat-suggestions" class="chat-suggestions-area">
+                    <div class="suggestions-label"><i class="bi bi-grid-fill text-orange me-1"></i> Admin Panel Sections:</div>
+                    <div class="suggestions-chips">
+                        <button type="button" class="suggestion-chip" data-prompt="Donations aur Financial Ledger ka mukammal data aur status dikhao.">
+                            <i class="bi bi-cash-coin me-1"></i> Donations & Ledger
+                        </button>
+                        <button type="button" class="suggestion-chip" data-prompt="Active Welfare Causes ka target aur raised funds status batao.">
+                            <i class="bi bi-heart-pulse me-1"></i> Welfare Causes
+                        </button>
+                        <button type="button" class="suggestion-chip" data-prompt="Registered Members Directory aur active user accounts ki summary do.">
+                            <i class="bi bi-people me-1"></i> Member Directory
+                        </button>
+                        <button type="button" class="suggestion-chip" data-prompt="Security Intelligence aur Threat Defense audit summary dikhao.">
+                            <i class="bi bi-shield-lock me-1"></i> Security & Threats
+                        </button>
+                        <button type="button" class="suggestion-chip" data-prompt="Autonomous AI Agent Audit Reports aur automated logs ka status kya hai?">
+                            <i class="bi bi-journal-text me-1"></i> Agent Audit Reports
+                        </button>
+                        <button type="button" class="suggestion-chip" data-prompt="Donation Intelligence aur predictive trends ki analytics summary do.">
+                            <i class="bi bi-graph-up-arrow me-1"></i> Donation Intelligence
+                        </button>
+                        <button type="button" class="suggestion-chip" data-prompt="Associated NGOs aur Corporate Partners ka status dikhao.">
+                            <i class="bi bi-building me-1"></i> NGOs & Partners
+                        </button>
+                        <button type="button" class="suggestion-chip" data-prompt="Our Programmes aur Charity Events ka schedule aur progress batao.">
+                            <i class="bi bi-calendar-event me-1"></i> Events & Programmes
+                        </button>
+                        <button type="button" class="suggestion-chip" data-prompt="Support Queries aur pending donor tickets ka kya status hai?">
+                            <i class="bi bi-headset me-1"></i> Support Queries
+                        </button>
+                        <button type="button" class="suggestion-chip" data-prompt="CMS Pages, Media Gallery aur FAQs ka content status batao.">
+                            <i class="bi bi-file-earmark-richtext me-1"></i> CMS & Media
+                        </button>
+                    </div>
+                </div>
+            }
+            else if (isUserAuth)
             {
                 <!-- Initial Welcome Message Card for Logged-In User -->
                 <div class="chat-msg chat-msg-bot">
@@ -71,7 +146,7 @@
                     <div class="msg-content">
                         <div class="msg-bubble welcome-bubble">
                             <p class="mb-1 fw-bold text-dark">
-                                Assalam-o-Alaikum, @(User.Identity.Name ?? "Valued Donor")! 👋
+                                Assalam-o-Alaikum, @(User.Identity?.Name ?? "Valued Donor")! 👋
                             </p>
                             <p class="mb-2 text-secondary" style="font-size: 0.88rem;">
                                 I am your <strong>Personal NGEOS Guide Agent</strong>. I am here to assist you with dashboard navigation, donation history &amp; receipts, exploring verified causes, and answering any platform inquiries:
@@ -177,7 +252,7 @@
                     <input type="text" 
                            id="ngeos-chat-input" 
                            class="form-control chat-input" 
-                           placeholder="Ask in English, Urdu ya Roman Urdu..." 
+                           placeholder="@(isAdminArea ? "Admin query poochein (Roman Urdu, Urdu ya English)..." : "Ask in English, Urdu ya Roman Urdu...")" 
                            maxlength="1000" 
                            autocomplete="off"
                            aria-label="Type your message" />

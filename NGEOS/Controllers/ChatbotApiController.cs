@@ -65,22 +65,28 @@ namespace NGEOS.Controllers
             string userRole = "Guest / Donor";
             string? userEmail = null;
 
-            if (User?.Identity?.IsAuthenticated == true)
+            bool isAdmin = (request.IsAdmin == true) 
+                        || (User?.Identity?.IsAuthenticated == true && User.IsInRole("Admin"))
+                        || (Request.Headers["Referer"].ToString().Contains("/Admin", StringComparison.OrdinalIgnoreCase));
+
+            if (isAdmin)
+            {
+                userRole = "Admin";
+                userName = "NGEOS Platform Administrator";
+                if (User?.Identity?.IsAuthenticated == true)
+                {
+                    var idClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                    if (int.TryParse(idClaim, out int parsedId)) userId = parsedId;
+                    userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
+                }
+            }
+            else if (User?.Identity?.IsAuthenticated == true)
             {
                 var idClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 if (int.TryParse(idClaim, out int parsedId)) userId = parsedId;
                 userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
-
-                if (User.IsInRole("Admin"))
-                {
-                    userRole = "Admin";
-                    userName = "NGEOS Platform Administrator";
-                }
-                else
-                {
-                    userName = User.Identity.Name ?? "Registered Member";
-                    userRole = "User";
-                }
+                userName = User.Identity.Name ?? "Registered Member";
+                userRole = "User";
             }
 
             // Security evaluation pass (fire and forget / non-blocking)

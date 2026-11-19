@@ -1,12 +1,11 @@
 /**
  * NGEOS AI Chatbot Client Script
  * Handles real-time messaging, multi-provider fallback display,
- * live database grounding responses, and smooth scrolling.
+ * live database grounding responses, role-aware admin/user separation, and smooth scrolling.
  */
 (function () {
     "use strict";
 
-    const STORAGE_KEY = "NGEOS_AI_CHAT_HISTORY";
     const WINDOW_STATE_KEY = "NGEOS_AI_CHAT_OPEN";
 
     // DOM Elements
@@ -17,6 +16,15 @@
     // State
     let conversationHistory = [];
     let isWaitingForResponse = false;
+
+    function checkIsAdmin() {
+        return container?.getAttribute("data-is-admin") === "true" 
+            || window.location.pathname.toLowerCase().startsWith("/admin");
+    }
+
+    function getStorageKey() {
+        return checkIsAdmin() ? "NGEOS_ADMIN_AI_CHAT_HISTORY" : "NGEOS_USER_AI_CHAT_HISTORY";
+    }
 
     document.addEventListener("DOMContentLoaded", initChatbot);
 
@@ -125,6 +133,7 @@
         scrollToBottom();
 
         try {
+            const isAdmin = checkIsAdmin();
             const response = await fetch("/api/chatbot/message", {
                 method: "POST",
                 headers: {
@@ -133,6 +142,7 @@
                 },
                 body: JSON.stringify({
                     message: messageText,
+                    isAdmin: isAdmin,
                     conversationHistory: conversationHistory.slice(-8)
                 })
             });
@@ -159,7 +169,7 @@
 
             // 7. Update header provider badge
             if (providerBadge && provider && provider !== "None") {
-                providerBadge.textContent = provider === "Groq" ? "Groq Llama 3.3" : "Gemini 2.0";
+                providerBadge.textContent = provider === "Groq" ? "Groq Llama 3.3" : (provider.includes("Gemini") ? "Gemini 2.0" : provider);
             }
         } catch (error) {
             console.error("Chatbot request failed:", error);
@@ -193,8 +203,13 @@
                 ? `<span class="provider-badge-indicator"><i class="bi bi-cpu-fill text-warning"></i> via ${escapeHtml(provider)}</span>` 
                 : '';
 
+            const isAdmin = checkIsAdmin();
+            const avatarHtml = isAdmin 
+                ? `<div class="msg-avatar"><div class="avatar-robot-icon d-flex align-items-center justify-content-center text-white rounded-circle" style="width: 32px; height: 32px; background: #0b192c; border: 2px solid #f25c05;"><i class="bi bi-shield-check text-warning small"></i></div></div>`
+                : `<div class="msg-avatar"><img src="/images/ngeos-logo.svg" alt="NGEOS" class="msg-avatar-img" /></div>`;
+
             msgDiv.innerHTML = `
-                <div class="msg-avatar"><img src="/images/ngeos-logo.svg" alt="NGEOS" class="msg-avatar-img" /></div>
+                ${avatarHtml}
                 <div class="msg-content">
                     <div class="msg-bubble">${formattedContent}</div>
                     <div class="d-flex align-items-center justify-content-between">
@@ -220,7 +235,22 @@
             btn.type = "button";
             btn.className = "suggestion-chip";
             btn.setAttribute("data-prompt", action);
-            btn.innerHTML = `<i class="bi bi-arrow-right-short me-1"></i> ${escapeHtml(action)}`;
+
+            // Choose icon dynamically based on action name
+            let iconClass = "bi-arrow-right-short";
+            const lower = action.toLowerCase();
+            if (lower.includes("ledger") || lower.includes("donation") || lower.includes("paisa") || lower.includes("funds")) iconClass = "bi-cash-coin";
+            else if (lower.includes("cause") || lower.includes("campaign") || lower.includes("welfare")) iconClass = "bi-heart-pulse";
+            else if (lower.includes("member") || lower.includes("user") || lower.includes("directory")) iconClass = "bi-people";
+            else if (lower.includes("security") || lower.includes("threat") || lower.includes("defense")) iconClass = "bi-shield-lock";
+            else if (lower.includes("audit") || lower.includes("agent") || lower.includes("report")) iconClass = "bi-journal-text";
+            else if (lower.includes("intelligence") || lower.includes("trend") || lower.includes("predict")) iconClass = "bi-graph-up-arrow";
+            else if (lower.includes("ngo") || lower.includes("partner") || lower.includes("corporate")) iconClass = "bi-building";
+            else if (lower.includes("event") || lower.includes("program") || lower.includes("drive")) iconClass = "bi-calendar-event";
+            else if (lower.includes("query") || lower.includes("ticket") || lower.includes("support")) iconClass = "bi-headset";
+            else if (lower.includes("cms") || lower.includes("media") || lower.includes("faq") || lower.includes("gallery")) iconClass = "bi-file-earmark-richtext";
+
+            btn.innerHTML = `<i class="bi ${iconClass} me-1"></i> ${escapeHtml(action)}`;
             chipsContainer.appendChild(btn);
         });
     }
@@ -240,20 +270,37 @@
     function clearConversation() {
         if (confirm("Clear conversation history?")) {
             conversationHistory = [];
-            sessionStorage.removeItem(STORAGE_KEY);
+            sessionStorage.removeItem(getStorageKey());
 
             // Remove all messages except welcome message and typing indicator
             const msgs = messagesContainer.querySelectorAll(".chat-msg:not(:first-child):not(#ngeos-chat-typing-indicator)");
             msgs.forEach(m => m.remove());
 
-            // Reset suggestions
-            renderSuggestionChips([
-                "Active Causes",
-                "How to Donate?",
-                "Total Funds Raised",
-                "Programmes",
-                "Volunteer Jobs"
-            ]);
+            // Reset suggestions based on role
+            const isAdmin = checkIsAdmin();
+            if (isAdmin) {
+                renderSuggestionChips([
+                    "Donations & Ledger",
+                    "Welfare Causes",
+                    "Member Directory",
+                    "Security & Threats",
+                    "Agent Audit Reports",
+                    "Donation Intelligence",
+                    "NGOs & Partners",
+                    "Events & Programmes",
+                    "Support Queries",
+                    "CMS & Media"
+                ]);
+            } else {
+                renderSuggestionChips([
+                    "Active Causes",
+                    "How to Donate?",
+                    "Total Funds Raised",
+                    "Programmes",
+                    "Volunteer Jobs",
+                    "Zakat & Sadqah"
+                ]);
+            }
 
             chatInput?.focus();
         }
@@ -269,7 +316,7 @@
 
     function saveSessionHistory() {
         try {
-            sessionStorage.setItem(STORAGE_KEY, JSON.stringify(conversationHistory));
+            sessionStorage.setItem(getStorageKey(), JSON.stringify(conversationHistory));
         } catch (e) {
             // Ignore storage quota errors
         }
@@ -277,7 +324,7 @@
 
     function loadSessionHistory() {
         try {
-            const saved = sessionStorage.getItem(STORAGE_KEY);
+            const saved = sessionStorage.getItem(getStorageKey());
             if (saved) {
                 const parsed = JSON.parse(saved);
                 if (Array.isArray(parsed) && parsed.length > 0) {
@@ -305,7 +352,7 @@
                     } else if (status.isGeminiConfigured) {
                         providerBadge.textContent = "Gemini Active";
                     } else {
-                        providerBadge.textContent = "Standby";
+                        providerBadge.textContent = "Live Grounded";
                     }
                 }
             }
