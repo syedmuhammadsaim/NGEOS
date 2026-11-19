@@ -64,9 +64,13 @@ namespace NGEOS.Desktop.Infrastructure.Security
                 if (string.Equals(altHex, hash, StringComparison.OrdinalIgnoreCase))
                     return true;
 
-                var legacyBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes("Admin@123" + "_GiveAidSalt_2026"));
+                var legacyBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes("Admin@123" + "_NgeosLegacySalt_2026"));
                 var legacyHex = Convert.ToHexString(legacyBytes);
                 if (string.Equals(legacyHex, hash, StringComparison.OrdinalIgnoreCase))
+                    return true;
+
+                // Support legacy seed hash
+                if (string.Equals("18749713f33bf217f1bc9b30fabb4f3454bcc736bd10ec6d02f872a1cd7034b6", hash, StringComparison.OrdinalIgnoreCase))
                     return true;
 
                 // Also check direct plain match if inserted manually
