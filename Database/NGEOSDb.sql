@@ -1186,3 +1186,273 @@ IF NOT EXISTS (SELECT 1 FROM [PasswordResetTokens] WHERE [Id] = 1020)
 GO
 SET IDENTITY_INSERT [PasswordResetTokens] OFF;
 GO
+
+-- ============================================================================
+-- AUTONOMOUS AI ECOSYSTEM TABLES (NGEOS AGENT ENGINE)
+-- Idempotent creation for local, SQL Server, and cloud hosting (MonsterASP)
+-- ============================================================================
+
+-- 1. Table: [AgentConfigurations]
+IF NOT EXISTS (SELECT 1 FROM sys.tables WHERE name = N'AgentConfigurations')
+BEGIN
+    CREATE TABLE [AgentConfigurations] (
+        [Id] INT IDENTITY(1,1) NOT NULL,
+        [IsAdminAgentEnabled] BIT NOT NULL CONSTRAINT [DF_AgentConfigurations_IsAdminAgentEnabled] DEFAULT 1,
+        [IsUserAgentEnabled] BIT NOT NULL CONSTRAINT [DF_AgentConfigurations_IsUserAgentEnabled] DEFAULT 1,
+        [IsAutomationPaused] BIT NOT NULL CONSTRAINT [DF_AgentConfigurations_IsAutomationPaused] DEFAULT 0,
+        [IsEmergencyKillSwitchActive] BIT NOT NULL CONSTRAINT [DF_AgentConfigurations_IsEmergencyKillSwitchActive] DEFAULT 0,
+        [PrimaryProvider] NVARCHAR(50) NOT NULL CONSTRAINT [DF_AgentConfigurations_PrimaryProvider] DEFAULT N'Groq',
+        [FallbackProvider] NVARCHAR(50) NOT NULL CONSTRAINT [DF_AgentConfigurations_FallbackProvider] DEFAULT N'Gemini',
+        [GroqModel] NVARCHAR(100) NOT NULL CONSTRAINT [DF_AgentConfigurations_GroqModel] DEFAULT N'llama-3.3-70b-versatile',
+        [GeminiModel] NVARCHAR(100) NOT NULL CONSTRAINT [DF_AgentConfigurations_GeminiModel] DEFAULT N'gemini-2.0-flash',
+        [DonationMonitoringIntervalMinutes] INT NOT NULL CONSTRAINT [DF_AgentConfigurations_DonationMonitoringIntervalMinutes] DEFAULT 5,
+        [SecurityScanIntervalMinutes] INT NOT NULL CONSTRAINT [DF_AgentConfigurations_SecurityScanIntervalMinutes] DEFAULT 10,
+        [HealthCheckIntervalMinutes] INT NOT NULL CONSTRAINT [DF_AgentConfigurations_HealthCheckIntervalMinutes] DEFAULT 15,
+        [LastSuccessfulExecution] DATETIME2 NOT NULL CONSTRAINT [DF_AgentConfigurations_LastSuccessfulExecution] DEFAULT SYSUTCDATETIME(),
+        [UpdatedAt] DATETIME2 NOT NULL CONSTRAINT [DF_AgentConfigurations_UpdatedAt] DEFAULT SYSUTCDATETIME(),
+        CONSTRAINT [PK_AgentConfigurations] PRIMARY KEY ([Id])
+    );
+    PRINT 'Created AgentConfigurations table.';
+END
+GO
+
+-- Seed default AgentConfigurations row
+IF NOT EXISTS (SELECT 1 FROM [AgentConfigurations] WHERE [Id] = 1)
+BEGIN
+    SET IDENTITY_INSERT [AgentConfigurations] ON;
+    INSERT INTO [AgentConfigurations] ([Id], [IsAdminAgentEnabled], [IsUserAgentEnabled], [IsAutomationPaused], [IsEmergencyKillSwitchActive], [PrimaryProvider], [FallbackProvider], [GroqModel], [GeminiModel], [DonationMonitoringIntervalMinutes], [SecurityScanIntervalMinutes], [HealthCheckIntervalMinutes], [LastSuccessfulExecution], [UpdatedAt])
+    VALUES (1, 1, 1, 0, 0, N'Groq', N'Gemini', N'llama-3.3-70b-versatile', N'gemini-2.0-flash', 5, 10, 15, SYSUTCDATETIME(), SYSUTCDATETIME());
+    SET IDENTITY_INSERT [AgentConfigurations] OFF;
+    PRINT 'Seeded default AgentConfiguration.';
+END
+GO
+
+-- 2. Table: [AgentAutomationJobs]
+IF NOT EXISTS (SELECT 1 FROM sys.tables WHERE name = N'AgentAutomationJobs')
+BEGIN
+    CREATE TABLE [AgentAutomationJobs] (
+        [Id] INT IDENTITY(1,1) NOT NULL,
+        [JobName] NVARCHAR(100) NOT NULL,
+        [ExecutionId] NVARCHAR(100) NOT NULL,
+        [Status] NVARCHAR(30) NOT NULL,
+        [StartedAt] DATETIME2 NOT NULL,
+        [CompletedAt] DATETIME2 NULL,
+        [RecordsEvaluated] INT NOT NULL CONSTRAINT [DF_AgentAutomationJobs_RecordsEvaluated] DEFAULT 0,
+        [ActionsTriggered] INT NOT NULL CONSTRAINT [DF_AgentAutomationJobs_ActionsTriggered] DEFAULT 0,
+        [SummaryMessage] NVARCHAR(MAX) NULL,
+        [ErrorMessage] NVARCHAR(MAX) NULL,
+        [RetryCount] INT NOT NULL CONSTRAINT [DF_AgentAutomationJobs_RetryCount] DEFAULT 0,
+        CONSTRAINT [PK_AgentAutomationJobs] PRIMARY KEY ([Id])
+    );
+    CREATE INDEX [IX_AgentAutomationJobs_JobName_StartedAt] ON [AgentAutomationJobs] ([JobName], [StartedAt]);
+    PRINT 'Created AgentAutomationJobs table.';
+END
+GO
+
+-- 3. Table: [AgentReports]
+IF NOT EXISTS (SELECT 1 FROM sys.tables WHERE name = N'AgentReports')
+BEGIN
+    CREATE TABLE [AgentReports] (
+        [Id] INT IDENTITY(1,1) NOT NULL,
+        [ReportCode] NVARCHAR(50) NOT NULL,
+        [AgentName] NVARCHAR(100) NOT NULL,
+        [AgentType] NVARCHAR(50) NOT NULL,
+        [ActionName] NVARCHAR(100) NOT NULL,
+        [ModuleName] NVARCHAR(100) NOT NULL,
+        [TargetUserId] INT NULL,
+        [AffectedRecordId] INT NULL,
+        [ActionDescription] NVARCHAR(1000) NOT NULL,
+        [ActionReason] NVARCHAR(1000) NULL,
+        [PreviousValue] NVARCHAR(MAX) NULL,
+        [NewValue] NVARCHAR(MAX) NULL,
+        [RiskLevel] NVARCHAR(20) NOT NULL,
+        [ActionStatus] NVARCHAR(30) NOT NULL,
+        [Timestamp] DATETIME2 NOT NULL,
+        [ExecutionDurationMs] FLOAT NOT NULL,
+        [RelatedSecurityEventId] NVARCHAR(100) NULL,
+        [ErrorDetails] NVARCHAR(MAX) NULL,
+        [IntegrityHash] NVARCHAR(128) NOT NULL,
+        CONSTRAINT [PK_AgentReports] PRIMARY KEY ([Id])
+    );
+    CREATE INDEX [IX_AgentReports_Timestamp] ON [AgentReports] ([Timestamp]);
+    CREATE INDEX [IX_AgentReports_ReportCode] ON [AgentReports] ([ReportCode]);
+    PRINT 'Created AgentReports table.';
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM sys.foreign_keys WHERE name = N'FK_AgentReports_Users_TargetUserId')
+BEGIN
+    ALTER TABLE [AgentReports] ADD CONSTRAINT [FK_AgentReports_Users_TargetUserId] FOREIGN KEY ([TargetUserId]) REFERENCES [Users] ([Id]);
+    PRINT 'Created FK_AgentReports_Users_TargetUserId.';
+END
+GO
+
+-- 4. Table: [AgentSecurityEvents]
+IF NOT EXISTS (SELECT 1 FROM sys.tables WHERE name = N'AgentSecurityEvents')
+BEGIN
+    CREATE TABLE [AgentSecurityEvents] (
+        [Id] INT IDENTITY(1,1) NOT NULL,
+        [EventCode] NVARCHAR(50) NOT NULL,
+        [UserId] INT NULL,
+        [UserEmail] NVARCHAR(150) NULL,
+        [IpAddress] NVARCHAR(50) NULL,
+        [ViolationCategory] NVARCHAR(100) NOT NULL,
+        [DetectionDetails] NVARCHAR(500) NOT NULL,
+        [RiskScore] FLOAT NOT NULL,
+        [Severity] NVARCHAR(20) NOT NULL,
+        [WarningIssued] BIT NOT NULL CONSTRAINT [DF_AgentSecurityEvents_WarningIssued] DEFAULT 0,
+        [RestrictionTriggered] BIT NOT NULL CONSTRAINT [DF_AgentSecurityEvents_RestrictionTriggered] DEFAULT 0,
+        [DetectedAt] DATETIME2 NOT NULL,
+        [DetectionEngine] NVARCHAR(100) NOT NULL,
+        CONSTRAINT [PK_AgentSecurityEvents] PRIMARY KEY ([Id])
+    );
+    CREATE INDEX [IX_AgentSecurityEvents_DetectedAt] ON [AgentSecurityEvents] ([DetectedAt]);
+    PRINT 'Created AgentSecurityEvents table.';
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM sys.foreign_keys WHERE name = N'FK_AgentSecurityEvents_Users_UserId')
+BEGIN
+    ALTER TABLE [AgentSecurityEvents] ADD CONSTRAINT [FK_AgentSecurityEvents_Users_UserId] FOREIGN KEY ([UserId]) REFERENCES [Users] ([Id]);
+    PRINT 'Created FK_AgentSecurityEvents_Users_UserId.';
+END
+GO
+
+-- 5. Table: [AgentUserRestrictions]
+IF NOT EXISTS (SELECT 1 FROM sys.tables WHERE name = N'AgentUserRestrictions')
+BEGIN
+    CREATE TABLE [AgentUserRestrictions] (
+        [Id] INT IDENTITY(1,1) NOT NULL,
+        [UserId] INT NOT NULL,
+        [ViolationCategory] NVARCHAR(100) NOT NULL,
+        [Reason] NVARCHAR(1000) NOT NULL,
+        [RestrictedAt] DATETIME2 NOT NULL,
+        [ExpiresAt] DATETIME2 NULL,
+        [IsActive] BIT NOT NULL CONSTRAINT [DF_AgentUserRestrictions_IsActive] DEFAULT 1,
+        [CountdownCompleted] BIT NOT NULL CONSTRAINT [DF_AgentUserRestrictions_CountdownCompleted] DEFAULT 0,
+        [SuspensionEmailSent] BIT NOT NULL CONSTRAINT [DF_AgentUserRestrictions_SuspensionEmailSent] DEFAULT 0,
+        [RevokedSessionId] NVARCHAR(MAX) NULL,
+        [RestoredAt] DATETIME2 NULL,
+        [RestoredBy] NVARCHAR(MAX) NULL,
+        [RestorationReason] NVARCHAR(MAX) NULL,
+        CONSTRAINT [PK_AgentUserRestrictions] PRIMARY KEY ([Id])
+    );
+    CREATE INDEX [IX_AgentUserRestrictions_UserId_IsActive] ON [AgentUserRestrictions] ([UserId], [IsActive]);
+    PRINT 'Created AgentUserRestrictions table.';
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM sys.foreign_keys WHERE name = N'FK_AgentUserRestrictions_Users_UserId')
+BEGIN
+    ALTER TABLE [AgentUserRestrictions] ADD CONSTRAINT [FK_AgentUserRestrictions_Users_UserId] FOREIGN KEY ([UserId]) REFERENCES [Users] ([Id]);
+    PRINT 'Created FK_AgentUserRestrictions_Users_UserId.';
+END
+GO
+
+-- 6. Table: [AgentAppeals]
+IF NOT EXISTS (SELECT 1 FROM sys.tables WHERE name = N'AgentAppeals')
+BEGIN
+    CREATE TABLE [AgentAppeals] (
+        [Id] INT IDENTITY(1,1) NOT NULL,
+        [UserId] INT NOT NULL,
+        [RestrictionId] INT NOT NULL,
+        [Explanation] NVARCHAR(2000) NOT NULL,
+        [ContactEmail] NVARCHAR(200) NULL,
+        [SubmittedAt] DATETIME2 NOT NULL,
+        [Status] NVARCHAR(30) NOT NULL,
+        [AdminNotes] NVARCHAR(MAX) NULL,
+        [ReviewedAt] DATETIME2 NULL,
+        [ReviewedBy] NVARCHAR(MAX) NULL,
+        CONSTRAINT [PK_AgentAppeals] PRIMARY KEY ([Id])
+    );
+    CREATE INDEX [IX_AgentAppeals_UserId] ON [AgentAppeals] ([UserId]);
+    CREATE INDEX [IX_AgentAppeals_Status] ON [AgentAppeals] ([Status]);
+    PRINT 'Created AgentAppeals table.';
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM sys.foreign_keys WHERE name = N'FK_AgentAppeals_Users_UserId')
+BEGIN
+    ALTER TABLE [AgentAppeals] ADD CONSTRAINT [FK_AgentAppeals_Users_UserId] FOREIGN KEY ([UserId]) REFERENCES [Users] ([Id]);
+    PRINT 'Created FK_AgentAppeals_Users_UserId.';
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM sys.foreign_keys WHERE name = N'FK_AgentAppeals_AgentUserRestrictions_RestrictionId')
+BEGIN
+    ALTER TABLE [AgentAppeals] ADD CONSTRAINT [FK_AgentAppeals_AgentUserRestrictions_RestrictionId] FOREIGN KEY ([RestrictionId]) REFERENCES [AgentUserRestrictions] ([Id]);
+    PRINT 'Created FK_AgentAppeals_AgentUserRestrictions_RestrictionId.';
+END
+GO
+
+-- 7. Table: [AgentConversations]
+IF NOT EXISTS (SELECT 1 FROM sys.tables WHERE name = N'AgentConversations')
+BEGIN
+    CREATE TABLE [AgentConversations] (
+        [Id] INT IDENTITY(1,1) NOT NULL,
+        [SessionId] NVARCHAR(50) NOT NULL,
+        [UserId] INT NULL,
+        [AgentType] NVARCHAR(30) NOT NULL,
+        [Language] NVARCHAR(20) NOT NULL,
+        [CreatedAt] DATETIME2 NOT NULL,
+        [LastActiveAt] DATETIME2 NOT NULL,
+        CONSTRAINT [PK_AgentConversations] PRIMARY KEY ([Id])
+    );
+    CREATE UNIQUE INDEX [IX_AgentConversations_SessionId] ON [AgentConversations] ([SessionId]);
+    PRINT 'Created AgentConversations table.';
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM sys.foreign_keys WHERE name = N'FK_AgentConversations_Users_UserId')
+BEGIN
+    ALTER TABLE [AgentConversations] ADD CONSTRAINT [FK_AgentConversations_Users_UserId] FOREIGN KEY ([UserId]) REFERENCES [Users] ([Id]);
+    PRINT 'Created FK_AgentConversations_Users_UserId.';
+END
+GO
+
+-- 8. Table: [AgentMessages]
+IF NOT EXISTS (SELECT 1 FROM sys.tables WHERE name = N'AgentMessages')
+BEGIN
+    CREATE TABLE [AgentMessages] (
+        [Id] INT IDENTITY(1,1) NOT NULL,
+        [ConversationId] INT NOT NULL,
+        [SenderRole] NVARCHAR(20) NOT NULL,
+        [Content] NVARCHAR(MAX) NOT NULL,
+        [ProviderUsed] NVARCHAR(50) NULL,
+        [ProcessingTimeSec] FLOAT NULL,
+        [SentAt] DATETIME2 NOT NULL,
+        CONSTRAINT [PK_AgentMessages] PRIMARY KEY ([Id])
+    );
+    CREATE INDEX [IX_AgentMessages_ConversationId] ON [AgentMessages] ([ConversationId]);
+    PRINT 'Created AgentMessages table.';
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM sys.foreign_keys WHERE name = N'FK_AgentMessages_AgentConversations_ConversationId')
+BEGIN
+    ALTER TABLE [AgentMessages] ADD CONSTRAINT [FK_AgentMessages_AgentConversations_ConversationId] FOREIGN KEY ([ConversationId]) REFERENCES [AgentConversations] ([Id]) ON DELETE CASCADE;
+    PRINT 'Created FK_AgentMessages_AgentConversations_ConversationId.';
+END
+GO
+
+-- 9. Table: [AgentUsageStatistics]
+IF NOT EXISTS (SELECT 1 FROM sys.tables WHERE name = N'AgentUsageStatistics')
+BEGIN
+    CREATE TABLE [AgentUsageStatistics] (
+        [Id] INT IDENTITY(1,1) NOT NULL,
+        [Provider] NVARCHAR(50) NOT NULL,
+        [ModelName] NVARCHAR(100) NOT NULL,
+        [OperationType] NVARCHAR(50) NOT NULL,
+        [PromptTokens] INT NOT NULL,
+        [CompletionTokens] INT NOT NULL,
+        [TotalTokens] INT NOT NULL,
+        [LatencyMs] FLOAT NOT NULL,
+        [IsSuccessful] BIT NOT NULL,
+        [ErrorCategory] NVARCHAR(MAX) NULL,
+        [Timestamp] DATETIME2 NOT NULL,
+        CONSTRAINT [PK_AgentUsageStatistics] PRIMARY KEY ([Id])
+    );
+    CREATE INDEX [IX_AgentUsageStatistics_Timestamp] ON [AgentUsageStatistics] ([Timestamp]);
+    PRINT 'Created AgentUsageStatistics table.';
+END
+GO
