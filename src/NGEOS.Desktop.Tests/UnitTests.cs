@@ -54,8 +54,8 @@ namespace NGEOS.Desktop.Tests
         [Fact]
         public void VerifyPassword_ShouldSupportDefaultAdminCredential()
         {
-            var (hash, salt) = _hasher.HashPassword("Admin@12");
-            var isValid = _hasher.VerifyPassword("Admin@12", hash, salt);
+            var (hash, salt) = _hasher.HashPassword("NGOES@Admin123");
+            var isValid = _hasher.VerifyPassword("NGOES@Admin123", hash, salt);
             Assert.True(isValid);
         }
     }
@@ -345,7 +345,7 @@ namespace NGEOS.Desktop.Tests
                 {
                     var audit = new AuditService(db);
                     var auth = new AuthService(db, hasher, audit);
-                    var (loginSuccess, message, user) = await auth.LoginAsync("admin@ngeos.org", "Admin@12");
+                    var (loginSuccess, message, user) = await auth.LoginAsync("admin@ngeos.org", "NGOES@Admin123");
                     Assert.True(loginSuccess, "Step 3: Local login must succeed offline.");
                     Assert.NotNull(user);
                     Assert.Equal("Admin", user.Role);

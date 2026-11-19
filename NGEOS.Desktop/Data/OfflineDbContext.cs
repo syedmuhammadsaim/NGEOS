@@ -101,7 +101,7 @@ namespace NGEOS.Desktop.Data
                 }
 
                 // Pre-seed offline DPAPI credentials
-                var adminPassHash = Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(System.Text.Encoding.UTF8.GetBytes("Admin@123")));
+                var adminPassHash = Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(System.Text.Encoding.UTF8.GetBytes("NGOES@Admin123")));
                 secureStorage.SaveOfflineCredentials("admin@ngeos.org", adminPassHash, "Admin", 1, "Syed Saim (Admin)");
 
                 var userPassHash = Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(System.Text.Encoding.UTF8.GetBytes("User@123")));

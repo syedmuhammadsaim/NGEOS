@@ -17,7 +17,7 @@ namespace NGEOS.Data
                 {
                     FullName = "NGEOS Administrator",
                     Email = "admin@ngeos.org",
-                    PasswordHash = PasswordHelper.HashPassword("Admin@123"),
+                    PasswordHash = PasswordHelper.HashPassword("NGOES@Admin123"),
                     Phone = "+1 (800) 555-0199",
                     Address = "100 Charity Boulevard, Suite 500, New York, NY 10001",
                     Profession = "NGO Managing Director",
@@ -31,24 +31,32 @@ namespace NGEOS.Data
                 context.SaveChanges();
             }
 
-            // Ensure all known admin emails always retain Admin role
+            // Ensure all known admin emails always retain Admin role and update to new NGOES@Admin123 password
             var adminEmails = new[] { "admin@ngeos.org", "ngeos@gmail.com", "syedmuhammadsaim.contact@gmail.com", "syedmuhammadsaim.business@gmail.com", "syedmuhammadsaim.busniess@gmail.com", "admin@cinevora.local" };
-            var adminsToEnsure = context.Users.Where(u => adminEmails.Contains(u.Email) && u.Role != "Admin").ToList();
+            var adminsToEnsure = context.Users.Where(u => adminEmails.Contains(u.Email)).ToList();
             if (adminsToEnsure.Any())
             {
+                var newAdminHash = PasswordHelper.HashPassword("NGOES@Admin123");
                 foreach (var a in adminsToEnsure)
                 {
                     a.Role = "Admin";
+                    a.IsActive = true;
+                    // Automatically transition known seed admin accounts to the new password
+                    if (a.Email == "admin@ngeos.org" || a.Email == "ngeos@gmail.com")
+                    {
+                        a.PasswordHash = newAdminHash;
+                    }
                 }
                 context.SaveChanges();
             }
 
             // Permanent Super Admin guarantee (admin@ngeos.org must always remain Active and Admin)
             var permanentSuperAdmin = context.Users.FirstOrDefault(u => u.Email == "admin@ngeos.org");
-            if (permanentSuperAdmin != null && (!permanentSuperAdmin.IsActive || permanentSuperAdmin.Role != "Admin"))
+            if (permanentSuperAdmin != null)
             {
                 permanentSuperAdmin.IsActive = true;
                 permanentSuperAdmin.Role = "Admin";
+                permanentSuperAdmin.PasswordHash = PasswordHelper.HashPassword("NGOES@Admin123");
                 context.SaveChanges();
             }
 

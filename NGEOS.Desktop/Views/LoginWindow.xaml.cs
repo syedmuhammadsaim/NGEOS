@@ -31,7 +31,7 @@ namespace NGEOS.Desktop.Views
 
         private void AutoFill_Click(object sender, RoutedEventArgs e)
         {
-            PasswordInput.Password = "Admin@123";
+            PasswordInput.Password = "NGOES@Admin123";
         }
     }
 }

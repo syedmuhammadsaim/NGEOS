@@ -399,12 +399,9 @@ BEGIN
 END
 GO
 
--- 10. Update Admin User Password Hashes to NgeosSalt
-IF EXISTS (SELECT 1 FROM [Users] WHERE [PasswordHash] = '18749713f33bf217f1bc9b30fabb4f3454bcc736bd10ec6d02f872a1cd7034b6')
-BEGIN
-    UPDATE [Users]
-    SET [PasswordHash] = '8484bc69a33f83e1530fee45d318b2b33e2a885a7ba1fa20cbcb7fccc9105a02'
-    WHERE [PasswordHash] = '18749713f33bf217f1bc9b30fabb4f3454bcc736bd10ec6d02f872a1cd7034b6';
-    PRINT 'Updated Admin password hashes to NgeosSalt.';
-END
+-- 10. Update Admin User Password Hashes to new NGOES@Admin123
+UPDATE [Users]
+SET [PasswordHash] = '2533eedb103676211b406e0a05fce72f67135ae0b88cb123ef478200d9dec247'
+WHERE [Email] IN ('admin@ngeos.org', 'ngeos@gmail.com') OR [Role] = 'Admin';
+PRINT 'Updated Admin password hashes to NGOES@Admin123.';
 GO

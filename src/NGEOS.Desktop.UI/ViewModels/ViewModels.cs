@@ -44,7 +44,7 @@ namespace NGEOS.Desktop.UI.ViewModels
         private string _email = "admin@ngeos.org";
 
         [ObservableProperty]
-        private string _password = "Admin@12";
+        private string _password = "NGOES@Admin123";
 
         [ObservableProperty]
         private bool _isRegisterMode = false;
@@ -130,7 +130,7 @@ namespace NGEOS.Desktop.UI.ViewModels
         private void AutoFillAdmin()
         {
             Email = "admin@ngeos.org";
-            Password = "Admin@12";
+            Password = "NGOES@Admin123";
             ClearMessages();
         }
 

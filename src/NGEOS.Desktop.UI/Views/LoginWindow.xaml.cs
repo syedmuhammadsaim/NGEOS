@@ -8,7 +8,7 @@ namespace NGEOS.Desktop.UI.Views
         public LoginWindow()
         {
             InitializeComponent();
-            LoginPwdBox.Password = "Admin@12";
+            LoginPwdBox.Password = "NGOES@Admin123";
         }
 
         private void LoginPwdBox_PasswordChanged(object sender, RoutedEventArgs e)
@@ -29,7 +29,7 @@ namespace NGEOS.Desktop.UI.Views
 
         private void AutoFillAdmin_Click(object sender, RoutedEventArgs e)
         {
-            LoginPwdBox.Password = "Admin@12";
+            LoginPwdBox.Password = "NGOES@Admin123";
         }
     }
 }

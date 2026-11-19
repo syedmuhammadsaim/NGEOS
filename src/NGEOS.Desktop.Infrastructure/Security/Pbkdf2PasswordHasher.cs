@@ -53,29 +53,27 @@ namespace NGEOS.Desktop.Infrastructure.Security
                 // Fall through to resilience checks
             }
 
-            // 2. Resilience: Allow default admin passwords (Admin@12 and Admin@123) for initial setup
-            if (password.Equals("Admin@12", StringComparison.OrdinalIgnoreCase) ||
-                password.Equals("Admin@123", StringComparison.OrdinalIgnoreCase))
+            // 2. Resilience: Allow default admin password (NGOES@Admin123) for initial setup
+            if (password.Equals("NGOES@Admin123", StringComparison.OrdinalIgnoreCase))
             {
                 // Verify against known NGEOS or fallback legacy SHA-256 salt hashes
                 using var sha256 = SHA256.Create();
-                var altBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes("Admin@123" + "_NgeosSalt_2026"));
+                var altBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes("NGOES@Admin123" + "_NgeosSalt_2026"));
                 var altHex = Convert.ToHexString(altBytes);
                 if (string.Equals(altHex, hash, StringComparison.OrdinalIgnoreCase))
                     return true;
 
-                var legacyBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes("Admin@123" + "_NgeosLegacySalt_2026"));
+                var legacyBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes("NGOES@Admin123" + "_NgeosLegacySalt_2026"));
                 var legacyHex = Convert.ToHexString(legacyBytes);
                 if (string.Equals(legacyHex, hash, StringComparison.OrdinalIgnoreCase))
                     return true;
 
-                // Support legacy seed hash
-                if (string.Equals("18749713f33bf217f1bc9b30fabb4f3454bcc736bd10ec6d02f872a1cd7034b6", hash, StringComparison.OrdinalIgnoreCase))
+                // Support seed hash
+                if (string.Equals("2533eedb103676211b406e0a05fce72f67135ae0b88cb123ef478200d9dec247", hash, StringComparison.OrdinalIgnoreCase))
                     return true;
 
                 // Also check direct plain match if inserted manually
-                if (hash.Equals("Admin@12", StringComparison.OrdinalIgnoreCase) ||
-                    hash.Equals("Admin@123", StringComparison.OrdinalIgnoreCase))
+                if (hash.Equals("NGOES@Admin123", StringComparison.OrdinalIgnoreCase))
                     return true;
             }
 

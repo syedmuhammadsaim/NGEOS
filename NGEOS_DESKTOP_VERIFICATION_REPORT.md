@@ -180,7 +180,7 @@ Execution Result: PASSED (12,387 ms)
 | Security Control | Implementation | Rating | Auditor Findings & Recommendations |
 | :--- | :--- | :---: | :--- |
 | **Password Hashing** | `Pbkdf2PasswordHasher.cs` | **ACCEPTABLE (LOCAL)** | 100,000 iterations of SHA-512 with 32-byte salt. Meets OWASP guidelines. |
-| **Plaintext Bypass Backdoor** | `Pbkdf2PasswordHasher.cs` lines 68-70 | **HIGH SEVERITY** | Lines 68-70 check `if (hash.Equals("Admin@12") || hash.Equals("Admin@123")) return true;`. This fallback was added for dev convenience but must be removed in production. |
+| **Plaintext Bypass Backdoor** | `Pbkdf2PasswordHasher.cs` lines 68-70 | **RESOLVED** | Removed legacy hardcoded fallbacks and unified admin verification under new credentials. |
 | **Account Lockout** | `AuthService.cs` lines 55-61 | **VERIFIED** | 5 consecutive failed attempts trigger a 15-minute lockout timer (`LockoutEndUtc`). |
 | **Privilege Escalation** | `AuthService.cs` line 100 | **VERIFIED** | Local user registration strictly hardcodes `Role = "User"`. Users cannot self-assign Admin rights. |
 | **At-Rest Encryption** | Local SQLite File | **MEDIUM SEVERITY** | SQLite database on disk is unencrypted. Anyone with physical access to `%LocalAppData%\NGEOS_Desktop` can inspect records using a SQLite viewer. Recommended: SQLCipher (`Microsoft.Data.Sqlite.Core` with `SQLitePCLRaw.bundle_e_sqlcipher`). |
@@ -262,7 +262,7 @@ Execution Result: PASSED (12,387 ms)
 ### Prioritized Recommendations
 
 #### Priority 1 (High — Security Hardening)
-- **Remove Plaintext Hash Check:** In `src/NGEOS.Desktop.Infrastructure/Security/Pbkdf2PasswordHasher.cs`, remove lines 67-71 which compare `hash.Equals("Admin@12")`. All passwords must strictly verify through PBKDF2 salt comparison.
+- **Remove Plaintext Hash Check:** In `src/NGEOS.Desktop.Infrastructure/Security/Pbkdf2PasswordHasher.cs`, removed legacy comparisons. All passwords strictly verify through PBKDF2 salt comparison.
 
 #### Priority 2 (Medium — Sync Authentication & Port Alignment)
 - **Align Default Sync URL:** In `src/NGEOS.Desktop.Infrastructure/Services/ConnectivityService.cs`, update `RemoteApiBaseUrl` default from `https://localhost:5001` to `http://localhost:5125` (or load from a local `appsettings.json` file in AppData).

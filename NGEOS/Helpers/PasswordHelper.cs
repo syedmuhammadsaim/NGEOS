@@ -38,26 +38,22 @@ namespace NGEOS.Helpers
                 }
                 if (string.Equals(legacyBuilder.ToString(), hash, StringComparison.OrdinalIgnoreCase)) return true;
 
-                // Support legacy seed hash for admin without exposing legacy branding
-                if (string.Equals(hash, "18749713f33bf217f1bc9b30fabb4f3454bcc736bd10ec6d02f872a1cd7034b6", StringComparison.OrdinalIgnoreCase) &&
-                    password.Equals("Admin@123", StringComparison.OrdinalIgnoreCase)) return true;
+                // Support seed hash for admin
+                if (string.Equals(hash, "2533eedb103676211b406e0a05fce72f67135ae0b88cb123ef478200d9dec247", StringComparison.OrdinalIgnoreCase) &&
+                    password.Equals("NGOES@Admin123", StringComparison.OrdinalIgnoreCase)) return true;
             }
 
             // 2. Direct plain text fallback (resilience against manual SQL insertions)
             if (string.Equals(password, hash, StringComparison.Ordinal)) return true;
 
-            // 3. Resilience: check alternate case and admin variants (Admin@12 and Admin@123)
-            if (password.Equals("admin@123", StringComparison.OrdinalIgnoreCase) ||
-                password.Equals("admin@12", StringComparison.OrdinalIgnoreCase))
+            // 3. Resilience: check alternate case for NGOES@Admin123
+            if (password.Equals("NGOES@Admin123", StringComparison.OrdinalIgnoreCase) ||
+                password.Equals("ngoes@admin123", StringComparison.OrdinalIgnoreCase))
             {
-                var alt1 = HashPassword("Admin@123");
-                var alt2 = HashPassword("admin@123");
-                var alt3 = HashPassword("Admin@12");
-                var alt4 = HashPassword("admin@12");
+                var alt1 = HashPassword("NGOES@Admin123");
+                var alt2 = HashPassword("ngoes@admin123");
                 if (string.Equals(alt1, hash, StringComparison.OrdinalIgnoreCase) ||
-                    string.Equals(alt2, hash, StringComparison.OrdinalIgnoreCase) ||
-                    string.Equals(alt3, hash, StringComparison.OrdinalIgnoreCase) ||
-                    string.Equals(alt4, hash, StringComparison.OrdinalIgnoreCase))
+                    string.Equals(alt2, hash, StringComparison.OrdinalIgnoreCase))
                 {
                     return true;
                 }

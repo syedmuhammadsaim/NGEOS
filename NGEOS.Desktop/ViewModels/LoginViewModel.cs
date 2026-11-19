@@ -71,7 +71,7 @@ namespace NGEOS.Desktop.ViewModels
         private void ExecuteAutoFillAdmin()
         {
             Email = "admin@ngeos.org";
-            Password = "Admin@123";
+            Password = "NGOES@Admin123";
         }
 
         private LocalUser? TryOfflineLogin(string email, string password)

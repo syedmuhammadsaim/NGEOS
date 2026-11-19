@@ -250,7 +250,7 @@ CREATE TABLE IF NOT EXISTS FriendInvitations (
             DbLog("1. Checking Users...");
             if (!await Users.AnyAsync())
             {
-                var (adminHash, adminSalt) = passwordHasher.HashPassword("Admin@12");
+                var (adminHash, adminSalt) = passwordHasher.HashPassword("NGOES@Admin123");
                 var admin = new User
                 {
                     FullName = "Super Administrator",

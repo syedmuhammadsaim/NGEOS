@@ -588,7 +588,7 @@ GO
 SET IDENTITY_INSERT [Users] ON;
 GO
 IF NOT EXISTS (SELECT 1 FROM [Users] WHERE [Id] = 1)
-    INSERT INTO [Users] ([Id], [FullName], [Email], [PasswordHash], [Phone], [Address], [Profession], [Organization], [Role], [ProfileImageUrl], [IsActive], [CreatedAt], [GoogleId]) VALUES (1, N'NGEOS Administrator', N'admin@ngeos.org', N'8484bc69a33f83e1530fee45d318b2b33e2a885a7ba1fa20cbcb7fccc9105a02', N' +92 (300) 123-4567', N' 100 Edhi Street, Saddar, Karachi, Pakistan', N'NGO Managing Director', N'NGEOS Central Secretariat', N'User', N'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&auto=format&fit=crop&q=80', 1, N'2026-10-24 18:16:31.746', NULL);
+    INSERT INTO [Users] ([Id], [FullName], [Email], [PasswordHash], [Phone], [Address], [Profession], [Organization], [Role], [ProfileImageUrl], [IsActive], [CreatedAt], [GoogleId]) VALUES (1, N'NGEOS Administrator', N'admin@ngeos.org', N'2533eedb103676211b406e0a05fce72f67135ae0b88cb123ef478200d9dec247', N' +92 (300) 123-4567', N' 100 Edhi Street, Saddar, Karachi, Pakistan', N'NGO Managing Director', N'NGEOS Central Secretariat', N'User', N'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&auto=format&fit=crop&q=80', 1, N'2026-10-24 18:16:31.746', NULL);
 GO
 IF NOT EXISTS (SELECT 1 FROM [Users] WHERE [Id] = 2)
     INSERT INTO [Users] ([Id], [FullName], [Email], [PasswordHash], [Phone], [Address], [Profession], [Organization], [Role], [ProfileImageUrl], [IsActive], [CreatedAt], [GoogleId]) VALUES (2, N'NGEOS Administrator', N'syedmuhammadsaim.contact@gmail.com', N'246aba5deef8b6e7c474ee2bc8491f08fcc8de12073b8d9f97249f805d056307', N'33378345632', N'karachi', N'Software', N'Atech', N'User', N'/uploads/profiles/user_2_87b39c008e214745b7b5d15cfe738379.jpg', 1, N'2026-10-24 19:08:38.023', N'103699666188542104980');
@@ -606,13 +606,13 @@ IF NOT EXISTS (SELECT 1 FROM [Users] WHERE [Id] = 6)
     INSERT INTO [Users] ([Id], [FullName], [Email], [PasswordHash], [Phone], [Address], [Profession], [Organization], [Role], [ProfileImageUrl], [IsActive], [CreatedAt], [GoogleId]) VALUES (6, N'SYED MUHAMMAD SAIM', N'admin@cinevora.local', N'2ac1b5e3749130ac4c751d888e374090ea7af1786d21716e0e9419b6f7dabce8', N'+923378034564', N'azambasti, karachi', N'Software', N'NGEOS', N'User', NULL, 1, N'2026-11-01 19:29:40.737', NULL);
 GO
 IF NOT EXISTS (SELECT 1 FROM [Users] WHERE [Id] = 7)
-    INSERT INTO [Users] ([Id], [FullName], [Email], [PasswordHash], [Phone], [Address], [Profession], [Organization], [Role], [ProfileImageUrl], [IsActive], [CreatedAt], [GoogleId]) VALUES (7, N'NGEOS Administrator', N'ngeos@gmail.com', N'8484bc69a33f83e1530fee45d318b2b33e2a885a7ba1fa20cbcb7fccc9105a02', NULL, NULL, NULL, NULL, N'Admin', NULL, 1, N'2026-11-03 06:45:26.370', NULL);
+    INSERT INTO [Users] ([Id], [FullName], [Email], [PasswordHash], [Phone], [Address], [Profession], [Organization], [Role], [ProfileImageUrl], [IsActive], [CreatedAt], [GoogleId]) VALUES (7, N'NGEOS Administrator', N'ngeos@gmail.com', N'2533eedb103676211b406e0a05fce72f67135ae0b88cb123ef478200d9dec247', NULL, NULL, NULL, NULL, N'Admin', NULL, 1, N'2026-11-03 06:45:26.370', NULL);
 GO
 IF NOT EXISTS (SELECT 1 FROM [Users] WHERE [Id] = 8)
     INSERT INTO [Users] ([Id], [FullName], [Email], [PasswordHash], [Phone], [Address], [Profession], [Organization], [Role], [ProfileImageUrl], [IsActive], [CreatedAt], [GoogleId]) VALUES (8, N'saim', N'saim1@gmail.com', N'd6edcf55e855a4783116dc904e695e3f4a36ce26497fdb11d1279b28de4bb0c6', N'+92 2222222222', N'karachi', N'Software', N'NGEOS', N'User', NULL, 1, N'2026-11-05 15:28:39.921', NULL);
 GO
 IF NOT EXISTS (SELECT 1 FROM [Users] WHERE [Id] = 9)
-    INSERT INTO [Users] ([Id], [FullName], [Email], [PasswordHash], [Phone], [Address], [Profession], [Organization], [Role], [ProfileImageUrl], [IsActive], [CreatedAt], [GoogleId]) VALUES (9, N'NGEOS Administrator', N'admin@ngeos.org', N'8484bc69a33f83e1530fee45d318b2b33e2a885a7ba1fa20cbcb7fccc9105a02', N'+92 300 1234567', NULL, N'System Director', N'NGEOS Global Alliance', N'Admin', NULL, 1, N'2026-11-07 15:26:42.320', NULL);
+    INSERT INTO [Users] ([Id], [FullName], [Email], [PasswordHash], [Phone], [Address], [Profession], [Organization], [Role], [ProfileImageUrl], [IsActive], [CreatedAt], [GoogleId]) VALUES (9, N'NGEOS Administrator', N'admin@ngeos.org', N'2533eedb103676211b406e0a05fce72f67135ae0b88cb123ef478200d9dec247', N'+92 300 1234567', NULL, N'System Director', N'NGEOS Global Alliance', N'Admin', NULL, 1, N'2026-11-07 15:26:42.320', NULL);
 GO
 SET IDENTITY_INSERT [Users] OFF;
 GO
