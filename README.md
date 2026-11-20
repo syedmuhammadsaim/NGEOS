@@ -47,6 +47,13 @@
     <a href="#-author"><b>👨‍💻 Author</b></a>
   </p>
 
+  <br />
+  <!-- FRONT HERO PREVIEW WITH AI CHATBOT -->
+  <img src="docs/screenshots/ngeos-web-homepage.png" alt="NGEOS Web Portal & AI Guide Assistant Preview" width="100%" />
+  <p align="center">
+    <em>🌐 NGEOS Web Portal (with Autonomous AI Assistant) — Local Development: <code>https://localhost:7179</code> (Localhost) &nbsp;|&nbsp; Live Cloud: <a href="https://ngeos.runasp.net" target="_blank">ngeos.runasp.net</a></em>
+  </p>
+
 </div>
 
 ---
@@ -78,8 +85,8 @@ NGEOS features a complete, production-grade **Python-powered Autonomous AI Ecosy
 The production version of **NGEOS** is actively deployed, publicly accessible worldwide with high availability, enterprise DDoS protection, Let's Encrypt 256-bit SSL encryption, and high-performance MS SQL database hosting:
 
 <div align="center">
-  <img src="docs/screenshots/ngeos-web-homepage.png" alt="NGEOS Web Platform Preview" width="100%" />
-  <p><em>🌐 Official NGEOS Web Portal — Live at <a href="https://ngeos.runasp.net" target="_blank">ngeos.runasp.net</a></em></p>
+  <img src="docs/screenshots/ngeos-web-homepage.png" alt="NGEOS Web Platform Preview (with AI Guide Assistant)" width="100%" />
+  <p><em>🌐 Official NGEOS Web Platform — Running locally on <code>https://localhost:7179</code> (Localhost) &nbsp;|&nbsp; Live Cloud at <a href="https://ngeos.runasp.net" target="_blank">ngeos.runasp.net</a></em></p>
 </div>
 
 | Infrastructure Layer | Technology / Provider | Configuration / Status |
