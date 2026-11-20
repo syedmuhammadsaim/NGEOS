@@ -77,6 +77,11 @@ NGEOS features a complete, production-grade **Python-powered Autonomous AI Ecosy
 
 The production version of **NGEOS** is actively deployed, publicly accessible worldwide with high availability, enterprise DDoS protection, Let's Encrypt 256-bit SSL encryption, and high-performance MS SQL database hosting:
 
+<div align="center">
+  <img src="docs/screenshots/ngeos-web-homepage.png" alt="NGEOS Web Platform Preview" width="100%" />
+  <p><em>🌐 Official NGEOS Web Portal — Live at <a href="https://ngeos.runasp.net" target="_blank">ngeos.runasp.net</a></em></p>
+</div>
+
 | Infrastructure Layer | Technology / Provider | Configuration / Status |
 | :--- | :--- | :--- |
 | **Live Production URL** | 🔗 **[https://ngeos.runasp.net](https://ngeos.runasp.net)** | 🟢 **100% Operational & Live** |
@@ -312,6 +317,11 @@ dotnet run
 
 NGEOS is packaged as a **Full Native Windows Desktop Application** (`NGEOS.Desktop.exe`) powered by Microsoft Edge WebView2 and WPF:
 
+<div align="center">
+  <img src="docs/screenshots/ngeos-desktop-app.png" alt="NGEOS Native Desktop Application" width="100%" />
+  <p><em>💻 NGEOS Desktop Edition — Native WPF & Edge WebView2 Offline Shell with Local SQLite Sync Engine</em></p>
+</div>
+
 ### 🌟 Features of NGEOS Desktop App
 * **100% Full Website Interface:** Experience the exact NGEOS platform — responsive hero sections, interactive cause cards, instant donation modal, floating AI Chatbot assistant, mobile-responsive Admin Center (`/Admin`), and personal Donor Dashboard (`/User/Dashboard`).
 * **Zero Browser Bloat:** Runs in a dedicated native Windows application window with custom NGEOS branding, icon, and title bar — **no browser address bars, no tabs, and no URL fields**.
@@ -345,6 +355,12 @@ NGEOS features an enterprise-grade AI chatbot assistant available at all times o
 ## 📱 Mobile-Responsive Executive Admin Center
 
 The Admin Center at `/Admin` is built with a touch-first architecture:
+
+<div align="center">
+  <img src="docs/screenshots/ngeos-admin-dashboard.png" alt="NGEOS Executive Admin Center" width="100%" />
+  <p><em>🛡️ Executive Administration Hub — 15 Unified Operational, Financial Ledger, and Security Modules</em></p>
+</div>
+
 * **Adaptive Navigation:** Clean docked sidebar on desktop, transitioning into a smooth slide-out drawer on mobile.
 * **Smart Toggle:** Header menu button dynamically flips from `☰` to `✕` when opened.
 * **Zero-Blur Backdrop:** Clean, non-blocking overlay allows full visibility of background stats without CPU/GPU lag.
