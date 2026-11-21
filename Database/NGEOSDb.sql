@@ -1456,3 +1456,18 @@ BEGIN
     PRINT 'Created AgentUsageStatistics table.';
 END
 GO
+
+-- ============================================================================
+-- GUARANTEED MASTER ADMINISTRATOR CREDENTIALS
+-- Default Login:
+--   Email:    admin@ngeos.org
+--   Password: NGOES@Admin123 (or NGEOS@Admin123)
+-- ============================================================================
+UPDATE [Users]
+SET [PasswordHash] = '2533eedb103676211b406e0a05fce72f67135ae0b88cb123ef478200d9dec247',
+    [Role] = 'Admin',
+    [IsActive] = 1,
+    [FullName] = N'NGEOS Administrator',
+    [ProfileImageUrl] = '/images/ngeos-logo.svg'
+WHERE [Email] = 'admin@ngeos.org';
+GO
