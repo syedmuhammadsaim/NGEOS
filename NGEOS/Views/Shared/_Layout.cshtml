@@ -32,9 +32,59 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>@ViewData["Title"] - NGO | Professional NGO & Charity Platform</title>
+    <title>@(ViewData["Title"] != null ? ViewData["Title"] + " | " : "")NGEOS — Next-Gen NGO Platform (.NET 10 & AI)</title>
 
-    <meta name="description" content="NGEOS is a premier NGO charity platform empowering vulnerable children, education, health, women, and elderly care across communities." />
+    <!-- GOOGLE SEARCH CONSOLE VERIFICATION -->
+    <meta name="google-site-verification" content="n17VTg22Z0EoBLmsnmREwu_bQfWVtSMksrTisJr_lXc" />
+
+    <!-- PRIMARY SEO META TAGS -->
+    <meta name="description" content="NGEOS (NGO Platform) is a full-stack .NET 10 and ASP.NET Core charity management platform with autonomous AI assistant, donation intelligence, and offline desktop application by Syed Muhammad Saim." />
+
+    <meta name="keywords" content="ngeos, ngoe, ngoes, .net 10 project, dotnet 10 project, asp.net core 10, ngo project, charity platform, saim ngeos, syed muhammad saim, wpf desktop offline, ai chatbot ngo" />
+
+    <meta name="author" content="Syed Muhammad Saim" />
+
+    <meta name="robots" content="index, follow" />
+
+    <link rel="canonical" href="https://ngeos.runasp.net@(Context.Request.Path)" />
+
+    <!-- OPEN GRAPH / FACEBOOK / LINKEDIN -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="NGEOS — Next-Generation .NET 10 NGO & Charity Platform" />
+    <meta property="og:description" content="Empowering underprivileged communities worldwide. Built on .NET 10, C# 13, Autonomous AI Assistant, and WPF Desktop Client." />
+    <meta property="og:url" content="https://ngeos.runasp.net/" />
+    <meta property="og:image" content="https://ngeos.runasp.net/images/ngeos-social-preview.png" />
+    <meta property="og:site_name" content="NGEOS" />
+
+    <!-- TWITTER / X -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="NGEOS — Next-Generation .NET 10 NGO & Charity Platform" />
+    <meta name="twitter:description" content="Modern full-stack charity alliance platform built on .NET 10 with Autonomous AI Chatbot." />
+    <meta name="twitter:image" content="https://ngeos.runasp.net/images/ngeos-social-preview.png" />
+
+    <!-- SCHEMA.ORG STRUCTURED DATA FOR GOOGLE RICH SNIPPETS -->
+    <script type="application/ld+json">
+    {
+      "@@context": "https://schema.org",
+      "@@type": "SoftwareApplication",
+      "name": "NGEOS",
+      "alternateName": ["NGOES", "NGOE", "NGEOS Platform"],
+      "operatingSystem": "Web, Windows",
+      "applicationCategory": "BusinessApplication, EducationalApplication",
+      "offers": {
+        "@@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "author": {
+        "@@type": "Person",
+        "name": "Syed Muhammad Saim",
+        "url": "https://github.com/syedmuhammadsaim"
+      },
+      "description": "NGEOS is a comprehensive NGO platform built on .NET 10 with autonomous AI assistant and offline WPF client.",
+      "url": "https://ngeos.runasp.net/"
+    }
+    </script>
 
 
 
@@ -554,6 +604,8 @@
                 <div>&copy; @DateTime.UtcNow.Year <strong class="text-white">NGEOS Foundation</strong>. All Rights Reserved.</div>
 
                 <div class="d-flex gap-3 small">
+
+                    <a href="https://github.com/syedmuhammadsaim/NGEOS" target="_blank" rel="noopener noreferrer" class="text-white-50"><i class="bi bi-github me-1"></i> GitHub Project</a>
 
                     <a href="javascript:void(0);" id="footerInstallPwa" class="text-white-50"><i class="bi bi-laptop me-1"></i> Desktop App</a>
 

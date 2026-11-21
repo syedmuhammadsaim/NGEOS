@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /Admin/
+Disallow: /Admin
+Disallow: /User/
+Disallow: /User
+Disallow: /Account/Appeal
+Disallow: /Account/ResetPassword
+
+Sitemap: https://ngeos.runasp.net/sitemap.xml
