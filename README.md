@@ -173,7 +173,7 @@ NGEOS features a dedicated master administrator account for central platform ove
 <br />
 
 <div align="center">
-  <img src="docs/screenshots/ngeos-admin-dashboard.png" alt="NGEOS Executive Control Center (Admin Portal)" width="100%" style="border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.15);" />
+  <img src="docs/screenshots/ngeos-admin-portal.png" alt="NGEOS Executive Control Center (Admin Portal)" width="100%" style="border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.15);" />
 
   <br />
 
@@ -528,7 +528,7 @@ The Admin Center at `/Admin` is built with a touch-first architecture:
 <br />
 
 <div align="center">
-  <img src="docs/screenshots/ngeos-admin-dashboard.png" alt="NGEOS Executive Admin Center" width="100%" style="border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.15);" />
+  <img src="docs/screenshots/ngeos-admin-portal.png" alt="NGEOS Executive Admin Center" width="100%" style="border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.15);" />
 
   <br />
 
