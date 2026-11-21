@@ -6,7 +6,7 @@
 --
 -- Official Credentials:
 --   Email:    admin@ngeos.org
---   Password: NGOES@Admin123  (or NGEOS@Admin123)
+--   Password: NGEOS@Admin123
 -- ============================================================================
 
 -- 1. If admin@ngeos.org does not exist, insert it
@@ -20,7 +20,7 @@ BEGIN
     VALUES (
         N'NGEOS Administrator',
         N'admin@ngeos.org',
-        N'2533eedb103676211b406e0a05fce72f67135ae0b88cb123ef478200d9dec247',
+        N'01a7836dc951c8a141bc82b6d4600c5722d92618cdf56399500989afb3d6d664',
         N'+92 (300) 123-4567',
         N'100 Edhi Street, Saddar, Karachi, Pakistan',
         N'NGO Managing Director',
@@ -34,9 +34,9 @@ BEGIN
 END
 ELSE
 BEGIN
-    -- 2. If exists, update password hash, role, and active status
+    -- 2. If exists, update password hash to NGEOS@Admin123, role, and active status
     UPDATE [Users]
-    SET [PasswordHash] = '2533eedb103676211b406e0a05fce72f67135ae0b88cb123ef478200d9dec247',
+    SET [PasswordHash] = '01a7836dc951c8a141bc82b6d4600c5722d92618cdf56399500989afb3d6d664',
         [Role] = 'Admin',
         [IsActive] = 1,
         [FullName] = N'NGEOS Administrator',
@@ -50,7 +50,7 @@ GO
 IF EXISTS (SELECT 1 FROM [Users] WHERE [Email] = 'ngeos@gmail.com')
 BEGIN
     UPDATE [Users]
-    SET [PasswordHash] = '2533eedb103676211b406e0a05fce72f67135ae0b88cb123ef478200d9dec247',
+    SET [PasswordHash] = '01a7836dc951c8a141bc82b6d4600c5722d92618cdf56399500989afb3d6d664',
         [Role] = 'Admin',
         [IsActive] = 1,
         [ProfileImageUrl] = '/images/ngeos-logo.svg'
@@ -62,6 +62,6 @@ GO
 PRINT '================================================================';
 PRINT 'SUCCESS: Admin credentials are now verified and active:';
 PRINT '  Email:    admin@ngeos.org';
-PRINT '  Password: NGOES@Admin123  (or NGEOS@Admin123)';
+PRINT '  Password: NGEOS@Admin123';
 PRINT '================================================================';
 GO

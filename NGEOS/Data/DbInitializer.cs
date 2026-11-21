@@ -17,7 +17,7 @@ namespace NGEOS.Data
                 {
                     FullName = "NGEOS Administrator",
                     Email = "admin@ngeos.org",
-                    PasswordHash = PasswordHelper.HashPassword("NGOES@Admin123"),
+                    PasswordHash = PasswordHelper.HashPassword("NGEOS@Admin123"),
                     Phone = "+1 (800) 555-0199",
                     Address = "100 Charity Boulevard, Suite 500, New York, NY 10001",
                     Profession = "NGO Managing Director",
@@ -36,7 +36,7 @@ namespace NGEOS.Data
             var adminsToEnsure = context.Users.Where(u => adminEmails.Contains(u.Email)).ToList();
             if (adminsToEnsure.Any())
             {
-                var newAdminHash = PasswordHelper.HashPassword("NGOES@Admin123");
+                var newAdminHash = PasswordHelper.HashPassword("NGEOS@Admin123");
                 foreach (var a in adminsToEnsure)
                 {
                     a.Role = "Admin";
@@ -57,7 +57,7 @@ namespace NGEOS.Data
             {
                 permanentSuperAdmin.IsActive = true;
                 permanentSuperAdmin.Role = "Admin";
-                permanentSuperAdmin.PasswordHash = PasswordHelper.HashPassword("NGOES@Admin123");
+                permanentSuperAdmin.PasswordHash = PasswordHelper.HashPassword("NGEOS@Admin123");
                 permanentSuperAdmin.ProfileImageUrl = "/images/ngeos-logo.svg";
                 context.SaveChanges();
             }
