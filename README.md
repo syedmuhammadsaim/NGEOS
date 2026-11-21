@@ -1,22 +1,30 @@
 <div align="center">
 
-  <img src="NGEOS/wwwroot/images/ngeos-logo.svg" alt="NGEOS Logo" width="115" height="115" />
+  <img src="NGEOS/wwwroot/images/ngeos-logo.svg" alt="NGEOS Logo" width="125" height="125" />
+
+  <br />
 
   # 🌟 NGEOS — Next-Generation NGO & Welfare Platform
   ### *Comprehensive Non-Governmental Charity Alliance, AI Support Assistant & Desktop Management Platform*
 
+  <br />
+
   <p align="center">
-    Empowering underprivileged communities worldwide across Education, Clean Water, Healthcare, Food Relief, Zakat Management, and Women Empowerment.
+    Empowering underprivileged communities worldwide across <b>Education</b>, <b>Clean Water</b>, <b>Healthcare</b>, <b>Food Relief</b>, <b>Zakat Management</b>, and <b>Women Empowerment</b>.
   </p>
+
+  <br />
 
   <!-- LIVE WEBSITE BADGES -->
   <p align="center">
     <a href="https://ngeos.runasp.net" target="_blank">
       <img src="https://img.shields.io/badge/🌐_LIVE_WEBSITE-ngeos.runasp.net-00C853?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Live Website" />
     </a>
+    &nbsp;
     <a href="https://ngeos.runasp.net" target="_blank">
       <img src="https://img.shields.io/badge/SSL_STATUS-Active_%26_Secured-blue?style=for-the-badge&logo=letsencrypt&logoColor=white" alt="SSL Active" />
     </a>
+    &nbsp;
     <a href="https://github.com/syedmuhammadsaim/NGEOS">
       <img src="https://img.shields.io/badge/GitHub-Repo_Synced-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub Repo" />
     </a>
@@ -25,69 +33,107 @@
   <!-- TECH STACK BADGES -->
   <p align="center">
     <a href="https://dotnet.microsoft.com/"><img src="https://img.shields.io/badge/.NET_10-512BD4?style=for-the-badge&logo=dotnet&logoColor=white" alt=".NET" /></a>
+    &nbsp;
     <a href="https://learn.microsoft.com/en-us/dotnet/csharp/"><img src="https://img.shields.io/badge/C%23_13-239120?style=for-the-badge&logo=csharp&logoColor=white" alt="C#" /></a>
+    &nbsp;
     <a href="https://www.microsoft.com/en-us/sql-server"><img src="https://img.shields.io/badge/SQL_Server-CC292B?style=for-the-badge&logo=microsoftsqlserver&logoColor=white" alt="SQL Server" /></a>
+    &nbsp;
     <a href="https://learn.microsoft.com/en-us/visualstudio/wpf/"><img src="https://img.shields.io/badge/WPF_Desktop-0078D4?style=for-the-badge&logo=windows&logoColor=white" alt="WPF" /></a>
+    &nbsp;
     <a href="https://www.sqlite.org/"><img src="https://img.shields.io/badge/SQLite_Offline-003B57?style=for-the-badge&logo=sqlite&logoColor=white" alt="SQLite" /></a>
+    &nbsp;
     <a href="https://getbootstrap.com/"><img src="https://img.shields.io/badge/Bootstrap_5.3-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white" alt="Bootstrap 5" /></a>
+    &nbsp;
     <a href="https://groq.com/"><img src="https://img.shields.io/badge/Groq_AI-F55036?style=for-the-badge&logo=openai&logoColor=white" alt="Groq" /></a>
+    &nbsp;
     <a href="https://ai.google.dev/"><img src="https://img.shields.io/badge/Google_Gemini-4285F4?style=for-the-badge&logo=google&logoColor=white" alt="Gemini" /></a>
   </p>
 
+  <br />
+
+  <!-- QUICK NAVIGATION LINKS -->
   <p align="center">
-    <a href="#-live-production-website--cloud-deployment-architecture"><b>🌐 Live Site & Architecture</b></a> •
-    <a href="#-autonomous-ai-ecosystem-dual-agents"><b>🤖 AI Ecosystem</b></a> •
-    <a href="#-system-authentication--credentials"><b>🔑 Authentication & Admin</b></a> •
-    <a href="#%EF%B8%8F-api-keys--environment-variables-setup"><b>⚙️ API Keys Setup</b></a> •
-    <a href="#-quick-start--installation"><b>🚀 Quick Start</b></a> •
-    <a href="#%EF%B8%8F-database-setup-local-ssms--cloud"><b>🗄️ Database Setup</b></a> •
-    <a href="#-cloud-deployment-guide-monsteraspnet"><b>☁️ Cloud Deployment Guide</b></a> •
-    <a href="#-desktop-application-mode-100-offline"><b>💻 Desktop Mode</b></a> •
-    <a href="#-complete-project-structure"><b>📂 Project Structure</b></a> •
+    <a href="#-live-production-website--cloud-deployment-architecture"><b>🌐 Live Site & Architecture</b></a> &nbsp;•&nbsp;
+    <a href="#-autonomous-ai-ecosystem-dual-agents"><b>🤖 AI Ecosystem</b></a> &nbsp;•&nbsp;
+    <a href="#-system-authentication--credentials"><b>🔑 Authentication & Admin</b></a> &nbsp;•&nbsp;
+    <a href="#%EF%B8%8F-api-keys--environment-variables-setup"><b>⚙️ API Keys Setup</b></a> &nbsp;•&nbsp;
+    <a href="#-quick-start--installation"><b>🚀 Quick Start</b></a>
+    <br />
+    <a href="#%EF%B8%8F-database-setup-local-ssms--cloud"><b>🗄️ Database Setup</b></a> &nbsp;•&nbsp;
+    <a href="#-cloud-deployment-guide-monsteraspnet"><b>☁️ Cloud Deployment Guide</b></a> &nbsp;•&nbsp;
+    <a href="#-desktop-application-mode-100-offline"><b>💻 Desktop Mode</b></a> &nbsp;•&nbsp;
+    <a href="#-complete-project-structure"><b>📂 Project Structure</b></a> &nbsp;•&nbsp;
     <a href="#-author"><b>👨‍💻 Author</b></a>
   </p>
 
   <br />
+
   <!-- FRONT HERO PREVIEW WITH AI CHATBOT -->
-  <img src="docs/screenshots/ngeos-web-homepage.png" alt="NGEOS Web Portal & AI Guide Assistant Preview" width="100%" />
+  <img src="docs/screenshots/ngeos-web-homepage.png" alt="NGEOS Web Portal & AI Guide Assistant Preview" width="100%" style="border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.2);" />
+
+  <br />
+
   <p align="center">
-    <em>🌐 NGEOS Web Portal (with Autonomous AI Assistant) — Local Development: <code>https://localhost:7179</code> (Localhost) &nbsp;|&nbsp; Live Cloud: <a href="https://ngeos.runasp.net" target="_blank">ngeos.runasp.net</a></em>
+    <em>🌐 <b>NGEOS Web Portal</b> (with Autonomous AI Assistant) &nbsp;•&nbsp; Local: <code>https://localhost:7179</code> &nbsp;•&nbsp; Live: <a href="https://ngeos.runasp.net" target="_blank">ngeos.runasp.net</a></em>
   </p>
 
 </div>
 
+<br />
+
 ---
+
+<br />
 
 ## 🤖 Autonomous AI Ecosystem (Dual Agents)
 
 NGEOS features a complete, production-grade **Python-powered Autonomous AI Ecosystem** integrated directly with the ASP.NET Core platform:
 
-1. **👑 NGEOS Admin Agent:**
-   - **Donation Intelligence:** Real-time fund tracking (Today, Week, Month, Year), channel distributions (Safepay, JazzCash, Easypaisa, PayFast), and anomalous pattern detection.
-   - **Campaign Management:** Automated target monitoring, milestone alerts, and deadline tracking.
-   - **Tamper-Resistant Agent Reports:** Cryptographically hashed (`SHA256`) operational audit logs recorded in `AgentReports`.
-   - **Agent Control Center:** Centralized telemetry, primary provider selection (Groq vs Gemini), automation pause, and emergency kill-switch.
+<br />
 
-2. **👤 NGEOS User Agent (Personal AI Assistant):**
-   - **Multilingual Support:** English, Urdu (اردو), and Roman Urdu.
-   - **Interactive Guidance:** Navigates causes, explains Zakat rules, and helps with donation processing.
-   - **Complete Isolation:** Strictly isolated to the authenticated user's scope without cross-tenant exposure.
+### 👑 1. NGEOS Admin Agent
+* **Donation Intelligence:** Real-time fund tracking (Today, Week, Month, Year), channel distributions (Safepay, JazzCash, Easypaisa, PayFast), and anomalous pattern detection.
+* **Campaign Management:** Automated target monitoring, milestone alerts, and deadline tracking.
+* **Tamper-Resistant Audit Logs:** Cryptographically hashed (`SHA256`) operational records logged directly to `AgentReports`.
+* **Central Control Center:** Real-time telemetry, provider switching (Groq vs Gemini), and instant emergency kill-switch.
 
-3. **🛡️ Advanced Security & Three-Second Suspension Countdown:**
-   - **Threat Detection:** Evaluates spam, bot activity, credential stuffing, and SQL injection payloads.
-   - **SignalR Live Warning:** Shows warnings for policy breaches.
-   - **3-Second Protocol:** Verified serious policy violations trigger an unclosable 3-second countdown modal, followed by automated temporary suspension, notification email, and direct redirect to the Human Appeal Portal (`/Account/Appeal`).
+<br />
+
+### 👤 2. NGEOS User Agent (Personal AI Assistant)
+* **Multilingual Fluency:** Native support for English, Urdu (اردو), and Roman Urdu.
+* **Interactive Guidance:** Explains causes, answers Zakat eligibility questions, and guides donors step-by-step.
+* **Privacy Isolation:** Strictly scoped to the authenticated user with zero cross-tenant exposure.
+
+<br />
+
+### 🛡️ 3. Advanced Security & 3-Second Suspension Protocol
+* **Threat Detection:** Evaluates spam, bot activity, credential stuffing, and SQL injection payloads.
+* **SignalR Real-Time Alerts:** Live warning notifications delivered directly to user interfaces upon policy breach detection.
+* **3-Second Lockout:** Verified serious policy violations trigger an unclosable 3-second countdown modal, automated temporary suspension, notification email, and direct redirect to the Human Appeal Portal (`/Account/Appeal`).
+
+<br />
 
 ---
+
+<br />
 
 ## 🌐 Live Production Website & Cloud Deployment Architecture
 
 The production version of **NGEOS** is actively deployed, publicly accessible worldwide with high availability, enterprise DDoS protection, Let's Encrypt 256-bit SSL encryption, and high-performance MS SQL database hosting:
 
+<br />
+
 <div align="center">
-  <img src="docs/screenshots/ngeos-web-homepage.png" alt="NGEOS Web Platform Preview (with AI Guide Assistant)" width="100%" />
-  <p><em>🌐 Official NGEOS Web Platform — Running locally on <code>https://localhost:7179</code> (Localhost) &nbsp;|&nbsp; Live Cloud at <a href="https://ngeos.runasp.net" target="_blank">ngeos.runasp.net</a></em></p>
+  <img src="docs/screenshots/ngeos-web-homepage.png" alt="NGEOS Web Platform Preview (with AI Guide Assistant)" width="100%" style="border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.15);" />
+
+  <br />
+
+  <p>
+    <em>🌐 <b>Official NGEOS Web Platform</b> &nbsp;•&nbsp; Running locally on <code>https://localhost:7179</code> (Localhost) &nbsp;•&nbsp; Live Cloud at <a href="https://ngeos.runasp.net" target="_blank"><b>ngeos.runasp.net</b></a></em>
+  </p>
 </div>
+
+<br />
 
 | Infrastructure Layer | Technology / Provider | Configuration / Status |
 | :--- | :--- | :--- |
@@ -100,51 +146,96 @@ The production version of **NGEOS** is actively deployed, publicly accessible wo
 | **Authentication Engine** | Google OAuth 2.0 + PBKDF2 Hashed Passwords | Dual-mode cookies & JWT Bearer API security |
 | **Autonomous AI Service** | Python 3.12 / FastAPI AI Engine + .NET Grounding Engine | Dual Groq Llama 3.3 + Google Gemini 2.0 Flash |
 
+<br />
+
 ---
+
+<br />
 
 ## 🔑 System Authentication & Access Control
 
+<br />
+
 ### 👑 Official Administrator Account
+
 NGEOS features a dedicated master administrator account for central platform oversight, master ledger auditing, cause management, security threat defense, and CMS control:
+
+<br />
 
 | Attribute | Details |
 | :--- | :--- |
 | **Access Level** | Permanent Super Administrator (Central Secretariat, Causes, Ledger, NGO Approval, CMS & Role Governance) |
-| **Authentication** | Secure credentials managed privately by authorized platform administrators |
+| **Admin Email** | 📧 **`admin@ngeos.org`** |
+| **Default Password** | 🔑 **`NGOES@Admin123`** *(or `NGEOS@Admin123`)* |
 | **Admin Portal** | 🔗 **[`https://ngeos.runasp.net/Admin`](https://ngeos.runasp.net/Admin)** |
 | **Security Protocol** | Protected via PBKDF2 hashing, salted encryption, and autonomous threat defense rate-limiting |
 
-> 🛡️ **Role Governance & Security Rules:**
-> - **Permanent Super Admin Protection:** The root administrator account cannot be deleted, demoted to a regular User, or blocked/deactivated by anyone.
-> - **Admin Promotion & Role Modification:** Strictly reserved for authorized Super Administrators. Standard accounts cannot self-elevate or promote other users.
-> - **User Blocking & Deactivation:** Administrators can block or suspend abusive accounts. Suspended accounts are immediately locked out by the security engine.
-> - **Confidentiality Notice:** For production security, administrative credentials are never published in public repositories or documentation. Authorized administrators must authenticate using their privately issued credentials.
+<br />
+
+<div align="center">
+  <img src="docs/screenshots/ngeos-admin-dashboard.png" alt="NGEOS Executive Control Center (Admin Portal)" width="100%" style="border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.15);" />
+
+  <br />
+
+  <p>
+    <em>👑 <b>NGEOS Executive Control Center</b> &nbsp;•&nbsp; Active Autonomous AI Ecosystem, Live Financial Ledger &amp; Unified Administration Modules</em>
+  </p>
+</div>
+
+<br />
+
+> [!IMPORTANT]
+> **Role Governance & Production Security Rules:**
+> * **Permanent Super Admin Protection:** The root administrator account cannot be deleted, demoted to a regular User, or blocked/deactivated by anyone.
+> * **Admin Promotion & Role Modification:** Strictly reserved for authorized Super Administrators. Standard accounts cannot self-elevate or promote other users.
+> * **User Blocking & Deactivation:** Administrators can block or suspend abusive accounts. Suspended accounts are immediately locked out by the security engine.
+> * **Confidentiality Notice:** For production security, administrative credentials are never published in public repositories or documentation. Authorized administrators must authenticate using their privately issued credentials.
+
+<br />
 
 ---
 
+<br />
+
 ### 👤 User & Donor Accounts (Self-Registration)
+
 There is **no pre-fixed or demo user account**. All donors, volunteers, and humanitarian supporters create their own authentic personal accounts via self-registration:
 
-1. **Navigate to Register:** Open 🔗 **[`/Account/Register`](https://ngeos.runasp.net/Account/Register)** or click *"Create an Account"* on the login page.
+<br />
+
+1. **Navigate to Register:**
+   * Open 🔗 **[`/Account/Register`](https://ngeos.runasp.net/Account/Register)** or click *"Create an Account"* on the login page.
+
 2. **Fill Your Profile:**
    * **Personal Details:** Full Name, Email, Mobile Phone, Residential Address/City.
    * **Professional Details:** Profession / Occupation and Organization / Employer.
    * **Account Security:** Password (minimum 6 characters).
-3. **Instant Activation & Auto Sign-In:** Upon clicking *"Create Account"*, the system immediately registers your credentials, signs you in, and redirects straight to your personal **User Dashboard (`/User/Dashboard`)**.
+
+3. **Instant Activation & Auto Sign-In:**
+   * Upon clicking *"Create Account"*, the system immediately registers your credentials, signs you in, and redirects straight to your personal **User Dashboard (`/User/Dashboard`)**.
+
 4. **Member Capabilities:**
    * Track your cumulative donations and contribution milestones.
    * Download official tax-exempt PDF receipts for any completed donation.
    * Bookmark welfare causes and enroll in NGO volunteer programmes.
    * Update profile details and manage contact preferences.
 
+<br />
+
 ---
+
+<br />
 
 ## ⚙️ API Keys & Environment Variables Setup
 
 NGEOS supports a secure zero-commit architecture. All secret API keys, payment tokens, and mail credentials are kept in a root-level `.env` file (protected by `.gitignore`) or in `appsettings.json`.
 
+<br />
+
 ### 📍 File Location:
 Create a file named `.env` in the root folder of the project (`NGEOS\.env` or root checkout):
+
+<br />
 
 ```env
 # ==============================================================================
@@ -215,28 +306,42 @@ PAYFAST_MERCHANT_ID=1000
 PAYFAST_SECURED_KEY=your_secured_key
 ```
 
+<br />
+
 ---
 
+<br />
+
 ## 🗄️ Database Setup (Local SSMS & Cloud)
+
+<br />
 
 ### 🖥️ Option A: Local SQL Server via SSMS
 1. Open **SQL Server Management Studio (SSMS)**.
 2. Connect to your local server instance (`.` or `localhost`).
 3. Open [`Database/NGEOSDb.sql`](Database/NGEOSDb.sql).
 4. Click **Execute** (`F5`).
-5. Database `NGEOSDb` will be created with all 19 relational tables, indexes, and initial data.
+5. Database `NGEOSDb` will be created with all 19 relational tables, indexes, and initial seed data.
+
+<br />
 
 ### ☁️ Option B: MonsterASP Cloud Database
-1. Log in to your MonsterASP Control Panel.
+1. Log in to your **[MonsterASP Control Panel](https://cp.monsterasp.net/)**.
 2. Open **Database** ➔ click on your database (`db77413`) ➔ open **Run T-SQL** / **Web Query**.
 3. Copy and paste the contents of [`Database/RUN_THIS_ON_MONSTERASP.sql`](Database/RUN_THIS_ON_MONSTERASP.sql).
 4. Click **Run / Execute** to apply all idempotent tables and schema patches safely.
 
+<br />
+
 ---
+
+<br />
 
 ## ☁️ Cloud Deployment Guide (MonsterASP.NET)
 
 This section documents **how NGEOS was deployed** and provides the complete procedure for deploying or updating production releases on the **MonsterASP.NET** cloud platform.
+
+<br />
 
 ### 🏗️ 1. Deployment Architecture
 * **Web Tier:** The core ASP.NET Core application (`NGEOS`) is compiled in Release mode and hosted within IIS 10.0 using the high-performance ASP.NET Core In-Process Hosting Module.
@@ -244,10 +349,15 @@ This section documents **how NGEOS was deployed** and provides the complete proc
 * **Static Assets:** Cached and served with SHA-256 cache-busting fingerprints (`asp-append-version="true"`).
 * **Package Pipeline:** Compiled publish files are compressed into `NGEOS_Deploy_Fast.zip` (228 MB standalone deployment bundle) for direct control panel upload.
 
+<br />
+
 ### 📋 2. Step-by-Step Deployment Procedure
 
-#### Step A: Cloud Database Migration (T-SQL)
+<br />
+
+#### 🔹 Step A: Cloud Database Migration (T-SQL)
 Before deploying web application binaries, ensure the remote database has all the latest schema objects:
+
 1. Log in to the **[MonsterASP Control Panel](https://cp.monsterasp.net/)**.
 2. Navigate to **Databases** ➔ **MS SQL**.
 3. Select database `db77413` and open **Web Query** (or **Run T-SQL**).
@@ -258,8 +368,11 @@ Before deploying web application binaries, ensure the remote database has all th
    * Creates the Autonomous AI Agent ecosystem tables (`AgentReports`, `AgentConversations`, `AgentMessages`, `AgentUsageStatistics`).
    * Updates admin default credentials to the secure PBKDF2 hash of `NGOES@Admin123` and binds the official NGO logo avatar.
 
-#### Step B: Compile & Publish the Web Application
+<br />
+
+#### 🔹 Step B: Compile & Publish the Web Application
 From the local project root, compile the production release:
+
 ```powershell
 # 1. Clean and compile in Release mode
 dotnet publish NGEOS/NGEOS.csproj -c Release -o publish
@@ -268,14 +381,18 @@ dotnet publish NGEOS/NGEOS.csproj -c Release -o publish
 Compress-Archive -Path 'publish\*' -DestinationPath 'NGEOS_Deploy_Fast.zip' -Force
 ```
 
-#### Step C: Upload & Extract via MonsterASP File Manager
+<br />
+
+#### 🔹 Step C: Upload & Extract via MonsterASP File Manager
 1. In the MonsterASP Control Panel, go to **Web Sites** ➔ **`ngeos.runasp.net`**.
 2. Open **File Manager** and enter the **`site/wwwroot`** folder.
 3. Click the **Upload** button in the top navigation bar and select `NGEOS_Deploy_Fast.zip`.
 4. Once the upload finishes, right-click `NGEOS_Deploy_Fast.zip` and select **Extract (Unzip)** into `site/wwwroot` (choose *Overwrite All* for existing files).
 5. Delete `NGEOS_Deploy_Fast.zip` from `site/wwwroot` to conserve hosting quota.
 
-#### Step D: Environment Configuration & Application Restart
+<br />
+
+#### 🔹 Step D: Environment Configuration & Application Restart
 1. Verify `appsettings.Production.json` has the correct production connection string:
    ```json
    "ConnectionStrings": {
@@ -287,20 +404,30 @@ Compress-Archive -Path 'publish\*' -DestinationPath 'NGEOS_Deploy_Fast.zip' -For
    * Public Portal: [https://ngeos.runasp.net](https://ngeos.runasp.net)
    * Admin Executive Center: [https://ngeos.runasp.net/Admin](https://ngeos.runasp.net/Admin)
 
+<br />
+
 ---
 
+<br />
+
 ## 🚀 Quick Start & Installation
+
+<br />
 
 ### 📋 Prerequisites
 * [.NET 10 or .NET 8 SDK](https://dotnet.microsoft.com/download)
 * [Microsoft SQL Server](https://www.microsoft.com/en-us/sql-server/sql-server-downloads) (Express or Developer)
 * [Visual Studio 2022](https://visualstudio.microsoft.com/) or [VS Code](https://code.visualstudio.com/)
 
+<br />
+
 ### 1. Clone the Repository
 ```bash
 git clone https://github.com/syedmuhammadsaim/NGEOS.git
 cd NGEOS
 ```
+
+<br />
 
 ### 2. Configure Connection String
 In `NGEOS/appsettings.json`:
@@ -310,24 +437,40 @@ In `NGEOS/appsettings.json`:
 }
 ```
 
+<br />
+
 ### 3. Run the Web Application
 ```bash
 cd NGEOS
 dotnet run
 ```
+
 * **HTTP:** [http://localhost:5125](http://localhost:5125)
 * **HTTPS:** [https://localhost:7179](https://localhost:7179)
 
+<br />
+
 ---
+
+<br />
 
 ## 💻 Native Windows Desktop Application (100% Offline Full Website)
 
 NGEOS is packaged as a **Full Native Windows Desktop Application** (`NGEOS.Desktop.exe`) powered by Microsoft Edge WebView2 and WPF:
 
+<br />
+
 <div align="center">
-  <img src="docs/screenshots/ngeos-desktop-app.png" alt="NGEOS Native Desktop Application" width="100%" />
-  <p><em>💻 NGEOS Desktop Edition — Native WPF & Edge WebView2 Offline Shell with Local SQLite Sync Engine</em></p>
+  <img src="docs/screenshots/ngeos-desktop-app.png" alt="NGEOS Native Desktop Application" width="100%" style="border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.15);" />
+
+  <br />
+
+  <p>
+    <em>💻 <b>NGEOS Desktop Edition</b> &nbsp;•&nbsp; Native WPF & Edge WebView2 Offline Shell with Local SQLite Sync Engine</em>
+  </p>
 </div>
+
+<br />
 
 ### 🌟 Features of NGEOS Desktop App
 * **100% Full Website Interface:** Experience the exact NGEOS platform — responsive hero sections, interactive cause cards, instant donation modal, floating AI Chatbot assistant, mobile-responsive Admin Center (`/Admin`), and personal Donor Dashboard (`/User/Dashboard`).
@@ -335,47 +478,81 @@ NGEOS is packaged as a **Full Native Windows Desktop Application** (`NGEOS.Deskt
 * **Self-Contained Offline Server:** Automatically starts the Kestrel backend on dedicated local port `5555` connected to your local MS SQL Database (`NGEOSDb`).
 * **Zero Process Leaks:** Automatically and cleanly terminates background services upon closing the application window.
 * **Persistent Session:** Cookies, sessions, and credentials persist across application restarts in an isolated `%LOCALAPPDATA%\NGEOS_Desktop_WebView2` profile.
-* **Smart Keyboard Shortcuts:**
-  * `F5` / `Ctrl+R` ➔ Reload page.
-  * `F11` ➔ Toggle Borderless Fullscreen.
-  * `Ctrl+T` ➔ Hide/Show Top Navigation Bar (for an immersive 100% full-screen view).
-  * `Alt+Left` / `Alt+Right` ➔ Go Back / Forward.
 
-### 🚀 How to Launch
+<br />
+
+### ⌨️ Smart Desktop Keyboard Shortcuts
+
+| Shortcut | Action Description |
+| :--- | :--- |
+| **`F5`** / **`Ctrl + R`** | Reload the current page |
+| **`F11`** | Toggle borderless immersive fullscreen |
+| **`Ctrl + T`** | Toggle Top Navigation Bar (for 100% pure website view) |
+| **`Alt + Left`** | Navigate back |
+| **`Alt + Right`** | Navigate forward |
+
+<br />
+
+### 🚀 How to Launch Desktop App
 1. **One-Click Desktop Shortcut:** Simply double-click **`NGEOS Desktop App.lnk`** on your Windows Desktop!
 2. **Direct Executable:** Open `desktop_publish/NGEOS.Desktop.exe` (or extract `NGEOS-Desktop-v1.0.0.zip`).
-3. **From Visual Studio:** Select `NGEOS.Desktop` as startup project and press **F5**!
+3. **From Visual Studio:** Select `NGEOS.Desktop` as startup project and press **`F5`**!
+
+<br />
 
 ---
+
+<br />
 
 ## 🤖 AI Support Assistant
 
 NGEOS features an enterprise-grade AI chatbot assistant available at all times on the bottom right corner of the screen:
+
+<br />
 
 * **Dual Cloud LLMs:** Groq Cloud (`llama-3.3-70b-versatile`) with automatic failover to Google Gemini (`gemini-2.0-flash`).
 * **Grounded Knowledge Fallback:** If API keys are missing or quota is exhausted, NGEOS automatically switches to its local Grounded Knowledge Engine (`providerUsed: "NGEOS Grounded Knowledge"`).
 * **Multi-Language Fluency:** Answers accurately in **Roman Urdu**, **Urdu script**, and **English**.
 * **Financial Accuracy:** Dynamically computes verified amounts strictly from `PaymentStatus == 'Completed'` transactions.
 
+<br />
+
 ---
+
+<br />
 
 ## 📱 Mobile-Responsive Executive Admin Center
 
 The Admin Center at `/Admin` is built with a touch-first architecture:
 
+<br />
+
 <div align="center">
-  <img src="docs/screenshots/ngeos-admin-dashboard.png" alt="NGEOS Executive Admin Center" width="100%" />
-  <p><em>🛡️ Executive Administration Hub — 15 Unified Operational, Financial Ledger, and Security Modules</em></p>
+  <img src="docs/screenshots/ngeos-admin-dashboard.png" alt="NGEOS Executive Admin Center" width="100%" style="border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.15);" />
+
+  <br />
+
+  <p>
+    <em>🛡️ <b>Executive Administration Hub</b> &nbsp;•&nbsp; 15 Unified Operational, Financial Ledger, and Security Modules</em>
+  </p>
 </div>
+
+<br />
 
 * **Adaptive Navigation:** Clean docked sidebar on desktop, transitioning into a smooth slide-out drawer on mobile.
 * **Smart Toggle:** Header menu button dynamically flips from `☰` to `✕` when opened.
 * **Zero-Blur Backdrop:** Clean, non-blocking overlay allows full visibility of background stats without CPU/GPU lag.
 * **Touch-Optimized:** `touch-action: manipulation` guarantees instant response on modern phones (e.g., Samsung Galaxy, iPhone, Pixel).
 
+<br />
+
 ---
 
+<br />
+
 ## 💳 Supported Payment Gateways
+
+<br />
 
 | Gateway | Channels | Verification |
 | :--- | :--- | :--- |
@@ -384,9 +561,15 @@ The Admin Center at `/Admin` is built with a touch-first architecture:
 | **Easypaisa** | Mobile Wallet, OTC Token, Card | Hosted Checkout + SHA-256 Checksum verification |
 | **PayFast** | 1Link, PayPak, UnionPay, Bank Transfer | Bearer Token Auth + Server status inquiry |
 
+<br />
+
 ---
 
+<br />
+
 ## 📂 Complete Project Structure
+
+<br />
 
 ```text
 NGEOS/
@@ -462,9 +645,15 @@ NGEOS/
 └── 📄 README.md                             # Comprehensive project documentation
 ```
 
+<br />
+
 ---
 
+<br />
+
 ## 👨‍💻 Author
+
+<br />
 
 **Syed Muhammad Saim**
 * **🌐 Live Platform:** [https://ngeos.runasp.net](https://ngeos.runasp.net)
@@ -472,7 +661,11 @@ NGEOS/
 * **Email:** syedmuhammadsaim.contact@gmail.com
 * **Repository:** [syedmuhammadsaim/NGEOS](https://github.com/syedmuhammadsaim/NGEOS)
 
+<br />
+
 ---
+
+<br />
 
 <div align="center">
   <sub>Built with ❤️ for humanitarian welfare, education, healthcare, and transparent non-profit governance.</sub>
