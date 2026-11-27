@@ -5,7 +5,7 @@
   <br />
 
   # 🌟 NGEOS — Next-Generation NGO & Welfare Platform
-  ### *Comprehensive Non-Governmental Charity Alliance, AI Support Assistant & Desktop Management Platform*
+  ### *Comprehensive Non-Governmental Charity Alliance & AI Support Assistant Platform*
 
   <br />
 
@@ -38,10 +38,6 @@
     &nbsp;
     <a href="https://www.microsoft.com/en-us/sql-server"><img src="https://img.shields.io/badge/SQL_Server-CC292B?style=for-the-badge&logo=microsoftsqlserver&logoColor=white" alt="SQL Server" /></a>
     &nbsp;
-    <a href="https://learn.microsoft.com/en-us/visualstudio/wpf/"><img src="https://img.shields.io/badge/WPF_Desktop-0078D4?style=for-the-badge&logo=windows&logoColor=white" alt="WPF" /></a>
-    &nbsp;
-    <a href="https://www.sqlite.org/"><img src="https://img.shields.io/badge/SQLite_Offline-003B57?style=for-the-badge&logo=sqlite&logoColor=white" alt="SQLite" /></a>
-    &nbsp;
     <a href="https://getbootstrap.com/"><img src="https://img.shields.io/badge/Bootstrap_5.3-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white" alt="Bootstrap 5" /></a>
     &nbsp;
     <a href="https://groq.com/"><img src="https://img.shields.io/badge/Groq_AI-F55036?style=for-the-badge&logo=openai&logoColor=white" alt="Groq" /></a>
@@ -61,7 +57,6 @@
     <br />
     <a href="#%EF%B8%8F-database-setup-local-ssms--cloud"><b>🗄️ Database Setup</b></a> &nbsp;•&nbsp;
     <a href="#-cloud-deployment-guide-monsteraspnet"><b>☁️ Cloud Deployment Guide</b></a> &nbsp;•&nbsp;
-    <a href="#-desktop-application-mode-100-offline"><b>💻 Desktop Mode</b></a> &nbsp;•&nbsp;
     <a href="#-complete-project-structure"><b>📂 Project Structure</b></a> &nbsp;•&nbsp;
     <a href="#-author"><b>👨‍💻 Author</b></a>
   </p>
@@ -454,56 +449,6 @@ dotnet run
 
 <br />
 
-## 💻 Native Windows Desktop Application (100% Offline Full Website)
-
-NGEOS is packaged as a **Full Native Windows Desktop Application** (`NGEOS.Desktop.exe`) powered by Microsoft Edge WebView2 and WPF:
-
-<br />
-
-<div align="center">
-  <img src="docs/screenshots/ngeos-desktop-app.png" alt="NGEOS Native Desktop Application" width="100%" style="border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.15);" />
-
-  <br />
-
-  <p>
-    <em>💻 <b>NGEOS Desktop Edition</b> &nbsp;•&nbsp; Native WPF & Edge WebView2 Offline Shell with Local SQLite Sync Engine</em>
-  </p>
-</div>
-
-<br />
-
-### 🌟 Features of NGEOS Desktop App
-* **100% Full Website Interface:** Experience the exact NGEOS platform — responsive hero sections, interactive cause cards, instant donation modal, floating AI Chatbot assistant, mobile-responsive Admin Center (`/Admin`), and personal Donor Dashboard (`/User/Dashboard`).
-* **Zero Browser Bloat:** Runs in a dedicated native Windows application window with custom NGEOS branding, icon, and title bar — **no browser address bars, no tabs, and no URL fields**.
-* **Self-Contained Offline Server:** Automatically starts the Kestrel backend on dedicated local port `5555` connected to your local MS SQL Database (`NGEOSDb`).
-* **Zero Process Leaks:** Automatically and cleanly terminates background services upon closing the application window.
-* **Persistent Session:** Cookies, sessions, and credentials persist across application restarts in an isolated `%LOCALAPPDATA%\NGEOS_Desktop_WebView2` profile.
-
-<br />
-
-### ⌨️ Smart Desktop Keyboard Shortcuts
-
-| Shortcut | Action Description |
-| :--- | :--- |
-| **`F5`** / **`Ctrl + R`** | Reload the current page |
-| **`F11`** | Toggle borderless immersive fullscreen |
-| **`Ctrl + T`** | Toggle Top Navigation Bar (for 100% pure website view) |
-| **`Alt + Left`** | Navigate back |
-| **`Alt + Right`** | Navigate forward |
-
-<br />
-
-### 🚀 How to Launch Desktop App
-1. **One-Click Desktop Shortcut:** Simply double-click **`NGEOS Desktop App.lnk`** on your Windows Desktop!
-2. **Direct Executable:** Open `desktop_publish/NGEOS.Desktop.exe` (or extract `NGEOS-Desktop-v1.0.0.zip`).
-3. **From Visual Studio:** Select `NGEOS.Desktop` as startup project and press **`F5`**!
-
-<br />
-
----
-
-<br />
-
 ## 🤖 AI Support Assistant
 
 NGEOS features an enterprise-grade AI chatbot assistant available at all times on the bottom right corner of the screen:
@@ -600,17 +545,6 @@ NGEOS/
 │   ├── appsettings.json                    # Local development configuration
 │   └── appsettings.Production.json         # MonsterASP cloud production configuration
 │
-├── 🖥️ src/                                  # Modular Clean Architecture Desktop Suite
-│   ├── NGEOS.Desktop.Core/                 # Domain layer: Entities, Repository Interfaces, Enums
-│   ├── NGEOS.Desktop.Infrastructure/       # Data layer: SQLite DbContext, Repositories, Security
-│   ├── NGEOS.Desktop.UI/                   # Presentation layer: WPF Views, MVVM ViewModels, Styles
-│   └── NGEOS.Desktop.Tests/                # Automated Unit & Integration Tests (13/13 passing)
-│
-├── 💻 NGEOS.Desktop/                        # Standalone WPF Desktop Client & Offline Engine
-│   ├── Data/                               # Offline SQLite Database Context
-│   ├── ViewModels/                         # MVVM ViewModels (Login, Admin, User, Reports)
-│   └── Views/                              # XAML Windows & UserControls
-│
 ├── 🤖 ngeos_ai_service/                    # Autonomous Python AI Agent Ecosystem (FastAPI)
 │   ├── app/
 │   │   ├── agents/                         # AdminAgent, UserAgent, SecurityEngine
@@ -629,18 +563,9 @@ NGEOS/
 │   ├── MonsterASP_Fix_Missing_Columns.sql  # Database patch for missing schema columns
 │   └── MonsterASP_Update_PaymentTransactions.sql # Payment table migration script
 │
-├── 📦 Installer/                            # Windows Application Installer
-│   ├── NGEOS_Setup.iss                     # Inno Setup 6 compilation script
-│   └── Output/                             # Generated Windows Setup executable
-│
 ├── 🚀 Deployment & Distribution Bundles/
-│   ├── desktop_publish/                    # Standalone native desktop executable (NGEOS.Desktop.exe)
 │   ├── publish/                            # Pre-compiled ASP.NET Core Release build
 │   └── NGEOS_Deploy_Fast.zip               # Cloud deployment package for MonsterASP.NET
-│
-├── 📜 Launchers & Automation
-│   ├── NGEOS-Desktop-Launcher.bat          # Standalone offline desktop launcher
-│   └── NGEOS-Desktop-Silent.vbs            # Silent background execution script
 │
 └── 📄 README.md                             # Comprehensive project documentation
 ```
