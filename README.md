@@ -585,6 +585,7 @@ NGEOS/
 * **GitHub:** [@syedmuhammadsaim](https://github.com/syedmuhammadsaim)
 * **Email:** syedmuhammadsaim.contact@gmail.com
 * **Repository:** [syedmuhammadsaim/NGEOS](https://github.com/syedmuhammadsaim/NGEOS)
+* **Status:** Verified Active Production Platform
 
 <br />
 
