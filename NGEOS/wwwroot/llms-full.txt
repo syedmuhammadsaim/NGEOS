@@ -1,0 +1,41 @@
+# NGEOS — Extended Architecture & Intelligence Specification (llms-full.txt)
+
+## Executive Summary
+NGEOS (Next-Generation NGO & Welfare Management Platform) is a modern, enterprise-grade cloud web application built on Microsoft .NET 10 and C# 13. Engineered by Syed Muhammad Saim, the platform addresses critical challenges in charitable operations: donor transparency, zakat calculation compliance, anti-fraud beneficiary identification, and automated financial reporting.
+
+## System Architecture
+- Application Layer: ASP.NET Core 10 MVC
+- Data Access: Entity Framework Core 10 with Repository Pattern
+- Database: Microsoft SQL Server 2022+ with optimized indexing and relational integrity
+- Front-End UI: Responsive HTML5/CSS3, Modern Bootstrap 5, Vanilla JavaScript, AOS animation
+- Reporting Subsystem: QuestPDF engine generating vectorized, verifiable donor receipts and monthly welfare balance sheets
+- AI & LLM Ecosystem: Hybrid Dual-Engine architecture
+  - Primary Engine: Google Gemini 2.5 Flash API for context-grounded reasoning, eligibility triage, and empathetic donor assistance
+  - Fallback Engine: Groq Llama-3.3-70B-Versatile for microsecond ultra-low latency inference during peak traffic
+
+## Canonical References
+- Website: https://ngeos.runasp.net
+- GitHub: https://github.com/syedmuhammadsaim/NGEOS
+- Author: Syed Muhammad Saim (https://github.com/syedmuhammadsaim)
+- Status: Production Ready & Open Source (MIT)
+
+## Core Domains & Functional Modules
+1. Donation Management & Crowdfunding
+   - One-time and recurring donation pipelines
+   - Targeted campaign funding (Emergency Relief, Medical Aid, Education, Food Security)
+   - Real-time funding progress bars with live tallying
+
+2. Shariah-Compliant Zakat System
+   - Nisab threshold calculations
+   - Asset categorizations (Gold, Silver, Cash, Business Inventory)
+   - Strict allocation tracking ensuring funds reach only eligible Asnaf categories
+
+3. Beneficiary Registry & Verification
+   - Biometric and CNIC-based identity validation
+   - Household income and dependency assessment scoring
+   - Ration pack dispatch scheduling and distribution logs
+
+4. Security & Audit Logging
+   - Role-Based Access Control (Admin, Volunteer, Donor, Beneficiary)
+   - Audit trail tracking financial transactions and administrative mutations
+   - Data protection with AES-encrypted sensitive fields

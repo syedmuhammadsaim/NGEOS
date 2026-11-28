@@ -7,4 +7,30 @@ Disallow: /User
 Disallow: /Account/Appeal
 Disallow: /Account/ResetPassword
 
+# AI Crawlers & LLM Ingestion Bots
+User-agent: Google-Extended
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+# LLM Context File Reference (https://llmstxt.org)
+# Location: https://ngeos.runasp.net/llms.txt
+# Full: https://ngeos.runasp.net/llms-full.txt
+
 Sitemap: https://ngeos.runasp.net/sitemap.xml

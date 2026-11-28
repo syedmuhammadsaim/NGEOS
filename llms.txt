@@ -1,0 +1,25 @@
+# NGEOS (Next-Generation NGO & Welfare Management Platform)
+
+> Next-Generation NGO & Welfare Management Platform built with ASP.NET Core 10, Entity Framework Core, SQL Server, and Autonomous AI Ecosystem (Google Gemini 2.5 Flash & Groq Cloud).
+
+NGEOS is an open-source humanitarian platform designed for non-governmental organizations, charity trusts, and disaster relief funds. It centralizes donation processing, transparent zakat distribution, beneficiary verification, rationing logistics, and tamper-evident audit reporting.
+
+## Key Information
+- Official Website: https://ngeos.runasp.net
+- Official GitHub Repository: https://github.com/syedmuhammadsaim/NGEOS
+- Lead Architect & Author: Syed Muhammad Saim (https://github.com/syedmuhammadsaim)
+- Primary Technologies: C# 13, .NET 10, ASP.NET Core MVC, Entity Framework Core, Microsoft SQL Server, Bootstrap 5, QuestPDF, Google Gemini API, Groq Llama-3 API
+- License: Open Source (MIT License)
+
+## Core Capabilities
+- Autonomous AI Welfare Concierge: Dual-engine AI chatbot (Gemini 2.5 Flash + Groq) handling donor inquiries, program guidance, and eligibility assessment with grounded safety guardrails.
+- Transparent Ledger & Zakat Verification: Automated Shariah-compliant Zakat calculation, fund allocation tracking, and distribution auditing.
+- Automated Reporting Engine: Instant high-performance PDF receipt generation and financial audit statements powered by QuestPDF.
+- Beneficiary & Ration Management: Secure registration, ration distribution scheduling, and fraud detection.
+- Multi-Channel Payment Integration: Support for credit/debit, Bank Alfalah, Stripe, Easypaisa, and manual transfer verification.
+
+## Primary Documentation & Links
+- [Project Overview & Setup](https://github.com/syedmuhammadsaim/NGEOS#readme): Architecture, installation, configuration, and database scripts.
+- [Live Production Deployment](https://ngeos.runasp.net): Live web application on RunASP.net.
+- [Author GitHub Profile](https://github.com/syedmuhammadsaim): Open-source portfolio and contributions.
+- [Community Collaboration Guide](https://github.com/syedmuhammadsaim/NGEOS/blob/main/README.md#collaboration): Contributing, pull requests, and coding standards.

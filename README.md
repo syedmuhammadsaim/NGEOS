@@ -28,6 +28,10 @@
     <a href="https://github.com/syedmuhammadsaim/NGEOS">
       <img src="https://img.shields.io/badge/GitHub-Repo_Synced-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub Repo" />
     </a>
+    &nbsp;
+    <a href="llms.txt">
+      <img src="https://img.shields.io/badge/llms.txt-AI_Ready-FF5722?style=for-the-badge&logo=markdown&logoColor=white" alt="llms.txt" />
+    </a>
   </p>
 
   <!-- TECH STACK BADGES -->
