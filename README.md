@@ -160,8 +160,7 @@ NGEOS features a dedicated master administrator account for central platform ove
 | Attribute | Details |
 | :--- | :--- |
 | **Access Level** | Permanent Super Administrator (Central Secretariat, Causes, Ledger, NGO Approval, CMS & Role Governance) |
-| **Admin Email** | 📧 **`admin@ngeos.org`** |
-| **Default Password** | 🔑 **`NGEOS@Admin123`** |
+| **Authentication** | 🔒 Restricted & Managed via Secure Environment Configuration |
 | **Admin Portal** | 🔗 **[`https://ngeos.runasp.net/Admin`](https://ngeos.runasp.net/Admin)** |
 | **Security Protocol** | Protected via PBKDF2 hashing, salted encryption, and autonomous threat defense rate-limiting |
 
